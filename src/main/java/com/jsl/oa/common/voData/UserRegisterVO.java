@@ -23,8 +23,7 @@ public class UserRegisterVO {
     @NotBlank(message = "密码不能为空")
     private String password;
 
-    @Pattern(regexp = "^(男|女|保密)$", message = "性别只能为男或女")
-    @NotBlank(message = "性别不能为空")
+    @Pattern(regexp = "^(男|女|保密)$", message = "性别只能为男、女或保密")
     private String sex;
 
     @NotBlank(message = "年龄不能为空")

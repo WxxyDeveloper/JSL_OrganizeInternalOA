@@ -33,15 +33,20 @@ public class UserController {
     public BaseResponse userRegister(@RequestBody @Validated UserRegisterVO userRegisterVO, BindingResult bindingResult) throws ParseException {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
-            return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
         return userService.userRegister(userRegisterVO);
     }
 
     /**
-     * 用户登录
-     * @param userDO
-     * @return
+     * <h1>用户登录</h1>
+     * <hr/>
+     * 用户登录接口
+     *
+     * @since v1.0.0
+     * @param userDO 用户登录信息
+     * @return {@link BaseResponse}
+     * @author 176yunxuan
      */
     @PostMapping("/user/login")
     public BaseResponse userLogin(@RequestBody UserDO userDO){

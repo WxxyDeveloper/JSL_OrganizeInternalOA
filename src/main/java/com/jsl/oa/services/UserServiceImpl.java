@@ -2,6 +2,7 @@ package com.jsl.oa.services;
 
 import com.jsl.oa.common.doData.UserDO;
 import com.jsl.oa.common.voData.UserRegisterVO;
+import com.jsl.oa.exception.BusinessException;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService {
         if (userMapper.insertUser(userDO)) {
             return ResultUtil.success("注册成功");
         } else {
-            return ResultUtil.error(ErrorCode.DATABASE_INSERT_ERROR);
+            throw new BusinessException(ErrorCode.DATABASE_INSERT_ERROR);
         }
     }
 
@@ -69,11 +70,9 @@ public class UserServiceImpl implements UserService {
     public BaseResponse userLogin(UserDO userDO) {
         String pwd = userDO.getPassword();
         String encodePwd = userMapper.loginPassword(userDO);
-        boolean a = BCrypt.checkpw(pwd, encodePwd);
-        if(BCrypt.checkpw(pwd, encodePwd))
-        {
+        if (BCrypt.checkpw(pwd, encodePwd)) {
             return ResultUtil.success(userMapper.login(userDO));
-        }else return ResultUtil.error(ErrorCode.WRONG_PASSWORD);
+        } else return ResultUtil.error(ErrorCode.WRONG_PASSWORD);
 
     }
 }
