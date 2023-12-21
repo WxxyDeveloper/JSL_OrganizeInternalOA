@@ -1,5 +1,7 @@
 package com.jsl.oa.utils;
 
+import org.springframework.http.ResponseEntity;
+
 public class ResultUtil {
 
     public static BaseResponse success() {
@@ -24,5 +26,14 @@ public class ResultUtil {
 
     public static BaseResponse error(ErrorCode errorCode, Object data) {
         return new BaseResponse(errorCode.getOutput(), errorCode.getCode(), errorCode.getMessage(), data);
+    }
+
+    public static BaseResponse error(String output, Integer code, String message, Object data) {
+        return new BaseResponse(output, code, message, data);
+    }
+
+    public static ResponseEntity<BaseResponse> error(String output, Integer code, String message) {
+        return ResponseEntity.status(code)
+                .body(new BaseResponse(output, code, message));
     }
 }
