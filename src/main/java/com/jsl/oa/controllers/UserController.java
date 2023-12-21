@@ -38,6 +38,11 @@ public class UserController {
         return userService.userRegister(userRegisterVO);
     }
 
+    /**
+     * 用户登录
+     * @param userDO
+     * @return
+     */
     @PostMapping("/user/login")
     public BaseResponse userLogin(@RequestBody UserDO userDO){
 
