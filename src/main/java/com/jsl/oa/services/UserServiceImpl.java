@@ -57,8 +57,8 @@ public class UserServiceImpl implements UserService {
                 .setUnit(userRegisterVO.getUnit())
                 .setFiled(userRegisterVO.getFiled())
                 .setHometown(userRegisterVO.getHometown())
-                .setKind("注册用户")
-                .setState("注册状态");
+                .setKind("0")
+                .setState("0");
         // 插入数据
         if (userMapper.insertUser(userDO)) {
             userDO.setPassword(null);
