@@ -1,6 +1,7 @@
 package com.jsl.oa.services;
 
 import com.jsl.oa.common.doData.UserDO;
+import com.jsl.oa.common.voData.UserLoginVO;
 import com.jsl.oa.common.voData.UserRegisterVO;
 import com.jsl.oa.exception.BusinessException;
 import com.jsl.oa.mapper.UserMapper;
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
         UserDO getUserByUsername = userMapper.getUserByUsername(userRegisterVO.getUsername());
         // 用户名已存在
         if (getUserByUsername != null) {
-            return ResultUtil.error(ErrorCode.USERNAME_EXIST);
+            return ResultUtil.error(ErrorCode.USER_EXIST);
         }
 
         // 生成工号
@@ -57,21 +58,22 @@ public class UserServiceImpl implements UserService {
                 .setFiled(userRegisterVO.getFiled())
                 .setHometown(userRegisterVO.getHometown())
                 .setKind("注册用户")
-                .setStatus("注册状态");
+                .setState("注册状态");
         // 插入数据
         if (userMapper.insertUser(userDO)) {
-            return ResultUtil.success("注册成功");
+            userDO.setPassword(null);
+            return ResultUtil.success("注册成功", userDO);
         } else {
             throw new BusinessException(ErrorCode.DATABASE_INSERT_ERROR);
         }
     }
 
     @Override
-    public BaseResponse userLogin(UserDO userDO) {
-        String pwd = userDO.getPassword();
-        String encodePwd = userMapper.loginPassword(userDO);
+    public BaseResponse userLogin(UserLoginVO userLoginVO) {
+        String pwd = userLoginVO.getPassword();
+        String encodePwd = userMapper.loginPassword(userLoginVO);
         if (BCrypt.checkpw(pwd, encodePwd)) {
-            return ResultUtil.success(userMapper.login(userDO));
+            return ResultUtil.success("登陆成功", userMapper.login(userLoginVO));
         } else return ResultUtil.error(ErrorCode.WRONG_PASSWORD);
 
     }

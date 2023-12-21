@@ -1,5 +1,6 @@
 package com.jsl.oa.common.doData;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -18,6 +19,7 @@ import java.sql.Date;
 @Getter
 @Setter
 @Accessors(chain = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDO {
     private Integer id;
     private String userNum;
@@ -29,5 +31,5 @@ public class UserDO {
     private String filed;
     private String hometown;
     private String kind;
-    private String status;
+    private String state;
 }

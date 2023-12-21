@@ -1,6 +1,6 @@
 package com.jsl.oa.controllers;
 
-import com.jsl.oa.common.doData.UserDO;
+import com.jsl.oa.common.voData.UserLoginVO;
 import com.jsl.oa.common.voData.UserRegisterVO;
 import com.jsl.oa.services.UserService;
 import com.jsl.oa.utils.BaseResponse;
@@ -44,13 +44,13 @@ public class UserController {
      * 用户登录接口
      *
      * @since v1.0.0
-     * @param userDO 用户登录信息
+     * @param userLoginVO 用户登录信息
      * @return {@link BaseResponse}
      * @author 176yunxuan
      */
     @PostMapping("/user/login")
-    public BaseResponse userLogin(@RequestBody UserDO userDO){
+    public BaseResponse userLogin(@RequestBody UserLoginVO userLoginVO){
 
-        return userService.userLogin(userDO);
+        return userService.userLogin(userLoginVO);
     }
 }

@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 /**
- * <h1>用户登陆自定义实体类</h1>
+ * <h1>用户注册自定义实体类</h1>
  * <hr/>
  * 用于处理用户注册表单输入的数据
  *
