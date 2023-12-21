@@ -64,4 +64,16 @@ public class UserServiceImpl implements UserService {
             return ResultUtil.error(ErrorCode.DATABASE_INSERT_ERROR);
         }
     }
+
+    @Override
+    public BaseResponse userLogin(UserDO userDO) {
+        String pwd = userDO.getPassword();
+        String encodePwd = userMapper.loginPassword(userDO);
+        boolean a = BCrypt.checkpw(pwd, encodePwd);
+        if(BCrypt.checkpw(pwd, encodePwd))
+        {
+            return ResultUtil.success(userMapper.login(userDO));
+        }else return ResultUtil.error(ErrorCode.WRONG_PASSWORD);
+
+    }
 }

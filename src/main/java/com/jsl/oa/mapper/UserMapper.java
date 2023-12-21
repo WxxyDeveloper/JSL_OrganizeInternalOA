@@ -18,4 +18,10 @@ public interface UserMapper {
             "VALUES " +
             "(#{userNum}, #{username}, #{password}, #{sex}, #{age}, #{unit}, #{filed}, #{hometown}, #{kind}, #{status})")
     Boolean insertUser(UserDO userDO);
+
+    @Select("select * from users where user_num = #{userNum} ")
+    UserDO login(UserDO userDO);
+
+    @Select("select password from users where user_num = #{userNum}")
+    String loginPassword(UserDO userDO);
 }

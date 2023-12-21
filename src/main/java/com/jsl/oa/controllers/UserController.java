@@ -1,5 +1,6 @@
 package com.jsl.oa.controllers;
 
+import com.jsl.oa.common.doData.UserDO;
 import com.jsl.oa.common.voData.UserRegisterVO;
 import com.jsl.oa.services.UserService;
 import com.jsl.oa.utils.BaseResponse;
@@ -35,5 +36,11 @@ public class UserController {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
         return userService.userRegister(userRegisterVO);
+    }
+
+    @PostMapping("/user/login")
+    public BaseResponse userLogin(@RequestBody UserDO userDO){
+
+        return userService.userLogin(userDO);
     }
 }
