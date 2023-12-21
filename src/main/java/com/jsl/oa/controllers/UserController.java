@@ -49,7 +49,7 @@ public class UserController {
      * @author 176yunxuan
      */
     @PostMapping("/user/login")
-    public BaseResponse userLogin(@RequestBody UserLoginVO userLoginVO, BindingResult bindingResult){
+    public BaseResponse userLogin(@RequestBody @Validated UserLoginVO userLoginVO, BindingResult bindingResult){
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));

@@ -72,6 +72,9 @@ public class UserServiceImpl implements UserService {
     public BaseResponse userLogin(UserLoginVO userLoginVO) {
         String pwd = userLoginVO.getPassword();
         String encodePwd = userMapper.loginPassword(userLoginVO);
+        if (encodePwd == null) {
+            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+        }
         if (BCrypt.checkpw(pwd, encodePwd)) {
             return ResultUtil.success("登陆成功", userMapper.login(userLoginVO));
         } else return ResultUtil.error(ErrorCode.WRONG_PASSWORD);
