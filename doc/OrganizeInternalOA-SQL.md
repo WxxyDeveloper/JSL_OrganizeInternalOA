@@ -386,7 +386,7 @@ node6  --|>  node4
 
 > 【配置表】用于相关内容的配置
 
-**请注意，这部分内容需要有额外的定义，具体定义内容请参考 [《config数据配置》](./OrganizeInternalOA-ConfigTableConfig.md)**
+**请注意，这部分内容需要有额外的定义，具体定义内容请参考 [《Config表详细内容设计》](./OrganizeInternalOA-ConfigTableConfig.md)**
 
 #### 数据表字段属性
 
