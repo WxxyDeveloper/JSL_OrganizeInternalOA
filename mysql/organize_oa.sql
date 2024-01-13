@@ -146,14 +146,8 @@ CREATE TABLE `oa_user` (
 --
 -- 表的结构 `oa_user_project`
 --
-
-CREATE TABLE `oa_user_project` (
-                                   `id` bigint UNSIGNED NOT NULL COMMENT '主键id',
-                                   `uid` bigint UNSIGNED NOT NULL COMMENT '用户id',
-                                   `pid` bigint UNSIGNED NOT NULL COMMENT '接到分割项目内容',
-                                   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                   `updated_at` timestamp NULL DEFAULT NULL COMMENT '修改时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户项目表';
+-- 读取表 organize_oa.oa_user_project 的结构时出错： #1146 - Table &#039;organize_oa.oa_user_project&#039; doesn&#039;t exist
+-- 读取表 organize_oa.oa_user_project 的数据时发生错误： #1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#039;FROM `organize_oa`.`oa_user_project`&#039; at line 1
 
 --
 -- 转储表的索引
@@ -217,13 +211,6 @@ ALTER TABLE `oa_user`
     ADD UNIQUE KEY `oa_user_username_uindex` (`username`);
 
 --
--- 表的索引 `oa_user_project`
---
-ALTER TABLE `oa_user_project`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `oa_user_project_oa_user_id_fk` (`uid`);
-
---
 -- 在导出的表使用AUTO_INCREMENT
 --
 
@@ -264,12 +251,6 @@ ALTER TABLE `oa_user`
     MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键';
 
 --
--- 使用表AUTO_INCREMENT `oa_user_project`
---
-ALTER TABLE `oa_user_project`
-    MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键id';
-
---
 -- 限制导出的表
 --
 
@@ -283,27 +264,21 @@ ALTER TABLE `oa_permissions`
 -- 限制表 `oa_project`
 --
 ALTER TABLE `oa_project`
-    ADD CONSTRAINT `oa_project_oa_project_type_id_fk` FOREIGN KEY (`type`) REFERENCES `oa_project_type` (`id`);
+    ADD CONSTRAINT `oa_project_oa_project_type_id_fk` FOREIGN KEY (`type`) REFERENCES `oa_project_type` (`id`) ON UPDATE CASCADE;
 
 --
 -- 限制表 `oa_role_permissions`
 --
 ALTER TABLE `oa_role_permissions`
-    ADD CONSTRAINT `oa_role_permissions_oa_permissions_id_fk` FOREIGN KEY (`pid`) REFERENCES `oa_permissions` (`id`) ON DELETE CASCADE,
-    ADD CONSTRAINT `oa_role_permissions_oa_role_id_fk` FOREIGN KEY (`rid`) REFERENCES `oa_role` (`id`) ON DELETE CASCADE;
+    ADD CONSTRAINT `oa_role_permissions_oa_permissions_id_fk` FOREIGN KEY (`pid`) REFERENCES `oa_permissions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `oa_role_permissions_oa_role_id_fk` FOREIGN KEY (`rid`) REFERENCES `oa_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- 限制表 `oa_role_user`
 --
 ALTER TABLE `oa_role_user`
     ADD CONSTRAINT `oa_role_user_oa_role_id_fk` FOREIGN KEY (`rid`) REFERENCES `oa_role` (`id`),
-    ADD CONSTRAINT `oa_role_user_oa_user_id_fk` FOREIGN KEY (`uid`) REFERENCES `oa_user` (`id`) ON DELETE CASCADE;
-
---
--- 限制表 `oa_user_project`
---
-ALTER TABLE `oa_user_project`
-    ADD CONSTRAINT `oa_user_project_oa_user_id_fk` FOREIGN KEY (`uid`) REFERENCES `oa_user` (`id`);
+    ADD CONSTRAINT `oa_role_user_oa_user_id_fk` FOREIGN KEY (`uid`) REFERENCES `oa_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

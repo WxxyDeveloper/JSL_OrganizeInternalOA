@@ -92,7 +92,92 @@ public interface GeneralMapper {
 
 ## organize_oa 数据库设计
 
-![image-20240113005049859](./assets/image-20240113005049859.png)
+> 以下是关于此数据库目前结构样式图，其中箭头为外键约束。对于外键约束内容详细会在下面进行详细叙述。
+
+```mermaid
+classDiagram
+direction BT
+class node7 {
+   varchar(50) value  /* 调用关键字 */
+   json data  /* json数据 */
+   timestamp created_at  /* 创建时间 */
+   timestamp updated_at  /* 修改时间 */
+   bigint unsigned id  /* 主键 */
+}
+class node0 {
+   bigint unsigned pid  /* 权限父id */
+   varchar(100) name  /* 权限名称 */
+   varchar(50) code  /* 权限编码 */
+   tinyint(1) type  /* 0为菜单，1为权限 */
+   deleted_at  /* 删除时间(没有删除应当为空) */ timestamp
+   bigint unsigned id  /* 主键 */
+}
+class node5 {
+   varchar(255) name  /* 项目名称 */
+   varchar(255) description  /* 一句话描述 */
+   text introduction  /* 项目详细介绍 */
+   tinyint(1) code_open  /* 代码是否开放 */
+   text core_code  /* 核心代码内容（Markdown） */
+   json git  /* git代码仓库内容 */
+   tinyint unsigned difficulty_level  /* 难度等级 */
+   int unsigned type  /* 类型 */
+   double reward  /* 报酬 */
+   tinyint unsigned status  /* 状态 */
+   bigint unsigned id  /* 项目id */
+}
+class node2 {
+   varchar(50) name  /* 类型名字 */
+   timestamp created_at  /* 创建时间 */
+   timestamp updated_at  /* 修改时间 */
+   int unsigned id  /* 项目类型id */
+}
+class node3 {
+   varchar(20) role_name  /* 角色名称 */
+   timestamp created_at  /* 创建时间 */
+   timestamp updated_at  /* 修改时间 */
+   int unsigned id  /* 角色id */
+}
+class node1 {
+   bigint unsigned pid  /* 权限id */
+   timestamp created_at  /* 创建时间 */
+   int unsigned rid  /* 角色id */
+}
+class node6 {
+   int unsigned rid  /* 角色id */
+   timestamp createdt_at  /* 创建时间 */
+   timestamp updated_at  /* 修改时间 */
+   bigint unsigned uid  /* 用户id */
+}
+class node4 {
+   char(10) job_id  /* 工作ID */
+   varchar(40) username  /* 用户名 */
+   varchar(255) password  /* 密码 */
+   varchar(255) address  /* 用户家庭地址 */
+   varchar(11) phone  /* 电话 */
+   varchar(100) email  /* 邮箱 */
+   tinyint unsigned age  /* 年龄 */
+   varchar(50) signature  /* 一句话描述自己 */
+   tinyint unsigned sex  /* 0/1/2:保密/男/女 */
+   text avatar  /* 头像地址 */
+   varchar(20) nickname  /* 昵称 */
+   tinyint(1) enabled  /* 账户是否可用 */
+   tinyint(1) account_no_expired  /* 账户是否过期 */
+   tinyint(1) credentials_no_expired  /* 密码是否过期 */
+   tinyint(1) recommend  /* 账户是否被推荐 */
+   tinyint(1) account_no_locked  /* 账户是否被锁定 */
+   text description  /* 个人简介 */
+   timestamp created_at  /* 创建时间 */
+   timestamp updated_at  /* 更新时间 */
+   bigint unsigned id  /* 主键 */
+}
+
+node0  --|>  node0
+node5  --|>  node2
+node1  --|>  node0
+node1  --|>  node3
+node6  --|>  node3
+node6  --|>  node4
+```
 
 ### oa_user 数据表
 
@@ -105,7 +190,7 @@ public interface GeneralMapper {
 | 序号 | 名称 | 描述 | 类型 | 键 | 为空 | 额外 | 默认值 |
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
 | 1 | `id` | 主键 | bigint unsigned | PRI | NO | auto_increment |  |
-| 2 | `job_id` | 工作ID：正则表达 "^[STU\|TEA\|OTH][0-9]{7}" | char(10) | UNI | NO |  |  |
+| 2 | `job_id` | 工作ID：正则表达 "^\[STU\|TEA\|OTH\]\[0-9\]{7}" | char(10) | UNI | NO |  |  |
 | 3 | `username` | 用户名 | varchar(40) | UNI | NO |  |  |
 | 4 | `password` | 密码 | varchar(255) |  | NO |  |  |
 | 5 | `address` | 用户家庭地址 | varchar(255) |  | NO |  |  |
@@ -131,12 +216,16 @@ public interface GeneralMapper {
 
 #### 说明
 
+> 【角色表】包含所有的角色（目前主要为三个，学生、老师、管理员）
+
 #### 数据表字段属性
 
 | 序号 | 名称 | 描述 | 类型 | 键 | 为空 | 额外 | 默认值 |
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
 | 1 | `id` | 角色id | int unsigned | PRI | NO | auto_increment |  |
 | 2 | `role_name` | 角色名称 | varchar(20) |  | NO |  |  |
+| 3 | `created_at` | 创建时间 | timestamp |  | NO | DEFAULT_GENERATED | CURRENT_TIMESTAMP |
+| 4 | `updated_at` | 修改时间 | timestamp |  | YES |  |  |
 
 
 
@@ -144,84 +233,143 @@ public interface GeneralMapper {
 
 #### 说明
 
+> 【权限表】所有的权限，具体到每一个功能
+
 #### 数据表字段属性
 
-| 序号 |     名称     |            描述            |      类型       |  键  | 为空 |      额外      | 默认值 |
-| :--: | :----------: | :------------------------: | :-------------: | :--: | :--: | :------------: | :----: |
-|  1   |     `id`     |            主键            | bigint unsigned | PRI  |  NO  | auto_increment |        |
-|  2   |    `pid`     |          权限父id          | bigint unsigned | MUL  | YES  |                |        |
-|  3   |    `name`    |          权限名称          |  varchar(100)   |      |  NO  |                |        |
-|  4   |    `code`    |          权限编码          |   varchar(50)   |      |  NO  |                |        |
-|  5   |    `type`    |      0为菜单，1为权限      |   tinyint(1)    |      |  NO  |                |   1    |
-|  6   | `deleted_at` | 删除时间(没有删除应当为空) |    timestamp    |      | YES  |                |        |
+| 序号 | 名称 | 描述 | 类型 | 键 | 为空 | 额外 | 默认值 |
+| :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
+| 1 | `id` | 主键 | bigint unsigned | PRI | NO | auto_increment |  |
+| 2 | `pid` | 权限父id | bigint unsigned | MUL | YES |  |  |
+| 3 | `name` | 权限名称 | varchar(100) |  | NO |  |  |
+| 4 | `code` | 权限编码 | varchar(50) |  | NO |  |  |
+| 5 | `type` | 0为菜单，1为权限 | tinyint(1) |  | NO |  | 1 |
+| 6 | `deleted_at` | 删除时间(没有删除应当为空) | timestamp |  | YES |  |  |
 
 
 
 ### oa_role_user 数据表
 
-| 序号 | 名称  |  描述  |      类型       |  键  | 为空 | 额外 | 默认值 |
-| :--: | :---: | :----: | :-------------: | :--: | :--: | :--: | :----: |
-|  1   | `uid` | 用户id | bigint unsigned | PRI  |  NO  |      |        |
-|  2   | `rid` | 角色id |  int unsigned   | MUL  |  NO  |      |        |
+#### 说明
+
+> 【用户角色分配表】为用户赋予默认权限属性的内容
+
+#### 数据表字段属性
+
+| 序号 | 名称 | 描述 | 类型 | 键 | 为空 | 额外 | 默认值 |
+| :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
+| 1 | `uid` | 用户id | bigint unsigned | PRI | NO |  |  |
+| 2 | `rid` | 角色id | int unsigned | MUL | NO |  |  |
+| 3 | `createdt_at` | 创建时间 | timestamp |  | NO | DEFAULT_GENERATED | CURRENT_TIMESTAMP |
+| 4 | `updated_at` | 修改时间 | timestamp |  | YES |  |  |
 
 
 
 ### oa_role_permissions 数据表
 
-| 序号 | 名称  |  描述  |      类型       |  键  | 为空 | 额外 | 默认值 |
-| :--: | :---: | :----: | :-------------: | :--: | :--: | :--: | :----: |
-|  1   | `rid` | 角色id |  int unsigned   | PRI  |  NO  |      |        |
-|  2   | `pid` | 权限id | bigint unsigned | MUL  |  NO  |      |        |
+#### 说明
+
+> 【角色权限表】为角色赋予指定权限操作
+
+#### 数据表字段属性
+
+| 序号 | 名称 | 描述 | 类型 | 键 | 为空 | 额外 | 默认值 |
+| :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
+| 1 | `rid` | 角色id | int unsigned | PRI | NO |  |  |
+| 2 | `pid` | 权限id | bigint unsigned | MUL | NO |  |  |
+| 3 | `created_at` | 创建时间 | timestamp |  | NO | DEFAULT_GENERATED | CURRENT_TIMESTAMP |
 
 
 
 ### oa_project 数据表
 
-| 序号 |        名称        |           描述           |       类型       |  键  | 为空 |      额外      | 默认值 |
-| :--: | :----------------: | :----------------------: | :--------------: | :--: | :--: | :------------: | :----: |
-|  1   |        `id`        |          项目id          | bigint unsigned  | PRI  |  NO  | auto_increment |        |
-|  2   |       `name`       |         项目名称         |   varchar(255)   |      |  NO  |                |        |
-|  3   |   `description`    |        一句话描述        |   varchar(255)   |      |  NO  |                |        |
-|  4   |   `introduction`   |       项目详细介绍       |       text       |      |  NO  |                |        |
-|  5   |    `code_open`     |       代码是否开放       |    tinyint(1)    |      |  NO  |                |   0    |
-|  6   |    `core_code`     | 核心代码内容（Markdown） |       text       |      | YES  |                |        |
-|  7   |       `git`        |     git代码仓库内容      |       json       |      | YES  |                |        |
-|  8   | `difficulty_level` |         难度等级         | tinyint unsigned |      |  NO  |                |   1    |
-|  9   |       `type`       |           类型           |   int unsigned   | MUL  |  NO  |                |        |
-|  10  |      `reward`      |           报酬           |      double      |      | YES  |                |        |
-|  11  |      `status`      |           状态           | tinyint unsigned |      |  NO  |                |   0    |
+#### 说明
+
+> 【项目表】用于存放项目相关内容
+
+#### 数据表字段属性
+
+| 序号 | 名称 | 描述 | 类型 | 键 | 为空 | 额外 | 默认值 |
+| :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
+| 1 | `id` | 项目id | bigint unsigned | PRI | NO | auto_increment |  |
+| 2 | `name` | 项目名称 | varchar(255) |  | NO |  |  |
+| 3 | `description` | 一句话描述 | varchar(255) |  | NO |  |  |
+| 4 | `introduction` | 项目详细介绍 | text |  | NO |  |  |
+| 5 | `code_open` | 代码是否开放 | tinyint(1) |  | NO |  | 0 |
+| 6 | `core_code` | 核心代码内容（Markdown） | text |  | YES |  |  |
+| 7 | `git` | git代码仓库内容 | json |  | YES |  |  |
+| 8 | `difficulty_level` | 难度等级 | tinyint unsigned |  | NO |  | 1 |
+| 9 | `type` | 类型 | int unsigned | MUL | NO |  |  |
+| 10 | `reward` | 报酬 | double |  | YES |  |  |
+| 11 | `status` | 状态 | tinyint unsigned |  | NO |  | 0 |
 
 
 
 ### oa_project_type 数据表
 
-| 序号 |     名称     |    描述    |     类型     |  键  | 为空 |       额外        |      默认值       |
-| :--: | :----------: | :--------: | :----------: | :--: | :--: | :---------------: | :---------------: |
-|  1   |     `id`     | 项目类型id | int unsigned | PRI  |  NO  |  auto_increment   |                   |
-|  2   |    `name`    |  类型名字  | varchar(50)  |      |  NO  |                   |                   |
-|  3   | `created_at` |  创建时间  |  timestamp   |      |  NO  | DEFAULT_GENERATED | CURRENT_TIMESTAMP |
-|  4   | `updated_at` |  修改时间  |  timestamp   |      | YES  |                   |                   |
+#### 说明
+
+> 【项目类型表】用于存放项目种类的种类分类表
+
+#### 数据表字段属性
+
+| 序号 | 名称 | 描述 | 类型 | 键 | 为空 | 额外 | 默认值 |
+| :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
+| 1 | `id` | 项目类型id | int unsigned | PRI | NO | auto_increment |  |
+| 2 | `name` | 类型名字 | varchar(50) |  | NO |  |  |
+| 3 | `created_at` | 创建时间 | timestamp |  | NO | DEFAULT_GENERATED | CURRENT_TIMESTAMP |
+| 4 | `updated_at` | 修改时间 | timestamp |  | YES |  |  |
 
 
 
-### oa_user_project 数据表
+### oa_project_cutting 数据表
 
-| 序号 |     名称     |       描述       |      类型       |  键  | 为空 |       额外        |      默认值       |
-| :--: | :----------: | :--------------: | :-------------: | :--: | :--: | :---------------: | :---------------: |
-|  1   |     `id`     |      主键id      | bigint unsigned | PRI  |  NO  |  auto_increment   |                   |
-|  2   |    `uid`     |      用户id      | bigint unsigned | MUL  |  NO  |                   |                   |
-|  3   |    `pid`     | 接到分割项目内容 | bigint unsigned |      |  NO  |                   |                   |
-|  4   | `created_at` |     创建时间     |    timestamp    |      |  NO  | DEFAULT_GENERATED | CURRENT_TIMESTAMP |
-|  5   | `updated_at` |     修改时间     |    timestamp    |      | YES  |                   |                   |
+#### 说明
+
+#### 数据表字段属性
+
+| 序号 |       名称       |       描述       |       类型       |  键  | 为空 |       额外        |      默认值       |
+| :--: | :--------------: | :--------------: | :--------------: | :--: | :--: | :---------------: | :---------------: |
+|  1   |       `id`       |       主键       | bigint unsigned  | PRI  |  NO  |  auto_increment   |                   |
+|  2   |      `pid`       |      项目id      | bigint unsigned  | MUL  |  NO  |                   |                   |
+|  3   |      `name`      | 项目分割模块名字 |   varchar(40)    |      |  NO  |                   |                   |
+|  4   |      `tag`       |     模块标签     |       json       |      | YES  |                   |                   |
+|  5   |  `engineering`   |    工程量计算    | tinyint unsigned |      |  NO  |                   |         1         |
+|  6   | `estimated_time` |  预估时间(小时)  |   int unsigned   |      |  NO  |                   |         3         |
+|  7   |   `real_time`    |     实际时间     |    timestamp     |      | YES  |                   |                   |
+|  8   |   `created_at`   |     创建时间     |    timestamp     |      |  NO  | DEFAULT_GENERATED | CURRENT_TIMESTAMP |
+|  9   |   `updated_at`   |     修改时间     |    timestamp     |      | YES  |                   |                   |
+
+
+
+### oa_project_user 数据表
+
+#### 说明
+
+> 【用户项目分配表】用于存放用户所分配到的子项目内容
+
+#### 数据表字段属性
+
+| 序号 | 名称 | 描述 | 类型 | 键 | 为空 | 额外 | 默认值 |
+| :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
+| 1 | `id` | 主键id | bigint unsigned | PRI | NO | auto_increment |  |
+| 2 | `uid` | 用户id | bigint unsigned | MUL | NO |  |  |
+| 3 | `pid` | 接到分割项目内容 | bigint unsigned | MUL | NO |  |  |
+| 4 | `created_at` | 创建时间 | timestamp |  | NO | DEFAULT_GENERATED | CURRENT_TIMESTAMP |
+| 5 | `updated_at` | 修改时间 | timestamp |  | YES |  |  |
 
 
 
 ### oa_config 数据表
 
-| 序号 |     名称     |    描述    |      类型       |  键  | 为空 |       额外        |      默认值       |
-| :--: | :----------: | :--------: | :-------------: | :--: | :--: | :---------------: | :---------------: |
-|  1   |     `id`     |    主键    | bigint unsigned | PRI  |  NO  |  auto_increment   |                   |
-|  2   |   `value`    | 调用关键字 |   varchar(50)   | UNI  |  NO  |                   |                   |
-|  3   |    `data`    |  json数据  |      json       |      | YES  |                   |                   |
-|  4   | `created_at` |  创建时间  |    timestamp    |      |  NO  | DEFAULT_GENERATED | CURRENT_TIMESTAMP |
-|  5   | `updated_at` |  修改时间  |    timestamp    |      | YES  |                   |                   |
+#### 说明
+
+#### 数据表字段属性
+
+| 序号 | 名称 | 描述 | 类型 | 键 | 为空 | 额外 | 默认值 |
+| :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
+| 1 | `id` | 主键 | bigint unsigned | PRI | NO | auto_increment |  |
+| 2 | `value` | 调用关键字 | varchar(50) | UNI | NO |  |  |
+| 3 | `data` | json数据 | json |  | YES |  |  |
+| 4 | `created_at` | 创建时间 | timestamp |  | NO | DEFAULT_GENERATED | CURRENT_TIMESTAMP |
+| 5 | `updated_at` | 修改时间 | timestamp |  | YES |  |  |
