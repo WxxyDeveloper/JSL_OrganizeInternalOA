@@ -1,4 +1,4 @@
-package com.jsl.oa.common.voData;
+package com.jsl.oa.model.voData;
 
 import lombok.Getter;
 

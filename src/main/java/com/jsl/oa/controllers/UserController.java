@@ -1,7 +1,7 @@
 package com.jsl.oa.controllers;
 
-import com.jsl.oa.common.voData.UserLoginVO;
-import com.jsl.oa.common.voData.UserRegisterVO;
+import com.jsl.oa.model.voData.UserLoginVO;
+import com.jsl.oa.model.voData.UserRegisterVO;
 import com.jsl.oa.services.UserService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;

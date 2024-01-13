@@ -1,4 +1,4 @@
-package com.jsl.oa.common.doData;
+package com.jsl.oa.model.doData;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;

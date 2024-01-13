@@ -1,10 +1,11 @@
-package com.jsl.oa.services;
+package com.jsl.oa.services.impl;
 
-import com.jsl.oa.common.doData.UserDO;
-import com.jsl.oa.common.voData.UserLoginVO;
-import com.jsl.oa.common.voData.UserRegisterVO;
+import com.jsl.oa.model.doData.UserDO;
+import com.jsl.oa.model.voData.UserLoginVO;
+import com.jsl.oa.model.voData.UserRegisterVO;
 import com.jsl.oa.exception.BusinessException;
 import com.jsl.oa.mapper.UserMapper;
+import com.jsl.oa.services.UserService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.Processing;
