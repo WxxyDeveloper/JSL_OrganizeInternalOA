@@ -312,7 +312,7 @@ node6  --|>  node4
 | 7 | `git` | git代码仓库内容 | json |  | YES |  |  |
 | 8 | `difficulty_level` | 难度等级 | tinyint unsigned |  | NO |  | 1 |
 | 9 | `type` | 类型 | int unsigned | MUL | NO |  |  |
-| 10 | `reward` | 报酬 | double |  | YES |  |  |
+| 10 | `reward` | 报酬 | bigint unsigned |  | YES |  |  |
 | 11 | `status` | 状态 | tinyint unsigned |  | NO |  | 0 |
 
 

@@ -35,7 +35,7 @@ public class UserControllerAspect {
      * @return {@link Object}
      * @throws Throwable 异常
      */
-    @Around("execution(* com.jsl.oa.controllers.UserController.*(..))")
+    @Around("execution(* com.jsl.oa.controllers.AuthController.*(..))")
     public Object controllerAround(ProceedingJoinPoint pjp) throws Throwable {
         // 获取HttpServletRequest对象
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();

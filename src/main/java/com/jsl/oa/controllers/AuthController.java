@@ -2,7 +2,7 @@ package com.jsl.oa.controllers;
 
 import com.jsl.oa.model.voData.UserLoginVO;
 import com.jsl.oa.model.voData.UserRegisterVO;
-import com.jsl.oa.services.UserService;
+import com.jsl.oa.services.AuthService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.Processing;
@@ -18,8 +18,8 @@ import java.text.ParseException;
 
 @RestController
 @RequiredArgsConstructor
-public class UserController {
-    private final UserService userService;
+public class AuthController {
+    private final AuthService authService;
 
     /**
      * <h1>用户注册</h1>
@@ -30,12 +30,12 @@ public class UserController {
      * @author 筱锋xiao_lfeng
      */
     @PostMapping("/user/register")
-    public BaseResponse userRegister(@RequestBody @Validated UserRegisterVO userRegisterVO, BindingResult bindingResult) throws ParseException {
+    public BaseResponse authRegister(@RequestBody @Validated UserRegisterVO userRegisterVO, BindingResult bindingResult) throws ParseException {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return userService.userRegister(userRegisterVO);
+        return authService.authRegister(userRegisterVO);
     }
 
     /**
@@ -49,11 +49,11 @@ public class UserController {
      * @author 176yunxuan
      */
     @PostMapping("/user/login")
-    public BaseResponse userLogin(@RequestBody @Validated UserLoginVO userLoginVO, BindingResult bindingResult){
+    public BaseResponse authLogin(@RequestBody @Validated UserLoginVO userLoginVO, BindingResult bindingResult){
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return userService.userLogin(userLoginVO);
+        return authService.authLogin(userLoginVO);
     }
 }

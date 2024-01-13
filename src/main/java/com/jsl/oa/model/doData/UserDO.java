@@ -1,35 +1,42 @@
 package com.jsl.oa.model.doData;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
- * <h1>users 数据表</h1>
+ * <h1>user 数据表</h1>
  * <hr/>
- * 映射 users 数据表内容进入自定义实体类
+ * 映射 oa_user 数据表内容进入自定义实体类
  *
  * @author 筱锋xiao_lfeng
+ * @version v1.1.0
  * @since v1.0.0
- * @version v1.0.0
  */
-@Getter
-@Setter
+@Data
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDO {
-    private Integer id;
-    private String userNum;
+    private Long id;
+    private Long jobId;
     private String username;
     private String password;
-    private String sex;
-    private Date age;
-    private String unit;
-    private String filed;
-    private String hometown;
-    private String kind;
-    private String state;
+    private String address;
+    private String phone;
+    private String email;
+    private Short age;
+    private String signature;
+    private String avatar;
+    private String nickname;
+    private Short sex;
+    private Boolean enabled;
+    private Boolean accountNoExpired;
+    private Boolean credentialsNoExpired;
+    private Boolean recommend;
+    private Boolean accountNoLocked;
+    private String description;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 }

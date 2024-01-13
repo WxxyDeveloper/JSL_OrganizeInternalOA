@@ -5,7 +5,7 @@ import com.jsl.oa.model.voData.UserLoginVO;
 import com.jsl.oa.model.voData.UserRegisterVO;
 import com.jsl.oa.exception.BusinessException;
 import com.jsl.oa.mapper.UserMapper;
-import com.jsl.oa.services.UserService;
+import com.jsl.oa.services.AuthService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.Processing;
@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
 
     /**
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
      * @throws ParseException 日期转换异常
      */
     @Override
-    public BaseResponse userRegister(UserRegisterVO userRegisterVO) throws ParseException {
+    public BaseResponse authRegister(UserRegisterVO userRegisterVO) throws ParseException {
         // 用户检查是否存在
         UserDO getUserByUsername = userMapper.getUserByUsername(userRegisterVO.getUsername());
         // 用户名已存在
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
         // 数据上传
         Date getDate = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(userRegisterVO.getAge()).getTime());
         UserDO userDO = new UserDO();
-        userDO.setUserNum(userNum)
+        userDO.πsetUserNum(userNum)
                 .setUsername(userRegisterVO.getUsername())
                 .setPassword(BCrypt.hashpw(userRegisterVO.getPassword(), BCrypt.gensalt()))
                 .setSex(userRegisterVO.getSex())
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResponse userLogin(UserLoginVO userLoginVO) {
+    public BaseResponse authLogin(UserLoginVO userLoginVO) {
         String pwd = userLoginVO.getPassword();
         String encodePwd = userMapper.loginPassword(userLoginVO);
         if (encodePwd == null) {

@@ -6,8 +6,7 @@ import com.jsl.oa.utils.BaseResponse;
 
 import java.text.ParseException;
 
-public interface UserService {
-    BaseResponse userRegister(UserRegisterVO userRegisterVO) throws ParseException;
-
-    BaseResponse userLogin(UserLoginVO userLoginVO);
+public interface AuthService {
+    BaseResponse authRegister(UserRegisterVO userRegisterVO) throws ParseException;
+    BaseResponse authLogin(UserLoginVO userLoginVO);
 }

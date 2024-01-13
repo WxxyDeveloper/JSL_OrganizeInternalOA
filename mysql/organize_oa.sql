@@ -64,7 +64,7 @@ CREATE TABLE `oa_project`
     `git`              json                      DEFAULT NULL COMMENT 'git代码仓库内容',
     `difficulty_level` tinyint UNSIGNED NOT NULL DEFAULT '1' COMMENT '难度等级',
     `type`             int UNSIGNED     NOT NULL COMMENT '类型',
-    `reward`           double                    DEFAULT NULL COMMENT '报酬',
+    `reward`           bigint UNSIGNED           DEFAULT NULL COMMENT '报酬',
     `status`           tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '状态'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
