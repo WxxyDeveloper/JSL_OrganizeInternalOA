@@ -10,19 +10,19 @@ import org.apache.ibatis.annotations.Select;
 public interface UserMapper {
 
     @Select("SELECT * FROM organize_oa.oa_user WHERE username = #{username}")
-    UserDO getUserByUsername(String username);
+    UserDO getUserInfoByUsername(String username);
 
-    @Select("SELECT * FROM organize_oa.oa_user WHERE user_num = #{userNum}")
-    UserDO getUserByUserNum(String userNum);
+    @Select("SELECT * FROM organize_oa.oa_user WHERE job_id = #{jobId}")
+    UserDO getUserByUserNum(String jobId);
 
-    @Insert("INSERT INTO organize_oa.oa_user (user_num, username, password, sex, age, unit, field, hometown, kind, state) " +
-            "VALUES " +
-            "(#{userNum}, #{username}, #{password}, #{sex}, #{age}, #{unit}, #{filed}, #{hometown}, #{kind}, #{state})")
-    Boolean insertUser(UserDO userDO);
+    @Insert("INSERT INTO organize_oa.oa_user " +
+            "(job_id, username, password, address, phone, email, age, signature, avatar, nickname, account_no_locked, description, updated_at) " +
+            "VALUES (#{jobId}, #{username}, #{password}, #{address}, #{phone}, #{email}, #{age}, #{signature}, #{avatar}, #{nickname}, #{accountNoLocked}, #{description}, #{updatedAt})")
+    boolean insertUser(UserDO userDO);
 
-    @Select("select id, user_num, username, sex, age, unit, field, hometown, kind, state from organize_oa.oa_user where user_num = #{userNum} ")
-    UserDO login(UserLoginVO userLoginVO);
-
-    @Select("select password from organize_oa.oa_user where user_num = #{userNum}")
+    @Select("SELECT password FROM organize_oa.oa_user WHERE job_id = #{jobId}")
     String loginPassword(UserLoginVO userLoginVO);
+
+    @Select("SELECT * FROM organize_oa.oa_user WHERE job_id = #{jobId}")
+    UserDO login(UserLoginVO userLoginVO);
 }

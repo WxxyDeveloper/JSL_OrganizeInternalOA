@@ -14,9 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +31,9 @@ public class AuthServiceImpl implements AuthService {
      * @throws ParseException 日期转换异常
      */
     @Override
-    public BaseResponse authRegister(UserRegisterVO userRegisterVO) throws ParseException {
+    public BaseResponse authRegister(UserRegisterVO userRegisterVO) {
         // 用户检查是否存在
-        UserDO getUserByUsername = userMapper.getUserByUsername(userRegisterVO.getUsername());
+        UserDO getUserByUsername = userMapper.getUserInfoByUsername(userRegisterVO.getUsername());
         // 用户名已存在
         if (getUserByUsername != null) {
             return ResultUtil.error(ErrorCode.USER_EXIST);
@@ -46,20 +44,15 @@ public class AuthServiceImpl implements AuthService {
         do {
             userNum = Processing.createJobNumber((short) 2);
         } while (userMapper.getUserByUserNum(userNum) != null);
+        // 处理性别
 
         // 数据上传
-        Date getDate = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(userRegisterVO.getAge()).getTime());
         UserDO userDO = new UserDO();
-        userDO.πsetUserNum(userNum)
+        userDO.setJobId(userNum)
                 .setUsername(userRegisterVO.getUsername())
                 .setPassword(BCrypt.hashpw(userRegisterVO.getPassword(), BCrypt.gensalt()))
                 .setSex(userRegisterVO.getSex())
-                .setAge(getDate)
-                .setUnit(userRegisterVO.getUnit())
-                .setFiled(userRegisterVO.getFiled())
-                .setHometown(userRegisterVO.getHometown())
-                .setKind("0")
-                .setState("0");
+                .setAge(userRegisterVO.getAge());
         // 插入数据
         if (userMapper.insertUser(userDO)) {
             userDO.setPassword(null);

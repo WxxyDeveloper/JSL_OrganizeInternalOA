@@ -1,6 +1,7 @@
 package com.jsl.oa.config;
 
-import com.jsl.oa.services.AccountService;
+import com.jsl.oa.model.doData.UserDO;
+import com.jsl.oa.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -10,7 +11,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 @RequiredArgsConstructor
 public class MyRealm extends AuthorizingRealm {
 
-    private final AccountService accountService;
+    private final UserService userService;
 
     /**
      * 授权
@@ -30,11 +31,21 @@ public class MyRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-        Account account = accountService.findByUsername(token.getUsername());
-        if(account != null){
-            return new SimpleAuthenticationInfo(account,account.getPassword(),getName());
+        JwtToken jwtToken = (JwtToken) authenticationToken;
+        String username = jwtToken.getUsername();
+
+        // 从数据库获取用户信息
+        UserDO userDO = userService.getUserInfoByUsername(username);
+        if (userDO == null) {
+            throw new UnknownAccountException("用户不存在");
+        } else if (!userDO.getAccountNoLocked()) {
+            throw new LockedAccountException("用户已被锁定");
+        } else if (!userDO.getEnabled()) {
+            throw new DisabledAccountException("用户已被禁用");
+        } else if (!userDO.getAccountNoExpired()) {
+            throw new ExpiredCredentialsException("用户已过期");
         }
-        return null;
+
+        return new SimpleAuthenticationInfo(username, jwtToken.getCredentials(), getName());
     }
 }

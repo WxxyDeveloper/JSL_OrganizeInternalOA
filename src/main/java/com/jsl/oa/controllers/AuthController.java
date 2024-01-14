@@ -10,26 +10,40 @@ import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
+/**
+ * <h1>用户认证控制器</h1>
+ * <hr/>
+ * 用户认证控制器，包含用户注册、用户登录、用户登出接口
+ *
+ * @since v1.0.0
+ * @version v1.1.0
+ * @see AuthService
+ * @see UserRegisterVO
+ * @see UserLoginVO
+ * @see BaseResponse
+ * @see ErrorCode
+ * @see Processing
+ * @see ResultUtil
+ */
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
 
     /**
-     * <h1>用户注册</h1>
+     * <h2>用户注册</h2>
      * <hr/>
      * 用户注册接口
      *
+     * @since v1.0.0
      * @return {@link BaseResponse}
      * @author 筱锋xiao_lfeng
      */
-    @PostMapping("/user/register")
+    @PostMapping("/auth/register")
     public BaseResponse authRegister(@RequestBody @Validated UserRegisterVO userRegisterVO, BindingResult bindingResult) throws ParseException {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -39,7 +53,7 @@ public class AuthController {
     }
 
     /**
-     * <h1>用户登录</h1>
+     * <h2>用户登录</h2>
      * <hr/>
      * 用户登录接口
      *
@@ -48,12 +62,16 @@ public class AuthController {
      * @return {@link BaseResponse}
      * @author 176yunxuan
      */
-    @PostMapping("/user/login")
+    @GetMapping("/auth/login")
     public BaseResponse authLogin(@RequestBody @Validated UserLoginVO userLoginVO, BindingResult bindingResult){
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
         return authService.authLogin(userLoginVO);
+    }
+
+    public BaseResponse authLogout() {
+        return null;
     }
 }

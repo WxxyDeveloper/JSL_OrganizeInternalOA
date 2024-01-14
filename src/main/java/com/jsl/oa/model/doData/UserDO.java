@@ -20,7 +20,7 @@ import java.sql.Timestamp;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDO {
     private Long id;
-    private Long jobId;
+    private String jobId;
     private String username;
     private String password;
     private String address;

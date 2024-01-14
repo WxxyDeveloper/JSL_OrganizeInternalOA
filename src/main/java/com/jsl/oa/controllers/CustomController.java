@@ -19,4 +19,9 @@ public class CustomController implements ErrorController {
     public ResponseEntity<BaseResponse> handleError() {
         return ResultUtil.error("PageNotFound", 404, "请求资源不存在");
     }
+
+    @RequestMapping("/unauthorized")
+    public ResponseEntity<BaseResponse> handleUnauthorized() {
+        return ResultUtil.error("Unauthorized", 401, "未授权");
+    }
 }
