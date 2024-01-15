@@ -1,6 +1,9 @@
 package com.jsl.oa.services;
 
 import com.jsl.oa.model.doData.UserDO;
+import com.jsl.oa.model.voData.UserDeleteVO;
+import com.jsl.oa.model.voData.UserLockVO;
+import com.jsl.oa.utils.BaseResponse;
 
 /**
  * <h1>用户控制器接口</h1>
@@ -22,4 +25,18 @@ public interface UserService {
         * @return 用户信息
         */
         UserDO getUserInfoByUsername(String username);
+
+    /**
+     * 用户账号删除
+     * @param userDeleteVO
+     * @return
+     */
+    BaseResponse userDelete(UserDeleteVO userDeleteVO);
+
+    /**
+     * 用户账号锁定
+     * @param userLockVO
+     * @return
+     */
+    BaseResponse userLock(UserLockVO userLockVO);
 }
