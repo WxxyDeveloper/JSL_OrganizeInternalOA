@@ -30,17 +30,23 @@ public interface UserMapper {
     @Select("SELECT * FROM organize_oa.oa_user WHERE job_id = #{jobId}")
     UserDO login(UserLoginVO userLoginVO);
 
-    @Update("update organize_oa.oa_user set enabled = 0 where id = #{id}  ")
+    @Update("UPDATE organize_oa.oa_user SET enabled = 0 WHERE id = #{id}  ")
     void userDelete(UserDeleteVO userDeleteVO);
 
-    @Update("update organize_oa.oa_user set account_no_locked = 1 where id = #{id}  ")
+    @Update("UPDATE organize_oa.oa_user SET account_no_locked = 1 WHERE id = #{id}  ")
     void userLock(UserLockVO userLockVO);
 
-    @Select("select * from organize_oa.oa_user where id = #{id}")
+    @Select("SELECT * FROM organize_oa.oa_user WHERE id = #{id}")
     UserDO getUserById(Long id);
 
-    @Select("select * from organize_oa.oa_user where email = #{email}")
+    @Select("SELECT * FROM organize_oa.oa_user WHERE email = #{email}")
     UserDO getUserInfoByEmail(String email);
+
+    @Select("SELECT * FROM organize_oa.oa_user WHERE phone = #{phone}")
+    UserDO getUserInfoByPhone(String user);
+
+    @Select("SELECT * FROM organize_oa.oa_user WHERE job_id = #{jobId}")
+    UserDO getUserByJobId(String user);
 
     void userEditProfile(UserEditProfile userEditProfile);
 }

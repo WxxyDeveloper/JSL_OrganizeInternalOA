@@ -33,7 +33,7 @@ public class ShiroConfiguration {
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         // 设置未登陆响应接口
-        shiroFilterFactoryBean.setLoginUrl("/unauthorized");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized");
 
         // 添加JWT过滤器
         Map<String, Filter> filters = new LinkedHashMap<>();

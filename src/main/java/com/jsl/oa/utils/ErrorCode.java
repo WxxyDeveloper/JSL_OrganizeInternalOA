@@ -11,6 +11,7 @@ public enum ErrorCode {
     TIMESTAMP_ERROR("TimestampError", 40014, "时间戳错误"),
     USER_NOT_EXIST("UserNotExist", 40015, "用户不存在"),
     UNAUTHORIZED("Unauthorized", 40100, "未授权"),
+    TOKEN_EXPIRED("TokenExpired", 40101, "Token已过期"),
     DATABASE_INSERT_ERROR("DatabaseInsertError", 50010, "数据库插入错误"),
     DATABASE_UPDATE_ERROR("DatabaseUpdateError", 50011, "数据库更新错误"),
     DATABASE_DELETE_ERROR("DatabaseDeleteError", 50012, "数据库删除错误");

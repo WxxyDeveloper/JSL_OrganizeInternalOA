@@ -10,6 +10,7 @@ import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResponse userLock(UserLockVO userLockVO) {
+    public BaseResponse userLock(@NotNull UserLockVO userLockVO) {
         //判断用户是否存在
         if(userDAO.isExistUser(userLockVO.getId())) {
             userDAO.userLock(userLockVO);
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResponse userEditProfile(UserEditProfile userEditProfile) {
+    public BaseResponse userEditProfile(@NotNull UserEditProfile userEditProfile) {
         if(userDAO.isExistUser(userEditProfile.getId())) {
             if(userEditProfile.getPassword()!=null){
                 userEditProfile.setPassword(BCrypt.hashpw(userEditProfile.getPassword(), BCrypt.gensalt()));
