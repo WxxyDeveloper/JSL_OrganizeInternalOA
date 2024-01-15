@@ -1,5 +1,6 @@
 package com.jsl.oa.utils;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
@@ -25,7 +26,7 @@ public class Processing {
      * @param bindingResult 参数校验结果
      * @return {@link ArrayList<String>}
      */
-    public static ArrayList<String> getValidatedErrorList(BindingResult bindingResult) {
+    public static @NotNull ArrayList<String> getValidatedErrorList(BindingResult bindingResult) {
         ArrayList<String> arrayList = new ArrayList<>();
         for (ObjectError objectError : bindingResult.getAllErrors()) {
             arrayList.add(objectError.getDefaultMessage());
@@ -42,7 +43,7 @@ public class Processing {
      * @param type 0:学生 1:教师 2:其他
      * @return {@link String}
      */
-    public static String createJobNumber(Short type) {
+    public static @NotNull String createJobNumber(Short type) {
         return createJobNumber(type, (short) 10);
     }
 
@@ -56,7 +57,7 @@ public class Processing {
      * @param size 工号长度
      * @return {@link String}
      */
-    public static String createJobNumber(Short type, Short size) {
+    public static @NotNull String createJobNumber(Short type, Short size) {
         StringBuilder stringBuilder = new StringBuilder();
         if (type == 0) {
             stringBuilder.append("STU");
@@ -68,6 +69,19 @@ public class Processing {
         // 生成工号
         Random random = new Random();
         for (int i = 0; i < size-3; i++) {
+            stringBuilder.append(random.nextInt(10));
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     *
+     */
+    public static @NotNull String createCode() {
+        StringBuilder stringBuilder = new StringBuilder();
+        // 生成验证码
+        Random random = new Random();
+        for (int i = 0; i < 6; i++) {
             stringBuilder.append(random.nextInt(10));
         }
         return stringBuilder.toString();

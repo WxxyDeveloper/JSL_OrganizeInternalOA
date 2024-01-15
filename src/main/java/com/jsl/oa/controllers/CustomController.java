@@ -1,14 +1,19 @@
 package com.jsl.oa.controllers;
 
+import com.jsl.oa.services.MailService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ResultUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class CustomController implements ErrorController {
+
+    private final MailService mailService;
 
     @RequestMapping("/")
     public BaseResponse index() {

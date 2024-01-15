@@ -37,4 +37,7 @@ public interface UserMapper {
 
     @Select("select * from organize_oa.oa_user where id = #{id}")
     UserDO getUserById(Long id);
+
+    @Select("select * from organize_oa.oa_user where email = #{email}")
+    UserDO getUserInfoByEmail(String email);
 }

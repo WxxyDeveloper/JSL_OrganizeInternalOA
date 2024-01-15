@@ -10,7 +10,7 @@ class JslOrganizeInternalOaApplicationTests {
     @Test
     void contextLoads() {
         String token = JwtUtil.generateToken("admin");
-        if (JwtUtil.verify(token, "admin")) {
+        if (JwtUtil.verify(token)) {
             System.out.println("验证通过");
         } else {
             System.out.println("验证失败");

@@ -13,6 +13,15 @@ public class UserDAO {
 
     private final UserMapper userMapper;
 
+    /**
+     * <h2>用户名获取用户信息</h2>
+     * <hr/>
+     * 根据用户名获取用户信息
+     *
+     * @param username 用户名
+     * @author 筱锋xiao_lfeng
+     * @return {@link UserDO}
+     */
     public UserDO getUserInfoByUsername(String username) {
         UserDO userDO = null;
         // 从 Redis 获取数据

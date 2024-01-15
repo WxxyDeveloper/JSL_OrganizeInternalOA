@@ -195,7 +195,7 @@ CREATE TABLE `oa_user`
     `account_no_expired`     tinyint(1)       NOT NULL DEFAULT '1' COMMENT '账户是否过期',
     `credentials_no_expired` tinyint(1)       NOT NULL DEFAULT '0' COMMENT '密码是否过期',
     `recommend`              tinyint(1)       NOT NULL DEFAULT '0' COMMENT '账户是否被推荐',
-    `account_no_locked`      tinyint(1)       NOT NULL COMMENT '账户是否被锁定',
+    `account_no_locked`      tinyint(1)       NOT NULL DEFAULT '1' COMMENT '账户是否被锁定',
     `description`            text COMMENT '个人简介',
     `created_at`             timestamp        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updated_at`             timestamp        NULL     DEFAULT NULL COMMENT '更新时间'
