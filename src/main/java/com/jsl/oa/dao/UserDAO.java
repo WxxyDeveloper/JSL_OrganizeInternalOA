@@ -3,6 +3,7 @@ package com.jsl.oa.dao;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.UserDeleteVO;
+import com.jsl.oa.model.voData.UserEditProfile;
 import com.jsl.oa.model.voData.UserLockVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,11 @@ public class UserDAO {
         return userDO;
     }
 
+    /**
+     * 根据id判断用户是否存在
+     * @param id
+     * @return
+     */
     public Boolean isExistUser(Long id){
         if(userMapper.getUserById(id)==null) {
             return false;
@@ -52,5 +58,9 @@ public class UserDAO {
      */
     public void userLock(UserLockVO userLockVO) {
         userMapper.userLock(userLockVO);
+    }
+
+    public void userEditProfile(UserEditProfile userEditProfile) {
+        userMapper.userEditProfile(userEditProfile);
     }
 }

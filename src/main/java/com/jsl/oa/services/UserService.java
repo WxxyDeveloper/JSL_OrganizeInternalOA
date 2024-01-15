@@ -2,6 +2,7 @@ package com.jsl.oa.services;
 
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.UserDeleteVO;
+import com.jsl.oa.model.voData.UserEditProfile;
 import com.jsl.oa.model.voData.UserLockVO;
 import com.jsl.oa.utils.BaseResponse;
 
@@ -39,4 +40,6 @@ public interface UserService {
      * @return
      */
     BaseResponse userLock(UserLockVO userLockVO);
+
+    BaseResponse userEditProfile(UserEditProfile userEditProfile);
 }

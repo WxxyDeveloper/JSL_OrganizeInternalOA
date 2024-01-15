@@ -2,6 +2,7 @@ package com.jsl.oa.mapper;
 
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.UserDeleteVO;
+import com.jsl.oa.model.voData.UserEditProfile;
 import com.jsl.oa.model.voData.UserLockVO;
 import com.jsl.oa.model.voData.UserLoginVO;
 import org.apache.ibatis.annotations.Insert;
@@ -40,4 +41,6 @@ public interface UserMapper {
 
     @Select("select * from organize_oa.oa_user where email = #{email}")
     UserDO getUserInfoByEmail(String email);
+
+    void userEditProfile(UserEditProfile userEditProfile);
 }

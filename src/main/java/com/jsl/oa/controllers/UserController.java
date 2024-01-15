@@ -1,9 +1,6 @@
 package com.jsl.oa.controllers;
 
-import com.jsl.oa.model.voData.UserDeleteVO;
-import com.jsl.oa.model.voData.UserLockVO;
-import com.jsl.oa.model.voData.UserLoginVO;
-import com.jsl.oa.model.voData.UserRegisterVO;
+import com.jsl.oa.model.voData.*;
 import com.jsl.oa.services.AuthService;
 import com.jsl.oa.services.UserService;
 import com.jsl.oa.utils.BaseResponse;
@@ -50,6 +47,15 @@ public class UserController {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
         return userService.userLock(userLockVO);
+    }
+
+    @PutMapping("/user/profile/edit")
+    public BaseResponse userEditProfile(@RequestBody @Validated UserEditProfile userEditProfile, BindingResult bindingResult){
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        return userService.userEditProfile(userEditProfile);
     }
 
 

@@ -87,5 +87,9 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
+    public BaseResponse authLoginByEmail(String email) {
+        return null;
     }
+
 }
