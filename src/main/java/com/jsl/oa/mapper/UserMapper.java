@@ -19,8 +19,8 @@ public interface UserMapper {
     UserDO getUserByUserNum(String jobId);
 
     @Insert("INSERT INTO organize_oa.oa_user " +
-            "(job_id, username, password, address, phone, email, age, signature, avatar, nickname, account_no_locked, description, updated_at) " +
-            "VALUES (#{jobId}, #{username}, #{password}, #{address}, #{phone}, #{email}, #{age}, #{signature}, #{avatar}, #{nickname}, #{accountNoLocked}, #{description}, #{updatedAt})")
+            "(job_id, username, password, address, phone, email, age, sex) " +
+            "VALUES (#{jobId}, #{username}, #{password}, #{address}, #{phone}, #{email}, #{age}, #{sex})")
     boolean insertUser(UserDO userDO);
 
     @Select("SELECT password FROM organize_oa.oa_user WHERE job_id = #{jobId}")
