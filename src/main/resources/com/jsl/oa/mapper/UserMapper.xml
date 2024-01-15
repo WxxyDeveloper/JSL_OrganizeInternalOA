@@ -7,37 +7,37 @@
     <update id="userEditProfile">
         update organize_oa.oa_user
         <set>
-            <if test="username != null">
+            <if test="username != null and username != ''">
                 username = #{username},
             </if>
-            <if test="password != null">
+            <if test="password != null and password != ''">
                 password = #{password},
             </if>
-            <if test="address != null">
+            <if test="address != null and address != ''">
                 address = #{address},
             </if>
-            <if test="phone != null">
+            <if test="phone != null and phone != ''">
                 phone = #{phone},
             </if>
-            <if test="email != null">
+            <if test="email != null and email != ''">
                 email = #{email},
             </if>
-            <if test="age != null">
+            <if test="age != null and age != ''">
                 age = #{age},
             </if>
-            <if test="signature != null">
+            <if test="signature != null and signature != ''">
                 signature = #{signature},
             </if>
-            <if test="sex != null">
+            <if test="sex != null and sex != ''">
                 sex = #{sex},
             </if>
-            <if test="avatar != null">
+            <if test="avatar != null and avatar != ''">
                 avatar = #{avatar},
             </if>
-            <if test="nickname != null">
+            <if test="nickname != null and nickname != ''">
                 nickname = #{nickname},
             </if>
-            <if test="description != null">
+            <if test="description != null and description != ''">
                 description = #{description}
             </if>
         </set>
