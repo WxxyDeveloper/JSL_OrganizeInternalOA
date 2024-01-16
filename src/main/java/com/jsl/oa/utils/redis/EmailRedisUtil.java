@@ -1,4 +1,4 @@
-package com.jsl.oa.utils;
+package com.jsl.oa.utils.redis;
 
 import com.jsl.oa.common.constant.BusinessConstants;
 import com.jsl.oa.common.constant.RedisConstant;
