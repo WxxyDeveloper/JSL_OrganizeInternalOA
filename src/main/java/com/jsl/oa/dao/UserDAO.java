@@ -3,7 +3,7 @@ package com.jsl.oa.dao;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.UserDeleteVO;
-import com.jsl.oa.model.voData.UserEditProfile;
+import com.jsl.oa.model.voData.UserEditProfileVO;
 import com.jsl.oa.model.voData.UserLockVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -60,7 +60,7 @@ public class UserDAO {
         userMapper.userLock(userLockVO);
     }
 
-    public void userEditProfile(UserEditProfile userEditProfile) {
-        userMapper.userEditProfile(userEditProfile);
+    public void userEditProfile(UserEditProfileVO userEditProfileVO) {
+        userMapper.userEditProfile(userEditProfileVO);
     }
 }

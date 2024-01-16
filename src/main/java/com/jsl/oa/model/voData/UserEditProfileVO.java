@@ -5,10 +5,11 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.sql.Timestamp;
 
 @Setter
 @Getter
-public class UserEditProfile {
+public class UserEditProfileVO {
     private Long id;
     @Pattern(regexp = "^[0-9A-Za-z_]{3,40}$", message = "用户名只能为字母、数字或下划线")
     private String username;

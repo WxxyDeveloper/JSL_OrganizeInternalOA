@@ -1,8 +1,8 @@
 package com.jsl.oa.dao;
 
 import com.jsl.oa.mapper.RoleMapper;
-import com.jsl.oa.model.voData.RoleAddUser;
-import com.jsl.oa.model.voData.RoleRemoveUser;
+import com.jsl.oa.model.voData.RoleAddUserVO;
+import com.jsl.oa.model.voData.RoleRemoveUserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 public class RoleDAO {
     private final RoleMapper roleMapper;
 
-    public void roleAddUser(RoleAddUser roleAddUser) {
-        roleMapper.roleAddUser(roleAddUser);
+    public void roleAddUser(RoleAddUserVO roleAddUserVO) {
+        roleMapper.roleAddUser(roleAddUserVO);
     }
 
-    public void roleRemoveUser(RoleRemoveUser roleRemoveUser) {
-        roleMapper.roleRemoveUser(roleRemoveUser);
+    public void roleRemoveUser(RoleRemoveUserVO roleRemoveUserVO) {
+        roleMapper.roleRemoveUser(roleRemoveUserVO);
     }
 }

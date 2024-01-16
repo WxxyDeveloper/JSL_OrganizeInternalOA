@@ -3,7 +3,7 @@ package com.jsl.oa.services.impl;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.UserDeleteVO;
-import com.jsl.oa.model.voData.UserEditProfile;
+import com.jsl.oa.model.voData.UserEditProfileVO;
 import com.jsl.oa.model.voData.UserLockVO;
 import com.jsl.oa.services.UserService;
 import com.jsl.oa.utils.BaseResponse;
@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
 
 @Service
 @RequiredArgsConstructor
@@ -44,12 +46,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResponse userEditProfile(@NotNull UserEditProfile userEditProfile) {
-        if(userDAO.isExistUser(userEditProfile.getId())) {
-            if(userEditProfile.getPassword()!=null){
-                userEditProfile.setPassword(BCrypt.hashpw(userEditProfile.getPassword(), BCrypt.gensalt()));
+    public BaseResponse userEditProfile(@NotNull UserEditProfileVO userEditProfileVO) {
+        if(userDAO.isExistUser(userEditProfileVO.getId())) {
+            if(userEditProfileVO.getPassword()!=null) {
+                userEditProfileVO.setPassword(BCrypt.hashpw(userEditProfileVO.getPassword(), BCrypt.gensalt()));
             }
-            userDAO.userEditProfile(userEditProfile);
+            userDAO.userEditProfile(userEditProfileVO);
             return ResultUtil.success("修改成功");
         }else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
     }

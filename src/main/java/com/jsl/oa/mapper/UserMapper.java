@@ -2,7 +2,7 @@ package com.jsl.oa.mapper;
 
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.UserDeleteVO;
-import com.jsl.oa.model.voData.UserEditProfile;
+import com.jsl.oa.model.voData.UserEditProfileVO;
 import com.jsl.oa.model.voData.UserLockVO;
 import com.jsl.oa.model.voData.UserLoginVO;
 import org.apache.ibatis.annotations.Insert;
@@ -24,16 +24,10 @@ public interface UserMapper {
             "VALUES (#{jobId}, #{username}, #{password}, #{address}, #{phone}, #{email}, #{age}, #{sex})")
     boolean insertUser(UserDO userDO);
 
-    @Select("SELECT password FROM organize_oa.oa_user WHERE job_id = #{jobId}")
-    String loginPassword(UserLoginVO userLoginVO);
-
-    @Select("SELECT * FROM organize_oa.oa_user WHERE job_id = #{jobId}")
-    UserDO login(UserLoginVO userLoginVO);
-
-    @Update("UPDATE organize_oa.oa_user SET enabled = 0 WHERE id = #{id}  ")
+    @Update("UPDATE organize_oa.oa_user SET enabled = 0 ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}  ")
     void userDelete(UserDeleteVO userDeleteVO);
 
-    @Update("UPDATE organize_oa.oa_user SET account_no_locked = 1 WHERE id = #{id}  ")
+    @Update("UPDATE organize_oa.oa_user SET account_no_locked = 1 ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}  ")
     void userLock(UserLockVO userLockVO);
 
     @Select("SELECT * FROM organize_oa.oa_user WHERE id = #{id}")
@@ -48,5 +42,5 @@ public interface UserMapper {
     @Select("SELECT * FROM organize_oa.oa_user WHERE job_id = #{jobId}")
     UserDO getUserByJobId(String user);
 
-    void userEditProfile(UserEditProfile userEditProfile);
+    void userEditProfile(UserEditProfileVO userEditProfileVO);
 }

@@ -1,7 +1,6 @@
 package com.jsl.oa.controllers;
 
 import com.jsl.oa.model.voData.*;
-import com.jsl.oa.services.AuthService;
 import com.jsl.oa.services.UserService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -11,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.text.ParseException;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,13 +46,19 @@ public class UserController {
         return userService.userLock(userLockVO);
     }
 
+    /**
+     * 用户编辑自己的信息
+     * @param userEditProfileVO
+     * @param bindingResult
+     * @return
+     */
     @PutMapping("/user/profile/edit")
-    public BaseResponse userEditProfile(@RequestBody @Validated UserEditProfile userEditProfile, BindingResult bindingResult){
+    public BaseResponse userEditProfile(@RequestBody @Validated UserEditProfileVO userEditProfileVO, BindingResult bindingResult){
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return userService.userEditProfile(userEditProfile);
+        return userService.userEditProfile(userEditProfileVO);
     }
 
 

@@ -38,8 +38,9 @@
                 nickname = #{nickname},
             </if>
             <if test="description != null and description != ''">
-                description = #{description}
+                description = #{description},
             </if>
+                updated_at = CURRENT_TIMESTAMP
         </set>
         where id = #{id}
     </update>

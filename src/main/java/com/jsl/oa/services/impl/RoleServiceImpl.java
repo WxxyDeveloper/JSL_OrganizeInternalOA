@@ -2,8 +2,8 @@ package com.jsl.oa.services.impl;
 
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
-import com.jsl.oa.model.voData.RoleAddUser;
-import com.jsl.oa.model.voData.RoleRemoveUser;
+import com.jsl.oa.model.voData.RoleAddUserVO;
+import com.jsl.oa.model.voData.RoleRemoveUserVO;
 import com.jsl.oa.services.RoleService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -19,17 +19,17 @@ public class RoleServiceImpl implements RoleService {
     private final UserDAO userDAO;
 
     @Override
-    public BaseResponse roleAddUser(RoleAddUser roleAddUser) {
-        if(userDAO.isExistUser(roleAddUser.getUid())) {
-            roleDAO.roleAddUser(roleAddUser);
+    public BaseResponse roleAddUser(RoleAddUserVO roleAddUserVO) {
+        if(userDAO.isExistUser(roleAddUserVO.getUid())) {
+            roleDAO.roleAddUser(roleAddUserVO);
             return ResultUtil.success();
         } else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
     }
 
     @Override
-    public BaseResponse roleRemoveUser(RoleRemoveUser roleRemoveUser) {
-        if(userDAO.isExistUser(roleRemoveUser.getUid())) {
-            roleDAO.roleRemoveUser(roleRemoveUser);
+    public BaseResponse roleRemoveUser(RoleRemoveUserVO roleRemoveUserVO) {
+        if(userDAO.isExistUser(roleRemoveUserVO.getUid())) {
+            roleDAO.roleRemoveUser(roleRemoveUserVO);
             return ResultUtil.success();
         } else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
     }
