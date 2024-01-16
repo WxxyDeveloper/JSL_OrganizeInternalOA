@@ -14,6 +14,12 @@ import java.util.regex.Pattern;
 @ControllerAdvice
 public class ProcessException {
 
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<BaseResponse> businessException(@NotNull Exception e) {
+        e.printStackTrace();
+        return ResultUtil.error("Exception", 500, "服务器异常");
+    }
+
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<BaseResponse> businessMethodNotAllowedException() {
         return ResultUtil.error("MethodNotAllowed", 405, "请求方法错误");

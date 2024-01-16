@@ -36,13 +36,23 @@ public interface AuthService {
     BaseResponse authLogin(UserLoginVO userLoginVO);
 
     /**
-     * <h2>用户登出</h2>
+     * <h2>邮箱登陆</h2>
      * <hr/>
-     * 用户登出服务类操作
+     * 用户邮箱登陆服务类操作
      *
-     * @param email 用户邮箱
+     * @param email 邮箱
+     * @param code  验证码
      * @return {@link BaseResponse}
-     * @author 筱锋xiao_lfeng
      */
-    BaseResponse authLoginByEmail(String email);
+    BaseResponse authLoginByEmail(String email, Integer code);
+
+    /**
+     * <h2>发送邮箱验证码</h2>
+     * <hr/>
+     * 用户邮箱登陆服务类操作
+     *
+     * @param email 邮箱
+     * @return {@link BaseResponse}
+     */
+    BaseResponse authLoginSendEmailCode(String email);
 }

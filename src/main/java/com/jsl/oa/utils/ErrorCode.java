@@ -12,6 +12,8 @@ public enum ErrorCode {
     USER_NOT_EXIST("UserNotExist", 40015, "用户不存在"),
     UNAUTHORIZED("Unauthorized", 40100, "未授权"),
     TOKEN_EXPIRED("TokenExpired", 40101, "Token已过期"),
+    VERIFICATION_INVALID("VerificationInvalid", 40102, "验证码无效"),
+    EMAIL_LOGIN_NOT_SUPPORT("EmailLoginNotSupport", 40300, "请使用邮箱登陆"),
     DATABASE_INSERT_ERROR("DatabaseInsertError", 50010, "数据库插入错误"),
     DATABASE_UPDATE_ERROR("DatabaseUpdateError", 50011, "数据库更新错误"),
     DATABASE_DELETE_ERROR("DatabaseDeleteError", 50012, "数据库删除错误");

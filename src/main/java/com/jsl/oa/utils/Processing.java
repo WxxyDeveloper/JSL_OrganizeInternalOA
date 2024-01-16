@@ -77,13 +77,13 @@ public class Processing {
     /**
      *
      */
-    public static @NotNull String createCode() {
+    public static @NotNull Integer createCode() {
         StringBuilder stringBuilder = new StringBuilder();
         // 生成验证码
         Random random = new Random();
         for (int i = 0; i < 6; i++) {
             stringBuilder.append(random.nextInt(10));
         }
-        return stringBuilder.toString();
+        return Integer.valueOf(stringBuilder.toString());
     }
 }

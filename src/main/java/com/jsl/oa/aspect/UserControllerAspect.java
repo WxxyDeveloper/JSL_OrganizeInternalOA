@@ -5,6 +5,7 @@ import com.jsl.oa.utils.ResultUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -59,7 +60,7 @@ public class UserControllerAspect {
      * @param request HttpServletRequest对象
      * @return {@link Boolean}
      */
-    public Boolean checkTimestamp(HttpServletRequest request) {
+    public Boolean checkTimestamp(@NotNull HttpServletRequest request) {
         // 获取请求头中的时间戳
         String getTimestamp = request.getHeader("Timestamp");
         // 判断是否为空

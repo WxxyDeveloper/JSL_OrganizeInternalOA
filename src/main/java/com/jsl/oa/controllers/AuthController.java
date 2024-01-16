@@ -84,11 +84,24 @@ public class AuthController {
      * @author 筱锋xiao_lfeng
      * @since v1.1.0
      */
-    @GetMapping("/auth/login/email")
-    public BaseResponse authLoginByEmail(@RequestParam String email) {
+    @GetMapping("/auth/login/email/code")
+    public BaseResponse authLoginSendEmailCode(@RequestParam String email) {
         if (email != null) {
             if (Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", email)) {
-                return authService.authLoginByEmail(email);
+                return authService.authLoginSendEmailCode(email);
+            } else {
+                return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
+            }
+        } else {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
+        }
+    }
+
+    @GetMapping("/auth/login/email")
+    public BaseResponse authLoginByEmail(@RequestParam String email, @RequestParam Integer code) {
+        if (email != null && code != null) {
+            if (Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", email)) {
+                return authService.authLoginByEmail(email, code);
             } else {
                 return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
             }
