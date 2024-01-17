@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jsl.oa.mapper.ProjectMapper">
+    <update id="projectEdit">
+        update organize_oa.oa_project
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="introduction != null and introduction != ''">
+                introduction = #{introduction},
+            </if>
+            <if test="codeOpen != null and codeOpen != ''">
+                code_open = #{codeOpen},
+            </if>
+            <if test="coreCode != null and coreCode != ''">
+                core_code = #{coreCode},
+            </if>
+            <if test="git != null and git != ''">
+                git = #{git},
+            </if>
+            <if test="difficultyLevel != null and difficultyLevel != ''">
+                difficulty_level = #{difficultyLevel},
+            </if>
+            <if test="type != null and type != ''">
+                type = #{type},
+            </if>
+            <if test="reward != null and reward != ''">
+                reward = #{reward},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

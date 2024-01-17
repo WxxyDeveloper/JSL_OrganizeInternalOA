@@ -21,7 +21,7 @@ public class ProjectDO {
     private String name;
     private String description;
     private String introduction;
-    private Boolean codeOpen;
+    private Short codeOpen;
     private String coreCode;
     private String git;
     private Short difficultyLevel;

@@ -18,32 +18,30 @@ public class UserController {
 
     /**
      * 用户账号删除
-     * @param userDeleteVO
-     * @param bindingResult
+     * @param id
      * @return
      */
     @PutMapping("/user/delete")
-    public BaseResponse userDelete(@RequestBody @Validated UserDeleteVO userDeleteVO, BindingResult bindingResult){
+    public BaseResponse userDelete(@RequestParam Long id){
         // 判断是否有参数错误
-        if (bindingResult.hasErrors()) {
-            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        if (id == null) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
-        return userService.userDelete(userDeleteVO);
+        else return userService.userDelete(id);
     }
 
     /**
      * 用户账号锁定
-     * @param userLockVO
-     * @param bindingResult
+     * @param id
      * @return
      */
     @PutMapping("/user/lock")
-    public BaseResponse userLock(@RequestBody @Validated UserLockVO userLockVO, BindingResult bindingResult){
+    public BaseResponse userLock(@RequestParam Long id){
         // 判断是否有参数错误
-        if (bindingResult.hasErrors()) {
-            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        if (id == null) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
-        return userService.userLock(userLockVO);
+        return userService.userLock(id);
     }
 
     /**

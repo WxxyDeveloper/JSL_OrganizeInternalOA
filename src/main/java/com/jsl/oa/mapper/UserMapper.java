@@ -1,10 +1,7 @@
 package com.jsl.oa.mapper;
 
 import com.jsl.oa.model.doData.UserDO;
-import com.jsl.oa.model.voData.UserDeleteVO;
 import com.jsl.oa.model.voData.UserEditProfileVO;
-import com.jsl.oa.model.voData.UserLockVO;
-import com.jsl.oa.model.voData.UserLoginVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -25,10 +22,10 @@ public interface UserMapper {
     boolean insertUser(UserDO userDO);
 
     @Update("UPDATE organize_oa.oa_user SET enabled = 0 ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}  ")
-    void userDelete(UserDeleteVO userDeleteVO);
+    void userDelete(Long id);
 
     @Update("UPDATE organize_oa.oa_user SET account_no_locked = 1 ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}  ")
-    void userLock(UserLockVO userLockVO);
+    void userLock(Long id);
 
     @Select("SELECT * FROM organize_oa.oa_user WHERE id = #{id}")
     UserDO getUserById(Long id);

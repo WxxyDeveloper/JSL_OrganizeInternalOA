@@ -2,9 +2,7 @@ package com.jsl.oa.dao;
 
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.doData.UserDO;
-import com.jsl.oa.model.voData.UserDeleteVO;
 import com.jsl.oa.model.voData.UserEditProfileVO;
-import com.jsl.oa.model.voData.UserLockVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -46,18 +44,18 @@ public class UserDAO {
     }
     /**
      * 用户账号删除
-     * @param userDeleteVO
+     * @param id
      */
-    public void userDelete(UserDeleteVO userDeleteVO) {
-        userMapper.userDelete(userDeleteVO);
+    public void userDelete(Long id) {
+        userMapper.userDelete(id);
     }
 
     /**
      * 用户账号锁定
-     * @param userLockVO
+     * @param id
      */
-    public void userLock(UserLockVO userLockVO) {
-        userMapper.userLock(userLockVO);
+    public void userLock(Long id) {
+        userMapper.userLock(id);
     }
 
     public void userEditProfile(UserEditProfileVO userEditProfileVO) {

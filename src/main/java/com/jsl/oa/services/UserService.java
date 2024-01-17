@@ -1,9 +1,7 @@
 package com.jsl.oa.services;
 
 import com.jsl.oa.model.doData.UserDO;
-import com.jsl.oa.model.voData.UserDeleteVO;
 import com.jsl.oa.model.voData.UserEditProfileVO;
-import com.jsl.oa.model.voData.UserLockVO;
 import com.jsl.oa.utils.BaseResponse;
 
 /**
@@ -29,17 +27,17 @@ public interface UserService {
 
     /**
      * 用户账号删除
-     * @param userDeleteVO
+     * @param id
      * @return
      */
-    BaseResponse userDelete(UserDeleteVO userDeleteVO);
+    BaseResponse userDelete(Long id);
 
     /**
      * 用户账号锁定
-     * @param userLockVO
+     * @param id
      * @return
      */
-    BaseResponse userLock(UserLockVO userLockVO);
+    BaseResponse userLock(Long id);
 
     BaseResponse userEditProfile(UserEditProfileVO userEditProfileVO);
 }

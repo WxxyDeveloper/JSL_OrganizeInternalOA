@@ -16,7 +16,8 @@ public enum ErrorCode {
     EMAIL_LOGIN_NOT_SUPPORT("EmailLoginNotSupport", 40300, "请使用邮箱登陆"),
     DATABASE_INSERT_ERROR("DatabaseInsertError", 50010, "数据库插入错误"),
     DATABASE_UPDATE_ERROR("DatabaseUpdateError", 50011, "数据库更新错误"),
-    DATABASE_DELETE_ERROR("DatabaseDeleteError", 50012, "数据库删除错误");
+    DATABASE_DELETE_ERROR("DatabaseDeleteError", 50012, "数据库删除错误"),
+    PROJECT_NOT_EXIST("ProjectNotExist", 40016, "项目不存在");
 
     private final String output;
     private final Integer code;
