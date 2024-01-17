@@ -1,38 +1,57 @@
 package com.jsl.oa.utils;
 
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 
+@Slf4j
 public class ResultUtil {
 
-    public static BaseResponse success() {
+    @Contract(" -> new")
+    public static @NotNull BaseResponse success() {
+        log.debug("请求接口成功");
         return new BaseResponse("Success", 200, "操作成功", null);
     }
 
-    public static BaseResponse success(String message) {
+    @Contract("_ -> new")
+    public static @NotNull BaseResponse success(String message) {
+        log.debug("请求接口成功");
         return new BaseResponse("Success", 200, message, null);
     }
 
-    public static BaseResponse success(Object data) {
+    @Contract(value = "_ -> new", pure = true)
+    public static @NotNull BaseResponse success(Object data) {
+        log.debug("请求接口成功");
         return new BaseResponse("Success", 200, "操作成功", data);
     }
 
-    public static BaseResponse success(String message, Object data) {
+    @Contract(value = "_, _ -> new", pure = true)
+    public static @NotNull BaseResponse success(String message, Object data) {
+        log.debug("请求接口成功");
         return new BaseResponse("Success", 200, message, data);
     }
 
-    public static BaseResponse error(ErrorCode errorCode) {
+    @Contract("_ -> new")
+    public static @NotNull BaseResponse error(@NotNull ErrorCode errorCode) {
+        log.debug("请求接口错误[" + errorCode.getCode() + "] " + errorCode.getMessage());
         return new BaseResponse(errorCode.getOutput(), errorCode.getCode(), errorCode.getMessage());
     }
 
-    public static BaseResponse error(ErrorCode errorCode, Object data) {
+    @Contract("_, _ -> new")
+    public static @NotNull BaseResponse error(@NotNull ErrorCode errorCode, Object data) {
+        log.debug("请求接口错误[" + errorCode.getCode() + "] " + errorCode.getMessage());
         return new BaseResponse(errorCode.getOutput(), errorCode.getCode(), errorCode.getMessage(), data);
     }
 
-    public static BaseResponse error(String output, Integer code, String message, Object data) {
+    @Contract(value = "_, _, _, _ -> new", pure = true)
+    public static @NotNull BaseResponse error(String output, Integer code, String message, Object data) {
+        log.debug("请求接口错误[" + code + "] " + message);
         return new BaseResponse(output, code, message, data);
     }
 
-    public static ResponseEntity<BaseResponse> error(String output, Integer code, String message) {
+    public static @NotNull ResponseEntity<BaseResponse> error(String output, Integer code, String message) {
+        log.debug("请求接口错误[" + code + "] " + message);
         return ResponseEntity.status(code)
                 .body(new BaseResponse(output, code, message));
     }

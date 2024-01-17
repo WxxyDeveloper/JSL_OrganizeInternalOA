@@ -2,8 +2,11 @@ package com.jsl.oa.services.impl;
 
 import com.jsl.oa.common.constant.BusinessConstants;
 import com.jsl.oa.exception.BusinessException;
+import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.mapper.UserMapper;
+import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserDO;
+import com.jsl.oa.model.voData.UserChangePasswordVO;
 import com.jsl.oa.model.voData.UserLoginVO;
 import com.jsl.oa.model.voData.UserRegisterVO;
 import com.jsl.oa.model.voData.UserReturnBackVO;
@@ -11,11 +14,14 @@ import com.jsl.oa.services.AuthService;
 import com.jsl.oa.services.MailService;
 import com.jsl.oa.utils.*;
 import com.jsl.oa.utils.redis.EmailRedisUtil;
+import com.jsl.oa.utils.redis.TokenRedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
 import java.util.regex.Pattern;
 
 /**
@@ -31,8 +37,11 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
+    private final RoleMapper roleMapper;
+
     private final MailService mailService;
     private final EmailRedisUtil<Integer> emailRedisUtil;
+    private final TokenRedisUtil<String> tokenRedisUtil;
 
     @Override
     public BaseResponse authRegister(@NotNull UserRegisterVO userRegisterVO) {
@@ -71,34 +80,23 @@ public class AuthServiceImpl implements AuthService {
     public BaseResponse authLogin(@NotNull UserLoginVO userLoginVO) {
         // 检查用户是否存在
         UserDO userDO;
-        if (Pattern.matches("^[0-9A-Za-z_]{3,40}$", userLoginVO.getUsername())) {
+        if (Pattern.matches("^[0-9A-Za-z_]{3,40}$", userLoginVO.getUser())) {
             // 是否为用户名
-            userDO = userMapper.getUserInfoByUsername(userLoginVO.getUsername());
-        } else if (Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", userLoginVO.getUsername())) {
+            userDO = userMapper.getUserInfoByUsername(userLoginVO.getUser());
+        } else if (Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", userLoginVO.getUser())) {
             // 是否为手机号
-            userDO = userMapper.getUserInfoByPhone(userLoginVO.getUsername());
-        } else if (Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", userLoginVO.getUsername())) {
+            userDO = userMapper.getUserInfoByPhone(userLoginVO.getUser());
+        } else if (Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", userLoginVO.getUser())) {
             // 是否为邮箱
             return ResultUtil.error(ErrorCode.EMAIL_LOGIN_NOT_SUPPORT);
         } else {
             // 工号
-            userDO = userMapper.getUserByJobId(userLoginVO.getUsername());
+            userDO = userMapper.getUserByJobId(userLoginVO.getUser());
         }
         if (userDO != null) {
             // 获取用户并登陆
             if (BCrypt.checkpw(userLoginVO.getPassword(), userDO.getPassword())) {
-                UserReturnBackVO userReturnBackVO = new UserReturnBackVO();
-                // 授权 Token
-                String token = JwtUtil.generateToken(userDO.getId());
-                userReturnBackVO.setAddress(userDO.getAddress())
-                        .setAge(userDO.getAge())
-                        .setEmail(userDO.getEmail())
-                        .setJobId(userDO.getJobId())
-                        .setPhone(userDO.getPhone())
-                        .setSex(userDO.getSex())
-                        .setUsername(userDO.getUsername())
-                        .setToken(token);
-                return ResultUtil.success("登陆成功", userReturnBackVO);
+                return this.encapsulateDisplayContent(userDO);
             } else {
                 return ResultUtil.error(ErrorCode.WRONG_PASSWORD);
             }
@@ -117,18 +115,7 @@ public class AuthServiceImpl implements AuthService {
                 if (emailRedisUtil.delData(BusinessConstants.BUSINESS_LOGIN, email)) {
                     // 邮箱获取用户
                     UserDO userDO = userMapper.getUserInfoByEmail(email);
-                    // 授权 Token
-                    String token = JwtUtil.generateToken(userDO.getId());
-                    UserReturnBackVO userReturnBackVO = new UserReturnBackVO();
-                    userReturnBackVO.setAddress(userDO.getAddress())
-                            .setAge(userDO.getAge())
-                            .setEmail(userDO.getEmail())
-                            .setJobId(userDO.getJobId())
-                            .setPhone(userDO.getPhone())
-                            .setSex(userDO.getSex())
-                            .setUsername(userDO.getUsername())
-                            .setToken(token);
-                    return ResultUtil.success("登陆成功", userReturnBackVO);
+                    return this.encapsulateDisplayContent(userDO);
                 } else {
                     return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
                 }
@@ -158,5 +145,77 @@ public class AuthServiceImpl implements AuthService {
         } else {
             return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
         }
+    }
+
+    @Override
+    public BaseResponse authChangePassword(HttpServletRequest request, @NotNull UserChangePasswordVO userChangePasswordVO) {
+        // 检查新密码输入无误
+        if (!userChangePasswordVO.getNewPassword().equals(userChangePasswordVO.getConfirmPassword())) {
+            return ResultUtil.error(ErrorCode.PASSWORD_NOT_SAME);
+        }
+        // 检查用户
+        UserDO userDO = userMapper.getUserById(Processing.getAuthHeader(request));
+        if (userDO != null) {
+            // 检查旧密码
+            if (BCrypt.checkpw(userChangePasswordVO.getOldPassword(), userDO.getPassword())) {
+                // 更新密码
+                if (userMapper.updateUserPassword(userDO.getId(), BCrypt.hashpw(userChangePasswordVO.getNewPassword(), BCrypt.gensalt()))) {
+                    return ResultUtil.success("修改成功");
+                } else {
+                    return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
+                }
+            } else {
+                return ResultUtil.error(ErrorCode.WRONG_PASSWORD);
+            }
+        } else {
+            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+        }
+    }
+
+    @Override
+    public BaseResponse authLogout(HttpServletRequest request) {
+        // 获取用户
+        UserDO userDO = userMapper.getUserById(Processing.getAuthHeader(request));
+        // 删除Token
+        if (tokenRedisUtil.delData(BusinessConstants.BUSINESS_LOGIN, userDO.getId().toString())) {
+            return ResultUtil.success("登出成功");
+        } else {
+            return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
+        }
+    }
+
+    /**
+     * <h2>封装返回内容</h2>
+     * <hr/>
+     * 封装返回内容
+     *
+     * @param userDO 用户信息
+     * @return {@link BaseResponse}
+     */
+    private @NotNull BaseResponse encapsulateDisplayContent(@NotNull UserDO userDO) {
+        // 授权 Token
+        String token = JwtUtil.generateToken(userDO.getId());
+        UserReturnBackVO userReturnBackVO = new UserReturnBackVO();
+        // Token 上传到 Redis
+        tokenRedisUtil.setData(BusinessConstants.BUSINESS_LOGIN, userDO.getId().toString(), token, 1440);
+        // 获取用户角色
+        RoleUserDO getUserRole = roleMapper.getRoleByUid(userDO.getId());
+        if (getUserRole == null) {
+            getUserRole = new RoleUserDO();
+            getUserRole.setRid(0L)
+                    .setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        } else {
+            getUserRole.setUid(null);
+        }
+        userReturnBackVO.setAddress(userDO.getAddress())
+                .setAge(userDO.getAge())
+                .setEmail(userDO.getEmail())
+                .setJobId(userDO.getJobId())
+                .setPhone(userDO.getPhone())
+                .setSex(userDO.getSex())
+                .setUsername(userDO.getUsername())
+                .setToken(token)
+                .setRole(getUserRole);
+        return ResultUtil.success("登陆成功", userReturnBackVO);
     }
 }

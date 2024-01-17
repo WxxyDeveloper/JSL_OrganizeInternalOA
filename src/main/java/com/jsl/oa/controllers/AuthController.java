@@ -1,5 +1,6 @@
 package com.jsl.oa.controllers;
 
+import com.jsl.oa.model.voData.UserChangePasswordVO;
 import com.jsl.oa.model.voData.UserLoginVO;
 import com.jsl.oa.model.voData.UserRegisterVO;
 import com.jsl.oa.services.AuthService;
@@ -13,7 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.regex.Pattern;
 
 /**
@@ -46,7 +47,7 @@ public class AuthController {
      * @since v1.0.0
      */
     @PostMapping("/auth/register")
-    public BaseResponse authRegister(@RequestBody @Validated UserRegisterVO userRegisterVO, @NotNull BindingResult bindingResult) throws ParseException {
+    public BaseResponse authRegister(@RequestBody @Validated UserRegisterVO userRegisterVO, @NotNull BindingResult bindingResult) {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -98,10 +99,16 @@ public class AuthController {
     }
 
     @GetMapping("/auth/login/email")
-    public BaseResponse authLoginByEmail(@RequestParam String email, @RequestParam Integer code) {
-        if (email != null && code != null) {
+    public BaseResponse authLoginByEmail(@RequestParam String email, @RequestParam String code) {
+        if (email != null && code != null && !email.isEmpty() && !code.isEmpty()) {
+            System.out.println("测试");
             if (Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", email)) {
-                return authService.authLoginByEmail(email, code);
+                try {
+                    Integer integer = Integer.valueOf(code);
+                    return authService.authLoginByEmail(email, integer);
+                } catch (NumberFormatException e) {
+                    return ResultUtil.error(ErrorCode.VERIFICATION_INVALID);
+                }
             } else {
                 return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
             }
@@ -119,7 +126,15 @@ public class AuthController {
      * @since v1.1.0
      */
     @GetMapping("/auth/logout")
-    public BaseResponse authLogout() {
-        return null;
+    public BaseResponse authLogout(HttpServletRequest request) {
+        return authService.authLogout(request);
+    }
+
+    @GetMapping("/auth/password")
+    public BaseResponse authChangePassword(@RequestBody @Validated UserChangePasswordVO userChangePasswordVO, HttpServletRequest request, @NotNull BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        return authService.authChangePassword(request, userChangePasswordVO);
     }
 }

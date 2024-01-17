@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 import java.security.Key;
@@ -21,6 +22,7 @@ import java.util.regex.Pattern;
  * @see com.jsl.oa.config.JwtFilter
  * @since v1.1.0
  */
+@Slf4j
 public class JwtUtil {
     private static final long EXPIRATION_TIME = 86400000;
 
@@ -52,9 +54,10 @@ public class JwtUtil {
         try {
             Long getTokenInUserId = getUserId(token);
             // 验证用户名是否匹配
+            log.debug("Token值" + getTokenInUserId.toString());
             return Pattern.matches("^[0-9]+$", getTokenInUserId.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.debug("Token验证失败", e);
             return false;
         }
     }
@@ -77,8 +80,9 @@ public class JwtUtil {
         long userId;
         try {
             userId = Long.parseLong(claimsJws.getBody().getSubject());
+            log.debug("用户ID" + userId);
         } catch (NumberFormatException exception) {
-            exception.printStackTrace();
+            log.debug("用户ID格式错误", exception);
             throw new NumberFormatException("用户ID格式错误");
         }
         return userId;

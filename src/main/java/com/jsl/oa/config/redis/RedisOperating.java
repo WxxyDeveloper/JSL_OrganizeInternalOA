@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
@@ -55,5 +57,24 @@ public abstract class RedisOperating<R> {
     public void set(String key, R value, Integer time) {
         redisTemplate.opsForValue().set(key, value);
         redisTemplate.expire(key, time, TimeUnit.SECONDS);
+    }
+
+    /**
+     * <h2>基础从Redis获取List</h2>
+     * <hr/>
+     * 基础方法，用于从Redis获取List<br/>
+     *
+     * @param pattern 正则表达式
+     * @return 返回List
+     */
+    public List<R> getList(String pattern) {
+        // 获取全部匹配的key
+        Set<String> keys = stringRedisTemplate.keys(pattern);
+        // 获取全部匹配的value
+        if (keys != null) {
+            return redisTemplate.opsForValue().multiGet(keys);
+        } else {
+            return null;
+        }
     }
 }

@@ -40,4 +40,7 @@ public interface UserMapper {
     UserDO getUserByJobId(String user);
 
     void userEditProfile(UserEditProfileVO userEditProfileVO);
+
+    @Update("UPDATE organize_oa.oa_user SET password = #{newPassword} WHERE id = #{id}")
+    boolean updateUserPassword(Long id, String newPassword);
 }

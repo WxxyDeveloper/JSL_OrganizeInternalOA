@@ -1,6 +1,6 @@
 package com.jsl.oa.model.voData;
 
-import lombok.Getter;
+import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -14,11 +14,11 @@ import javax.validation.constraints.Pattern;
  * @version v1.0.0
  * @since v1.0.0
  */
-@Getter
+@Data
 public class UserLoginVO {
     @Pattern(regexp = "^[0-9A-Za-z_]+$", message = "支持用户名/手机号/工号登陆")
     @NotBlank(message = "用户名不能为空")
-    private String username;
+    private String user;
     @NotBlank(message = "密码不能为空")
     private String password;
 }

@@ -17,9 +17,11 @@ public class RedisConstant {
      * 类型分类
      */
     public static final String TYPE_EMAIL = "mail:"; // 邮件相关
+    public static final String TYPE_AUTH = "auth:"; // 登陆相关
 
     /*
      * 表分类
      */
     public static final String TABLE_EMAIL = "code:"; // 邮箱验证码
+    public static final String TABLE_TOKEN = "token:"; // 令牌相关
 }

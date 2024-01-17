@@ -1,5 +1,6 @@
 package com.jsl.oa.model.voData;
 
+import com.jsl.oa.model.doData.RoleUserDO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -25,4 +26,5 @@ public class UserReturnBackVO {
     private Short age;
     private Short sex;
     private String token;
+    private RoleUserDO role;
 }

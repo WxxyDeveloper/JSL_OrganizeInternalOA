@@ -1,9 +1,11 @@
 package com.jsl.oa.utils;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -124,6 +126,24 @@ public class Processing {
         }
 
         return result.toString();
+    }
+
+    /**
+     * <h2>获取Authorization Header</h2>
+     * <hr/>
+     * 用于获取Authorization Header
+     *
+     * @param request 请求
+     */
+    public static @Nullable Long getAuthHeader(@NotNull HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (token == null || token.isEmpty()) {
+            return null;
+        } else {
+            // 解析Bearer后面的令牌
+            token = token.replace("Bearer ", "");
+            return JwtUtil.getUserId(token);
+        }
     }
 
     private static char getCharFromIndex(int index) {
