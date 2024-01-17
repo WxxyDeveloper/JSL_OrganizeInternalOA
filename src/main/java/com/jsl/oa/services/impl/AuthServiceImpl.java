@@ -89,7 +89,7 @@ public class AuthServiceImpl implements AuthService {
             if (BCrypt.checkpw(userLoginVO.getPassword(), userDO.getPassword())) {
                 UserReturnBackVO userReturnBackVO = new UserReturnBackVO();
                 // 授权 Token
-                String token = JwtUtil.generateToken(userDO.getUsername());
+                String token = JwtUtil.generateToken(userDO.getId());
                 userReturnBackVO.setAddress(userDO.getAddress())
                         .setAge(userDO.getAge())
                         .setEmail(userDO.getEmail())
@@ -118,7 +118,7 @@ public class AuthServiceImpl implements AuthService {
                     // 邮箱获取用户
                     UserDO userDO = userMapper.getUserInfoByEmail(email);
                     // 授权 Token
-                    String token = JwtUtil.generateToken(userDO.getUsername());
+                    String token = JwtUtil.generateToken(userDO.getId());
                     UserReturnBackVO userReturnBackVO = new UserReturnBackVO();
                     userReturnBackVO.setAddress(userDO.getAddress())
                             .setAge(userDO.getAge())
@@ -143,7 +143,7 @@ public class AuthServiceImpl implements AuthService {
         UserDO userDO = userMapper.getUserInfoByEmail(email);
         if (userDO != null) {
             // 生成验证码
-            Integer code = Processing.createCode();
+            Integer code = Processing.createCode(null);
             // 存储验证码
             if (emailRedisUtil.setData(BusinessConstants.BUSINESS_LOGIN, email, code, 5)) {
                 // 发送邮件
