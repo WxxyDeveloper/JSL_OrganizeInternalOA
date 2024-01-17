@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 public class RoleDAO {
     private final RoleMapper roleMapper;
 
-    public void roleAddUser(RoleAddUserVO roleAddUserVO) {
-        roleMapper.roleAddUser(roleAddUserVO);
+    public void roleAddUser(Long uid,Long rid) {
+        roleMapper.roleAddUser(uid,rid);
     }
 
-    public void roleRemoveUser(RoleRemoveUserVO roleRemoveUserVO) {
-        roleMapper.roleRemoveUser(roleRemoveUserVO);
+    public void roleRemoveUser(Long uid) {
+        roleMapper.roleRemoveUser(uid);
     }
 }

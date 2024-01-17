@@ -18,7 +18,7 @@ import javax.validation.constraints.Pattern;
 public class UserLoginVO {
     @Pattern(regexp = "^[0-9A-Za-z_]+$", message = "支持用户名/手机号/工号登陆")
     @NotBlank(message = "用户名不能为空")
-    private String user;
+    private String username;
     @NotBlank(message = "密码不能为空")
     private String password;
 }

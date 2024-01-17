@@ -71,18 +71,18 @@ public class AuthServiceImpl implements AuthService {
     public BaseResponse authLogin(@NotNull UserLoginVO userLoginVO) {
         // 检查用户是否存在
         UserDO userDO;
-        if (Pattern.matches("^[0-9A-Za-z_]{3,40}$", userLoginVO.getUser())) {
+        if (Pattern.matches("^[0-9A-Za-z_]{3,40}$", userLoginVO.getUsername())) {
             // 是否为用户名
-            userDO = userMapper.getUserInfoByUsername(userLoginVO.getUser());
-        } else if (Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", userLoginVO.getUser())) {
+            userDO = userMapper.getUserInfoByUsername(userLoginVO.getUsername());
+        } else if (Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", userLoginVO.getUsername())) {
             // 是否为手机号
-            userDO = userMapper.getUserInfoByPhone(userLoginVO.getUser());
-        } else if (Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", userLoginVO.getUser())) {
+            userDO = userMapper.getUserInfoByPhone(userLoginVO.getUsername());
+        } else if (Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", userLoginVO.getUsername())) {
             // 是否为邮箱
             return ResultUtil.error(ErrorCode.EMAIL_LOGIN_NOT_SUPPORT);
         } else {
             // 工号
-            userDO = userMapper.getUserByJobId(userLoginVO.getUser());
+            userDO = userMapper.getUserByJobId(userLoginVO.getUsername());
         }
         if (userDO != null) {
             // 获取用户并登陆

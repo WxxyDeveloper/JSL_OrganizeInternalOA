@@ -19,17 +19,17 @@ public class RoleServiceImpl implements RoleService {
     private final UserDAO userDAO;
 
     @Override
-    public BaseResponse roleAddUser(RoleAddUserVO roleAddUserVO) {
-        if(userDAO.isExistUser(roleAddUserVO.getUid())) {
-            roleDAO.roleAddUser(roleAddUserVO);
+    public BaseResponse roleAddUser(Long uid,Long rid) {
+        if(userDAO.isExistUser(uid)) {
+            roleDAO.roleAddUser(uid,rid);
             return ResultUtil.success();
         } else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
     }
 
     @Override
-    public BaseResponse roleRemoveUser(RoleRemoveUserVO roleRemoveUserVO) {
-        if(userDAO.isExistUser(roleRemoveUserVO.getUid())) {
-            roleDAO.roleRemoveUser(roleRemoveUserVO);
+    public BaseResponse roleRemoveUser(Long uid) {
+        if(userDAO.isExistUser(uid)) {
+            roleDAO.roleRemoveUser(uid);
             return ResultUtil.success();
         } else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
     }

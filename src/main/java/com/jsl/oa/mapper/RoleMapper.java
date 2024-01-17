@@ -10,8 +10,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface RoleMapper {
 
     @Insert("insert into organize_oa.oa_role_user (uid, rid) VALUE (#{uid},#{rid})")
-    void roleAddUser(RoleAddUserVO roleAddUserVO);
+    void roleAddUser(Long uid,Long rid);
 
     @Delete("delete from organize_oa.oa_role_user where uid=#{uid}")
-    void roleRemoveUser(RoleRemoveUserVO roleRemoveUserVO);
+    void roleRemoveUser(Long uid);
 }

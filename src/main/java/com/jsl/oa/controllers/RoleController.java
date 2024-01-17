@@ -10,10 +10,7 @@ import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,31 +20,29 @@ public class RoleController {
 
     /**
      * 用户权限授予
-     * @param roleAddUserVO
-     * @param bindingResult
+     *
      * @return
      */
     @PostMapping("role/user/add")
-    public BaseResponse roleAddUser(@RequestBody @Validated RoleAddUserVO roleAddUserVO, BindingResult bindingResult){
+    public BaseResponse roleAddUser(@RequestParam Long uid,@RequestParam Long rid){
         // 判断是否有参数错误
-        if (bindingResult.hasErrors()) {
-            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        if (uid == null || rid == null) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
-        return roleService.roleAddUser(roleAddUserVO);
+        return roleService.roleAddUser(uid,rid);
     }
 
     /**
      * 用户权限删除
-     * @param roleRemoveUserVO
-     * @param bindingResult
+     *
      * @return
      */
     @DeleteMapping("role/user/remove")
-    public BaseResponse roleRemoveUser(@RequestBody @Validated RoleRemoveUserVO roleRemoveUserVO, BindingResult bindingResult){
+    public BaseResponse roleRemoveUser(@RequestParam Long uid){
         // 判断是否有参数错误
-        if (bindingResult.hasErrors()) {
-            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        if (uid==null) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
-        return roleService.roleRemoveUser(roleRemoveUserVO);
+        return roleService.roleRemoveUser(uid);
     }
 }
