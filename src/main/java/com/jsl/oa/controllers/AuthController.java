@@ -86,8 +86,8 @@ public class AuthController {
      * @author 筱锋xiao_lfeng
      * @since v1.1.0
      */
-    @GetMapping("/auth/login/email/code")
-    public BaseResponse authLoginSendEmailCode(@RequestParam String email) {
+    @GetMapping("/auth/email/code")
+    public BaseResponse authSendEmailCode(@RequestParam String email) {
         if (email != null) {
             if (Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", email)) {
                 return authService.authLoginSendEmailCode(email);

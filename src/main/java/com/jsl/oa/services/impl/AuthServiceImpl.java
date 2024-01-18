@@ -91,11 +91,16 @@ public class AuthServiceImpl implements AuthService {
             userDO = userMapper.getUserByJobId(userLoginVO.getUser());
         }
         if (userDO != null) {
-            // 获取用户并登陆
-            if (BCrypt.checkpw(userLoginVO.getPassword(), userDO.getPassword())) {
-                return this.encapsulateDisplayContent(userDO);
+            // 账户是否有效
+            if (userDO.getEnabled()) {
+                // 获取用户并登陆
+                if (BCrypt.checkpw(userLoginVO.getPassword(), userDO.getPassword())) {
+                    return this.encapsulateDisplayContent(userDO);
+                } else {
+                    return ResultUtil.error(ErrorCode.WRONG_PASSWORD);
+                }
             } else {
-                return ResultUtil.error(ErrorCode.WRONG_PASSWORD);
+                return ResultUtil.error(ErrorCode.USER_IS_DEACTIVATED);
             }
         } else {
             return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
@@ -126,18 +131,23 @@ public class AuthServiceImpl implements AuthService {
         // 获取用户信息
         UserDO userDO = userMapper.getUserInfoByEmail(email);
         if (userDO != null) {
-            // 生成验证码
-            Integer code = Processing.createCode(null);
-            // 存储验证码
-            if (emailRedisUtil.setData(BusinessConstants.BUSINESS_LOGIN, email, code, 5)) {
-                // 发送邮件
-                if (mailService.sendMailAboutUserLogin(email, code)) {
-                    return ResultUtil.success("验证码已发送");
+            // 账户是否有效
+            if (userDO.getEnabled()) {
+                // 生成验证码
+                Integer code = Processing.createCode(null);
+                // 存储验证码
+                if (emailRedisUtil.setData(BusinessConstants.BUSINESS_LOGIN, email, code, 5)) {
+                    // 发送邮件
+                    if (mailService.sendMailAboutUserLogin(email, code)) {
+                        return ResultUtil.success("验证码已发送");
+                    } else {
+                        return ResultUtil.error(ErrorCode.EMAIL_LOGIN_NOT_SUPPORT);
+                    }
                 } else {
-                    return ResultUtil.error(ErrorCode.EMAIL_LOGIN_NOT_SUPPORT);
+                    return ResultUtil.error(ErrorCode.DATABASE_INSERT_ERROR);
                 }
             } else {
-                return ResultUtil.error(ErrorCode.DATABASE_INSERT_ERROR);
+                return ResultUtil.error(ErrorCode.USER_IS_DEACTIVATED);
             }
         } else {
             return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
@@ -151,7 +161,7 @@ public class AuthServiceImpl implements AuthService {
             return ResultUtil.error(ErrorCode.PASSWORD_NOT_SAME);
         }
         // 检查用户
-        UserDO userDO = userMapper.getUserById(Processing.getAuthHeader(request));
+        UserDO userDO = userMapper.getUserById(Processing.getAuthHeaderToUserId(request));
         if (userDO != null) {
             // 检查旧密码
             if (BCrypt.checkpw(userChangePasswordVO.getOldPassword(), userDO.getPassword())) {
@@ -172,7 +182,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public BaseResponse authLogout(HttpServletRequest request) {
         // 获取用户
-        UserDO userDO = userMapper.getUserById(Processing.getAuthHeader(request));
+        UserDO userDO = userMapper.getUserById(Processing.getAuthHeaderToUserId(request));
         // 删除Token
         if (tokenRedisUtil.delData(BusinessConstants.BUSINESS_LOGIN, userDO.getId().toString())) {
             return ResultUtil.success("登出成功");
@@ -196,7 +206,7 @@ public class AuthServiceImpl implements AuthService {
                         return ResultUtil.success("修改成功");
                     } else {
                         return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
-                        }
+                    }
                 }
             }
         }
@@ -218,7 +228,7 @@ public class AuthServiceImpl implements AuthService {
         // Token 上传到 Redis
         tokenRedisUtil.setData(BusinessConstants.BUSINESS_LOGIN, userDO.getId().toString(), token, 1440);
         // 获取用户角色
-        RoleUserDO getUserRole = roleMapper.getRoleByUid(userDO.getId());
+        RoleUserDO getUserRole = roleMapper.getRoleUserByUid(userDO.getId());
         if (getUserRole == null) {
             getUserRole = new RoleUserDO();
             getUserRole.setRid(0L)

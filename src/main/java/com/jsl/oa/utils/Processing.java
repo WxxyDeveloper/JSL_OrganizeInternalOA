@@ -135,7 +135,7 @@ public class Processing {
      *
      * @param request 请求
      */
-    public static @Nullable Long getAuthHeader(@NotNull HttpServletRequest request) {
+    public static @Nullable Long getAuthHeaderToUserId(@NotNull HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         if (token == null || token.isEmpty()) {
             return null;

@@ -1,5 +1,6 @@
 package com.jsl.oa.mapper;
 
+import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -16,5 +17,8 @@ public interface RoleMapper {
     void roleRemoveUser(Long uid);
 
     @Select("SELECT * FROM organize_oa.oa_role_user WHERE uid=#{uid}")
-    RoleUserDO getRoleByUid(Long uid);
+    RoleUserDO getRoleUserByUid(Long uid);
+
+    @Select("SELECT * FROM organize_oa.oa_role WHERE role_name=#{roleName}")
+    RoleDO getRoleByRoleName(String roleName);
 }

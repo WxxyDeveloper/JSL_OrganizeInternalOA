@@ -1,16 +1,26 @@
 package com.jsl.oa.dao;
 
+import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.mapper.UserMapper;
+import com.jsl.oa.model.doData.RoleUserDO;
+import com.jsl.oa.model.doData.UserCurrentDO;
 import com.jsl.oa.model.doData.UserDO;
+import com.jsl.oa.model.voData.UserAllCurrentVO;
 import com.jsl.oa.model.voData.UserEditProfileVO;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
+
+import java.sql.Timestamp;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class UserDAO {
 
     private final UserMapper userMapper;
+    private final RoleMapper roleMapper;
 
     /**
      * <h2>用户名获取用户信息</h2>
@@ -60,5 +70,31 @@ public class UserDAO {
 
     public void userEditProfile(UserEditProfileVO userEditProfileVO) {
         userMapper.userEditProfile(userEditProfileVO);
+    }
+
+    public List<UserCurrentDO> userCurrentAll(UserAllCurrentVO userAllCurrentVO) {
+        List<UserCurrentDO> userCurrentDO = userMapper.getAllUser(userAllCurrentVO);
+        return this.userCurrentAll(userCurrentDO);
+
+    }
+
+    public List<UserCurrentDO> userCurrentAllLike(UserAllCurrentVO userAllCurrentVO) {
+        List<UserCurrentDO> userCurrentDO = userMapper.getAllUserBySearch(userAllCurrentVO);
+        return this.userCurrentAll(userCurrentDO);
+    }
+
+    @Contract("_ -> param1")
+    private @NotNull List<UserCurrentDO> userCurrentAll(@NotNull List<UserCurrentDO> userCurrentDO) {
+        userCurrentDO.forEach(it -> {
+            it.setRole(roleMapper.getRoleUserByUid(it.getId()));
+            if (it.getRole() == null) {
+                RoleUserDO newRoleUserDO = new RoleUserDO();
+                newRoleUserDO.setRid(0L)
+                        .setUid(it.getId())
+                        .setCreatedAt(new Timestamp(System.currentTimeMillis()));
+                it.setRole(newRoleUserDO);
+            }
+        });
+        return userCurrentDO;
     }
 }

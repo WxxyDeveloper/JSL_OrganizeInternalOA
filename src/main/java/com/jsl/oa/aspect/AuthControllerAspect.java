@@ -41,7 +41,7 @@ public class AuthControllerAspect {
      * @throws Throwable 异常
      * @since v1.0.0
      */
-    @Around("execution(* com.jsl.oa.controllers.AuthController.*(..))")
+    @Around("execution(* com.jsl.oa.controllers.*.*(..))")
     public Object controllerAround(ProceedingJoinPoint pjp) throws Throwable {
         // 获取HttpServletRequest对象
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();

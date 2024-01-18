@@ -1,11 +1,15 @@
 package com.jsl.oa.mapper;
 
+import com.jsl.oa.model.doData.UserCurrentDO;
 import com.jsl.oa.model.doData.UserDO;
+import com.jsl.oa.model.voData.UserAllCurrentVO;
 import com.jsl.oa.model.voData.UserEditProfileVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -43,4 +47,14 @@ public interface UserMapper {
 
     @Update("UPDATE organize_oa.oa_user SET password = #{newPassword} WHERE id = #{id}")
     boolean updateUserPassword(Long id, String newPassword);
+
+    @Select("SELECT * FROM organize_oa.oa_user ORDER BY `id` DESC LIMIT #{page},#{limit}")
+    List<UserCurrentDO> getAllUser(UserAllCurrentVO userAllCurrentVO);
+
+    @Select("SELECT * FROM organize_oa.oa_user " +
+            "WHERE username LIKE CONCAT('%',#{search},'%') " +
+            "OR email LIKE CONCAT('%',#{search},'%') " +
+            "OR phone LIKE CONCAT('%',#{search},'%') " +
+            "ORDER BY `id` LIMIT #{page},#{limit}")
+    List<UserCurrentDO> getAllUserBySearch(UserAllCurrentVO userAllCurrentVO);
 }

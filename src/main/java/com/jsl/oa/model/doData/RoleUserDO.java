@@ -1,6 +1,5 @@
 package com.jsl.oa.model.doData;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -17,7 +16,6 @@ import java.sql.Timestamp;
  */
 @Data
 @Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RoleUserDO {
     private Long uid;
     private Long rid;
