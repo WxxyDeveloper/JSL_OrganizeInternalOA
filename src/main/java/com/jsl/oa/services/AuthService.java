@@ -1,6 +1,7 @@
 package com.jsl.oa.services;
 
 import com.jsl.oa.model.voData.UserChangePasswordVO;
+import com.jsl.oa.model.voData.UserForgetPasswordVO;
 import com.jsl.oa.model.voData.UserLoginVO;
 import com.jsl.oa.model.voData.UserRegisterVO;
 import com.jsl.oa.utils.BaseResponse;
@@ -77,4 +78,6 @@ public interface AuthService {
      * @return {@link BaseResponse}
      */
     BaseResponse authLogout(HttpServletRequest request);
+
+    BaseResponse authForgetPassword(UserForgetPasswordVO userForgetPasswordVO);
 }

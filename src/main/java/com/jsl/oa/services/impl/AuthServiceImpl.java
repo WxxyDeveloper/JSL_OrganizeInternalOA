@@ -6,10 +6,7 @@ import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserDO;
-import com.jsl.oa.model.voData.UserChangePasswordVO;
-import com.jsl.oa.model.voData.UserLoginVO;
-import com.jsl.oa.model.voData.UserRegisterVO;
-import com.jsl.oa.model.voData.UserReturnBackVO;
+import com.jsl.oa.model.voData.*;
 import com.jsl.oa.services.AuthService;
 import com.jsl.oa.services.MailService;
 import com.jsl.oa.utils.*;
@@ -182,6 +179,28 @@ public class AuthServiceImpl implements AuthService {
         } else {
             return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
         }
+    }
+
+    @Override
+    public BaseResponse authForgetPassword(UserForgetPasswordVO userForgetPasswordVO) {
+        // 获取验证码是否有效
+        Integer redisCode = emailRedisUtil.getData(BusinessConstants.BUSINESS_LOGIN, userForgetPasswordVO.getEmail());
+        if (redisCode != null) {
+            if (redisCode.equals(userForgetPasswordVO.getCheck())) {
+                // 删除验证码
+                if (emailRedisUtil.delData(BusinessConstants.BUSINESS_LOGIN, userForgetPasswordVO.getEmail())) {
+                    // 邮箱获取用户
+                    UserDO userDO = userMapper.getUserInfoByEmail(userForgetPasswordVO.getEmail());
+                    // 更新密码
+                    if (userMapper.updateUserPassword(userDO.getId(), BCrypt.hashpw(userForgetPasswordVO.getNewPassword(), BCrypt.gensalt()))) {
+                        return ResultUtil.success("修改成功");
+                    } else {
+                        return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
+                        }
+                }
+            }
+        }
+        return ResultUtil.error(ErrorCode.VERIFICATION_INVALID);
     }
 
     /**

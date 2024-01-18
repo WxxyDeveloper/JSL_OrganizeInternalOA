@@ -1,6 +1,7 @@
 package com.jsl.oa.controllers;
 
 import com.jsl.oa.model.voData.UserChangePasswordVO;
+import com.jsl.oa.model.voData.UserForgetPasswordVO;
 import com.jsl.oa.model.voData.UserLoginVO;
 import com.jsl.oa.model.voData.UserRegisterVO;
 import com.jsl.oa.services.AuthService;
@@ -136,5 +137,13 @@ public class AuthController {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
         return authService.authChangePassword(request, userChangePasswordVO);
+    }
+
+    @PutMapping("auth/password/forget")
+    public BaseResponse authForgetPassword(@RequestBody @Validated UserForgetPasswordVO userForgetPasswordVO, @NotNull BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        return authService.authForgetPassword(userForgetPasswordVO);
     }
 }
