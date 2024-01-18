@@ -2,6 +2,7 @@ package com.jsl.oa.dao;
 
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.mapper.UserMapper;
+import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserCurrentDO;
 import com.jsl.oa.model.doData.UserDO;
@@ -153,5 +154,81 @@ public class UserDAO {
         } else {
             return null;
         }
+    }
+
+
+    /**
+     * @return
+     * @Description: TODO 用户添加
+     * @Date: 2024/1/16
+     * @Param userDO: user 数据库表实体类
+     */
+    public boolean userAdd(UserDO userDO){
+        return userMapper.insertUser(userDO);
+    }
+
+    public void userEdit(UserDO userDO){ userMapper.updateUser(userDO); }
+
+
+
+    /**
+     * @Description: TODO 根据username检测用户是否重复
+     * @Date: 2024/1/16
+     * @Param username: 用户名
+     **/
+    public Boolean isRepeatUser(String username){
+        if(userMapper.getUserInfoByUsername(username)==null){
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * @Description: TODO 检测用户工号是否重复
+     * @Date: 2024/1/18
+     * @Param userNum:
+     **/
+    public Boolean isRepeatUserNum(String userNum){
+        if(userMapper.getUserByUserNum(userNum) != null){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @Description: TODO 根据用户id获取用户数据
+     * @Date: 2024/1/17
+     * @Param userId:
+     **/
+    public UserDO getUserById(Long userId){
+        return userMapper.getUserById(userId);
+    }
+
+
+    /**
+     * @Description: TODO 根据用户id查询对应用户权限
+     * @Date: 2024/1/18
+     * @Param uid:用户id
+     **/
+    public RoleUserDO getRoleFromUser(Long uid){
+        return userMapper.getRoleIdByUserId(uid);
+    }
+
+
+    /**
+     * @Description: TODO 检验用户权限是否为管理员
+     * @Date: 2024/1/18
+     * @Param null:用户id
+     **/
+    public Boolean isManagerByRoleId(Long roleId){
+        RoleDO role = userMapper.getRoleById(roleId);
+        if(role == null){
+            return false;
+        }
+        if(role.getRoleName().equals("管理员")){
+            return true;
+        }
+        return false;
     }
 }

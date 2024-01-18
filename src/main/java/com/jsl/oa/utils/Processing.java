@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -173,4 +174,70 @@ public class Processing {
         String charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         return charset.charAt(index);
     }
+
+
+    /**
+     * @Description: TODO VO类与实体类属性赋值
+     * @Date: 2024/1/18
+     * @Param source:
+     * @Param dest:
+     **/
+    public static <T, S> T copyProperties(S source, T target) throws Exception {
+        Class<?> sourceClass = source.getClass();
+        Class<?> targetClass = target.getClass();
+
+        Field[] sourceFields = sourceClass.getDeclaredFields();
+        for (Field sourceField : sourceFields) {
+            String fieldName = sourceField.getName();
+            Field targetField = null;
+            try {
+                targetField = targetClass.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+                // 目标对象不存在该属性，忽略
+                continue;
+            }
+
+            sourceField.setAccessible(true);
+            targetField.setAccessible(true);
+
+            Object value = sourceField.get(source);
+
+            if(value == null){
+                continue;
+            }
+
+            //如果获取的值不为数字且等于“”，则跳过
+            if ( !(value instanceof Number) && value.equals("")) {
+                continue;
+            }
+
+            if (!sourceField.getType().equals(targetField.getType())) {
+                continue;
+            }
+
+            targetField.set(target, value);
+        }
+
+        return target;
+    }
+
+    /**
+     * @Description: TODO 将性别转为字符形式
+     * @Date: 2024/1/18
+
+     **/
+    public static String getSex(short sex){
+        if(sex == 0){
+            return "保密";
+        }
+        if(sex == 1){
+            return "男";
+        }
+        if(sex == 2){
+            return "女";
+        }
+        return " ";
+    }
+
+
 }

@@ -1,7 +1,9 @@
 package com.jsl.oa.controllers;
 
+import com.jsl.oa.model.voData.UserAddVo;
 import com.jsl.oa.model.voData.UserAllCurrentVO;
 import com.jsl.oa.model.voData.UserEditProfileVO;
+import com.jsl.oa.model.voData.UserEditVo;
 import com.jsl.oa.services.UserService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -145,4 +147,35 @@ public class UserController {
         return userService.userCurrentAll(request, userAllCurrentVO);
     }
 
+
+    /**
+     * @Description: TODO 管理员添加用户
+     * @Date: 2024/1/18
+     * @Param userEditProfileVO:
+     * @Param bindingResult:
+     **/
+    @PostMapping("/user/add")
+    public BaseResponse userAdd(@RequestBody @Validated UserAddVo userAddVo, BindingResult bindingResult, HttpServletRequest request){
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        return userService.userAdd(userAddVo,request);
+    }
+
+
+    @PutMapping("/user/edit")
+    public BaseResponse userEdit(@RequestBody @Validated UserEditVo userEditVo, BindingResult bindingResult, HttpServletRequest request){
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        return userService.userEdit(userEditVo,request);
+    }
+
+
+    @GetMapping("/user/profile/get")
+    public BaseResponse userProflieGet(@RequestParam Long id){
+        return userService.userProflieGet(id);
+    }
 }

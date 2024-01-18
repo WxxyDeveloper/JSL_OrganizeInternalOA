@@ -1,5 +1,7 @@
 package com.jsl.oa.mapper;
 
+import com.jsl.oa.model.doData.RoleDO;
+import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserCurrentDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.UserAllCurrentVO;
@@ -69,4 +71,21 @@ public interface UserMapper {
 
     @Select("SELECT * FROM organize_oa.oa_user WHERE phone = #{phone}")
     UserCurrentDO getUserCurrentByPhone(String phone);
+
+
+    @Select("SELECT * FROM organize_oa.oa_role_user WHERE uid = #{userId}")
+    RoleUserDO getRoleIdByUserId(Long userId);
+
+    @Select("SELECT * FROM organize_oa.oa_role WHERE id = #{roleId}")
+    RoleDO getRoleById(Long roleId);
+
+
+
+    @Update("UPDATE organize_oa.oa_user " +
+            "SET address = #{address}, phone = #{phone}, email = #{email}, age = #{age}, " +
+            "signature = #{signature}, sex = #{sex}, avatar = #{avatar}, nickname = #{nickname}, " +
+            "description = #{description} " +
+            "WHERE id = #{id}")
+    void updateUser(UserDO userDO);
+
 }
