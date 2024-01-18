@@ -1,5 +1,8 @@
 package com.jsl.oa.utils;
 
+import com.jsl.oa.mapper.RoleMapper;
+import com.jsl.oa.model.doData.RoleDO;
+import com.jsl.oa.model.doData.RoleUserDO;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.validation.BindingResult;
@@ -143,6 +146,25 @@ public class Processing {
             // 解析Bearer后面的令牌
             token = token.replace("Bearer ", "");
             return JwtUtil.getUserId(token);
+        }
+    }
+
+    /**
+     * <h2>检查用户是否是管理员</h2>
+     * <hr/>
+     * 该方法用于检查用户是否是管理员，类型封装后字节返回结果
+     *
+     * @param request 请求
+     * @param roleMapper RoleMapper
+     * @return 如果为 true 是管理员，false 不是管理员
+     */
+    public static @NotNull Boolean checkUserIsAdmin(HttpServletRequest request, @NotNull RoleMapper roleMapper) {
+        RoleUserDO roleUserDO = roleMapper.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
+        if (roleUserDO != null) {
+            RoleDO roleDO = roleMapper.getRoleByRoleName("admin");
+            return roleUserDO.getRid().equals(roleDO.getId());
+        } else {
+            return false;
         }
     }
 

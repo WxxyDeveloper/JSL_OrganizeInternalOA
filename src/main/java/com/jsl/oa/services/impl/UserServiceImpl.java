@@ -2,8 +2,6 @@ package com.jsl.oa.services.impl;
 
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.RoleMapper;
-import com.jsl.oa.model.doData.RoleDO;
-import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserCurrentDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.UserAllCurrentVO;
@@ -67,7 +65,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseResponse userCurrentAll(HttpServletRequest request, @NotNull UserAllCurrentVO userAllCurrentVO) {
         // 检查是否是管理员用户
-        if (!checkUserIsAdmin(request)) {
+        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         // 检查数据
@@ -104,7 +102,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseResponse userCurrent(HttpServletRequest request, String id, String username, String email, String phone) {
         // 检查是否是管理员用户
-        if (!checkUserIsAdmin(request)) {
+        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         // 根据顺序优先级进行用户信息获取
@@ -123,24 +121,6 @@ public class UserServiceImpl implements UserService {
             return ResultUtil.success(userCurrentDO);
         } else {
             return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
-        }
-    }
-
-    /**
-     * <h2>检查用户是否是管理员</h2>
-     * <hr/>
-     * 该方法用于检查用户是否是管理员，类型封装后字节返回结果
-     *
-     * @param request 请求
-     * @return 如果为 true 是管理员，false 不是管理员
-     */
-    private @NotNull Boolean checkUserIsAdmin(HttpServletRequest request) {
-        RoleUserDO roleUserDO = roleMapper.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
-        if (roleUserDO != null) {
-            RoleDO roleDO = roleMapper.getRoleByRoleName("admin");
-            return roleUserDO.getRid().equals(roleDO.getId());
-        } else {
-            return false;
         }
     }
 }
