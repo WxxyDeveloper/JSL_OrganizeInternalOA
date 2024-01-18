@@ -93,11 +93,15 @@ public class AuthServiceImpl implements AuthService {
         if (userDO != null) {
             // 账户是否有效
             if (userDO.getEnabled()) {
-                // 获取用户并登陆
-                if (BCrypt.checkpw(userLoginVO.getPassword(), userDO.getPassword())) {
-                    return this.encapsulateDisplayContent(userDO);
+                if (userDO.getAccountNoLocked()) {
+                    // 获取用户并登陆
+                    if (BCrypt.checkpw(userLoginVO.getPassword(), userDO.getPassword())) {
+                        return this.encapsulateDisplayContent(userDO);
+                    } else {
+                        return ResultUtil.error(ErrorCode.WRONG_PASSWORD);
+                    }
                 } else {
-                    return ResultUtil.error(ErrorCode.WRONG_PASSWORD);
+                    return ResultUtil.error(ErrorCode.USER_IS_LOCKED);
                 }
             } else {
                 return ResultUtil.error(ErrorCode.USER_IS_DEACTIVATED);

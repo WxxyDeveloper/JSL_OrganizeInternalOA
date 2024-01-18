@@ -175,7 +175,7 @@ public class UserController {
 
 
     @GetMapping("/user/profile/get")
-    public BaseResponse userProflieGet(@RequestParam Long id){
-        return userService.userProflieGet(id);
+    public BaseResponse userProfileGet(HttpServletRequest request){
+        return userService.userProfileGet(request);
     }
 }

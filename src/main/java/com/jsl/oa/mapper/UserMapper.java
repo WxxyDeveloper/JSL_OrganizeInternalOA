@@ -30,7 +30,7 @@ public interface UserMapper {
     @Update("UPDATE organize_oa.oa_user SET enabled = 0 ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}  ")
     void userDelete(Long id);
 
-    @Update("UPDATE organize_oa.oa_user SET account_no_locked = 1 ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}  ")
+    @Update("UPDATE organize_oa.oa_user SET account_no_locked = 0 ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}  ")
     void userLock(Long id);
 
     @Select("SELECT * FROM organize_oa.oa_user WHERE id = #{id}")

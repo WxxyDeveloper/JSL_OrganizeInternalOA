@@ -45,11 +45,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResponse userLock(HttpServletRequest request, Long id) {
+        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
+            return ResultUtil.error(ErrorCode.NOT_ADMIN);
+        }
         //判断用户是否存在
         if (userDAO.isExistUser(id)) {
-            if (!Processing.checkUserIsAdmin(request, roleMapper)) {
-                return ResultUtil.error(ErrorCode.NOT_ADMIN);
-            }
             userDAO.userLock(id);
             return ResultUtil.success("锁定成功");
         } else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
@@ -152,8 +152,7 @@ public class UserServiceImpl implements UserService {
                     .setPhone(userAddVo.getPhone())
                     .setEmail(userAddVo.getEmail())
                     .setAge(userAddVo.getAge())
-                    .setSex(userAddVo.getSex())
-                    .setAccountNoLocked(false);
+                    .setSex(userAddVo.getSex());
             // 插入数据
             if (userDAO.userAdd(userDO)) {
                 userDO.setPassword(null);
@@ -172,6 +171,7 @@ public class UserServiceImpl implements UserService {
         if (checkManagerResult.getCode() != 200) {
             return checkManagerResult;
         }
+
         //根据id获取用户信息
         UserDO userDO = userDAO.getUserById(userEditVo.getId());
         if (userDO == null) {
@@ -192,12 +192,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResponse userProflieGet(Long id) {
-
-        UserDO userDO = userDAO.getUserById(id);
-        if (userDO == null) {
-            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
-        }
+    public BaseResponse userProfileGet(HttpServletRequest request) {
+        // 获取用户Id
+        UserDO userDO = userDAO.getUserById(Processing.getAuthHeaderToUserId(request));
         UserProfile userProfile = new UserProfile();
         try {
             Processing.copyProperties(userDO, userProfile);

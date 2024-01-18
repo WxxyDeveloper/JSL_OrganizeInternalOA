@@ -16,6 +16,7 @@ public enum ErrorCode {
     TOKEN_EXPIRED("TokenExpired", 40101, "Token已过期"),
     VERIFICATION_INVALID("VerificationInvalid", 40102, "验证码无效"),
     TOKEN_NOT_EXIST("TokenNotExist", 40103, "Token不存在"),
+    USER_IS_LOCKED("UserIsLocked", 40300, "用户已被锁定"),
     USER_IS_DEACTIVATED("UserIsDeactivated", 40300, "用户已被禁用"),
     NOT_ADMIN("NotAdmin", 40300, "不是管理员"),
     EMAIL_LOGIN_NOT_SUPPORT("EmailLoginNotSupport", 40300, "请使用邮箱登陆"),

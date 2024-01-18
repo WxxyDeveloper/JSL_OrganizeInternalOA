@@ -89,7 +89,7 @@ public interface UserService {
     BaseResponse userEdit(UserEditVo userEditVo, HttpServletRequest request);
 
 
-    BaseResponse userProflieGet(Long id);
+    BaseResponse userProfileGet(HttpServletRequest request);
 
 
 }

@@ -29,8 +29,8 @@ public class UserDAO {
      * 根据用户名获取用户信息
      *
      * @param username 用户名
-     * @author 筱锋xiao_lfeng
      * @return {@link UserDO}
+     * @author 筱锋xiao_lfeng
      */
     public UserDO getUserInfoByUsername(String username) {
         UserDO userDO = null;
@@ -45,16 +45,19 @@ public class UserDAO {
 
     /**
      * 根据id判断用户是否存在
+     *
      * @param id
      * @return
      */
-    public Boolean isExistUser(Long id){
-        if(userMapper.getUserById(id)==null) {
+    public Boolean isExistUser(Long id) {
+        if (userMapper.getUserById(id) == null) {
             return false;
-        }else return true;
+        } else return true;
     }
+
     /**
      * 用户账号删除
+     *
      * @param id
      */
     public void userDelete(Long id) {
@@ -63,6 +66,7 @@ public class UserDAO {
 
     /**
      * 用户账号锁定
+     *
      * @param id
      */
     public void userLock(Long id) {
@@ -159,25 +163,26 @@ public class UserDAO {
 
     /**
      * @return
-     * @Description: TODO 用户添加
+     * @Description 用户添加
      * @Date: 2024/1/16
      * @Param userDO: user 数据库表实体类
      */
-    public boolean userAdd(UserDO userDO){
+    public boolean userAdd(UserDO userDO) {
         return userMapper.insertUser(userDO);
     }
 
-    public void userEdit(UserDO userDO){ userMapper.updateUser(userDO); }
-
+    public void userEdit(UserDO userDO) {
+        userMapper.updateUser(userDO);
+    }
 
 
     /**
-     * @Description: TODO 根据username检测用户是否重复
+     * @Description 根据username检测用户是否重复
      * @Date: 2024/1/16
      * @Param username: 用户名
      **/
-    public Boolean isRepeatUser(String username){
-        if(userMapper.getUserInfoByUsername(username)==null){
+    public Boolean isRepeatUser(String username) {
+        if (userMapper.getUserInfoByUsername(username) == null) {
             return false;
         }
         return true;
@@ -185,48 +190,48 @@ public class UserDAO {
 
 
     /**
-     * @Description: TODO 检测用户工号是否重复
-     * @Date: 2024/1/18
+     * @Description 检测用户工号是否重复
+     * @Date 2024/1/18
      * @Param userNum:
      **/
-    public Boolean isRepeatUserNum(String userNum){
-        if(userMapper.getUserByUserNum(userNum) != null){
+    public Boolean isRepeatUserNum(String userNum) {
+        if (userMapper.getUserByUserNum(userNum) != null) {
             return true;
         }
         return false;
     }
 
     /**
-     * @Description: TODO 根据用户id获取用户数据
-     * @Date: 2024/1/17
-     * @Param userId:
+     * @Description 根据用户id获取用户数据
+     * @Date 2024/1/17
+     * @Param userId
      **/
-    public UserDO getUserById(Long userId){
+    public UserDO getUserById(Long userId) {
         return userMapper.getUserById(userId);
     }
 
 
     /**
-     * @Description: TODO 根据用户id查询对应用户权限
-     * @Date: 2024/1/18
+     * @Description 根据用户id查询对应用户权限
+     * @Date 2024/1/18
      * @Param uid:用户id
      **/
-    public RoleUserDO getRoleFromUser(Long uid){
+    public RoleUserDO getRoleFromUser(Long uid) {
         return userMapper.getRoleIdByUserId(uid);
     }
 
 
     /**
-     * @Description: TODO 检验用户权限是否为管理员
-     * @Date: 2024/1/18
+     * @Description 检验用户权限是否为管理员
+     * @Date 2024/1/18
      * @Param null:用户id
      **/
-    public Boolean isManagerByRoleId(Long roleId){
+    public Boolean isManagerByRoleId(Long roleId) {
         RoleDO role = userMapper.getRoleById(roleId);
-        if(role == null){
+        if (role == null) {
             return false;
         }
-        if(role.getRoleName().equals("管理员")){
+        if (role.getRoleName().equals("admin")) {
             return true;
         }
         return false;
