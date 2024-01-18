@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 public interface UserService {
     /**
      * <h2>根据用户名获取用户信息</h2>
-     *
-     * <p>该方法用于根据用户名获取用户信息</p>
+     * <hr/>
+     * 该方法用于根据用户名获取用户信息
      *
      * @param username 用户名
      * @return 用户信息
@@ -27,21 +27,33 @@ public interface UserService {
     UserDO getUserInfoByUsername(String username);
 
     /**
-     * 用户账号删除
+     * <h2>用户账号删除</h2>
+     * <hr/>
+     * 该方法用于用户账号删除
      *
-     * @param id
-     * @return
+     * @param id 用户id
+     * @return {@link BaseResponse}
      */
     BaseResponse userDelete(Long id);
 
     /**
-     * 用户账号锁定
+     * <h2>账号锁定</h2>
+     * <hr/>
+     * 该方法用于用户账号锁定
      *
-     * @param id
-     * @return
+     * @param id 用户id
+     * @return {@link BaseResponse}
      */
     BaseResponse userLock(Long id);
 
+    /**
+     * <h2>用户编辑自己的信息</h2>
+     * <hr/>
+     * 该方法用于用户编辑自己的信息
+     *
+     * @param userEditProfileVO 用户编辑自己的信息
+     * @return {@link BaseResponse}
+     */
     BaseResponse userEditProfile(UserEditProfileVO userEditProfileVO);
 
     /**
@@ -54,4 +66,18 @@ public interface UserService {
      * @return {@link BaseResponse}
      */
     BaseResponse userCurrentAll(HttpServletRequest request, UserAllCurrentVO userAllCurrentVO);
+
+    /**
+     * <h2>获取当前用户信息</h2>
+     * <hr/>
+     * 该方法用于获取当前用户信息
+     *
+     * @param request  请求
+     * @param id       用户id
+     * @param username 用户名
+     * @param email    邮箱
+     * @param phone    手机号
+     * @return {@link BaseResponse}
+     */
+    BaseResponse userCurrent(HttpServletRequest request, String id, String username, String email, String phone);
 }

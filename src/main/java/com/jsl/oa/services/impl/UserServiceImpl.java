@@ -67,13 +67,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseResponse userCurrentAll(HttpServletRequest request, @NotNull UserAllCurrentVO userAllCurrentVO) {
         // 检查是否是管理员用户
-        RoleUserDO roleUserDO = roleMapper.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
-        if (roleUserDO != null) {
-            RoleDO roleDO = roleMapper.getRoleByRoleName("admin");
-            if (!roleUserDO.getRid().equals(roleDO.getId())) {
-                return ResultUtil.error(ErrorCode.NOT_ADMIN);
-            }
-        } else {
+        if (!checkUserIsAdmin(request)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         // 检查数据
@@ -105,5 +99,48 @@ public class UserServiceImpl implements UserService {
             userAllCurrentVOList.removeIf(it -> !userAllCurrentVO.getRole().equals(it.getRole().getRid()));
         }
         return ResultUtil.success(userAllCurrentVOList);
+    }
+
+    @Override
+    public BaseResponse userCurrent(HttpServletRequest request, String id, String username, String email, String phone) {
+        // 检查是否是管理员用户
+        if (!checkUserIsAdmin(request)) {
+            return ResultUtil.error(ErrorCode.NOT_ADMIN);
+        }
+        // 根据顺序优先级进行用户信息获取
+        UserCurrentDO userCurrentDO = null;
+        if (id != null && !id.isEmpty()) {
+            userCurrentDO = userDAO.userCurrentById(Long.valueOf(id));
+        } else if (username != null && !username.isEmpty()) {
+            userCurrentDO = userDAO.userCurrentByUsername(username);
+        } else if (email != null && !email.isEmpty()) {
+            userCurrentDO = userDAO.userCurrentByEmail(email);
+        } else if (phone != null && !phone.isEmpty()) {
+            userCurrentDO = userDAO.userCurrentByPhone(phone);
+        }
+        // 返回结果
+        if (userCurrentDO != null) {
+            return ResultUtil.success(userCurrentDO);
+        } else {
+            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+        }
+    }
+
+    /**
+     * <h2>检查用户是否是管理员</h2>
+     * <hr/>
+     * 该方法用于检查用户是否是管理员，类型封装后字节返回结果
+     *
+     * @param request 请求
+     * @return 如果为 true 是管理员，false 不是管理员
+     */
+    private @NotNull Boolean checkUserIsAdmin(HttpServletRequest request) {
+        RoleUserDO roleUserDO = roleMapper.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
+        if (roleUserDO != null) {
+            RoleDO roleDO = roleMapper.getRoleByRoleName("admin");
+            return roleUserDO.getRid().equals(roleDO.getId());
+        } else {
+            return false;
+        }
     }
 }

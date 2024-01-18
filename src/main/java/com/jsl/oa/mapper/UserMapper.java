@@ -57,4 +57,16 @@ public interface UserMapper {
             "OR phone LIKE CONCAT('%',#{search},'%') " +
             "ORDER BY `id` LIMIT #{page},#{limit}")
     List<UserCurrentDO> getAllUserBySearch(UserAllCurrentVO userAllCurrentVO);
+
+    @Select("SELECT * FROM organize_oa.oa_user WHERE id = #{uid}")
+    UserCurrentDO getUserCurrentById(Long uid);
+
+    @Select("SELECT * FROM organize_oa.oa_user WHERE username = #{username}")
+    UserCurrentDO getUserCurrentByUsername(String username);
+
+    @Select("SELECT * FROM organize_oa.oa_user WHERE email = #{email}")
+    UserCurrentDO getUserCurrentByEmail(String email);
+
+    @Select("SELECT * FROM organize_oa.oa_user WHERE phone = #{phone}")
+    UserCurrentDO getUserCurrentByPhone(String phone);
 }

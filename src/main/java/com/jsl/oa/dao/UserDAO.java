@@ -97,4 +97,61 @@ public class UserDAO {
         });
         return userCurrentDO;
     }
+
+    /**
+     * 获取当前用户信息
+     *
+     * @param uid 用户id
+     * @return {@link UserCurrentDO}
+     */
+    public UserCurrentDO userCurrentById(Long uid) {
+        UserCurrentDO userCurrentDO = userMapper.getUserCurrentById(uid);
+        return getUserCurrentForRole(userCurrentDO);
+    }
+
+    /**
+     * 获取当前用户信息
+     *
+     * @param username 用户名
+     * @return {@link UserCurrentDO}
+     */
+    public UserCurrentDO userCurrentByUsername(String username) {
+        UserCurrentDO userCurrentDO = userMapper.getUserCurrentByUsername(username);
+        return getUserCurrentForRole(userCurrentDO);
+    }
+
+    /**
+     * 获取当前用户信息
+     *
+     * @param email 邮箱
+     * @return {@link UserCurrentDO}
+     */
+    public UserCurrentDO userCurrentByEmail(String email) {
+        UserCurrentDO userCurrentDO = userMapper.getUserCurrentByEmail(email);
+        return getUserCurrentForRole(userCurrentDO);
+    }
+
+    /**
+     * 获取当前用户信息
+     *
+     * @param phone 手机号
+     * @return {@link UserCurrentDO}
+     */
+    public UserCurrentDO userCurrentByPhone(String phone) {
+        UserCurrentDO userCurrentDO = userMapper.getUserCurrentByPhone(phone);
+        return getUserCurrentForRole(userCurrentDO);
+    }
+
+    private UserCurrentDO getUserCurrentForRole(UserCurrentDO userCurrentDO) {
+        if (userCurrentDO != null) {
+            RoleUserDO newRoleUserDO = new RoleUserDO();
+            newRoleUserDO.setRid(0L)
+                    .setUid(userCurrentDO.getId())
+                    .setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            userCurrentDO.setRole(newRoleUserDO);
+            return userCurrentDO;
+        } else {
+            return null;
+        }
+    }
 }
