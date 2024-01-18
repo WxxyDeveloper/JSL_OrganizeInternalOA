@@ -34,18 +34,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResponse userDelete(Long id) {
+    public BaseResponse userDelete(HttpServletRequest request,Long id) {
         //判断用户是否存在
         if (userDAO.isExistUser(id)) {
+            if(!Processing.checkUserIsAdmin(request,roleMapper)){
+                return ResultUtil.error(ErrorCode.NOT_ADMIN);
+            }
             userDAO.userDelete(id);
             return ResultUtil.success("删除成功");
         } else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
     }
 
     @Override
-    public BaseResponse userLock(Long id) {
+    public BaseResponse userLock(HttpServletRequest request,Long id) {
         //判断用户是否存在
         if (userDAO.isExistUser(id)) {
+            if (!Processing.checkUserIsAdmin(request,roleMapper)){
+                return ResultUtil.error(ErrorCode.NOT_ADMIN);
+            }
             userDAO.userLock(id);
             return ResultUtil.success("锁定成功");
         } else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
@@ -54,9 +60,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseResponse userEditProfile(@NotNull UserEditProfileVO userEditProfileVO) {
         if (userDAO.isExistUser(userEditProfileVO.getId())) {
-            if (userEditProfileVO.getPassword() != null) {
-                userEditProfileVO.setPassword(BCrypt.hashpw(userEditProfileVO.getPassword(), BCrypt.gensalt()));
-            }
             userDAO.userEditProfile(userEditProfileVO);
             return ResultUtil.success("修改成功");
         } else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);

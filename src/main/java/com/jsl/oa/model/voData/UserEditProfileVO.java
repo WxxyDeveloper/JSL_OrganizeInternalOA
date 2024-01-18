@@ -13,7 +13,6 @@ public class UserEditProfileVO {
     private Long id;
     @Pattern(regexp = "^[0-9A-Za-z_]{3,40}$", message = "用户名只能为字母、数字或下划线")
     private String username;
-    private String password;
     private String address;
     private String phone;
     private String email;

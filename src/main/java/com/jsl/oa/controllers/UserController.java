@@ -40,11 +40,11 @@ public class UserController {
      * @return {@link BaseResponse}
      */
     @PutMapping("/user/delete")
-    public BaseResponse userDelete(@RequestParam Long id) {
+    public BaseResponse userDelete(HttpServletRequest request,@RequestParam Long id) {
         // 判断是否有参数错误
         if (id == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
-        } else return userService.userDelete(id);
+        } else return userService.userDelete(request,id);
     }
 
     /**
@@ -54,12 +54,12 @@ public class UserController {
      * @return {@link BaseResponse}
      */
     @PutMapping("/user/lock")
-    public BaseResponse userLock(@RequestParam Long id) {
+    public BaseResponse userLock(HttpServletRequest request,@RequestParam Long id) {
         // 判断是否有参数错误
         if (id == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
-        return userService.userLock(id);
+        return userService.userLock(request,id);
     }
 
     /**
