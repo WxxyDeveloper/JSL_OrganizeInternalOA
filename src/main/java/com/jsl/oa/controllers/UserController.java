@@ -66,7 +66,7 @@ public class UserController {
      * 用户编辑自己的信息
      *
      * @param userEditProfileVO 用户编辑自己的信息
-     * @param bindingResult    参数校验结果
+     * @param bindingResult     参数校验结果
      * @return {@link BaseResponse}
      */
     @PutMapping("/user/profile/edit")
@@ -78,6 +78,19 @@ public class UserController {
         return userService.userEditProfile(userEditProfileVO);
     }
 
+    /**
+     * <h2>获取当前用户信息</h2>
+     * <hr/>
+     * 获取当前用户信息接口<br/>
+     * Admin接口
+     *
+     * @param request  请求
+     * @param id       用户id
+     * @param username 用户名
+     * @param email    邮箱
+     * @param phone    手机号
+     * @return {@link BaseResponse}
+     */
     @GetMapping("/user/current")
     public BaseResponse userCurrent(HttpServletRequest request, @RequestParam @Nullable String id, @RequestParam @Nullable String username, @RequestParam @Nullable String email, @RequestParam @Nullable String phone) {
         // 判断是否有参数错误
@@ -86,22 +99,22 @@ public class UserController {
         }
         // 检查数据是否有问题
         ArrayList<String> arrayForError = new ArrayList<>();
-        if (id != null) {
+        if (id != null && !id.isEmpty()) {
             if (!Pattern.matches("^[0-9]+$", id)) {
                 arrayForError.add("id 只能为数字");
             }
         }
-        if (username != null) {
+        if (username != null && !username.isEmpty()) {
             if (!Pattern.matches("^[0-9A-Za-z_]+$", username)) {
                 arrayForError.add("username 只允许 0-9、A-Z、a-z、_");
             }
         }
-        if (email != null) {
+        if (email != null && !email.isEmpty()) {
             if (!Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", email)) {
                 arrayForError.add("email 格式不正确");
             }
         }
-        if (phone != null) {
+        if (phone != null && !phone.isEmpty()) {
             if (!Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", phone)) {
                 arrayForError.add("手机格式不正确");
             }
