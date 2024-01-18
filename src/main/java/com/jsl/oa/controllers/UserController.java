@@ -36,8 +36,8 @@ public class UserController {
     /**
      * 用户账号删除
      *
-     * @param id
-     * @return
+     * @param id 用户id
+     * @return {@link BaseResponse}
      */
     @PutMapping("/user/delete")
     public BaseResponse userDelete(@RequestParam Long id) {
@@ -50,8 +50,8 @@ public class UserController {
     /**
      * 用户账号锁定
      *
-     * @param id
-     * @return
+     * @param id 用户id
+     * @return {@link BaseResponse}
      */
     @PutMapping("/user/lock")
     public BaseResponse userLock(@RequestParam Long id) {
@@ -65,9 +65,9 @@ public class UserController {
     /**
      * 用户编辑自己的信息
      *
-     * @param userEditProfileVO
-     * @param bindingResult
-     * @return
+     * @param userEditProfileVO 用户编辑自己的信息
+     * @param bindingResult    参数校验结果
+     * @return {@link BaseResponse}
      */
     @PutMapping("/user/profile/edit")
     public BaseResponse userEditProfile(@RequestBody @Validated UserEditProfileVO userEditProfileVO, BindingResult bindingResult) {
