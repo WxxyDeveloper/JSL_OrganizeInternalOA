@@ -46,7 +46,7 @@ public interface UserService {
      * @param id 用户id
      * @return {@link BaseResponse}
      */
-    BaseResponse userLock(HttpServletRequest request,Long id);
+    BaseResponse userLock(HttpServletRequest request,Long id,Long isLock);
 
     /**
      * <h2>用户编辑自己的信息</h2>

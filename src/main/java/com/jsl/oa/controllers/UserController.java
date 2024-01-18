@@ -56,12 +56,12 @@ public class UserController {
      * @return {@link BaseResponse}
      */
     @PutMapping("/user/lock")
-    public BaseResponse userLock(HttpServletRequest request,@RequestParam Long id) {
+    public BaseResponse userLock(HttpServletRequest request,@RequestParam Long id,@RequestParam Long isLock) {
         // 判断是否有参数错误
         if (id == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
-        return userService.userLock(request,id);
+        return userService.userLock(request,id,isLock);
     }
 
     /**

@@ -69,8 +69,8 @@ public class UserDAO {
      *
      * @param id
      */
-    public void userLock(Long id) {
-        userMapper.userLock(id);
+    public void userLock(Long id,Long isLock) {
+        userMapper.userLock(id,isLock);
     }
 
     public void userEditProfile(UserEditProfileVO userEditProfileVO) {

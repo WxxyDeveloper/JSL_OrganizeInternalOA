@@ -44,14 +44,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResponse userLock(HttpServletRequest request, Long id) {
+    public BaseResponse userLock(HttpServletRequest request, Long id,Long isLock) {
         if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         //判断用户是否存在
         if (userDAO.isExistUser(id)) {
-            userDAO.userLock(id);
-            return ResultUtil.success("锁定成功");
+            userDAO.userLock(id,isLock);
+            return ResultUtil.success("更改成功");
         } else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
     }
 
