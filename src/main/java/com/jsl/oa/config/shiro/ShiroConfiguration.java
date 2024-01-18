@@ -27,7 +27,7 @@ public class ShiroConfiguration {
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         filterChainDefinitionMap.put("/auth/**/**", "anon"); // 登录接口允许匿名访问
         filterChainDefinitionMap.put("/unauthorized", "anon"); // 未授权接口允许匿名访问
-        filterChainDefinitionMap.put("/", "jwt"); // 首页允许匿名访问
+        filterChainDefinitionMap.put("/", "anon"); // 首页允许匿名访问
         filterChainDefinitionMap.put("/**/**", "jwt"); // 其他接口一律拦截(需要Token)
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

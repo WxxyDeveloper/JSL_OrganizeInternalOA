@@ -3,7 +3,6 @@ package com.jsl.oa.services.impl;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.exception.BusinessException;
 import com.jsl.oa.mapper.RoleMapper;
-import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserCurrentDO;
 import com.jsl.oa.model.doData.UserDO;
@@ -33,10 +32,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResponse userDelete(HttpServletRequest request,Long id) {
+    public BaseResponse userDelete(HttpServletRequest request, Long id) {
         //判断用户是否存在
         if (userDAO.isExistUser(id)) {
-            if(!Processing.checkUserIsAdmin(request,roleMapper)){
+            if (!Processing.checkUserIsAdmin(request, roleMapper)) {
                 return ResultUtil.error(ErrorCode.NOT_ADMIN);
             }
             userDAO.userDelete(id);
@@ -45,10 +44,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResponse userLock(HttpServletRequest request,Long id) {
+    public BaseResponse userLock(HttpServletRequest request, Long id) {
         //判断用户是否存在
         if (userDAO.isExistUser(id)) {
-            if (!Processing.checkUserIsAdmin(request,roleMapper)){
+            if (!Processing.checkUserIsAdmin(request, roleMapper)) {
                 return ResultUtil.error(ErrorCode.NOT_ADMIN);
             }
             userDAO.userLock(id);
@@ -127,19 +126,17 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-
     @Override
     public BaseResponse userAdd(UserAddVo userAddVo, HttpServletRequest request) {
 
         //检测用户是否为管理员
         BaseResponse checkManagerResult = isManager(request);
-        if(checkManagerResult.getCode() != 200){
+        if (checkManagerResult.getCode() != 200) {
             return checkManagerResult;
         }
 
         //如果用户不重复，添加用户
-        if(!userDAO.isRepeatUser(userAddVo.getUsername())){
+        if (!userDAO.isRepeatUser(userAddVo.getUsername())) {
             // 生成工号
             String userNum;
             do {
@@ -164,27 +161,26 @@ public class UserServiceImpl implements UserService {
             } else {
                 throw new BusinessException(ErrorCode.DATABASE_INSERT_ERROR);
             }
-        }else return ResultUtil.error(ErrorCode.USER_EXIST);
+        } else return ResultUtil.error(ErrorCode.USER_EXIST);
     }
-
 
 
     @Override
     public BaseResponse userEdit(UserEditVo userEditVo, HttpServletRequest request) {
         //检测用户是否为管理员
         BaseResponse checkManagerResult = isManager(request);
-        if(checkManagerResult.getCode() != 200){
+        if (checkManagerResult.getCode() != 200) {
             return checkManagerResult;
         }
         //根据id获取用户信息
         UserDO userDO = userDAO.getUserById(userEditVo.getId());
-        if(userDO == null){
+        if (userDO == null) {
             return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
         }
 
         //修改非空属性
         try {
-            Processing.copyProperties(userEditVo,userDO);
+            Processing.copyProperties(userEditVo, userDO);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -199,12 +195,12 @@ public class UserServiceImpl implements UserService {
     public BaseResponse userProflieGet(Long id) {
 
         UserDO userDO = userDAO.getUserById(id);
-        if(userDO == null){
+        if (userDO == null) {
             return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
         }
         UserProfile userProfile = new UserProfile();
         try {
-            Processing.copyProperties(userDO,userProfile);
+            Processing.copyProperties(userDO, userProfile);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -218,18 +214,18 @@ public class UserServiceImpl implements UserService {
      * @Date: 2024/1/18
      * @Param request: 请求头
      **/
-    public BaseResponse isManager(HttpServletRequest request){
+    public BaseResponse isManager(HttpServletRequest request) {
         //获取token
         String originalAuthorization = request.getHeader("Authorization");
         String token = originalAuthorization.replace("Bearer ", "");
         //获取操作用户的权限
         RoleUserDO roleUserDO = userDAO.getRoleFromUser(JwtUtil.getUserId(token));
         //用户权限不为空
-        if(roleUserDO == null){
+        if (roleUserDO == null) {
             return ResultUtil.error(ErrorCode.USER_ROLE_NOT_EXIST);
         }
         //用户权限应为管理员
-        if(!userDAO.isManagerByRoleId(roleUserDO.getRid())){
+        if (!userDAO.isManagerByRoleId(roleUserDO.getRid())) {
             return ResultUtil.error(ErrorCode.USER_ROLE_NOT_MANAGER);
         }
         return ResultUtil.success();

@@ -40,8 +40,7 @@ public interface MailService {
      *
      * @param email 邮箱
      * @param code  验证码
-     * @return 是否发送成功
      */
-    boolean sendMailAboutUserLogin(String email, Integer code);
+    void sendMailAboutUserLogin(String email, Integer code);
 }
 

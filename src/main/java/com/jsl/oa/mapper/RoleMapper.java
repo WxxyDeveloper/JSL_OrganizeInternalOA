@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface RoleMapper {
 
@@ -21,4 +23,10 @@ public interface RoleMapper {
 
     @Select("SELECT * FROM organize_oa.oa_role WHERE role_name=#{roleName}")
     RoleDO getRoleByRoleName(String roleName);
+
+    @Select("SELECT * FROM organize_oa.oa_role WHERE id=#{id}")
+    RoleDO getRoleById(Long id);
+
+    @Select("SELECT * FROM organize_oa.oa_role ORDER BY id DESC")
+    List<RoleDO> getRole();
 }

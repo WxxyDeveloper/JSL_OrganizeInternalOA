@@ -1,5 +1,6 @@
 package com.jsl.oa.config.redis;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -21,9 +22,17 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  */
 @Configuration
 public class RedisConfiguration {
+    @Value("${spring.redis.host}")
+    private String host;
+    @Value("${spring.redis.port}")
+    private Integer port;
+    @Value("${spring.redis.password}")
+    private String password;
+
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration("localhost");
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
+        config.setPassword(password);
         return new JedisConnectionFactory(config);
     }
 

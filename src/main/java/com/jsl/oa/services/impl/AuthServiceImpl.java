@@ -138,11 +138,8 @@ public class AuthServiceImpl implements AuthService {
                 // 存储验证码
                 if (emailRedisUtil.setData(BusinessConstants.BUSINESS_LOGIN, email, code, 5)) {
                     // 发送邮件
-                    if (mailService.sendMailAboutUserLogin(email, code)) {
-                        return ResultUtil.success("验证码已发送");
-                    } else {
-                        return ResultUtil.error(ErrorCode.EMAIL_LOGIN_NOT_SUPPORT);
-                    }
+                    mailService.sendMailAboutUserLogin(email, code);
+                    return ResultUtil.success("验证码已发送");
                 } else {
                     return ResultUtil.error(ErrorCode.DATABASE_INSERT_ERROR);
                 }

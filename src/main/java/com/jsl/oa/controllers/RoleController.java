@@ -1,22 +1,41 @@
 package com.jsl.oa.controllers;
 
-import com.jsl.oa.model.voData.RoleAddUserVO;
-import com.jsl.oa.model.voData.RoleRemoveUserVO;
 import com.jsl.oa.services.RoleService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
-import com.jsl.oa.utils.Processing;
 import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * <h1>角色控制器</h1>
+ * <hr/>
+ * 角色控制器，包含角色获取接口
+ *
+ * @version v1.1.0
+ * @see RoleService
+ * @since v1.1.0
+ */
 @RestController
 @RequiredArgsConstructor
-
 public class RoleController {
     private final RoleService roleService;
+
+    /**
+     * <h2>角色获取</h2>
+     * <hr/>
+     * 角色获取接口
+     *
+     * @param id 角色id
+     * @return {@link BaseResponse}
+     */
+    @GetMapping("/role/get")
+    public BaseResponse roleGet(HttpServletRequest request, @RequestParam @Nullable String id) {
+        return roleService.roleGet(request, id);
+    }
 
     /**
      * 用户权限授予
@@ -24,12 +43,12 @@ public class RoleController {
      * @return
      */
     @PostMapping("role/user/add")
-    public BaseResponse roleAddUser(@RequestParam Long uid,@RequestParam Long rid){
+    public BaseResponse roleAddUser(@RequestParam Long uid, @RequestParam Long rid) {
         // 判断是否有参数错误
         if (uid == null || rid == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
-        return roleService.roleAddUser(uid,rid);
+        return roleService.roleAddUser(uid, rid);
     }
 
     /**
@@ -38,9 +57,9 @@ public class RoleController {
      * @return
      */
     @DeleteMapping("role/user/remove")
-    public BaseResponse roleRemoveUser(@RequestParam Long uid){
+    public BaseResponse roleRemoveUser(@RequestParam Long uid) {
         // 判断是否有参数错误
-        if (uid==null) {
+        if (uid == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
         return roleService.roleRemoveUser(uid);

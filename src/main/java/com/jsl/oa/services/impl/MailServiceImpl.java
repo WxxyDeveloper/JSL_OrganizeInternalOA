@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -60,7 +61,8 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public boolean sendMailAboutUserLogin(String email, Integer code) {
+    @Async
+    public void sendMailAboutUserLogin(String email, Integer code) {
         // 发送邮件带HTML模块部分
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -72,14 +74,12 @@ public class MailServiceImpl implements MailService {
             Context context = new Context();
             context.setVariable("code", code);
             context.setVariable("email", email);
-            String emailContent = templateEngine.process("/mail/user-login.html", context);
+            String emailContent = templateEngine.process("./mail/user-login.html", context);
             mimeMessage.setText(emailContent, true);
 
             javaMailSender.send(message);
-            return true;
         } catch (MessagingException e) {
             //TODO: 10001-发送邮件失败处理
-            return false;
         }
     }
 }

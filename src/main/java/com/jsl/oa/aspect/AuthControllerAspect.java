@@ -41,7 +41,7 @@ public class AuthControllerAspect {
      * @throws Throwable 异常
      * @since v1.0.0
      */
-    @Around("execution(* com.jsl.oa.controllers.*.*(..))")
+    @Around("execution(* com.jsl.oa.controllers.*.*(..)) && !execution(* com.jsl.oa.controllers.IndexController.*(..))")
     public Object controllerAround(ProceedingJoinPoint pjp) throws Throwable {
         // 获取HttpServletRequest对象
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
@@ -56,6 +56,15 @@ public class AuthControllerAspect {
 
     }
 
+    /**
+     * <h1>Token检查切面</h1>
+     * <hr/>
+     * 用于检查Token是否有效
+     *
+     * @param pjp ProceedingJoinPoint对象
+     * @return {@link Object}
+     * @throws Throwable
+     */
     @Around("execution(* com.jsl.oa.controllers.AuthController.authLogout(..)) || execution(* com.jsl.oa.controllers.AuthController.authChangePassword(..))")
     public Object tokenControllerAround(ProceedingJoinPoint pjp) throws Throwable {
         // 获取 HttpServletRequest 对象
@@ -99,6 +108,6 @@ public class AuthControllerAspect {
         long nowTimestamp = System.currentTimeMillis();
 
         // 时间误差允许前后五秒钟
-        return nowTimestamp - Long.parseLong(getTimestamp) <= 5000 && nowTimestamp - Long.parseLong(getTimestamp) >= -5000;
+        return nowTimestamp - Long.parseLong(getTimestamp) <= 10000 && nowTimestamp - Long.parseLong(getTimestamp) >= -10000;
     }
 }
