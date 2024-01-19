@@ -15,6 +15,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 /**
  * <h1>角色控制器</h1>
@@ -63,6 +65,31 @@ public class RoleController {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
         return roleService.roleEdit(request, roleEditVO);
+    }
+
+    /**
+     * <h2>角色删除</h2>
+     * <hr/>
+     * 角色删除接口
+     *
+     * @param request 请求
+     * @param id 角色id
+     * @return {@link BaseResponse}
+     */
+    @DeleteMapping("/role/delete")
+    public BaseResponse roleDelete(HttpServletRequest request, @RequestParam String id) {
+        log.info("请求接口[DELETE]: /role/delete");
+        // 判断是否有参数错误
+        if (id == null) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
+        } else {
+            if (Pattern.matches("^[0-9]+$", id)) {
+                ArrayList<String> error = new ArrayList<>();
+                error.add("id 只能为数字");
+                return ResultUtil.error(ErrorCode.PARAMETER_ERROR, error);
+            }
+        }
+        return roleService.roleDelete(request, Long.valueOf(id));
     }
 
     /**

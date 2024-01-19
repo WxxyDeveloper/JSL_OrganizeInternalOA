@@ -38,4 +38,8 @@ public class RoleDAO {
     public boolean roleEdit(RoleDO getRole) {
         return roleMapper.roleEdit(getRole);
     }
+
+    public boolean roleDelete(Long id) {
+        return roleMapper.roleDelete(id);
+    }
 }

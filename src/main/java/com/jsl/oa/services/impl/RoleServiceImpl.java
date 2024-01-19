@@ -84,4 +84,26 @@ public class RoleServiceImpl implements RoleService {
             return ResultUtil.error(ErrorCode.ROLE_NOT_FOUNDED);
         }
     }
+
+    @Override
+    public BaseResponse roleDelete(HttpServletRequest request, Long id) {
+        // 检查用户权限
+        if (!Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
+            return ResultUtil.error(ErrorCode.NOT_ADMIN);
+        }
+        // 获取 Role 相关信息
+        RoleDO getRole = roleDAO.getRoleById(id);
+        // 判断是否存在该 Role
+        if (getRole != null) {
+            // 删除 Role 信息
+            if (roleDAO.roleDelete(id)) {
+                return ResultUtil.success();
+            } else {
+                return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
+            }
+        } else {
+            return ResultUtil.error(ErrorCode.ROLE_NOT_FOUNDED);
+        }
+
+    }
 }

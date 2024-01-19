@@ -29,4 +29,7 @@ public interface RoleMapper {
 
     @Update("UPDATE organize_oa.oa_role SET role_name=#{roleName},display_name=#{displayName} WHERE id=#{id}")
     boolean roleEdit(RoleDO getRole);
+
+    @Delete("DELETE FROM organize_oa.oa_role WHERE id=#{id}")
+    boolean roleDelete(Long id);
 }

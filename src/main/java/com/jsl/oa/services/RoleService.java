@@ -21,4 +21,6 @@ public interface RoleService {
     BaseResponse roleGet(HttpServletRequest request, String id);
 
     BaseResponse roleEdit(HttpServletRequest request, RoleEditVO roleEditVO);
+
+    BaseResponse roleDelete(HttpServletRequest request, Long id);
 }
