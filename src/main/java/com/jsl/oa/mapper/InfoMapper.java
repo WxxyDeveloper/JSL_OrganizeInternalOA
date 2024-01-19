@@ -1,6 +1,7 @@
 package com.jsl.oa.mapper;
 
 import com.jsl.oa.model.doData.ConfigDO;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -45,4 +46,14 @@ public interface InfoMapper {
      */
     @Update("INSERT INTO organize_oa.oa_config (value, data, created_at) VALUES (#{value}, #{data}, #{createdAt})")
     void insertSecurityKey(ConfigDO configDO);
+
+
+    @Select("SELECT data FROM organize_oa.oa_config WHERE value= 'carousel'")
+    String getCarousel();
+
+    @Update("UPDATE organize_oa.oa_config SET data = #{setCarouselSql} WHERE value = 'carousel'")
+    boolean setCarousel(String setCarouselSql);
+
+    @Insert("INSERT INTO organize_oa.oa_config (value, data, created_at) VALUES ('carousel', null, NOW())")
+    void insertCarousel();
 }

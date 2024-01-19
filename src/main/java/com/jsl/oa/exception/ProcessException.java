@@ -36,6 +36,6 @@ public class ProcessException {
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<BaseResponse> businessException(@NotNull Exception e) {
         log.error(e.getMessage(), e);
-        return ResultUtil.error("Exception", 500, "服务器异常");
+        return ResultUtil.error("ServerInternalError", 500, "服务器内部错误");
     }
 }

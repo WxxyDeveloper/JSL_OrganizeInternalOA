@@ -1,7 +1,9 @@
 package com.jsl.oa.utils;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 public enum ErrorCode {
     WRONG_PASSWORD("WrongPassword", 40010, "密码错误"),
@@ -17,10 +19,11 @@ public enum ErrorCode {
     VERIFICATION_INVALID("VerificationInvalid", 40102, "验证码无效"),
     TOKEN_NOT_EXIST("TokenNotExist", 40103, "Token不存在"),
     USER_IS_LOCKED("UserIsLocked", 40300, "用户已被锁定"),
-    USER_IS_DEACTIVATED("UserIsDeactivated", 40300, "用户已被禁用"),
-    NOT_ADMIN("NotAdmin", 40300, "不是管理员"),
-    EMAIL_LOGIN_NOT_SUPPORT("EmailLoginNotSupport", 40300, "请使用邮箱登陆"),
-    PASSWORD_NOT_SAME("PasswordNotSame", 40301, "两次密码不一致"),
+    USER_IS_DEACTIVATED("UserIsDeactivated", 40301, "用户已被禁用"),
+    NOT_ADMIN("NotAdmin", 40302, "不是管理员"),
+    EMAIL_LOGIN_NOT_SUPPORT("EmailLoginNotSupport", 40303, "请使用邮箱登陆"),
+    PASSWORD_NOT_SAME("PasswordNotSame", 40304, "两次密码不一致"),
+    ID_NOT_EXIST("IdNotExist", 40305, "ID不存在"),
     DATABASE_INSERT_ERROR("DatabaseInsertError", 50010, "数据库插入错误"),
     DATABASE_UPDATE_ERROR("DatabaseUpdateError", 50011, "数据库更新错误"),
     DATABASE_DELETE_ERROR("DatabaseDeleteError", 50012, "数据库删除错误"),

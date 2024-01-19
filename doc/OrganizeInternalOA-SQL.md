@@ -397,3 +397,23 @@ node6  --|>  node4
 | 3 | `data` | json数据 | json |  | YES |  |  |
 | 4 | `created_at` | 创建时间 | timestamp |  | NO | DEFAULT_GENERATED | CURRENT_TIMESTAMP |
 | 5 | `updated_at` | 修改时间 | timestamp |  | YES |  |  |
+
+
+
+### oa_message 数据表
+
+#### 说明
+
+> 【消息表】用户消息获取，如站内消息等信息的消息，需要配合Email操作
+
+#### 数据表字段属性
+
+| 序号 |     名称     |     描述     |      类型       |  键  | 为空 |       额外        |      默认值       |
+| :--: | :----------: | :----------: | :-------------: | :--: | :--: | :---------------: | :---------------: |
+|  1   |     `id`     |   消息主键   | bigint unsigned | PRI  |  NO  |  auto_increment   |                   |
+|  2   |    `uid`     |   用户主键   | bigint unsigned | MUL  |  NO  |                   |                   |
+|  3   |   `title`    |   消息抬头   |  varchar(100)   |      |  NO  |                   |                   |
+|  4   |    `text`    |   消息正文   |      text       |      |  NO  |                   |                   |
+|  5   |    `read`    | 消息是否已读 |   tinyint(1)    |      |  NO  |                   |         0         |
+|  6   | `created_at` |   创建时间   |    timestamp    |      |  NO  | DEFAULT_GENERATED | CURRENT_TIMESTAMP |
+|  7   | `deleted_at` |   删除时间   |    timestamp    |      | YES  |                   |                   |

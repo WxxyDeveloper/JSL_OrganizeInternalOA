@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.JwtUtil;
 import com.jsl.oa.utils.ResultUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.ExpiredCredentialsException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  * @version v1.1.0
  * @since v1.1.0
  */
+@Slf4j
 public class JwtFilter extends BasicHttpAuthenticationFilter {
 
     /**
@@ -41,6 +43,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         } else {
             // 解析Bearer后面的令牌
             token = token.replace("Bearer ", "");
+            log.info("请求令牌：" + token);
             return JwtUtil.verify(token);
         }
     }

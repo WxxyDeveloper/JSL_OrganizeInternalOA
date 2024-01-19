@@ -54,10 +54,10 @@ public class JwtUtil {
         try {
             Long getTokenInUserId = getUserId(token);
             // 验证用户名是否匹配
-            log.debug("Token值" + getTokenInUserId.toString());
+            log.info("令牌用户主键：" + getTokenInUserId.toString());
             return Pattern.matches("^[0-9]+$", getTokenInUserId.toString());
         } catch (Exception e) {
-            log.debug("Token验证失败", e);
+            log.info("令牌错误或失效");
             return false;
         }
     }
@@ -80,9 +80,7 @@ public class JwtUtil {
         long userId;
         try {
             userId = Long.parseLong(claimsJws.getBody().getSubject());
-            log.debug("用户ID" + userId);
         } catch (NumberFormatException exception) {
-            log.debug("用户ID格式错误", exception);
             throw new NumberFormatException("用户ID格式错误");
         }
         return userId;
