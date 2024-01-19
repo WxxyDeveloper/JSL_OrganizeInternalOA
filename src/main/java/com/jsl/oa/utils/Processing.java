@@ -1,5 +1,6 @@
 package com.jsl.oa.utils;
 
+import com.jsl.oa.exception.ClassCopyException;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
@@ -182,43 +183,46 @@ public class Processing {
      * @Param source:
      * @Param dest:
      **/
-    public static <T, S> T copyProperties(S source, T target) throws Exception {
+    public static <T, S> T copyProperties(@NotNull S source, @NotNull T target) throws ClassCopyException {
         Class<?> sourceClass = source.getClass();
         Class<?> targetClass = target.getClass();
 
-        Field[] sourceFields = sourceClass.getDeclaredFields();
-        for (Field sourceField : sourceFields) {
-            String fieldName = sourceField.getName();
-            Field targetField = null;
-            try {
-                targetField = targetClass.getDeclaredField(fieldName);
-            } catch (NoSuchFieldException e) {
-                // 目标对象不存在该属性，忽略
-                continue;
+        try {
+            Field[] sourceFields = sourceClass.getDeclaredFields();
+            for (Field sourceField : sourceFields) {
+                String fieldName = sourceField.getName();
+                Field targetField = null;
+                try {
+                    targetField = targetClass.getDeclaredField(fieldName);
+                } catch (NoSuchFieldException e) {
+                    // 目标对象不存在该属性，忽略
+                    continue;
+                }
+
+                sourceField.setAccessible(true);
+                targetField.setAccessible(true);
+
+                Object value = sourceField.get(source);
+
+                if(value == null){
+                    continue;
+                }
+
+                //如果获取的值不为数字且等于“”，则跳过
+                if ( !(value instanceof Number) && value.equals("")) {
+                    continue;
+                }
+
+                if (!sourceField.getType().equals(targetField.getType())) {
+                    continue;
+                }
+
+                targetField.set(target, value);
             }
-
-            sourceField.setAccessible(true);
-            targetField.setAccessible(true);
-
-            Object value = sourceField.get(source);
-
-            if(value == null){
-                continue;
-            }
-
-            //如果获取的值不为数字且等于“”，则跳过
-            if ( !(value instanceof Number) && value.equals("")) {
-                continue;
-            }
-
-            if (!sourceField.getType().equals(targetField.getType())) {
-                continue;
-            }
-
-            targetField.set(target, value);
+        } catch (IllegalAccessException e) {
+            throw new ClassCopyException(ErrorCode.CLASS_COPY_EXCEPTION);
         }
-
-        return target;
+        return null;
     }
 
     /**

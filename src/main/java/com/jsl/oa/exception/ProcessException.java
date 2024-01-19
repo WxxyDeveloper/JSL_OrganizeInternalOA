@@ -35,7 +35,7 @@ public class ProcessException {
         return ResultUtil.error("HttpMessageNotReadable", 400, "请求参数错误");
     }
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
-    public ResponseEntity<BaseResponse> businessMissingServletRequestParameterExceptionException(MissingServletRequestParameterException e) {
+    public ResponseEntity<BaseResponse> businessMissingServletRequestParameterException(MissingServletRequestParameterException e) {
         log.error(e.getMessage(), e);
         return ResponseEntity
                 .status(400)
@@ -45,6 +45,12 @@ public class ProcessException {
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<BaseResponse> businessException(@NotNull Exception e) {
         log.error(e.getMessage(), e);
-        return ResultUtil.error("ServerInternalError", 500, "服务器内部错误");
+        return ResultUtil.error("ServerInternalError", 50000, "服务器内部错误");
+    }
+
+    @ExceptionHandler(value = ClassCopyException.class)
+    public ResponseEntity<BaseResponse> businessClassCopyException(@NotNull ClassCopyException e) {
+        log.error(e.getMessage(), e);
+        return ResultUtil.error("ServerInternalError", 50001, "服务器内部错误");
     }
 }

@@ -1,7 +1,7 @@
 package com.jsl.oa.services.impl;
 
 import com.jsl.oa.dao.UserDAO;
-import com.jsl.oa.exception.BusinessException;
+import com.jsl.oa.exception.ClassCopyException;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserCurrentDO;
@@ -44,13 +44,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResponse userLock(HttpServletRequest request, Long id,Long isLock) {
+    public BaseResponse userLock(HttpServletRequest request, Long id, Long isLock) {
         if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         //判断用户是否存在
         if (userDAO.isExistUser(id)) {
-            userDAO.userLock(id,isLock);
+            userDAO.userLock(id, isLock);
             return ResultUtil.success("更改成功");
         } else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
     }
@@ -158,14 +158,14 @@ public class UserServiceImpl implements UserService {
                 userDO.setPassword(null);
                 return ResultUtil.success("添加用户成功", userDO);
             } else {
-                throw new BusinessException(ErrorCode.DATABASE_INSERT_ERROR);
+                return ResultUtil.error(ErrorCode.DATABASE_INSERT_ERROR);
             }
         } else return ResultUtil.error(ErrorCode.USER_EXIST);
     }
 
 
     @Override
-    public BaseResponse userEdit(UserEditVo userEditVo, HttpServletRequest request) {
+    public BaseResponse userEdit(UserEditVo userEditVo, HttpServletRequest request) throws ClassCopyException {
         //检测用户是否为管理员
         BaseResponse checkManagerResult = isManager(request);
         if (checkManagerResult.getCode() != 200) {
@@ -179,11 +179,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //修改非空属性
-        try {
-            Processing.copyProperties(userEditVo, userDO);
-        } catch (Exception e) {
-            return ResultUtil.error(ErrorCode.CLASS_COPY_EXCEPTION);
-        }
+        Processing.copyProperties(userEditVo, userDO);
 
         //向数据库中修改属性
         userDAO.userEdit(userDO);
@@ -192,15 +188,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResponse userProfileGet(HttpServletRequest request) {
+    public BaseResponse userProfileGet(HttpServletRequest request) throws ClassCopyException {
         // 获取用户Id
         UserDO userDO = userDAO.getUserById(Processing.getAuthHeaderToUserId(request));
         UserProfile userProfile = new UserProfile();
-        try {
-            Processing.copyProperties(userDO, userProfile);
-        } catch (Exception e) {
-            return ResultUtil.error(ErrorCode.CLASS_COPY_EXCEPTION);
-        }
+        Processing.copyProperties(userDO, userProfile);
         userProfile.setSex(Processing.getSex(userDO.getSex()));
         return ResultUtil.success(userProfile);
     }

@@ -1,5 +1,6 @@
 package com.jsl.oa.controllers;
 
+import com.jsl.oa.exception.ClassCopyException;
 import com.jsl.oa.model.voData.RoleAddVo;
 import com.jsl.oa.model.voData.RoleEditVO;
 import com.jsl.oa.services.RoleService;
@@ -131,7 +132,7 @@ public class RoleController {
      * @Param uid:
      **/
     @PostMapping("role/add")
-    public BaseResponse addRole(HttpServletRequest request, @RequestBody @Validated RoleAddVo roleAddVO, @NotNull BindingResult bindingResult ) {
+    public BaseResponse addRole(HttpServletRequest request, @RequestBody @Validated RoleAddVo roleAddVO, @NotNull BindingResult bindingResult ) throws ClassCopyException {
         log.info("请求接口[POST]: /role/add");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {

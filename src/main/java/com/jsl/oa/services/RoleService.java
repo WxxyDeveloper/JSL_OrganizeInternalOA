@@ -1,5 +1,6 @@
 package com.jsl.oa.services;
 
+import com.jsl.oa.exception.ClassCopyException;
 import com.jsl.oa.model.voData.RoleAddVo;
 import com.jsl.oa.model.voData.RoleEditVO;
 import com.jsl.oa.utils.BaseResponse;
@@ -25,7 +26,7 @@ public interface RoleService {
 
     BaseResponse roleDelete(HttpServletRequest request, Long id);
 
-    BaseResponse addRole(HttpServletRequest request, RoleAddVo roleAddVO);
+    BaseResponse addRole(HttpServletRequest request, RoleAddVo roleAddVO) throws ClassCopyException;
 
     BaseResponse roleChangeUser(HttpServletRequest request, Long uid, Long rid);
 }

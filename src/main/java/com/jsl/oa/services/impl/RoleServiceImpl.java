@@ -1,6 +1,7 @@
 package com.jsl.oa.services.impl;
 
 import com.jsl.oa.dao.RoleDAO;
+import com.jsl.oa.exception.ClassCopyException;
 import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.voData.RoleAddVo;
 import com.jsl.oa.model.voData.RoleEditVO;
@@ -119,7 +120,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public BaseResponse addRole(HttpServletRequest request, RoleAddVo roleAddVO) {
+    public BaseResponse addRole(HttpServletRequest request, RoleAddVo roleAddVO) throws ClassCopyException {
         // 检查用户权限
         if (!Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -128,12 +129,8 @@ public class RoleServiceImpl implements RoleService {
         String roleName = roleAddVO.getName();
         RoleDO roleDO = new RoleDO();
         if (!roleDAO.isExistRoleByRoleName(roleName)) {
-            try {
-                Processing.copyProperties(roleAddVO, roleDO);
-                roleDO.setRoleName(roleAddVO.getName());
-            } catch (Exception e) {
-                return ResultUtil.error(ErrorCode.CLASS_COPY_EXCEPTION);
-            }
+            Processing.copyProperties(roleAddVO, roleDO);
+            roleDO.setRoleName(roleAddVO.getName());
         } else {
             return ResultUtil.error(ErrorCode.ROLE_NAME_REPEAT);
         }
