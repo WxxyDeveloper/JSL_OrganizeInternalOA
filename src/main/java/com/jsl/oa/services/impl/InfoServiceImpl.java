@@ -121,4 +121,21 @@ public class InfoServiceImpl implements InfoService {
             return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
         }
     }
+
+    @Override
+    public BaseResponse editSettingHeaderImage(HttpServletRequest request, Boolean showType) {
+        // 用户权限校验
+        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
+            return ResultUtil.error(ErrorCode.NOT_ADMIN);
+        }
+        // 获取轮播图信息
+        CarouselDO carouselDO = infoDAO.getCarousel();
+        carouselDO.setOrder(showType ? "asc" : "desc");
+        // 保存轮播图
+        if (infoDAO.setCarousel(carouselDO)) {
+            return ResultUtil.success();
+        } else {
+            return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
+        }
+    }
 }

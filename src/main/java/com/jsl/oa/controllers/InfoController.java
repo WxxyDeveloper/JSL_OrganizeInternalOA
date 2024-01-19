@@ -9,7 +9,6 @@ import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -70,8 +69,8 @@ public class InfoController {
     }
 
     @PutMapping("/info/header-image/edit-setting")
-    public BaseResponse infoEditSettingHeaderImage(@RequestBody @Validated CarouselVO carouselVO, @RequestParam Integer id, HttpServletRequest πrequest, @NotNull BindingResult bindingResult) {
+    public BaseResponse infoEditSettingHeaderImage(@RequestParam Boolean showType, HttpServletRequest request) {
         log.info("请求接口[PUT]: /info/header-image/edit-setting");
-        return null;
+        return infoService.editSettingHeaderImage(request, showType);
     }
 }

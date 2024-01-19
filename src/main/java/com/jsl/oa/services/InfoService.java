@@ -57,4 +57,14 @@ public interface InfoService {
      * @return {@link BaseResponse}
      */
     BaseResponse delHeaderImage(HttpServletRequest request, Integer id);
+
+    /**
+     * <h2>编辑轮播图设置</h2>
+     * <hr/>
+     * 编辑轮播图显示类型
+     *
+     * @param showType 显示类型（true：顺序，false：倒序）
+     * @return {@link BaseResponse}
+     */
+    BaseResponse editSettingHeaderImage(HttpServletRequest request, Boolean showType);
 }
