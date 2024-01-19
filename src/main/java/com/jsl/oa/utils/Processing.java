@@ -219,8 +219,8 @@ public class Processing {
 
                 targetField.set(target, value);
             }
-        } catch (IllegalAccessException e) {
-            throw new ClassCopyException(ErrorCode.CLASS_COPY_EXCEPTION);
+        } catch (IllegalAccessException ignored) {
+            throw new ClassCopyException();
         }
         return null;
     }

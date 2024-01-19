@@ -1,6 +1,5 @@
 package com.jsl.oa.controllers;
 
-import com.jsl.oa.exception.ClassCopyException;
 import com.jsl.oa.model.voData.UserAddVo;
 import com.jsl.oa.model.voData.UserAllCurrentVO;
 import com.jsl.oa.model.voData.UserEditProfileVO;
@@ -166,7 +165,7 @@ public class UserController {
 
 
     @PutMapping("/user/edit")
-    public BaseResponse userEdit(@RequestBody @Validated UserEditVo userEditVo, BindingResult bindingResult, HttpServletRequest request) throws ClassCopyException {
+    public BaseResponse userEdit(@RequestBody @Validated UserEditVo userEditVo, BindingResult bindingResult, HttpServletRequest request) {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -176,7 +175,7 @@ public class UserController {
 
 
     @GetMapping("/user/profile/get")
-    public BaseResponse userProfileGet(HttpServletRequest request) throws ClassCopyException {
+    public BaseResponse userProfileGet(HttpServletRequest request) {
         return userService.userProfileGet(request);
     }
 }

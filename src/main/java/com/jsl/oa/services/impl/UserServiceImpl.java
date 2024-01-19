@@ -1,7 +1,6 @@
 package com.jsl.oa.services.impl;
 
 import com.jsl.oa.dao.UserDAO;
-import com.jsl.oa.exception.ClassCopyException;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserCurrentDO;
@@ -165,7 +164,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public BaseResponse userEdit(UserEditVo userEditVo, HttpServletRequest request) throws ClassCopyException {
+    public BaseResponse userEdit(UserEditVo userEditVo, HttpServletRequest request)  {
         //检测用户是否为管理员
         BaseResponse checkManagerResult = isManager(request);
         if (checkManagerResult.getCode() != 200) {
@@ -188,7 +187,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResponse userProfileGet(HttpServletRequest request) throws ClassCopyException {
+    public BaseResponse userProfileGet(HttpServletRequest request) {
         // 获取用户Id
         UserDO userDO = userDAO.getUserById(Processing.getAuthHeaderToUserId(request));
         UserProfile userProfile = new UserProfile();

@@ -42,7 +42,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public BaseResponse roleChangeUser(HttpServletRequest request, Long uid, Long rid) {
         if (Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
-            if(!roleDAO.roleChangeUser(uid, rid)){
+            // TODO: 2023-01-20|List:10002-未判断用户是否存在
+            // TODO: 2023-01-20|List:10003-保险起见，默认用户主键为 1 的用户为超级管理员
+            //  （不可以修改自己权限组，避免修改后不存在管理员，无管理组）
+            if (!roleDAO.roleChangeUser(uid, rid)) {
                 return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
             }
             return ResultUtil.success();
@@ -84,8 +87,7 @@ public class RoleServiceImpl implements RoleService {
         // 判断是否存在该 Role
         if (getRole != null) {
             // 替换 Role 信息
-            getRole.setRoleName(roleEditVO.getName())
-                    .setDisplayName(roleEditVO.getDisplayName());
+            getRole.setRoleName(roleEditVO.getName()).setDisplayName(roleEditVO.getDisplayName());
             // 更新 Role 信息
             if (roleDAO.roleEdit(getRole)) {
                 return ResultUtil.success();

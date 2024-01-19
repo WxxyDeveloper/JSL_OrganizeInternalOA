@@ -1,6 +1,5 @@
 package com.jsl.oa.services;
 
-import com.jsl.oa.exception.ClassCopyException;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.UserAddVo;
 import com.jsl.oa.model.voData.UserAllCurrentVO;
@@ -87,10 +86,10 @@ public interface UserService {
 
     BaseResponse userAdd(UserAddVo userAddVo, HttpServletRequest request);
 
-    BaseResponse userEdit(UserEditVo userEditVo, HttpServletRequest request) throws ClassCopyException;
+    BaseResponse userEdit(UserEditVo userEditVo, HttpServletRequest request);
 
 
-    BaseResponse userProfileGet(HttpServletRequest request) throws ClassCopyException;
+    BaseResponse userProfileGet(HttpServletRequest request);
 
 
 }
