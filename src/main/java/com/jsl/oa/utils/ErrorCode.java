@@ -21,6 +21,7 @@ public enum ErrorCode {
     NOT_ADMIN("NotAdmin", 40300, "不是管理员"),
     EMAIL_LOGIN_NOT_SUPPORT("EmailLoginNotSupport", 40300, "请使用邮箱登陆"),
     PASSWORD_NOT_SAME("PasswordNotSame", 40301, "两次密码不一致"),
+    ROLE_NOT_FOUNDED("RoleNotFounded", 40400, "角色不存在"),
     DATABASE_INSERT_ERROR("DatabaseInsertError", 50010, "数据库插入错误"),
     DATABASE_UPDATE_ERROR("DatabaseUpdateError", 50011, "数据库更新错误"),
     DATABASE_DELETE_ERROR("DatabaseDeleteError", 50012, "数据库删除错误"),

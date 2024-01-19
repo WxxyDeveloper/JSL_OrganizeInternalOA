@@ -2,10 +2,7 @@ package com.jsl.oa.mapper;
 
 import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -13,7 +10,7 @@ import java.util.List;
 public interface RoleMapper {
 
     @Insert("insert into organize_oa.oa_role_user (uid, rid) VALUE (#{uid},#{rid})")
-    void roleAddUser(Long uid,Long rid);
+    void roleAddUser(Long uid, Long rid);
 
     @Delete("delete from organize_oa.oa_role_user where uid=#{uid}")
     void roleRemoveUser(Long uid);
@@ -29,4 +26,7 @@ public interface RoleMapper {
 
     @Select("SELECT * FROM organize_oa.oa_role ORDER BY id DESC")
     List<RoleDO> getRole();
+
+    @Update("UPDATE organize_oa.oa_role SET role_name=#{roleName},display_name=#{displayName} WHERE id=#{id}")
+    boolean roleEdit(RoleDO getRole);
 }

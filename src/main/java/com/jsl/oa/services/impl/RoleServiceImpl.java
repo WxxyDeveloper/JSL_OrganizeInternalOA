@@ -1,8 +1,8 @@
 package com.jsl.oa.services.impl;
 
 import com.jsl.oa.dao.RoleDAO;
-import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.model.doData.RoleDO;
+import com.jsl.oa.model.voData.RoleEditVO;
 import com.jsl.oa.services.RoleService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -47,7 +47,7 @@ public class RoleServiceImpl implements RoleService {
         ArrayList<RoleDO> getRoleList;
         if (id != null && !id.isEmpty()) {
             if (Pattern.matches("^[0-9]+$", id)) {
-                getRoleList = (ArrayList<RoleDO>) roleDAO.getRoleById(id);
+                getRoleList = (ArrayList<RoleDO>) roleDAO.getRolesById(id);
             } else {
                 ArrayList<String> error = new ArrayList<>();
                 error.add("id 只能为数字");
@@ -59,5 +59,29 @@ public class RoleServiceImpl implements RoleService {
         }
         // 返回数据
         return ResultUtil.success(getRoleList);
+    }
+
+    @Override
+    public BaseResponse roleEdit(HttpServletRequest request, RoleEditVO roleEditVO) {
+        // 检查用户权限
+        if (!Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
+            return ResultUtil.error(ErrorCode.NOT_ADMIN);
+        }
+        // 获取 Role 相关信息
+        RoleDO getRole = roleDAO.getRoleById(roleEditVO.getId());
+        // 判断是否存在该 Role
+        if (getRole != null) {
+            // 替换 Role 信息
+            getRole.setRoleName(roleEditVO.getName())
+                    .setDisplayName(roleEditVO.getDisplayName());
+            // 更新 Role 信息
+            if (roleDAO.roleEdit(getRole)) {
+                return ResultUtil.success();
+            } else {
+                return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
+            }
+        } else {
+            return ResultUtil.error(ErrorCode.ROLE_NOT_FOUNDED);
+        }
     }
 }

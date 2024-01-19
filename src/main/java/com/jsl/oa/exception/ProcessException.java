@@ -17,19 +17,19 @@ public class ProcessException {
 
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<BaseResponse> businessMethodNotAllowedException() {
-        log.debug("请求方法错误");
+        log.warn("请求方法错误");
         return ResultUtil.error("MethodNotAllowed", 405, "请求方法错误");
     }
 
     @ExceptionHandler(value = DuplicateKeyException.class)
     public ResponseEntity<BaseResponse> businessDuplicateKeyException(@NotNull DuplicateKeyException e) {
-        log.debug(e.getMessage(), e);
+        log.warn(e.getMessage(), e);
         return ResultUtil.error("DuplicateEntry", 400, "数据重复/外键约束");
     }
 
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     public ResponseEntity<BaseResponse> businessHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        log.debug(e.getMessage(), e);
+        log.warn(e.getMessage(), e);
         return ResultUtil.error("HttpMessageNotReadable", 400, "请求参数错误");
     }
 

@@ -21,13 +21,21 @@ public class RoleDAO {
         roleMapper.roleRemoveUser(uid);
     }
 
-    public List<RoleDO> getRoleById(String id) {
+    public List<RoleDO> getRolesById(String id) {
         ArrayList<RoleDO> getRoleList = new ArrayList<>();
         getRoleList.add(roleMapper.getRoleById(Long.valueOf(id)));
         return getRoleList;
     }
 
+    public RoleDO getRoleById(Long id) {
+        return roleMapper.getRoleById(id);
+    }
+
     public List<RoleDO> getRole() {
         return roleMapper.getRole();
+    }
+
+    public boolean roleEdit(RoleDO getRole) {
+        return roleMapper.roleEdit(getRole);
     }
 }
