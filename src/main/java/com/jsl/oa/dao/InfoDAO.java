@@ -49,6 +49,11 @@ public class InfoDAO {
             }
         }
         // 获取排序
+        sortCarousel(getCarousel);
+        return getCarousel;
+    }
+
+    private void sortCarousel(CarouselDO getCarousel) {
         for (int i = 0; i < getCarousel.getData().size(); i++) {
             for (int j = 0; j < getCarousel.getData().size(); j++) {
                 if (getCarousel.getOrder().equals("desc")) {
@@ -62,7 +67,6 @@ public class InfoDAO {
                 }
             }
         }
-        return getCarousel;
     }
 
     /**
@@ -74,6 +78,7 @@ public class InfoDAO {
      * @return {@link Boolean}
      */
     public boolean setCarousel(CarouselDO carouselDO) {
+        sortCarousel(carouselDO);
         String setCarouselSql = gson.toJson(carouselDO);
         return infoMapper.setCarousel(setCarouselSql);
     }

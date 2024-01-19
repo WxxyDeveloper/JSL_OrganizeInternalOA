@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 @Slf4j
 @Service
@@ -67,7 +68,10 @@ public class InfoServiceImpl implements InfoService {
         // 获取轮播图信息
         CarouselDO carouselDO = infoDAO.getCarousel();
         // 获取指定轮播图
-        CarouselDO.DataDO carousel = carouselDO.getData().get(id);
+        if (id > carouselDO.getData().size()) {
+            return ResultUtil.error(ErrorCode.ID_NOT_EXIST);
+        }
+        CarouselDO.DataDO carousel = carouselDO.getData().get(id - 1);
         carousel.setDisplayOrder(carouselVO.getDisplayOrder())
                 .setImage(carouselVO.getImage())
                 .setDescription(carouselVO.getDescription())
@@ -84,8 +88,16 @@ public class InfoServiceImpl implements InfoService {
     }
 
     @Override
-    public BaseResponse getHeaderImage() {
+    public BaseResponse getHeaderImage(Integer id) {
         CarouselDO carouselDO = infoDAO.getCarousel();
+        if (id != null) {
+            if (id > carouselDO.getData().size()) {
+                return ResultUtil.error(ErrorCode.ID_NOT_EXIST);
+            }
+            ArrayList<CarouselDO.DataDO> newCarouselDO = new ArrayList<>();
+            newCarouselDO.add(carouselDO.getData().get(id - 1));
+            carouselDO.setData(newCarouselDO);
+        }
         return ResultUtil.success(carouselDO);
     }
 

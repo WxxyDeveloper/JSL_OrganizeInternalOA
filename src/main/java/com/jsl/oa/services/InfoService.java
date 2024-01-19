@@ -45,7 +45,7 @@ public interface InfoService {
      *
      * @return {@link BaseResponse}
      */
-    BaseResponse getHeaderImage();
+    BaseResponse getHeaderImage(Integer id);
 
     /**
      * <h2>删除轮播图</h2>

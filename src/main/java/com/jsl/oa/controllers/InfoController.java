@@ -9,6 +9,7 @@ import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +32,9 @@ public class InfoController {
     private final InfoService infoService;
 
     @GetMapping("/info/header-image/get")
-    public BaseResponse infoGetHeaderImage() {
+    public BaseResponse infoGetHeaderImage(@RequestParam(required = false) Integer id) {
         log.info("请求接口[GET]: /info/header-image/get");
-        return infoService.getHeaderImage();
+        return infoService.getHeaderImage(id);
     }
 
     @PutMapping("/info/header-image/edit")
@@ -69,7 +70,7 @@ public class InfoController {
     }
 
     @PutMapping("/info/header-image/edit-setting")
-    public BaseResponse infoEditSettingHeaderImage(@RequestBody @Validated CarouselVO carouselVO, @RequestParam Integer id, HttpServletRequest request, @NotNull BindingResult bindingResult) {
+    public BaseResponse infoEditSettingHeaderImage(@RequestBody @Validated CarouselVO carouselVO, @RequestParam Integer id, HttpServletRequest πrequest, @NotNull BindingResult bindingResult) {
         log.info("请求接口[PUT]: /info/header-image/edit-setting");
         return null;
     }
