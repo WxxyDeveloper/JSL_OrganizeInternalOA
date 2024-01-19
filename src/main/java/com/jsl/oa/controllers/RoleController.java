@@ -9,6 +9,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 
 /**
  * <h1>角色控制器</h1>
@@ -43,12 +44,12 @@ public class RoleController {
      * @return
      */
     @PostMapping("role/user/add")
-    public BaseResponse roleAddUser(@RequestParam Long uid, @RequestParam Long rid) {
+    public BaseResponse roleAddUser(HttpServletRequest request, @RequestParam Long uid, @RequestParam Long rid) {
         // 判断是否有参数错误
         if (uid == null || rid == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
-        return roleService.roleAddUser(uid, rid);
+        return roleService.roleAddUser(request,uid, rid);
     }
 
     /**
@@ -57,11 +58,11 @@ public class RoleController {
      * @return
      */
     @DeleteMapping("role/user/remove")
-    public BaseResponse roleRemoveUser(@RequestParam Long uid) {
+    public BaseResponse roleRemoveUser(HttpServletRequest request,@RequestParam Long uid) {
         // 判断是否有参数错误
         if (uid == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
-        return roleService.roleRemoveUser(uid);
+        return roleService.roleRemoveUser(request,uid);
     }
 }

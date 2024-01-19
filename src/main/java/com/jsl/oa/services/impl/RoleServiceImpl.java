@@ -20,22 +20,21 @@ import java.util.regex.Pattern;
 public class RoleServiceImpl implements RoleService {
 
     private final RoleDAO roleDAO;
-    private final UserDAO userDAO;
 
     @Override
-    public BaseResponse roleAddUser(Long uid, Long rid) {
-        if (userDAO.isExistUser(uid)) {
+    public BaseResponse roleAddUser(HttpServletRequest request,Long uid, Long rid) {
+        if (Processing.checkUserIsAdmin(request,roleDAO.roleMapper)) {
             roleDAO.roleAddUser(uid, rid);
             return ResultUtil.success();
-        } else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+        } else return ResultUtil.error(ErrorCode.NOT_ADMIN);
     }
 
     @Override
-    public BaseResponse roleRemoveUser(Long uid) {
-        if (userDAO.isExistUser(uid)) {
+    public BaseResponse roleRemoveUser(HttpServletRequest request,Long uid) {
+        if (Processing.checkUserIsAdmin(request,roleDAO.roleMapper)) {
             roleDAO.roleRemoveUser(uid);
             return ResultUtil.success();
-        } else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+        } else return ResultUtil.error(ErrorCode.NOT_ADMIN);
     }
 
     @Override

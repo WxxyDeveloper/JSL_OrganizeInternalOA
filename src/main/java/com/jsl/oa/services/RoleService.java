@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServletRequest;
  * @since v1.1.0
  */
 public interface RoleService {
-    BaseResponse roleAddUser(Long uid, Long rid);
+    BaseResponse roleAddUser(HttpServletRequest request,Long uid, Long rid);
 
-    BaseResponse roleRemoveUser(Long uid);
+    BaseResponse roleRemoveUser(HttpServletRequest request,Long uid);
 
     BaseResponse roleGet(HttpServletRequest request, String id);
 }
