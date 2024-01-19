@@ -66,7 +66,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
         // 添加跨域禁止
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+        CorsFilter.setHeader(httpServletResponse);
         // 程序执行
         try {
             // 尝试获取Authorization Header

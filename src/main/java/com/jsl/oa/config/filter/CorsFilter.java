@@ -1,6 +1,7 @@
 package com.jsl.oa.config.filter;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -15,8 +16,8 @@ public class CorsFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         HttpServletRequest request = (HttpServletRequest) req;
 
-        // 允许跨域请求
-        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+        // 设置请求头
+        setHeader(response);
 
         try {
             chain.doFilter(request, response);
@@ -25,10 +26,22 @@ public class CorsFilter implements Filter {
         }
     }
 
-    public void init(FilterConfig filterConfig) {}
+    public void init(FilterConfig filterConfig) {
+    }
 
     public void destroy() {
         Filter.super.destroy();
+    }
+
+    protected static void setHeader(@NotNull HttpServletResponse response) {
+        // 允许跨域请求
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        //允许请求方式
+        response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        //需要放行header头部字段 如需鉴权字段，自行添加，如Authorization
+        response.setHeader("Access-Control-Allow-Headers", "*");
     }
 
 }
