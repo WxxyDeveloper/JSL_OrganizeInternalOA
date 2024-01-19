@@ -19,7 +19,6 @@ import java.sql.Timestamp;
 public class RoleDO {
     private Long id;
     private String roleName;
-    private String displayName;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 }

@@ -182,7 +182,7 @@ public class UserServiceImpl implements UserService {
         try {
             Processing.copyProperties(userEditVo, userDO);
         } catch (Exception e) {
-            return ResultUtil.error(ErrorCode.CLASS_COPY_EXCEPTION);
+            throw new RuntimeException(e);
         }
 
         //向数据库中修改属性
@@ -199,7 +199,7 @@ public class UserServiceImpl implements UserService {
         try {
             Processing.copyProperties(userDO, userProfile);
         } catch (Exception e) {
-            return ResultUtil.error(ErrorCode.CLASS_COPY_EXCEPTION);
+            throw new RuntimeException(e);
         }
         userProfile.setSex(Processing.getSex(userDO.getSex()));
         return ResultUtil.success(userProfile);

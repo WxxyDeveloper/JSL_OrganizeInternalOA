@@ -1,7 +1,5 @@
 package com.jsl.oa.services;
 
-import com.jsl.oa.model.voData.RoleAddVo;
-import com.jsl.oa.model.voData.RoleEditVO;
 import com.jsl.oa.utils.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,12 +18,4 @@ public interface RoleService {
     BaseResponse roleRemoveUser(HttpServletRequest request,Long uid);
 
     BaseResponse roleGet(HttpServletRequest request, String id);
-
-    BaseResponse roleEdit(HttpServletRequest request, RoleEditVO roleEditVO);
-
-    BaseResponse roleDelete(HttpServletRequest request, Long id);
-
-    BaseResponse addRole(HttpServletRequest request, RoleAddVo roleAddVO);
-
-    BaseResponse roleChangeUser(HttpServletRequest request, Long uid, Long rid);
 }
