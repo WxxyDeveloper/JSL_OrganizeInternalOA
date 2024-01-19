@@ -67,7 +67,7 @@ public class AuthController {
      * @author 176yunxuan
      * @since v1.0.0
      */
-    @GetMapping("/auth/login")
+    @PostMapping("/auth/login")
     public BaseResponse authLogin(@RequestBody @Validated UserLoginVO userLoginVO, @NotNull BindingResult bindingResult) {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -131,7 +131,7 @@ public class AuthController {
         return authService.authLogout(request);
     }
 
-    @GetMapping("/auth/password")
+    @PutMapping("/auth/password")
     public BaseResponse authChangePassword(@RequestBody @Validated UserChangePasswordVO userChangePasswordVO, HttpServletRequest request, @NotNull BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));

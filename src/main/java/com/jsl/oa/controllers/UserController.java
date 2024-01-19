@@ -137,7 +137,7 @@ public class UserController {
      *
      * @return {@link BaseResponse}
      */
-    @GetMapping("/user/current/all")
+    @PostMapping("/user/current/all")
     public BaseResponse userCurrentAll(@RequestBody @Validated UserAllCurrentVO userAllCurrentVO,
                                        HttpServletRequest request, @NotNull BindingResult bindingResult) {
         // 判断是否有参数错误
