@@ -1,7 +1,6 @@
 package com.jsl.oa.services.impl;
 
 import com.jsl.oa.common.constant.BusinessConstants;
-import com.jsl.oa.exception.BusinessException;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.doData.RoleUserDO;
@@ -69,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
             userDO.setPassword(null);
             return ResultUtil.success("注册成功", userDO);
         } else {
-            throw new BusinessException(ErrorCode.DATABASE_INSERT_ERROR);
+            return ResultUtil.error(ErrorCode.DATABASE_INSERT_ERROR);
         }
     }
 
