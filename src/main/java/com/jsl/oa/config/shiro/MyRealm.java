@@ -1,7 +1,5 @@
 package com.jsl.oa.config.shiro;
 
-import com.jsl.oa.services.UserService;
-import lombok.RequiredArgsConstructor;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -10,10 +8,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.jetbrains.annotations.NotNull;
 
-@RequiredArgsConstructor
 public class MyRealm extends AuthorizingRealm {
-
-    private final UserService userService;
 
     /**
      * 授权

@@ -1,4 +1,4 @@
-package com.jsl.oa.config;
+package com.jsl.oa.config.filter;
 
 import com.google.gson.Gson;
 import com.jsl.oa.utils.ErrorCode;
@@ -7,10 +7,12 @@ import com.jsl.oa.utils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.ExpiredCredentialsException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <h1>JWT过滤器</h1>
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
  * @since v1.1.0
  */
 @Slf4j
+@Component
 public class JwtFilter extends BasicHttpAuthenticationFilter {
 
     /**
@@ -61,6 +64,10 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
+        // 添加跨域禁止
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+        // 程序执行
         try {
             // 尝试获取Authorization Header
             String token = getAuthzHeader(request);

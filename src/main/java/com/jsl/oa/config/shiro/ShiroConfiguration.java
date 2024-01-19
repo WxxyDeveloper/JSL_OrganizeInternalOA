@@ -1,6 +1,7 @@
 package com.jsl.oa.config.shiro;
 
-import com.jsl.oa.config.JwtFilter;
+import com.jsl.oa.config.filter.CorsFilter;
+import com.jsl.oa.config.filter.JwtFilter;
 import com.jsl.oa.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -29,7 +30,7 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/unauthorized", "anon"); // 未授权接口允许匿名访问
         filterChainDefinitionMap.put("/", "anon"); // 首页允许匿名访问
         filterChainDefinitionMap.put("/info/header-image/get", "anon"); // 信息接口允许匿名访问
-        filterChainDefinitionMap.put("/**/**", "jwt"); // 其他接口一律拦截(需要Token)
+        filterChainDefinitionMap.put("/**/**", "authc"); // 其他接口一律拦截(需要Token)
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
@@ -38,7 +39,8 @@ public class ShiroConfiguration {
 
         // 添加JWT过滤器
         Map<String, Filter> filters = new LinkedHashMap<>();
-        filters.put("jwt", new JwtFilter()); // 配置自定义的JWT过滤器
+        filters.put("authc", new JwtFilter()); // 配置自定义的JWT过滤器
+        filters.put("anon", new CorsFilter()); // 配置自定义的CORS过滤器
         shiroFilterFactoryBean.setFilters(filters);
         return shiroFilterFactoryBean;
     }
@@ -52,6 +54,6 @@ public class ShiroConfiguration {
 
     @Bean
     public MyRealm myRealm() {
-        return new MyRealm(userService);
+        return new MyRealm();
     }
 }

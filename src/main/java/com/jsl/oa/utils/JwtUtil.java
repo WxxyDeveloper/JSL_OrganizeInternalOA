@@ -1,6 +1,7 @@
 package com.jsl.oa.utils;
 
 import com.jsl.oa.common.constant.SafeConstants;
+import com.jsl.oa.config.filter.JwtFilter;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
  *
  * @author 筱锋xiao_lfeng
  * @version v1.1.0
- * @see com.jsl.oa.config.JwtFilter
+ * @see JwtFilter
  * @since v1.1.0
  */
 @Slf4j
