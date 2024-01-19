@@ -1,5 +1,6 @@
 package com.jsl.oa.controllers;
 
+import com.jsl.oa.model.voData.RoleAddVo;
 import com.jsl.oa.model.voData.RoleEditVO;
 import com.jsl.oa.services.RoleService;
 import com.jsl.oa.utils.BaseResponse;
@@ -120,5 +121,22 @@ public class RoleController {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
         return roleService.roleRemoveUser(request, uid);
+    }
+
+
+    /**
+     * @Description: TODO 添加用户权限
+     * @Date: 2024/1/19
+     * @Param request:
+     * @Param uid:
+     **/
+    @PostMapping("role/add")
+    public BaseResponse addRole(HttpServletRequest request, @RequestBody @Validated RoleAddVo roleAddVO, @NotNull BindingResult bindingResult ) {
+        log.info("请求接口[POST]: /role/add");
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        return roleService.addRole(request, roleAddVO);
     }
 }

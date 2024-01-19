@@ -35,6 +35,8 @@ public class RoleDAO {
         return roleMapper.getRole();
     }
 
+    public void roleAdd(RoleDO roleDO) {  roleMapper.roleAdd(roleDO);}
+
     public boolean roleEdit(RoleDO getRole) {
         return roleMapper.roleEdit(getRole);
     }
@@ -42,4 +44,14 @@ public class RoleDAO {
     public boolean roleDelete(Long id) {
         return roleMapper.roleDelete(id);
     }
+
+    public boolean isExistRoleByRoleName(String roleName){
+        RoleDO roleDO = roleMapper.getRoleByRoleName(roleName);
+        if(roleDO == null){
+            return false;
+        }
+        return true;
+    }
+
+
 }
