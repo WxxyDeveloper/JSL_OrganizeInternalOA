@@ -26,4 +26,6 @@ public interface RoleService {
     BaseResponse roleDelete(HttpServletRequest request, Long id);
 
     BaseResponse addRole(HttpServletRequest request, RoleAddVo roleAddVO);
+
+    BaseResponse roleChangeUser(HttpServletRequest request, Long uid, Long rid);
 }

@@ -53,5 +53,7 @@ public class RoleDAO {
         return true;
     }
 
-
+    public boolean roleChangeUser(Long uid, Long rid) {
+       return roleMapper.roleChangeUser(uid,rid);
+    }
 }

@@ -139,4 +139,15 @@ public class RoleController {
         }
         return roleService.addRole(request, roleAddVO);
     }
+
+
+    @PutMapping("role/user/change")
+    public BaseResponse roleChangeUser(HttpServletRequest request, @RequestParam Long uid, @RequestParam Long rid) {
+        log.info("请求接口[POST]: /role/user/change");
+        // 判断是否有参数错误
+        if (uid == null || rid == null) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
+        }
+        return roleService.roleChangeUser(request, uid, rid);
+    }
 }

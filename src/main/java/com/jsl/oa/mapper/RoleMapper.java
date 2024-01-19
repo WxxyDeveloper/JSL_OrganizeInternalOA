@@ -33,8 +33,12 @@ public interface RoleMapper {
     @Update("UPDATE organize_oa.oa_role SET role_name=#{roleName},display_name=#{displayName} WHERE id=#{id}")
     boolean roleEdit(RoleDO getRole);
 
+    @Update("UPDATE organize_oa.oa_role_user SET rid = #{rid} WHERE uid = #{uid}")
+    boolean roleChangeUser(Long uid, Long rid);
+
     @Delete("DELETE FROM organize_oa.oa_role WHERE id=#{id}")
     boolean roleDelete(Long id);
+
 
 
 }

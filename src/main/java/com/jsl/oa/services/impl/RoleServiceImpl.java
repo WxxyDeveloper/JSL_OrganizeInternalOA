@@ -39,6 +39,16 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public BaseResponse roleChangeUser(HttpServletRequest request, Long uid, Long rid) {
+        if (Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
+            if(!roleDAO.roleChangeUser(uid, rid)){
+                return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
+            }
+            return ResultUtil.success();
+        } else return ResultUtil.error(ErrorCode.NOT_ADMIN);
+    }
+
+    @Override
     public BaseResponse roleGet(HttpServletRequest request, String id) {
         // 检查用户权限
         if (!Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
@@ -132,4 +142,6 @@ public class RoleServiceImpl implements RoleService {
 
         return ResultUtil.success();
     }
+
+
 }
