@@ -1,8 +1,6 @@
 package com.jsl.oa.controllers;
 
-import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
-import com.jsl.oa.model.voData.business.info.CarouselVO;
 import com.jsl.oa.model.voData.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
 import com.jsl.oa.utils.BaseResponse;
@@ -32,7 +30,7 @@ public class ProjectController {
     }
 
     @GetMapping("/project/get")
-    public BaseResponse projectGet(){
+    public BaseResponse projectGet() {
         return projectService.get();
     }
 
@@ -54,7 +52,7 @@ public class ProjectController {
     }
 
     @PutMapping("/project/header/edit")
-    public BaseResponse projectEditHeader(@RequestBody @Validated ProjectShowVO projectShowVO,@RequestParam Integer id,HttpServletRequest request,@NotNull BindingResult bindingResult) {
+    public BaseResponse projectEditHeader(@RequestBody @Validated ProjectShowVO projectShowVO, @RequestParam Integer id, HttpServletRequest request, @NotNull BindingResult bindingResult) {
         log.info("请求接口[PUT]: /project/header/del");
         // 参数校验
         if (bindingResult.hasErrors()) {
@@ -70,13 +68,14 @@ public class ProjectController {
 
 
     @DeleteMapping("/project/header/del")
-    public BaseResponse projectDelHeader(@RequestParam Integer id,HttpServletRequest request) {
+    public BaseResponse projectDelHeader(@RequestParam Integer id, HttpServletRequest request) {
         log.info("请求接口[Delete]: /project/header/del");
-        return projectService.delHeader(id,request);
+        return projectService.delHeader(id, request);
     }
 
     @PostMapping("/project/add")
-    public BaseResponse projectAdd(@RequestBody @Validated ProjectInfoVO projectAdd, BindingResult bindingResult){
+    public BaseResponse projectAdd(@RequestBody @Validated ProjectInfoVO projectAdd, @NotNull BindingResult bindingResult) {
+        log.info("请求接口[PUT]: /project/header/del");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -85,7 +84,8 @@ public class ProjectController {
     }
 
     @PutMapping("/project/edit")
-    public BaseResponse projectEdit(@RequestBody @Validated ProjectInfoVO projectEdit, BindingResult bindingResult){
+    public BaseResponse projectEdit(@RequestBody @Validated ProjectInfoVO projectEdit, @NotNull BindingResult bindingResult) {
+        log.info("请求接口[PUT]: /project/header/del");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -94,7 +94,8 @@ public class ProjectController {
     }
 
     @GetMapping("/project/cut/user")
-    public BaseResponse projectGetUserInCutting(@RequestParam Long uid){
+    public BaseResponse projectGetUserInCutting(@RequestParam Long uid) {
+        log.info("请求接口[PUT]: /project/header/del");
         // 判断是否有参数错误
         if (uid == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
@@ -103,11 +104,12 @@ public class ProjectController {
     }
 
     @PostMapping("/project/cut/user/add")
-    public BaseResponse projectAddUserForCutting(@RequestParam Long uid,@RequestParam Long pid){
+    public BaseResponse projectAddUserForCutting(@RequestParam Long uid, @RequestParam Long pid) {
+        log.info("请求接口[PUT]: /project/header/del");
         // 判断是否有参数错误
         if (uid == null || pid == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
-        return projectService.projectAddUserForCutting(uid,pid);
+        return projectService.projectAddUserForCutting(uid, pid);
     }
 }

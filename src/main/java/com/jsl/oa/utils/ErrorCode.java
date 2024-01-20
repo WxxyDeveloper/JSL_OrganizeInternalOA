@@ -25,6 +25,7 @@ public enum ErrorCode {
     NOT_ADMIN("NotAdmin", 40302, "不是管理员"),
     EMAIL_LOGIN_NOT_SUPPORT("EmailLoginNotSupport", 40303, "请使用邮箱登陆"),
     PASSWORD_NOT_SAME("PasswordNotSame", 40304, "两次密码不一致"),
+    PLEASE_ASSIGN_ROLE_TO_USER("PleaseAssignRoleToUser", 40305, "请为用户添加角色"),
     ID_NOT_EXIST("IdNotExist", 40400, "ID不存在"),
     ROLE_NOT_FOUNDED("RoleNotFounded", 40401, "角色不存在"),
     ROLE_NAME_REPEAT("RoleNameRepeat", 40402, "角色名称重复"),

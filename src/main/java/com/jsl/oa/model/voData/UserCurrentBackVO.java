@@ -3,6 +3,7 @@ package com.jsl.oa.model.voData;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -16,10 +17,9 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class UserReturnBackVO {
+public class UserCurrentBackVO {
     private ReturnUser user;
     private ReturnUserRole role;
-    private String token;
     private List<String> permission;
 
     @Data
@@ -34,7 +34,21 @@ public class UserReturnBackVO {
         private Long id;
         private String jobId;
         private String username;
+        private String address;
         private String phone;
         private String email;
+        private Short age;
+        private String signature;
+        private String avatar;
+        private String nickname;
+        private Short sex;
+        private Boolean enabled;
+        private Boolean accountNoExpired;
+        private Boolean credentialsNoExpired;
+        private Boolean recommend;
+        private Boolean accountNoLocked;
+        private String description;
+        private Timestamp createdAt;
+        private Timestamp updatedAt;
     }
 }

@@ -7,7 +7,10 @@ import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.voData.RoleAddVo;
 import com.jsl.oa.model.voData.RoleEditVO;
 import com.jsl.oa.services.RoleService;
-import com.jsl.oa.utils.*;
+import com.jsl.oa.utils.BaseResponse;
+import com.jsl.oa.utils.ErrorCode;
+import com.jsl.oa.utils.Processing;
+import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,22 +43,21 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public BaseResponse roleChangeUser(HttpServletRequest request, Long uid, Long rid) {
-
         //检测用户是否存在
-        if(!userDAO.isExistUser(uid)){
+        if (!userDAO.isExistUser(uid)) {
             return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
         }
         //检测要改变的用户权限是否为自己
-        String token = request.getHeader("Authorization").replace("Bearer ", "");
-        if(uid == JwtUtil.getUserId(token)){
+        if (uid.equals(Processing.getAuthHeaderToUserId(request))) {
             return ResultUtil.error(ErrorCode.USER_NOT_CHANGE_TO_THEMSELVES);
         }
         //检测用户权限是否为管理员
         if (Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
-            if (!roleDAO.roleChangeUser(uid, rid)) {
-                return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
+            if (roleDAO.roleChangeUser(uid, rid)) {
+                return ResultUtil.success();
+            } else {
+                return ResultUtil.error(ErrorCode.PLEASE_ASSIGN_ROLE_TO_USER);
             }
-            return ResultUtil.success();
         } else return ResultUtil.error(ErrorCode.NOT_ADMIN);
     }
 
@@ -125,7 +127,6 @@ public class RoleServiceImpl implements RoleService {
         } else {
             return ResultUtil.error(ErrorCode.ROLE_NOT_FOUNDED);
         }
-
     }
 
     @Override
@@ -145,9 +146,6 @@ public class RoleServiceImpl implements RoleService {
         }
         //向数据库中插入数据
         roleDAO.roleAdd(roleDO);
-
         return ResultUtil.success();
     }
-
-
 }

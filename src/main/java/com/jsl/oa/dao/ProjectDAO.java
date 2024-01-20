@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
-import com.jsl.oa.model.doData.info.CarouselDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import com.jsl.oa.utils.BaseResponse;
@@ -35,9 +34,7 @@ public class ProjectDAO {
     }
 
     public boolean isExistProject(Long id) {
-        if(projectMapper.getProjectById(id)==null) {
-            return false;
-        }else return true;
+        return projectMapper.getProjectById(id) != null;
     }
 
     public List<ProjectCuttingDO> projectGetUserInCutting(Long uid) {
@@ -45,28 +42,28 @@ public class ProjectDAO {
     }
 
     public void projectAddUserForCutting(Long uid, Long pid) {
-         projectMapper.projectAddUserInCutting(uid,pid);
+        projectMapper.projectAddUserInCutting(uid, pid);
     }
 
     public ProjectShowDO getHeader() {
-            String getProjectShowSql = projectMapper.getHeader();
-            ProjectShowDO getProjectShow = null;
-            if (!getProjectShowSql.equals("{}")) {
-                getProjectShow = gson.fromJson(getProjectShowSql, ProjectShowDO.class);
+        String getProjectShowSql = projectMapper.getHeader();
+        ProjectShowDO getProjectShow = null;
+        if (getProjectShowSql != null && !getProjectShowSql.equals("{}")) {
+            getProjectShow = gson.fromJson(getProjectShowSql, ProjectShowDO.class);
+        }
+        if (getProjectShow == null) {
+            // 初始化
+            getProjectShow = new ProjectShowDO();
+            getProjectShow.setOrder("desc");
+            getProjectShow.setData(new ArrayList<>());
+            try {
+                projectMapper.insertProjectShow();
+            } catch (DuplicateKeyException ignored) {
             }
-            if (getProjectShow == null) {
-                // 初始化
-                getProjectShow = new ProjectShowDO();
-                getProjectShow.setOrder("desc");
-                getProjectShow.setData(new ArrayList<>());
-                try {
-                    projectMapper.insertProjectShow();
-                } catch (DuplicateKeyException ignored) {
-                }
-            }
-            // 获取排序
-            sortProject(getProjectShow);
-            return getProjectShow;
+        }
+        // 获取排序
+        sortProject(getProjectShow);
+        return getProjectShow;
     }
 
     private void sortProject(ProjectShowDO projectShowDO) {

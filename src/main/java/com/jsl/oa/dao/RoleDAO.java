@@ -13,8 +13,8 @@ import java.util.List;
 public class RoleDAO {
     public final RoleMapper roleMapper;
 
-    public void roleAddUser(Long uid,Long rid) {
-        roleMapper.roleAddUser(uid,rid);
+    public void roleAddUser(Long uid, Long rid) {
+        roleMapper.roleAddUser(uid, rid);
     }
 
     public void roleRemoveUser(Long uid) {
@@ -35,7 +35,9 @@ public class RoleDAO {
         return roleMapper.getRole();
     }
 
-    public void roleAdd(RoleDO roleDO) {  roleMapper.roleAdd(roleDO);}
+    public void roleAdd(RoleDO roleDO) {
+        roleMapper.roleAdd(roleDO);
+    }
 
     public boolean roleEdit(RoleDO getRole) {
         return roleMapper.roleEdit(getRole);
@@ -45,12 +47,12 @@ public class RoleDAO {
         return roleMapper.roleDelete(id);
     }
 
-    public boolean isExistRoleByRoleName(String roleName){
+    public boolean isExistRoleByRoleName(String roleName) {
         RoleDO roleDO = roleMapper.getRoleByRoleName(roleName);
         return roleDO != null;
     }
 
     public boolean roleChangeUser(Long uid, Long rid) {
-       return roleMapper.roleChangeUser(uid,rid);
+        return roleMapper.roleChangeUser(uid, rid);
     }
 }

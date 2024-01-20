@@ -7,15 +7,20 @@ import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserCurrentDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.UserAllCurrentVO;
+import com.jsl.oa.model.voData.UserCurrentBackVO;
 import com.jsl.oa.model.voData.UserEditProfileVO;
+import com.jsl.oa.utils.Processing;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class UserDAO {
@@ -50,9 +55,7 @@ public class UserDAO {
      * @return
      */
     public Boolean isExistUser(Long id) {
-        if (userMapper.getUserById(id) == null) {
-            return false;
-        } else return true;
+        return userMapper.getUserById(id) != null;
     }
 
     /**
@@ -77,15 +80,23 @@ public class UserDAO {
         userMapper.userEditProfile(userEditProfileVO);
     }
 
-    public List<UserCurrentDO> userCurrentAll(UserAllCurrentVO userAllCurrentVO) {
-        List<UserCurrentDO> userCurrentDO = userMapper.getAllUser(userAllCurrentVO);
-        return this.userCurrentAll(userCurrentDO);
+    public List<UserCurrentBackVO> userCurrentAll(UserAllCurrentVO userAllCurrentVO) {
+        List<UserDO> userCurrentDO = userMapper.getAllUser(userAllCurrentVO);
+        List<UserCurrentBackVO> userCurrentDOList = new ArrayList<>();
+        userCurrentDO.forEach(it -> {
+            userCurrentDOList.add(Processing.ReturnUserInfo(it, roleMapper));
+        });
+        return userCurrentDOList;
 
     }
 
-    public List<UserCurrentDO> userCurrentAllLike(UserAllCurrentVO userAllCurrentVO) {
-        List<UserCurrentDO> userCurrentDO = userMapper.getAllUserBySearch(userAllCurrentVO);
-        return this.userCurrentAll(userCurrentDO);
+    public List<UserCurrentBackVO> userCurrentAllLike(UserAllCurrentVO userAllCurrentVO) {
+        List<UserDO> userCurrentDO = userMapper.getAllUserBySearch(userAllCurrentVO);
+        List<UserCurrentBackVO> userCurrentDOList = new ArrayList<>();
+        userCurrentDO.forEach(it -> {
+            userCurrentDOList.add(Processing.ReturnUserInfo(it, roleMapper));
+        });
+        return userCurrentDOList;
     }
 
     @Contract("_ -> param1")
@@ -172,6 +183,7 @@ public class UserDAO {
     }
 
     public void userEdit(UserDO userDO) {
+        log.info("> 执行 DAO 层 userEdit 方法");
         userMapper.updateUser(userDO);
     }
 
@@ -207,6 +219,7 @@ public class UserDAO {
      * @Param userId
      **/
     public UserDO getUserById(Long userId) {
+        log.info("> 执行 DAO 层 getUserById 方法");
         return userMapper.getUserById(userId);
     }
 
@@ -240,5 +253,13 @@ public class UserDAO {
 
     public List<UserDO> getRecommendUser(){
         return userMapper.getRecommendUser();
+    }
+
+    public UserDO getUserByEmail(String email) {
+        return userMapper.getUserByEmail(email);
+    }
+
+    public UserDO getUserByPhone(String phone) {
+        return userMapper.getUserByPhone(phone);
     }
 }

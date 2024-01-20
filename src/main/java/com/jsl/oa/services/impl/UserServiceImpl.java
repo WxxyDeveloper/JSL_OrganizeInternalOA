@@ -2,13 +2,15 @@ package com.jsl.oa.services.impl;
 
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.RoleMapper;
-import com.jsl.oa.model.doData.RoleUserDO;
-import com.jsl.oa.model.doData.UserCurrentDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.*;
 import com.jsl.oa.services.UserService;
-import com.jsl.oa.utils.*;
+import com.jsl.oa.utils.BaseResponse;
+import com.jsl.oa.utils.ErrorCode;
+import com.jsl.oa.utils.Processing;
+import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -80,7 +83,7 @@ public class UserServiceImpl implements UserService {
             userAllCurrentVO.setPage((userAllCurrentVO.getPage() - 1) * userAllCurrentVO.getLimit());
         }
         // 检查是否处于模糊查询
-        List<UserCurrentDO> userAllCurrentVOList;
+        List<UserCurrentBackVO> userAllCurrentVOList;
         if (userAllCurrentVO.getSearch() != null && !userAllCurrentVO.getSearch().isEmpty()) {
             if (Pattern.matches("^[0-9A-Za-z_@]+$", userAllCurrentVO.getSearch())) {
                 userAllCurrentVOList = userDAO.userCurrentAllLike(userAllCurrentVO);
@@ -101,39 +104,46 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResponse userCurrent(HttpServletRequest request, String id, String username, String email, String phone) {
-        // 检查是否是管理员用户
-        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
-            return ResultUtil.error(ErrorCode.NOT_ADMIN);
-        }
-        // 根据顺序优先级进行用户信息获取
-        UserCurrentDO userCurrentDO = null;
-        if (id != null && !id.isEmpty()) {
-            userCurrentDO = userDAO.userCurrentById(Long.valueOf(id));
-        } else if (username != null && !username.isEmpty()) {
-            userCurrentDO = userDAO.userCurrentByUsername(username);
-        } else if (email != null && !email.isEmpty()) {
-            userCurrentDO = userDAO.userCurrentByEmail(email);
-        } else if (phone != null && !phone.isEmpty()) {
-            userCurrentDO = userDAO.userCurrentByPhone(phone);
-        }
-        // 返回结果
-        if (userCurrentDO != null) {
-            return ResultUtil.success(userCurrentDO);
+        if (id == null && username == null && email == null && phone == null) {
+            // Token获取信息
+            UserDO userDO = userDAO.getUserById(Processing.getAuthHeaderToUserId(request));
+            if (userDO != null) {
+                return ResultUtil.success(Processing.ReturnUserInfo(userDO, roleMapper));
+            } else {
+                return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+            }
         } else {
-            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+            // 检查是否是管理员用户
+            if (!Processing.checkUserIsAdmin(request, roleMapper)) {
+                return ResultUtil.error(ErrorCode.NOT_ADMIN);
+            }
+            // 根据顺序优先级进行用户信息获取
+            UserDO userDO = null;
+            if (id != null && !id.isEmpty()) {
+                userDO = userDAO.getUserById(Long.valueOf(id));
+            } else if (username != null && !username.isEmpty()) {
+                userDO = userDAO.getUserInfoByUsername(username);
+            } else if (email != null && !email.isEmpty()) {
+                userDO = userDAO.getUserByEmail(email);
+            } else if (phone != null && !phone.isEmpty()) {
+                userDO = userDAO.getUserByPhone(phone);
+            }
+            // 返回结果
+            if (userDO != null) {
+                return ResultUtil.success(Processing.ReturnUserInfo(userDO, roleMapper));
+            } else {
+                return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+            }
         }
     }
 
 
     @Override
     public BaseResponse userAdd(UserAddVo userAddVo, HttpServletRequest request) {
-
-        //检测用户是否为管理员
-        BaseResponse checkManagerResult = isManager(request);
-        if (checkManagerResult.getCode() != 200) {
-            return checkManagerResult;
+        // 检测用户是否为管理员
+        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
+            return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
-
         //如果用户不重复，添加用户
         if (!userDAO.isRepeatUser(userAddVo.getUsername())) {
             // 生成工号
@@ -164,22 +174,32 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public BaseResponse userEdit(UserEditVo userEditVo, HttpServletRequest request)  {
-        //检测用户是否为管理员
-        BaseResponse checkManagerResult = isManager(request);
-        if (checkManagerResult.getCode() != 200) {
-            return checkManagerResult;
+    public BaseResponse userEdit(UserEditVO userEditVO, HttpServletRequest request) {
+        log.info("> 执行 Service 层 userEdit 方法");
+        // 检测用户是否为管理员
+        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
+            return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
-
         //根据id获取用户信息
-        UserDO userDO = userDAO.getUserById(userEditVo.getId());
+        UserDO userDO = userDAO.getUserById(userEditVO.getId());
         if (userDO == null) {
             return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
         }
-
         //修改非空属性
-        Processing.copyProperties(userEditVo, userDO);
-
+        userDO.setAddress(userEditVO.getAddress())
+                .setPhone(userEditVO.getPhone())
+                .setEmail(userEditVO.getEmail())
+                .setAge(userEditVO.getAge())
+                .setSex(userEditVO.getSex())
+                .setSignature(userEditVO.getSignature())
+                .setAvatar(userEditVO.getAvatar())
+                .setNickname(userEditVO.getNickname())
+                .setDescription(userEditVO.getDescription())
+                .setEnabled(userEditVO.getEnabled())
+                .setAccountNoExpired(userEditVO.getIsExpired())
+                .setCredentialsNoExpired(userEditVO.getPasswordExpired())
+                .setRecommend(userEditVO.getRecommend())
+                .setAccountNoLocked(userEditVO.getIsLocked());
         //向数据库中修改属性
         userDAO.userEdit(userDO);
 
@@ -195,29 +215,4 @@ public class UserServiceImpl implements UserService {
         userProfileVo.setSex(Processing.getSex(userDO.getSex()));
         return ResultUtil.success(userProfileVo);
     }
-
-
-    /**
-     * @Description: 判断用户是否为管理员
-     * @Date: 2024/1/18
-     * @Param request: 请求头
-     **/
-    public BaseResponse isManager(HttpServletRequest request) {
-        //获取token
-        String originalAuthorization = request.getHeader("Authorization");
-        String token = originalAuthorization.replace("Bearer ", "");
-        //获取操作用户的权限
-        RoleUserDO roleUserDO = userDAO.getRoleFromUser(JwtUtil.getUserId(token));
-        //用户权限不为空
-        if (roleUserDO == null) {
-            return ResultUtil.error(ErrorCode.USER_ROLE_NOT_EXIST);
-        }
-        //用户权限应为管理员
-        if (!userDAO.isManagerByRoleId(roleUserDO.getRid())) {
-            return ResultUtil.error(ErrorCode.USER_ROLE_NOT_MANAGER);
-        }
-        return ResultUtil.success();
-    }
-
-
 }
