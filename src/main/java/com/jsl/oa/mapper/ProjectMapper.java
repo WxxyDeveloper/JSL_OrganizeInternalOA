@@ -3,6 +3,7 @@ package com.jsl.oa.mapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
+import com.jsl.oa.utils.BaseResponse;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -39,4 +40,10 @@ public interface ProjectMapper {
 
     @Update("UPDATE organize_oa.oa_config SET data = #{setProjectShow} WHERE value = 'project_show'")
     boolean setProjectShow(String setProjectShow);
+
+    @Select("select * from organize_oa.oa_permissions")
+    List<ProjectDO> get();
+
+    @Select("select * from organize_oa.oa_project where name=#{name}")
+    BaseResponse getByName(String name);
 }

@@ -31,6 +31,17 @@ public class ProjectController {
         return projectService.getHeader(id);
     }
 
+    @GetMapping("/project/get")
+    public BaseResponse projectGet(){
+        return projectService.get();
+    }
+
+    @GetMapping("/project/header")
+    public BaseResponse projectGetByName(@RequestParam(required = false) String name) {
+        log.info("请求接口[GET]: /project/header");
+        return projectService.getByName(name);
+    }
+
     @PostMapping("/project/header/add")
     public BaseResponse projectAddHeader(@RequestBody @Validated ProjectShowVO projectShowVO, HttpServletRequest request, @NotNull BindingResult bindingResult) {
         log.info("请求接口[POST]: /project/header/add");

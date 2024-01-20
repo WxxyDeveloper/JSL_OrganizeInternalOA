@@ -4,6 +4,7 @@ import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
+import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.doData.info.CarouselDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
@@ -160,6 +161,17 @@ public class ProjectServiceImpl implements ProjectService {
         } else {
             return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
         }
+    }
+
+    @Override
+    public BaseResponse get() {
+        List<ProjectDO> projectDOList =projectDAO.get();
+        return ResultUtil.success(projectDOList);
+    }
+
+    @Override
+    public BaseResponse getByName(String name) {
+        return projectDAO.getByName(name);
     }
 
 

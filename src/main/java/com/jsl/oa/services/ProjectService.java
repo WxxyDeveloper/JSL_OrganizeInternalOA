@@ -23,4 +23,8 @@ public interface ProjectService {
     BaseResponse delHeader(Integer id, HttpServletRequest request);
 
     BaseResponse editHeader(HttpServletRequest request, ProjectShowVO projectShowVO, Integer id);
+
+    BaseResponse get();
+
+    BaseResponse getByName(String name);
 }

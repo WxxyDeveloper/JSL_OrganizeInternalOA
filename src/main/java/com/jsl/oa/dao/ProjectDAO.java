@@ -3,9 +3,11 @@ package com.jsl.oa.dao;
 import com.google.gson.Gson;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
+import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.info.CarouselDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
+import com.jsl.oa.utils.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
@@ -85,5 +87,14 @@ public class ProjectDAO {
         sortProject(projectShowDO);
         String setProjectShow = gson.toJson(projectShowDO);
         return projectMapper.setProjectShow(setProjectShow);
+    }
+
+    public List<ProjectDO> get() {
+
+        return projectMapper.get();
+    }
+
+    public BaseResponse getByName(String name) {
+        return projectMapper.getByName(name);
     }
 }
