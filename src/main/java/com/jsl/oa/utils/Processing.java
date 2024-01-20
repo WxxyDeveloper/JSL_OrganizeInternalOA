@@ -2,9 +2,11 @@ package com.jsl.oa.utils;
 
 import com.jsl.oa.exception.ClassCopyException;
 import com.jsl.oa.mapper.RoleMapper;
+import com.jsl.oa.model.doData.PermissionDO;
 import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserDO;
+import com.jsl.oa.model.voData.PermissionContentVo;
 import com.jsl.oa.model.voData.UserProfileVo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,10 +15,7 @@ import org.springframework.validation.ObjectError;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * <h1>自定义快捷工具类</h1>
@@ -183,7 +182,7 @@ public class Processing {
 
 
     /**
-     * @Description: TODO VO类与实体类属性赋值
+     * @Description:  VO类与实体类属性赋值
      * @Date: 2024/1/18
      * @Param source:
      * @Param dest:
@@ -232,7 +231,7 @@ public class Processing {
 
 
     /**
-     * @Description: TODO 将性别转为字符形式
+     * @Description:  将性别转为字符形式
      * @Date: 2024/1/18
      **/
     public static String getSex(short sex){
@@ -270,6 +269,60 @@ public class Processing {
         userDOS.sort(comparator);
         return userDOS;
     }
+
+
+
+    /**
+     * @Description:  将Permission归纳为父子关系的json形式
+     * @Date: 2024/1/20
+     * @Param permissions: 权限实体类
+     **/
+    public static List<PermissionContentVo> convertToVoList(List<PermissionDO> permissions) {
+        List<PermissionContentVo> vos = new ArrayList<>();
+        Map<Long, List<PermissionDO>> childrenMap = new HashMap<>();
+
+        for (PermissionDO permission : permissions) {
+            if (permission.getPid() != null) {
+                List<PermissionDO> children = childrenMap.getOrDefault(permission.getPid(), new ArrayList<>());
+                children.add(permission);
+                childrenMap.put(permission.getPid(), children);
+            }
+        }
+
+        for (PermissionDO permission : permissions) {
+            if (permission.getPid() == null) {
+                PermissionContentVo vo = convertToVo(permission, childrenMap);
+                vos.add(vo);
+            }
+        }
+
+        return vos;
+    }
+
+
+    /**
+     * @Description:  封装PermissionContentVo的子类，被convertToVoList方法调用
+     * @Date: 2024/1/20
+     * @Param permission: 权限实体类
+     * @Param childrenMap: 要封装的子类
+     **/
+    public static PermissionContentVo convertToVo(PermissionDO permission, Map<Long, List<PermissionDO>> childrenMap) {
+        PermissionContentVo vo = new PermissionContentVo();
+        copyProperties(permission,vo);
+
+        List<PermissionDO> children = childrenMap.get(permission.getId());
+        if (children != null) {
+            List<PermissionContentVo> childVos = new ArrayList<>();
+            for (PermissionDO child : children) {
+                PermissionContentVo childVo = convertToVo(child, childrenMap);
+                childVos.add(childVo);
+            }
+            vo.setChildren(childVos);
+        }
+
+        return vo;
+    }
+
 
 
 }
