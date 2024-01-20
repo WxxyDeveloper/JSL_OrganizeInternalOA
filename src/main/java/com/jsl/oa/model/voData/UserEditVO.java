@@ -2,14 +2,20 @@ package com.jsl.oa.model.voData;
 
 import lombok.Data;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 
 @Data
-public class UserEditVo {
+public class UserEditVO {
 
     @NotNull
     private Long id;
+
+    @NotNull
+    private String username;
 
     private String address;
 
@@ -28,7 +34,16 @@ public class UserEditVo {
     private String avatar;
     private String nickname;
     private String description;
-
+    @NotNull
+    private Boolean enabled;
+    @NotNull
+    private Boolean isExpired;
+    @NotNull
+    private Boolean passwordExpired;
+    @NotNull
+    private Boolean recommend;
+    @NotNull
+    private Boolean isLocked;
 }
 
 
