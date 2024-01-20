@@ -12,7 +12,7 @@ spring:
     port: 6379
     password: 123456
   profiles:
-    active: dev
+    active: test
 mybatis:
   configuration:
     map-underscore-to-camel-case: true

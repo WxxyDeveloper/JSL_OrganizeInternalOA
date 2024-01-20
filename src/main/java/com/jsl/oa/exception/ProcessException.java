@@ -13,6 +13,10 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Slf4j
 @RestControllerAdvice
 public class ProcessException {
@@ -37,9 +41,18 @@ public class ProcessException {
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     public ResponseEntity<BaseResponse> businessMissingServletRequestParameterException(MissingServletRequestParameterException e) {
         log.error(e.getMessage(), e);
+        // 使用正则表达式匹配并提取'id'部分
+        Pattern pattern = Pattern.compile("'.*?'");
+        Matcher matcher = pattern.matcher(Objects.requireNonNull(e.getMessage()));
+
+        // 查找匹配项
+        while (matcher.find()) {
+            String matchedGroup = matcher.group();
+        }
+
         return ResponseEntity
                 .status(400)
-                .body(ResultUtil.error(ErrorCode.PARAMETER_ERROR, e.getMessage()));
+                .body(ResultUtil.error(ErrorCode.PARAMETER_ERROR, "缺少 " + e.getParameterName() + " 参数"));
     }
 
     @ExceptionHandler(value = Exception.class)

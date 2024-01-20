@@ -31,6 +31,7 @@ public class InfoServiceImpl implements InfoService {
 
     @Override
     public BaseResponse addHeaderImage(HttpServletRequest request, CarouselVO carouselVO) {
+        log.info("\t> 执行 Service 层 InfoService.addHeaderImage 方法");
         // 用户权限校验
         if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -60,6 +61,7 @@ public class InfoServiceImpl implements InfoService {
 
     @Override
     public BaseResponse editHeaderImage(HttpServletRequest request, CarouselVO carouselVO, Integer id) {
+        log.info("\t> 执行 Service 层 InfoService.editHeaderImage 方法");
         // 用户权限校验
         if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -91,6 +93,8 @@ public class InfoServiceImpl implements InfoService {
 
     @Override
     public BaseResponse getHeaderImage(Integer id) {
+        log.info("\t> 执行 Service 层 InfoService.getHeaderImage 方法");
+        // 获取轮播图信息
         CarouselDO carouselDO = infoDAO.getCarousel();
         if (id != null) {
             if (id > carouselDO.getData().size()) {
@@ -105,6 +109,7 @@ public class InfoServiceImpl implements InfoService {
 
     @Override
     public BaseResponse delHeaderImage(HttpServletRequest request, Integer id) {
+        log.info("\t> 执行 Service 层 InfoService.delHeaderImage 方法");
         // 用户权限校验
         if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -126,6 +131,7 @@ public class InfoServiceImpl implements InfoService {
 
     @Override
     public BaseResponse editSettingHeaderImage(HttpServletRequest request, Boolean showType) {
+        log.info("\t> 执行 Service 层 InfoService.editSettingHeaderImage 方法");
         // 用户权限校验
         if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -143,6 +149,7 @@ public class InfoServiceImpl implements InfoService {
 
     @Override
     public BaseResponse getHeaderUser(HttpServletRequest request, String order, String orderBy) {
+        log.info("\t> 执行 Service 层 InfoService.getHeaderUser 方法");
         // 默认无参数情况
         if (order == null) {
             order = "asc";
@@ -151,16 +158,16 @@ public class InfoServiceImpl implements InfoService {
             orderBy = "userId";
         }
         // 检查参数是否错误
-        if (!(order.equals("asc") || order.equals("desc")) || !(orderBy.equals("userName") || orderBy.equals("userId"))) {
+        if (!("asc".equals(order) || "desc".equals(order)) || !("userName".equals(orderBy) || "userId".equals(orderBy))) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
         //获取用户信息
-        List<UserDO> userDOS = userDAO.getRecommendUser();
+        List<UserDO> userDOList = userDAO.getRecommendUser();
         //进行排序
-        Processing.orderUser(userDOS, order, orderBy);
+        Processing.orderUser(userDOList, order, orderBy);
         //封装VO类
         List<UserProfileVo> userProfileVos = new ArrayList<>();
-        for (UserDO userDO : userDOS) {
+        for (UserDO userDO : userDOList) {
             UserProfileVo userProfileVo = new UserProfileVo();
             Processing.copyProperties(userDO, userProfileVo);
             userProfileVo.setSex(Processing.getSex(userDO.getSex()));

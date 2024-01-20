@@ -44,11 +44,14 @@ public class UserController {
      * @return {@link BaseResponse}
      */
     @PutMapping("/user/delete")
-    public BaseResponse userDelete(HttpServletRequest request,@RequestParam Long id) {
+    public BaseResponse userDelete(HttpServletRequest request, @RequestParam String id) {
+        log.info("请求接口[PUT]: /user/delete");
         // 判断是否有参数错误
         if (id == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
-        } else return userService.userDelete(request,id);
+        } else {
+            return userService.userDelete(request, Long.valueOf(id));
+        }
     }
 
     /**
@@ -58,12 +61,13 @@ public class UserController {
      * @return {@link BaseResponse}
      */
     @PutMapping("/user/lock")
-    public BaseResponse userLock(HttpServletRequest request,@RequestParam Long id,@RequestParam Long isLock) {
+    public BaseResponse userLock(HttpServletRequest request, @RequestParam Long id, @RequestParam Long isLock) {
+        log.info("请求接口[PUT]: /user/lock");
         // 判断是否有参数错误
         if (id == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
-        return userService.userLock(request,id,isLock);
+        return userService.userLock(request, id, isLock);
     }
 
     /**
@@ -75,6 +79,7 @@ public class UserController {
      */
     @PutMapping("/user/profile/edit")
     public BaseResponse userEditProfile(@RequestBody @Validated UserEditProfileVO userEditProfileVO, BindingResult bindingResult) {
+        log.info("请求接口[PUT]: /user/profile/edit");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -97,6 +102,7 @@ public class UserController {
      */
     @GetMapping("/user/current")
     public BaseResponse userCurrent(HttpServletRequest request, @RequestParam @Nullable String id, @RequestParam @Nullable String username, @RequestParam @Nullable String email, @RequestParam @Nullable String phone) {
+        log.info("请求接口[GET]: /user/current");
         // 检查数据是否有问题
         ArrayList<String> arrayForError = new ArrayList<>();
         if (id != null && !id.isEmpty()) {
@@ -138,6 +144,7 @@ public class UserController {
     @PostMapping("/user/current/all")
     public BaseResponse userCurrentAll(@RequestBody @Validated UserAllCurrentVO userAllCurrentVO,
                                        HttpServletRequest request, @NotNull BindingResult bindingResult) {
+        log.info("请求接口[POST]: /user/current/all");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -153,12 +160,13 @@ public class UserController {
      * @Param bindingResult:
      **/
     @PostMapping("/user/add")
-    public BaseResponse userAdd(@RequestBody @Validated UserAddVo userAddVo, BindingResult bindingResult, HttpServletRequest request){
+    public BaseResponse userAdd(@RequestBody @Validated UserAddVo userAddVo, BindingResult bindingResult, HttpServletRequest request) {
+        log.info("请求接口[POST]: /user/add");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return userService.userAdd(userAddVo,request);
+        return userService.userAdd(userAddVo, request);
     }
 
 
@@ -169,15 +177,15 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return userService.userEdit(userEditVO,request);
+        return userService.userEdit(userEditVO, request);
     }
 
 
     @GetMapping("/user/profile/get")
     public BaseResponse userProfileGet(HttpServletRequest request) {
+        log.info("请求接口[GET]: /user/profile/get");
         return userService.userProfileGet(request);
     }
-
 
 
 }
