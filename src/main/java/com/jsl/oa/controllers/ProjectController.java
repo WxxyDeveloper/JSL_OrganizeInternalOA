@@ -1,21 +1,68 @@
 package com.jsl.oa.controllers;
 
+import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
+import com.jsl.oa.model.voData.business.info.CarouselVO;
+import com.jsl.oa.model.voData.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.Processing;
 import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ProjectController {
 
     private final ProjectService projectService;
+
+    @GetMapping("/project/header/get")
+    public BaseResponse projectGetHeader(@RequestParam(required = false) Integer id) {
+        log.info("请求接口[GET]: /project/header/get");
+        return projectService.getHeader(id);
+    }
+
+    @PostMapping("/project/header/add")
+    public BaseResponse projectAddHeader(@RequestBody @Validated ProjectShowVO projectShowVO, HttpServletRequest request, @NotNull BindingResult bindingResult) {
+        log.info("请求接口[POST]: /project/header/add");
+        // 参数校验
+        if (bindingResult.hasErrors()) {
+            log.warn("参数校验失败: {}", Processing.getValidatedErrorList(bindingResult));
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        return projectService.addHeader(request, projectShowVO);
+    }
+
+    @PutMapping("/project/header/edit")
+    public BaseResponse projectEditHeader(@RequestBody @Validated ProjectShowVO projectShowVO,@RequestParam Integer id,HttpServletRequest request,@NotNull BindingResult bindingResult) {
+        log.info("请求接口[PUT]: /project/header/del");
+        // 参数校验
+        if (bindingResult.hasErrors()) {
+            log.warn("参数校验失败: {}", Processing.getValidatedErrorList(bindingResult));
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        if (id == null) {
+            log.warn("参数校验失败: {}", "id不能为空");
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR, "id不能为空");
+        }
+        return projectService.editHeader(request, projectShowVO, id);
+    }
+
+
+    @GetMapping("/project/header/del")
+    public BaseResponse projectDelHeader(@RequestParam Integer id,HttpServletRequest request) {
+        log.info("请求接口[GET]: /project/header/del");
+        return projectService.delHeader(id,request);
+    }
 
     @PostMapping("/project/add")
     public BaseResponse projectAdd(@RequestBody @Validated ProjectInfoVO projectAdd, BindingResult bindingResult){

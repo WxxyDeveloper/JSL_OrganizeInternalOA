@@ -6,6 +6,7 @@ import com.jsl.oa.model.voData.ProjectInfoVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -29,4 +30,13 @@ public interface ProjectMapper {
 
     @Insert("insert into organize_oa.oa_project_user(uid, pid)value (#{uid},#{pid})")
     void projectAddUserInCutting(Long uid, Long pid);
+
+    @Select("select data from organize_oa.oa_config where value='project_show'")
+    String getHeader();
+
+    @Insert("insert into organize_oa.oa_config(value, data, created_at)value ('project_show',null,NOW())")
+    void insertProjectShow();
+
+    @Update("UPDATE organize_oa.oa_config SET data = #{setProjectShow} WHERE value = 'project_show'")
+    boolean setProjectShow(String setProjectShow);
 }

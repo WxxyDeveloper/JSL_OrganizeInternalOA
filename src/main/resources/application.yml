@@ -10,6 +10,7 @@ spring:
     database: 0
     host: localhost
     port: 6379
+    password:
   profiles:
     active: dev
 mybatis:
