@@ -4,7 +4,6 @@ import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
-import com.jsl.oa.model.doData.UserCurrentDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.UserAllCurrentVO;
 import com.jsl.oa.model.voData.UserCurrentBackVO;
@@ -12,11 +11,8 @@ import com.jsl.oa.model.voData.UserEditProfileVO;
 import com.jsl.oa.utils.Processing;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserDAO {
 
-    private final UserMapper userMapper;
+    public final UserMapper userMapper;
     private final RoleMapper roleMapper;
 
     /**
@@ -70,6 +66,11 @@ public class UserDAO {
         userMapper.userDelete(id);
     }
 
+    public boolean userGetDelete(Long id) {
+        log.info("\t> 执行 DAO 层 UserDAO.userGetDelete 方法");
+        return userMapper.userGetDelete(id);
+    }
+
     /**
      * 用户账号锁定
      *
@@ -104,84 +105,6 @@ public class UserDAO {
             userCurrentDOList.add(Processing.ReturnUserInfo(it, roleMapper));
         });
         return userCurrentDOList;
-    }
-
-    @Contract("_ -> param1")
-    private @NotNull List<UserCurrentDO> userCurrentAll(@NotNull List<UserCurrentDO> userCurrentDO) {
-        log.info("\t> 执行 DAO 层 UserDAO.userCurrentAll 方法");
-        userCurrentDO.forEach(it -> {
-            it.setRole(roleMapper.getRoleUserByUid(it.getId()));
-            if (it.getRole() == null) {
-                RoleUserDO newRoleUserDO = new RoleUserDO();
-                newRoleUserDO.setRid(0L)
-                        .setUid(it.getId())
-                        .setCreatedAt(new Timestamp(System.currentTimeMillis()));
-                it.setRole(newRoleUserDO);
-            }
-        });
-        return userCurrentDO;
-    }
-
-    /**
-     * 获取当前用户信息
-     *
-     * @param uid 用户id
-     * @return {@link UserCurrentDO}
-     */
-    public UserCurrentDO userCurrentById(Long uid) {
-        log.info("\t> 执行 DAO 层 UserDAO.userCurrentById 方法");
-        UserCurrentDO userCurrentDO = userMapper.getUserCurrentById(uid);
-        return getUserCurrentForRole(userCurrentDO);
-    }
-
-    /**
-     * 获取当前用户信息
-     *
-     * @param username 用户名
-     * @return {@link UserCurrentDO}
-     */
-    public UserCurrentDO userCurrentByUsername(String username) {
-        log.info("\t> 执行 DAO 层 UserDAO.userCurrentByUsername 方法");
-        UserCurrentDO userCurrentDO = userMapper.getUserCurrentByUsername(username);
-        return getUserCurrentForRole(userCurrentDO);
-    }
-
-    /**
-     * 获取当前用户信息
-     *
-     * @param email 邮箱
-     * @return {@link UserCurrentDO}
-     */
-    public UserCurrentDO userCurrentByEmail(String email) {
-        log.info("\t> 执行 DAO 层 UserDAO.userCurrentByEmail 方法");
-        UserCurrentDO userCurrentDO = userMapper.getUserCurrentByEmail(email);
-        return getUserCurrentForRole(userCurrentDO);
-    }
-
-    /**
-     * 获取当前用户信息
-     *
-     * @param phone 手机号
-     * @return {@link UserCurrentDO}
-     */
-    public UserCurrentDO userCurrentByPhone(String phone) {
-        log.info("\t> 执行 DAO 层 UserDAO.userCurrentByPhone 方法");
-        UserCurrentDO userCurrentDO = userMapper.getUserCurrentByPhone(phone);
-        return getUserCurrentForRole(userCurrentDO);
-    }
-
-    private UserCurrentDO getUserCurrentForRole(UserCurrentDO userCurrentDO) {
-        log.info("\t> 执行 DAO 层 UserDAO.getUserCurrentForRole 方法");
-        if (userCurrentDO != null) {
-            RoleUserDO newRoleUserDO = new RoleUserDO();
-            newRoleUserDO.setRid(0L)
-                    .setUid(userCurrentDO.getId())
-                    .setCreatedAt(new Timestamp(System.currentTimeMillis()));
-            userCurrentDO.setRole(newRoleUserDO);
-            return userCurrentDO;
-        } else {
-            return null;
-        }
     }
 
 

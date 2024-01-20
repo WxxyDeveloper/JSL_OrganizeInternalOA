@@ -1,7 +1,9 @@
 package com.jsl.oa.utils;
 
 import com.jsl.oa.exception.ClassCopyException;
+import com.jsl.oa.mapper.PermissionMapper;
 import com.jsl.oa.mapper.RoleMapper;
+import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.doData.PermissionDO;
 import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
@@ -213,7 +215,7 @@ public class Processing {
                 }
 
                 //如果获取的值不为数字且等于“”，则跳过
-                if ( !(value instanceof Number) && value.equals("")) {
+                if ("".equals(value)) {
                     continue;
                 }
 
@@ -285,7 +287,8 @@ public class Processing {
                         .setAccountNoLocked(userDO.getAccountNoLocked())
                         .setDescription(userDO.getDescription())
                         .setCreatedAt(userDO.getCreatedAt())
-                        .setUpdatedAt(userDO.getUpdatedAt()))
+                        .setUpdatedAt(userDO.getUpdatedAt())
+                        .setIsDelete(userDO.getIsDelete()))
                 .setRole(new UserCurrentBackVO.ReturnUserRole()
                         .setRid(getUserRole.getRid()))
                 .setPermission(new ArrayList<>());
@@ -343,7 +346,6 @@ public class Processing {
         return vos;
     }
 
-
     /**
      * @Description:  封装PermissionContentVo的子类，被convertToVoList方法调用
      * @Date: 2024/1/20
@@ -367,6 +369,31 @@ public class Processing {
         return vo;
     }
 
+    public static @Nullable BaseResponse checkUserAbleToNext(HttpServletRequest request, @NotNull UserMapper userMapper) {
+        Long userId = Processing.getAuthHeaderToUserId(request);
+        // 获取用户信息
+        UserDO userDO = userMapper.getUserById(userId);
+        // 用户不存在
+        if (userDO == null) {
+            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+        }
+        // 用户是否被禁用
+        if (!userDO.getEnabled()) {
+            return ResultUtil.error(ErrorCode.USER_DISABLED);
+        }
+        // 用户是否被封禁
+        if (!userDO.getAccountNoLocked()) {
+            return ResultUtil.error(ErrorCode.USER_LOCKED);
+        }
+        // 用户是否被删除
+        if (userDO.getIsDelete()) {
+            return ResultUtil.error(ErrorCode.USER_ALREADY_DELETE);
+        }
+        return null;
+    }
 
-
+    public static boolean checkUserHasPermission(HttpServletRequest request, RoleMapper roleMapper, PermissionMapper permissionMapper, String permission) {
+        // TODO: 10003-用户权限及权限组校验
+        return true;
+    }
 }

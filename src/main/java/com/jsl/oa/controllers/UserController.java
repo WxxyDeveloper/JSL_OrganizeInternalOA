@@ -18,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 /**
@@ -104,33 +103,28 @@ public class UserController {
     public BaseResponse userCurrent(HttpServletRequest request, @RequestParam @Nullable String id, @RequestParam @Nullable String username, @RequestParam @Nullable String email, @RequestParam @Nullable String phone) {
         log.info("请求接口[GET]: /user/current");
         // 检查数据是否有问题
-        ArrayList<String> arrayForError = new ArrayList<>();
         if (id != null && !id.isEmpty()) {
             if (!Pattern.matches("^[0-9]+$", id)) {
-                arrayForError.add("id 只能为数字");
+                return ResultUtil.error(ErrorCode.PARAMETER_ERROR, "id 只能为数字");
             }
         }
         if (username != null && !username.isEmpty()) {
             if (!Pattern.matches("^[0-9A-Za-z_]+$", username)) {
-                arrayForError.add("username 只允许 0-9、A-Z、a-z、_");
+                return ResultUtil.error(ErrorCode.PARAMETER_ERROR, "username 只允许 0-9、A-Z、a-z、_");
             }
         }
         if (email != null && !email.isEmpty()) {
             if (!Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", email)) {
-                arrayForError.add("email 格式不正确");
+                return ResultUtil.error(ErrorCode.PARAMETER_ERROR, "email 格式不正确");
             }
         }
         if (phone != null && !phone.isEmpty()) {
             if (!Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", phone)) {
-                arrayForError.add("手机格式不正确");
+                return ResultUtil.error(ErrorCode.PARAMETER_ERROR, "手机格式不正确");
             }
         }
         // 检查是否出现错误
-        if (arrayForError.isEmpty()) {
-            return userService.userCurrent(request, id, username, email, phone);
-        } else {
-            return ResultUtil.error(ErrorCode.PARAMETER_ERROR, arrayForError);
-        }
+        return userService.userCurrent(request, id, username, email, phone);
     }
 
     /**
