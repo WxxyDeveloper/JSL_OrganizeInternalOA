@@ -27,7 +27,7 @@ public interface UserMapper {
             "VALUES (#{jobId}, #{username}, #{password}, #{address}, #{phone}, #{email}, #{age}, #{sex})")
     boolean insertUser(UserDO userDO);
 
-    @Update("UPDATE organize_oa.oa_user SET enabled = 0 ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}  ")
+    @Update("UPDATE organize_oa.oa_user SET is_delete = 1 ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}  ")
     void userDelete(Long id);
 
     @Update("UPDATE organize_oa.oa_user SET account_no_locked = #{isLock} ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}  ")
