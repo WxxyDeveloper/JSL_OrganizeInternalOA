@@ -1,5 +1,6 @@
 package com.jsl.oa.mapper;
 
+import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserCurrentDO;
@@ -79,6 +80,8 @@ public interface UserMapper {
     @Select("SELECT * FROM organize_oa.oa_role WHERE id = #{roleId}")
     RoleDO getRoleById(Long roleId);
 
+    @Select("SELECT * FROM organize_oa.oa_user WHERE recommend = 1")
+    List<UserDO> getRecommendUser();
 
 
     @Update("UPDATE organize_oa.oa_user " +
@@ -86,6 +89,7 @@ public interface UserMapper {
             "signature = #{signature}, sex = #{sex}, avatar = #{avatar}, nickname = #{nickname}, " +
             "description = #{description} " +
             "WHERE id = #{id}")
+
     void updateUser(UserDO userDO);
 
 }

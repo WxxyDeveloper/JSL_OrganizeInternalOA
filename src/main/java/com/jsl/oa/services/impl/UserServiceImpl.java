@@ -190,15 +190,15 @@ public class UserServiceImpl implements UserService {
     public BaseResponse userProfileGet(HttpServletRequest request) {
         // 获取用户Id
         UserDO userDO = userDAO.getUserById(Processing.getAuthHeaderToUserId(request));
-        UserProfile userProfile = new UserProfile();
-        Processing.copyProperties(userDO, userProfile);
-        userProfile.setSex(Processing.getSex(userDO.getSex()));
-        return ResultUtil.success(userProfile);
+        UserProfileVo userProfileVo = new UserProfileVo();
+        Processing.copyProperties(userDO, userProfileVo);
+        userProfileVo.setSex(Processing.getSex(userDO.getSex()));
+        return ResultUtil.success(userProfileVo);
     }
 
 
     /**
-     * @Description: TODO 判断用户是否为管理员
+     * @Description: 判断用户是否为管理员
      * @Date: 2024/1/18
      * @Param request: 请求头
      **/
