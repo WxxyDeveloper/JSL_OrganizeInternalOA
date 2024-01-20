@@ -37,7 +37,7 @@ public class ProjectController {
     }
 
     @GetMapping("/project/header")
-    public BaseResponse projectGetByName(@RequestParam(required = false) String name) {
+    public BaseResponse projectGetByName(@RequestParam String name) {
         log.info("请求接口[GET]: /project/header");
         return projectService.getByName(name);
     }

@@ -171,6 +171,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse getByName(String name) {
+
         return projectDAO.getByName(name);
     }
 

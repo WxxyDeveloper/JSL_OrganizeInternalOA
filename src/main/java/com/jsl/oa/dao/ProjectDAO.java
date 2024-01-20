@@ -8,6 +8,8 @@ import com.jsl.oa.model.doData.info.CarouselDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import com.jsl.oa.utils.BaseResponse;
+import com.jsl.oa.utils.ErrorCode;
+import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
@@ -95,6 +97,9 @@ public class ProjectDAO {
     }
 
     public BaseResponse getByName(String name) {
-        return projectMapper.getByName(name);
+        if(projectMapper.getByName(name)!=null){
+            return ResultUtil.success(projectMapper.getByName(name));
+        }else return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
+
     }
 }
