@@ -4,7 +4,7 @@ import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.UserAddVo;
 import com.jsl.oa.model.voData.UserAllCurrentVO;
 import com.jsl.oa.model.voData.UserEditProfileVO;
-import com.jsl.oa.model.voData.UserEditVo;
+import com.jsl.oa.model.voData.UserEditVO;
 import com.jsl.oa.utils.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -86,7 +86,7 @@ public interface UserService {
 
     BaseResponse userAdd(UserAddVo userAddVo, HttpServletRequest request);
 
-    BaseResponse userEdit(UserEditVo userEditVo, HttpServletRequest request);
+    BaseResponse userEdit(UserEditVO userEditVo, HttpServletRequest request);
 
 
     BaseResponse userProfileGet(HttpServletRequest request);

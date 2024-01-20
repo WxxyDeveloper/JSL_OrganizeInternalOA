@@ -1,6 +1,5 @@
 package com.jsl.oa.mapper;
 
-import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserCurrentDO;
@@ -52,14 +51,14 @@ public interface UserMapper {
     boolean updateUserPassword(Long id, String newPassword);
 
     @Select("SELECT * FROM organize_oa.oa_user ORDER BY `id` DESC LIMIT #{page},#{limit}")
-    List<UserCurrentDO> getAllUser(UserAllCurrentVO userAllCurrentVO);
+    List<UserDO> getAllUser(UserAllCurrentVO userAllCurrentVO);
 
     @Select("SELECT * FROM organize_oa.oa_user " +
             "WHERE username LIKE CONCAT('%',#{search},'%') " +
             "OR email LIKE CONCAT('%',#{search},'%') " +
             "OR phone LIKE CONCAT('%',#{search},'%') " +
             "ORDER BY `id` LIMIT #{page},#{limit}")
-    List<UserCurrentDO> getAllUserBySearch(UserAllCurrentVO userAllCurrentVO);
+    List<UserDO> getAllUserBySearch(UserAllCurrentVO userAllCurrentVO);
 
     @Select("SELECT * FROM organize_oa.oa_user WHERE id = #{uid}")
     UserCurrentDO getUserCurrentById(Long uid);
@@ -92,4 +91,9 @@ public interface UserMapper {
 
     void updateUser(UserDO userDO);
 
+    @Select("SELECT * FROM organize_oa.oa_user WHERE email = #{email}")
+    UserDO getUserByEmail(String email);
+
+    @Select("SELECT * FROM organize_oa.oa_user WHERE phone = #{phone}")
+    UserDO getUserByPhone(String phone);
 }

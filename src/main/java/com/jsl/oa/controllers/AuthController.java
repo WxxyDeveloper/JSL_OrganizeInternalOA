@@ -10,6 +10,7 @@ import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.Processing;
 import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +34,7 @@ import java.util.regex.Pattern;
  * @see ResultUtil
  * @since v1.0.0
  */
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
@@ -49,6 +51,7 @@ public class AuthController {
      */
     @PostMapping("/auth/register")
     public BaseResponse authRegister(@RequestBody @Validated UserRegisterVO userRegisterVO, @NotNull BindingResult bindingResult) {
+        log.info("请求接口[POST]: /auth/register");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -69,6 +72,7 @@ public class AuthController {
      */
     @PostMapping("/auth/login")
     public BaseResponse authLogin(@RequestBody @Validated UserLoginVO userLoginVO, @NotNull BindingResult bindingResult) {
+        log.info("请求接口[POST]: /auth/login");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -88,6 +92,7 @@ public class AuthController {
      */
     @GetMapping("/auth/email/code")
     public BaseResponse authSendEmailCode(@RequestParam String email) {
+        log.info("请求接口[GET]: /auth/email/code");
         if (email != null) {
             if (Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", email)) {
                 return authService.authLoginSendEmailCode(email);
@@ -101,6 +106,7 @@ public class AuthController {
 
     @GetMapping("/auth/login/email")
     public BaseResponse authLoginByEmail(@RequestParam String email, @RequestParam String code) {
+        log.info("请求接口[GET]: /auth/login/email");
         if (email != null && code != null && !email.isEmpty() && !code.isEmpty()) {
             System.out.println("测试");
             if (Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", email)) {
@@ -128,11 +134,14 @@ public class AuthController {
      */
     @GetMapping("/auth/logout")
     public BaseResponse authLogout(HttpServletRequest request) {
+        log.info("请求接口[GET]: /auth/logout");
         return authService.authLogout(request);
     }
 
     @PutMapping("/auth/password")
     public BaseResponse authChangePassword(@RequestBody @Validated UserChangePasswordVO userChangePasswordVO, HttpServletRequest request, @NotNull BindingResult bindingResult) {
+        log.info("请求接口[PUT]: /auth/password");
+        // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
@@ -141,6 +150,8 @@ public class AuthController {
 
     @PutMapping("auth/password/forget")
     public BaseResponse authForgetPassword(@RequestBody @Validated UserForgetPasswordVO userForgetPasswordVO, @NotNull BindingResult bindingResult) {
+        log.info("请求接口[PUT]: /auth/password/forget");
+        // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }

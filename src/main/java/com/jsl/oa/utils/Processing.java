@@ -7,7 +7,7 @@ import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.PermissionContentVo;
-import com.jsl.oa.model.voData.UserProfileVo;
+import com.jsl.oa.model.voData.UserCurrentBackVO;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.validation.BindingResult;
@@ -15,6 +15,7 @@ import org.springframework.validation.ObjectError;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -166,8 +167,7 @@ public class Processing {
     public static @NotNull Boolean checkUserIsAdmin(HttpServletRequest request, @NotNull RoleMapper roleMapper) {
         RoleUserDO roleUserDO = roleMapper.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
         if (roleUserDO != null) {
-            //默认主键为1的用户为管理员
-            RoleDO roleDO = roleMapper.getRoleById(Long.valueOf(1));
+            RoleDO roleDO = roleMapper.getRoleByRoleName("admin");
             return roleUserDO.getRid().equals(roleDO.getId());
         } else {
             return false;
@@ -247,6 +247,50 @@ public class Processing {
         return " ";
     }
 
+    /**
+     * <h2>封装返回内容</h2>
+     * <hr/>
+     * 封装返回内容
+     *
+     * @param userDO 用户信息
+     * @return {@link BaseResponse}
+     */
+    public static @NotNull UserCurrentBackVO ReturnUserInfo(@NotNull UserDO userDO, RoleMapper roleMapper) {
+        UserCurrentBackVO userCurrentBackVO = new UserCurrentBackVO();
+        // 获取用户角色
+        RoleUserDO getUserRole = roleMapper.getRoleUserByUid(userDO.getId());
+        if (getUserRole == null) {
+            getUserRole = new RoleUserDO();
+            getUserRole.setRid(0L)
+                    .setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        } else {
+            getUserRole.setUid(null);
+        }
+        userCurrentBackVO.setUser(new UserCurrentBackVO.ReturnUser()
+                        .setId(userDO.getId())
+                        .setJobId(userDO.getJobId())
+                        .setUsername(userDO.getUsername())
+                        .setAddress(userDO.getAddress())
+                        .setPhone(userDO.getPhone())
+                        .setEmail(userDO.getEmail())
+                        .setAge(userDO.getAge())
+                        .setSignature(userDO.getSignature())
+                        .setAvatar(userDO.getAvatar())
+                        .setNickname(userDO.getNickname())
+                        .setSex(userDO.getSex())
+                        .setEnabled(userDO.getEnabled())
+                        .setAccountNoExpired(userDO.getAccountNoExpired())
+                        .setCredentialsNoExpired(userDO.getCredentialsNoExpired())
+                        .setRecommend(userDO.getRecommend())
+                        .setAccountNoLocked(userDO.getAccountNoLocked())
+                        .setDescription(userDO.getDescription())
+                        .setCreatedAt(userDO.getCreatedAt())
+                        .setUpdatedAt(userDO.getUpdatedAt()))
+                .setRole(new UserCurrentBackVO.ReturnUserRole()
+                        .setRid(getUserRole.getRid()))
+                .setPermission(new ArrayList<>());
+        return userCurrentBackVO;
+    }
 
     public static List<UserDO> orderUser(List<UserDO> userDOS,String order,String orderBy){
 

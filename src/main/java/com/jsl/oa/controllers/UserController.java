@@ -3,13 +3,14 @@ package com.jsl.oa.controllers;
 import com.jsl.oa.model.voData.UserAddVo;
 import com.jsl.oa.model.voData.UserAllCurrentVO;
 import com.jsl.oa.model.voData.UserEditProfileVO;
-import com.jsl.oa.model.voData.UserEditVo;
+import com.jsl.oa.model.voData.UserEditVO;
 import com.jsl.oa.services.UserService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.Processing;
 import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.BindingResult;
@@ -30,6 +31,7 @@ import java.util.regex.Pattern;
  * @see UserEditProfileVO
  * @since v1.0.0
  */
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -95,10 +97,6 @@ public class UserController {
      */
     @GetMapping("/user/current")
     public BaseResponse userCurrent(HttpServletRequest request, @RequestParam @Nullable String id, @RequestParam @Nullable String username, @RequestParam @Nullable String email, @RequestParam @Nullable String phone) {
-        // 判断是否有参数错误
-        if (id == null && username == null && email == null && phone == null) {
-            return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
-        }
         // 检查数据是否有问题
         ArrayList<String> arrayForError = new ArrayList<>();
         if (id != null && !id.isEmpty()) {
@@ -165,12 +163,13 @@ public class UserController {
 
 
     @PutMapping("/user/edit")
-    public BaseResponse userEdit(@RequestBody @Validated UserEditVo userEditVo, BindingResult bindingResult, HttpServletRequest request) {
+    public BaseResponse userEdit(@RequestBody @Validated UserEditVO userEditVO, BindingResult bindingResult, HttpServletRequest request) {
+        log.info("请求接口[PUT]: /user/edit");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return userService.userEdit(userEditVo,request);
+        return userService.userEdit(userEditVO,request);
     }
 
 

@@ -3,7 +3,6 @@ package com.jsl.oa.services.impl;
 import com.jsl.oa.dao.InfoDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.RoleMapper;
-import com.jsl.oa.model.doData.UserCurrentDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.doData.info.CarouselDO;
 import com.jsl.oa.model.voData.UserProfileVo;
@@ -144,31 +143,31 @@ public class InfoServiceImpl implements InfoService {
 
     @Override
     public BaseResponse getHeaderUser(HttpServletRequest request, String order, String orderBy) {
-        // 用户权限校验
-        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
-            return ResultUtil.error(ErrorCode.NOT_ADMIN);
+        // 默认无参数情况
+        if (order == null) {
+            order = "asc";
+        }
+        if (orderBy == null) {
+            orderBy = "userId";
         }
         // 检查参数是否错误
-        if( !(order.equals("asc")||order.equals("desc")) || !(orderBy.equals("userName")||orderBy.equals("userId")) ){
+        if (!(order.equals("asc") || order.equals("desc")) || !(orderBy.equals("userName") || orderBy.equals("userId"))) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
         //获取用户信息
         List<UserDO> userDOS = userDAO.getRecommendUser();
         //进行排序
-        userDOS = Processing.orderUser(userDOS,order,orderBy);
+        Processing.orderUser(userDOS, order, orderBy);
         //封装VO类
         List<UserProfileVo> userProfileVos = new ArrayList<>();
-        for(UserDO userDO :userDOS){
+        for (UserDO userDO : userDOS) {
             UserProfileVo userProfileVo = new UserProfileVo();
-            Processing.copyProperties(userDO,userProfileVo);
+            Processing.copyProperties(userDO, userProfileVo);
             userProfileVo.setSex(Processing.getSex(userDO.getSex()));
             userProfileVos.add(userProfileVo);
         }
-
-
         return ResultUtil.success(userProfileVos);
     }
-
 
 
 }

@@ -12,12 +12,14 @@ import com.jsl.oa.utils.*;
 import com.jsl.oa.utils.redis.EmailRedisUtil;
 import com.jsl.oa.utils.redis.TokenRedisUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 /**
@@ -29,6 +31,7 @@ import java.util.regex.Pattern;
  * @see AuthService
  * @since v1.0.0
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -78,15 +81,19 @@ public class AuthServiceImpl implements AuthService {
         UserDO userDO;
         if (Pattern.matches("^[0-9A-Za-z_]{3,40}$", userLoginVO.getUser())) {
             // 是否为用户名
+            log.info("userLogin: 用户名登陆");
             userDO = userMapper.getUserInfoByUsername(userLoginVO.getUser());
         } else if (Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", userLoginVO.getUser())) {
             // 是否为手机号
+            log.info("userLogin: 手机号登陆");
             userDO = userMapper.getUserInfoByPhone(userLoginVO.getUser());
         } else if (Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", userLoginVO.getUser())) {
             // 是否为邮箱
+            log.info("userLogin: 邮箱登陆");
             return ResultUtil.error(ErrorCode.EMAIL_LOGIN_NOT_SUPPORT);
         } else {
             // 工号
+            log.info("userLogin: 工号登陆");
             userDO = userMapper.getUserByJobId(userLoginVO.getUser());
         }
         if (userDO != null) {
@@ -236,15 +243,16 @@ public class AuthServiceImpl implements AuthService {
         } else {
             getUserRole.setUid(null);
         }
-        userReturnBackVO.setAddress(userDO.getAddress())
-                .setAge(userDO.getAge())
-                .setEmail(userDO.getEmail())
-                .setJobId(userDO.getJobId())
-                .setPhone(userDO.getPhone())
-                .setSex(userDO.getSex())
-                .setUsername(userDO.getUsername())
+        userReturnBackVO.setUser(new UserReturnBackVO.ReturnUser()
+                        .setId(userDO.getId())
+                        .setJobId(userDO.getJobId())
+                        .setUsername(userDO.getUsername())
+                        .setEmail(userDO.getEmail())
+                        .setPhone(userDO.getPhone()))
+                .setRole(new UserReturnBackVO.ReturnUserRole()
+                        .setRid(getUserRole.getRid()))
                 .setToken(token)
-                .setRole(getUserRole);
+                .setPermission(new ArrayList<>());
         return ResultUtil.success("登陆成功", userReturnBackVO);
     }
 }

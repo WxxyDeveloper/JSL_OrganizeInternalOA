@@ -6,20 +6,17 @@ import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.UserDO;
-import com.jsl.oa.model.doData.info.CarouselDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import com.jsl.oa.model.voData.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
-import com.jsl.oa.services.UserService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.Processing;
 import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
@@ -42,7 +39,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse projectEdit(ProjectInfoVO projectEdit) {
+    public BaseResponse projectEdit(@NotNull ProjectInfoVO projectEdit) {
         //判断项目是否存在
         if(projectDAO.isExistProject(projectEdit.getId())) {
             projectDAO.projectEdit(projectEdit);

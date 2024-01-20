@@ -34,24 +34,24 @@ public class ResultUtil {
 
     @Contract("_ -> new")
     public static @NotNull BaseResponse error(@NotNull ErrorCode errorCode) {
-        log.warn("失败: 错误码[" + errorCode.getCode() + "]: {} - {}", errorCode.getOutput(), errorCode.getMessage());
+        log.warn("失败: 错误码[" + errorCode.getCode() + "] {} - {}", errorCode.getOutput(), errorCode.getMessage());
         return new BaseResponse(errorCode.getOutput(), errorCode.getCode(), errorCode.getMessage());
     }
 
     @Contract("_, _ -> new")
     public static @NotNull BaseResponse error(@NotNull ErrorCode errorCode, Object data) {
-        log.warn("失败: 错误码[" + errorCode.getCode() + "]: {} - {}", errorCode.getOutput(), errorCode.getMessage());
+        log.warn("失败: 错误码[" + errorCode.getCode() + "] {} - {}", errorCode.getOutput(), errorCode.getMessage());
         return new BaseResponse(errorCode.getOutput(), errorCode.getCode(), errorCode.getMessage(), data);
     }
 
     @Contract(value = "_, _, _, _ -> new", pure = true)
     public static @NotNull BaseResponse error(String output, Integer code, String message, Object data) {
-        log.warn("失败: 错误码[" + code + "]: {} - {}", output, message);
+        log.warn("失败: 错误码[" + code + "] {} - {}", output, message);
         return new BaseResponse(output, code, message, data);
     }
 
     public static @NotNull ResponseEntity<BaseResponse> error(String output, Integer code, String message) {
-        log.warn("失败: 错误码[" + code + "]: {} - {}", output, message);
+        log.warn("失败: 错误码[" + code + "] {} - {}", output, message);
         return ResponseEntity.status(code)
                 .body(new BaseResponse(output, code, message));
     }
