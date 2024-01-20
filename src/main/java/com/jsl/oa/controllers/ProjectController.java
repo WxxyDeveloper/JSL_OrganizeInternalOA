@@ -112,4 +112,15 @@ public class ProjectController {
         }
         return projectService.projectAddUserForCutting(uid, pid);
     }
+
+    @DeleteMapping("/project/delete")
+    public BaseResponse projectDelete(@RequestParam Long id){
+        log.info("请求接口[Delete]: /project/delete");
+        if(id == null){
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
+        }
+        return projectService.projectDelete(id);
+    }
+
+
 }

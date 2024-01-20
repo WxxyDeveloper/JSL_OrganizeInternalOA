@@ -2,13 +2,11 @@ package com.jsl.oa.services.impl;
 
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.RoleMapper;
+import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.*;
 import com.jsl.oa.services.UserService;
-import com.jsl.oa.utils.BaseResponse;
-import com.jsl.oa.utils.ErrorCode;
-import com.jsl.oa.utils.Processing;
-import com.jsl.oa.utils.ResultUtil;
+import com.jsl.oa.utils.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -215,4 +213,29 @@ public class UserServiceImpl implements UserService {
         userProfileVo.setSex(Processing.getSex(userDO.getSex()));
         return ResultUtil.success(userProfileVo);
     }
+
+
+    /**
+     * @Description: 判断用户是否为管理员
+     * @Date: 2024/1/18
+     * @Param request: 请求头
+     **/
+    public BaseResponse isManager(HttpServletRequest request) {
+        //获取token
+        String originalAuthorization = request.getHeader("Authorization");
+        String token = originalAuthorization.replace("Bearer ", "");
+        //获取操作用户的权限
+        RoleUserDO roleUserDO = userDAO.getRoleFromUser(JwtUtil.getUserId(token));
+        //用户权限不为空
+        if (roleUserDO == null) {
+            return ResultUtil.error(ErrorCode.USER_ROLE_NOT_EXIST);
+        }
+        //用户权限应为管理员
+        if (!userDAO.isManagerByRoleId(roleUserDO.getRid())) {
+            return ResultUtil.error(ErrorCode.USER_ROLE_NOT_MANAGER);
+        }
+        return ResultUtil.success();
+    }
+
+
 }

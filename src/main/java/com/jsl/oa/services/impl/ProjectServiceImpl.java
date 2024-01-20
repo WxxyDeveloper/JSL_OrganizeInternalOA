@@ -172,5 +172,13 @@ public class ProjectServiceImpl implements ProjectService {
         return projectDAO.getByName(name);
     }
 
+    @Override
+    public BaseResponse projectDelete(Long id) {
+        if(!projectDAO.projectDelete(id)){
+            return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
+        }
+        return ResultUtil.success();
+    }
+
 
 }

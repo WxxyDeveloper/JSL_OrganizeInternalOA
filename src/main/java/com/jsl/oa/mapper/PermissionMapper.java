@@ -2,10 +2,7 @@ package com.jsl.oa.mapper;
 
 import com.jsl.oa.model.doData.PermissionDO;
 import com.jsl.oa.model.doData.RolePermissionDO;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -32,4 +29,7 @@ public interface PermissionMapper {
     @Update("UPDATE organize_oa.oa_permissions SET pid = #{pid}, name = #{name}, code = #{code}, " +
             "type = #{type} WHERE id = #{id}")
     boolean updatePermission(PermissionDO permissionDO);
+
+    @Delete("DELETE FROM organize_oa.oa_permissions where id=#{pid}")
+    boolean deletePermission(Long pid);
 }

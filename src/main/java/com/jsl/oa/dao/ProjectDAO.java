@@ -99,4 +99,8 @@ public class ProjectDAO {
         }else return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
 
     }
+
+    public boolean projectDelete(Long id){
+        return projectMapper.deleteProject(id);
+    }
 }

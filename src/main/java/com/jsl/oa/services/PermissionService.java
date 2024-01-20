@@ -14,4 +14,6 @@ public interface PermissionService {
     BaseResponse permissionGet(HttpServletRequest request);
 
     BaseResponse permissionEdit(PermissionEditVo permissionEditVo, HttpServletRequest request);
+
+    BaseResponse permissionDelete(HttpServletRequest request, Long pid);
 }

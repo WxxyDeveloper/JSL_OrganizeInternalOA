@@ -49,4 +49,12 @@ public class PermissionController {
         }
         return permissionService.permissionEdit(permissionEditVo,request);
     }
+
+    @DeleteMapping("/permission/delete")
+    public BaseResponse permissionDelete(@RequestParam Long pid,HttpServletRequest request){
+        // 判断是否有参数错误
+        if (pid == null) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
+        } else return permissionService.permissionDelete(request,pid);
+    }
 }

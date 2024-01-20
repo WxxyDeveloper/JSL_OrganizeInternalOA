@@ -84,5 +84,19 @@ public class PermissionServiceImpl implements PermissionService {
         return ResultUtil.success();
     }
 
+    @Override
+    public BaseResponse permissionDelete(HttpServletRequest request, Long pid) {
+        //检验用户权限是否为管理员
+        if(!Processing.checkUserIsAdmin(request,roleMapper)){
+            return ResultUtil.error(ErrorCode.NOT_ADMIN);
+        }
+        //删除权限
+        if(!permissionMapper.deletePermission(pid)){
+            return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
+        }
+
+        return ResultUtil.success();
+    }
+
 
 }

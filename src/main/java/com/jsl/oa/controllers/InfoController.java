@@ -75,7 +75,7 @@ public class InfoController {
     }
 
     @GetMapping("info/header-user/get")
-    public BaseResponse infoGetHeaderUser(@RequestParam(required = false) String order,@RequestParam(required = false) String orderBy,HttpServletRequest request){
+    public BaseResponse infoGetHeaderUser(@RequestParam String order,@RequestParam String orderBy,HttpServletRequest request){
         log.info("请求接口[GET]: /info/header-user/get");
         return infoService.getHeaderUser(request,order,orderBy);
     }

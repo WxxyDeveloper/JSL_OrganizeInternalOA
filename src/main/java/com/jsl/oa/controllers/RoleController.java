@@ -11,6 +11,7 @@ import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,7 @@ public class RoleController {
      * @return {@link BaseResponse}
      */
     @GetMapping("/role/get")
-    public BaseResponse roleGet(HttpServletRequest request, @RequestParam(required = false) String id) {
+    public BaseResponse roleGet(HttpServletRequest request, @RequestParam @Nullable String id) {
         log.info("请求接口[GET]: /role/get");
         return roleService.roleGet(request, id);
     }

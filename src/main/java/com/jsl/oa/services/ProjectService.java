@@ -27,4 +27,6 @@ public interface ProjectService {
     BaseResponse get();
 
     BaseResponse getByName(String name);
+
+    BaseResponse projectDelete(Long id);
 }
