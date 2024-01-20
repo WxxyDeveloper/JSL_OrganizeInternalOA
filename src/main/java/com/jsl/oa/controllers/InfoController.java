@@ -73,4 +73,10 @@ public class InfoController {
         log.info("请求接口[PUT]: /info/header-image/edit-setting");
         return infoService.editSettingHeaderImage(request, showType);
     }
+
+    @GetMapping("info/header-user/get")
+    public BaseResponse infoGetHeaderUser(@RequestParam String order,@RequestParam String orderBy,HttpServletRequest request){
+        log.info("请求接口[GET]: /info/header-user/get");
+        return infoService.getHeaderUser(request,order,orderBy);
+    }
 }

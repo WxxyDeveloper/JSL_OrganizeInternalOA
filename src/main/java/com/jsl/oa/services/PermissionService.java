@@ -9,4 +9,6 @@ public interface PermissionService {
     BaseResponse permissionAdd(HttpServletRequest request, Long rid, Long pid);
 
     BaseResponse permissionUser(HttpServletRequest request, Long uid);
+
+    BaseResponse permissionGet(HttpServletRequest request);
 }

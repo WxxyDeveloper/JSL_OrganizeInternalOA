@@ -1,14 +1,12 @@
 package com.jsl.oa.model.voData;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import lombok.Value;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 
 @Data
-public class UserProfile {
+public class UserProfileVo {
 
+    private Long id;
     private String username;
     private String address;
     private String phone;

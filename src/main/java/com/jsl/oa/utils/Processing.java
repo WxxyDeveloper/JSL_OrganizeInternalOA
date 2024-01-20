@@ -4,6 +4,8 @@ import com.jsl.oa.exception.ClassCopyException;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
+import com.jsl.oa.model.doData.UserDO;
+import com.jsl.oa.model.voData.UserProfileVo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.validation.BindingResult;
@@ -12,6 +14,8 @@ import org.springframework.validation.ObjectError;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -163,7 +167,8 @@ public class Processing {
     public static @NotNull Boolean checkUserIsAdmin(HttpServletRequest request, @NotNull RoleMapper roleMapper) {
         RoleUserDO roleUserDO = roleMapper.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
         if (roleUserDO != null) {
-            RoleDO roleDO = roleMapper.getRoleByRoleName("admin");
+            //默认主键为1的用户为管理员
+            RoleDO roleDO = roleMapper.getRoleById(Long.valueOf(1));
             return roleUserDO.getRid().equals(roleDO.getId());
         } else {
             return false;
@@ -225,10 +230,10 @@ public class Processing {
         return null;
     }
 
+
     /**
      * @Description: TODO 将性别转为字符形式
      * @Date: 2024/1/18
-
      **/
     public static String getSex(short sex){
         if(sex == 0){
@@ -241,6 +246,29 @@ public class Processing {
             return "女";
         }
         return " ";
+    }
+
+
+    public static List<UserDO> orderUser(List<UserDO> userDOS,String order,String orderBy){
+
+        Comparator<UserDO> comparator = null;
+
+        if (order.equals("asc")) {
+            if (orderBy.equals("userName")) {
+                comparator = Comparator.comparing(UserDO::getUsername);
+            } else if (orderBy.equals("userId")) {
+                comparator = Comparator.comparingLong(UserDO::getId);
+            }
+        } else if (order.equals("desc")) {
+            if (orderBy.equals("userName")) {
+                comparator = Comparator.comparing(UserDO::getUsername).reversed();
+            } else if (orderBy.equals("userId")) {
+                comparator = Comparator.comparingLong(UserDO::getId).reversed();
+            }
+        }
+
+        userDOS.sort(comparator);
+        return userDOS;
     }
 
 

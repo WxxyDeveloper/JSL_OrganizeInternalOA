@@ -67,4 +67,6 @@ public interface InfoService {
      * @return {@link BaseResponse}
      */
     BaseResponse editSettingHeaderImage(HttpServletRequest request, Boolean showType);
+
+    BaseResponse getHeaderUser(HttpServletRequest request, String order, String orderBy);
 }

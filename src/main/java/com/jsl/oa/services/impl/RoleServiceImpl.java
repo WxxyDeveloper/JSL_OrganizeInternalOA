@@ -1,15 +1,13 @@
 package com.jsl.oa.services.impl;
 
 import com.jsl.oa.dao.RoleDAO;
+import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.exception.ClassCopyException;
 import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.voData.RoleAddVo;
 import com.jsl.oa.model.voData.RoleEditVO;
 import com.jsl.oa.services.RoleService;
-import com.jsl.oa.utils.BaseResponse;
-import com.jsl.oa.utils.ErrorCode;
-import com.jsl.oa.utils.Processing;
-import com.jsl.oa.utils.ResultUtil;
+import com.jsl.oa.utils.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +20,7 @@ import java.util.regex.Pattern;
 public class RoleServiceImpl implements RoleService {
 
     private final RoleDAO roleDAO;
+    private final UserDAO userDAO;
 
     @Override
     public BaseResponse roleAddUser(HttpServletRequest request, Long uid, Long rid) {
@@ -41,10 +40,18 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public BaseResponse roleChangeUser(HttpServletRequest request, Long uid, Long rid) {
+
+        //检测用户是否存在
+        if(!userDAO.isExistUser(uid)){
+            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+        }
+        //检测要改变的用户权限是否为自己
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        if(uid == JwtUtil.getUserId(token)){
+            return ResultUtil.error(ErrorCode.USER_NOT_CHANGE_TO_THEMSELVES);
+        }
+        //检测用户权限是否为管理员
         if (Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
-            // TODO: 2023-01-20|List:10002-未判断用户是否存在
-            // TODO: 2023-01-20|List:10003-保险起见，默认用户主键为 1 的用户为超级管理员
-            //  （不可以修改自己权限组，避免修改后不存在管理员，无管理组）
             if (!roleDAO.roleChangeUser(uid, rid)) {
                 return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
             }

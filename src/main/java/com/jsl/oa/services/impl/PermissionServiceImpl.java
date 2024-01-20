@@ -39,4 +39,15 @@ public class PermissionServiceImpl implements PermissionService {
         }
         return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
     }
+
+//    开发中
+    @Override
+    public BaseResponse permissionGet(HttpServletRequest request) {
+        if(!Processing.checkUserIsAdmin(request,roleMapper)){
+            return ResultUtil.error(ErrorCode.NOT_ADMIN);
+        }
+        return null;
+    }
+
+
 }

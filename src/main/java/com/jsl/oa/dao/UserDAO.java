@@ -236,4 +236,9 @@ public class UserDAO {
         }
         return false;
     }
+
+
+    public List<UserDO> getRecommendUser(){
+        return userMapper.getRecommendUser();
+    }
 }

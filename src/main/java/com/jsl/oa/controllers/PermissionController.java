@@ -31,4 +31,9 @@ public class PermissionController {
         } else return permissionService.permissionUser(request,uid);
     }
 
+    @GetMapping("/permission/get")
+    public BaseResponse permissionGet(HttpServletRequest request){
+        return permissionService.permissionGet(request);
+    }
+
 }

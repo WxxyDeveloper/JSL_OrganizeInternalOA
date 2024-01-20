@@ -14,6 +14,7 @@ public enum ErrorCode {
     USER_NOT_EXIST("UserNotExist", 40015, "用户不存在"),
     USER_ROLE_NOT_EXIST("UserRoleNotExist", 40016, "用户权限不存在"),
     USER_ROLE_NOT_MANAGER("UserRoleNotExist", 40017, "用户权限非管理员权限"),
+    USER_NOT_CHANGE_TO_THEMSELVES("UserNotChangeToThemselves", 40018, "用户不能改变自己的权限"),
     UNAUTHORIZED("Unauthorized", 40100, "未授权"),
     TOKEN_EXPIRED("TokenExpired", 40101, "Token已过期"),
     VERIFICATION_INVALID("VerificationInvalid", 40102, "验证码无效"),

@@ -142,6 +142,13 @@ public class RoleController {
     }
 
 
+    /**
+     * @Description: TODO 改变用户角色权限信息
+     * @Date: 2024/1/20
+     * @Param request:
+     * @Param uid: 用户id
+     * @Param rid: 角色id
+     **/
     @PutMapping("role/user/change")
     public BaseResponse roleChangeUser(HttpServletRequest request, @RequestParam Long uid, @RequestParam Long rid) {
         log.info("请求接口[POST]: /role/user/change");
@@ -151,4 +158,10 @@ public class RoleController {
         }
         return roleService.roleChangeUser(request, uid, rid);
     }
+
+
+
+
+
+
 }
