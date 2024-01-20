@@ -44,27 +44,30 @@ public class ProjectServiceImpl implements ProjectService {
     public BaseResponse projectEdit(@NotNull ProjectInfoVO projectEdit) {
         log.info("\t> 执行 Service 层 ProjectService.projectEdit 方法");
         //判断项目是否存在
-        if(projectDAO.isExistProject(projectEdit.getId())) {
+        if (projectDAO.isExistProject(projectEdit.getId())) {
             projectDAO.projectEdit(projectEdit);
             return ResultUtil.success("修改成功");
-        }else return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
+        } else {
+            return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
+        }
     }
 
     @Override
     public BaseResponse projectGetUserInCutting(Long uid) {
         log.info("\t> 执行 Service 层 ProjectService.projectGetUserInCutting 方法");
-        if(userDAO.isExistUser(uid)) {
-            List<ProjectCuttingDO> projectCuttingDOList =projectDAO.projectGetUserInCutting(uid);
+        if (userDAO.isExistUser(uid)) {
+            List<ProjectCuttingDO> projectCuttingDOList = projectDAO.projectGetUserInCutting(uid);
             return ResultUtil.success(projectCuttingDOList);
+        } else {
+            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
         }
-        else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
     }
 
     @Override
     public BaseResponse projectAddUserForCutting(Long uid, Long pid) {
         log.info("\t> 执行 Service 层 ProjectService.projectAddUserForCutting 方法");
-        if(userDAO.isExistUser(uid)){
-            projectDAO.projectAddUserForCutting(uid,pid);
+        if (userDAO.isExistUser(uid)) {
+            projectDAO.projectAddUserForCutting(uid, pid);
             return ResultUtil.success();
         }
         return null;
@@ -172,14 +175,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public BaseResponse get() {
         log.info("\t> 执行 Service 层 ProjectService.get 方法");
-        List<ProjectDO> projectDOList =projectDAO.get();
+        List<ProjectDO> projectDOList = projectDAO.get();
         return ResultUtil.success(projectDOList);
     }
 
     @Override
     public BaseResponse getByName(String name) {
         log.info("\t> 执行 Service 层 ProjectService.getByName 方法");
-        return projectDAO.getByName(name);
+        return ResultUtil.success(projectDAO.getByName(name));
     }
 
 

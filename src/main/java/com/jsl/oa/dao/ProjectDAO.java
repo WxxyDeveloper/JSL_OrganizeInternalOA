@@ -6,7 +6,6 @@ import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
-import com.jsl.oa.utils.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -101,7 +100,7 @@ public class ProjectDAO {
         return projectMapper.get();
     }
 
-    public BaseResponse getByName(String name) {
+    public ProjectDO getByName(String name) {
         log.info("\t> 执行 DAO 层 ProjectDAO.getByName 方法");
         return projectMapper.getByName(name);
     }
