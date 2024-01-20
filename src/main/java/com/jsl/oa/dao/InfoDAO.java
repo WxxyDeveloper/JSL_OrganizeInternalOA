@@ -35,7 +35,7 @@ public class InfoDAO {
     public CarouselDO getCarousel() {
         String getCarouselSql = infoMapper.getCarousel();
         CarouselDO getCarousel = null;
-        if (!getCarouselSql.equals("{}")) {
+        if (getCarouselSql != null && !getCarouselSql.equals("{}")) {
             getCarousel = gson.fromJson(getCarouselSql, CarouselDO.class);
         }
         if (getCarousel == null) {

@@ -6,6 +6,7 @@ import com.jsl.oa.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,13 +26,7 @@ public class ShiroConfiguration {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
         // 配置过滤器规则
-        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        filterChainDefinitionMap.put("/auth/**/**", "anon"); // 登录接口允许匿名访问
-        filterChainDefinitionMap.put("/unauthorized", "anon"); // 未授权接口允许匿名访问
-        filterChainDefinitionMap.put("/", "anon"); // 首页允许匿名访问
-        filterChainDefinitionMap.put("/info/header-image/get", "anon"); // 信息接口允许匿名访问
-        filterChainDefinitionMap.put("/info/header-user/get", "anon"); // 信息接口允许匿名访问
-        filterChainDefinitionMap.put("/**/**", "authc"); // 其他接口一律拦截(需要Token)
+        Map<String, String> filterChainDefinitionMap = setFilterChain();
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
@@ -56,5 +51,19 @@ public class ShiroConfiguration {
     @Bean
     public MyRealm myRealm() {
         return new MyRealm();
+    }
+
+    @NotNull
+    private static Map<String, String> setFilterChain() {
+        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
+        filterChainDefinitionMap.put("/auth/**/**", "anon"); // 登录接口允许匿名访问
+        filterChainDefinitionMap.put("/unauthorized", "anon"); // 未授权接口允许匿名访问
+        filterChainDefinitionMap.put("/", "anon"); // 首页允许匿名访问
+        filterChainDefinitionMap.put("/info/header-image/get", "anon"); // 信息接口允许匿名访问
+        filterChainDefinitionMap.put("/info/header-user/get", "anon"); // 信息接口允许匿名访问
+        filterChainDefinitionMap.put("/project/header/get", "anon"); // 信息接口允许匿名访问
+        filterChainDefinitionMap.put("/project/get", "anon"); // 信息接口允许匿名访问
+        filterChainDefinitionMap.put("/**/**", "authc"); // 其他接口一律拦截(需要Token)
+        return filterChainDefinitionMap;
     }
 }
