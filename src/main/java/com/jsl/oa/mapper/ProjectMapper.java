@@ -41,7 +41,7 @@ public interface ProjectMapper {
     @Update("UPDATE organize_oa.oa_config SET data = #{setProjectShow} WHERE value = 'project_show'")
     boolean setProjectShow(String setProjectShow);
 
-    @Select("select * from organize_oa.oa_permissions")
+    @Select("select * from organize_oa.oa_project")
     List<ProjectDO> get();
 
     @Select("select * from organize_oa.oa_project where name=#{name}")
