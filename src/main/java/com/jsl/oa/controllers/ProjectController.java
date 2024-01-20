@@ -58,9 +58,9 @@ public class ProjectController {
     }
 
 
-    @GetMapping("/project/header/del")
+    @DeleteMapping("/project/header/del")
     public BaseResponse projectDelHeader(@RequestParam Integer id,HttpServletRequest request) {
-        log.info("请求接口[GET]: /project/header/del");
+        log.info("请求接口[Delete]: /project/header/del");
         return projectService.delHeader(id,request);
     }
 
