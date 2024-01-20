@@ -15,7 +15,6 @@ public class CorsFilter implements Filter {
         // 请求头处理
         HttpServletResponse response = (HttpServletResponse) res;
         HttpServletRequest request = (HttpServletRequest) req;
-
         // 设置请求头
         setHeader(response);
 

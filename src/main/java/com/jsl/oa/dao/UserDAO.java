@@ -38,6 +38,7 @@ public class UserDAO {
      * @author 筱锋xiao_lfeng
      */
     public UserDO getUserInfoByUsername(String username) {
+        log.info("\t> 执行 DAO 层 UserDAO.getUserInfoByUsername 方法");
         UserDO userDO = null;
         // 从 Redis 获取数据
         // TODO: 10000-Redis: 从 Redis 获取数据
@@ -55,6 +56,7 @@ public class UserDAO {
      * @return
      */
     public Boolean isExistUser(Long id) {
+        log.info("\t> 执行 DAO 层 UserDAO.isExistUser 方法");
         return userMapper.getUserById(id) != null;
     }
 
@@ -64,6 +66,7 @@ public class UserDAO {
      * @param id
      */
     public void userDelete(Long id) {
+        log.info("\t> 执行 DAO 层 UserDAO.userDelete 方法");
         userMapper.userDelete(id);
     }
 
@@ -73,14 +76,17 @@ public class UserDAO {
      * @param id
      */
     public void userLock(Long id,Long isLock) {
+        log.info("\t> 执行 DAO 层 UserDAO.userLock 方法");
         userMapper.userLock(id,isLock);
     }
 
     public void userEditProfile(UserEditProfileVO userEditProfileVO) {
+        log.info("\t> 执行 DAO 层 UserDAO.userEditProfile 方法");
         userMapper.userEditProfile(userEditProfileVO);
     }
 
     public List<UserCurrentBackVO> userCurrentAll(UserAllCurrentVO userAllCurrentVO) {
+        log.info("\t> 执行 DAO 层 UserDAO.userCurrentAll 方法");
         List<UserDO> userCurrentDO = userMapper.getAllUser(userAllCurrentVO);
         List<UserCurrentBackVO> userCurrentDOList = new ArrayList<>();
         userCurrentDO.forEach(it -> {
@@ -91,6 +97,7 @@ public class UserDAO {
     }
 
     public List<UserCurrentBackVO> userCurrentAllLike(UserAllCurrentVO userAllCurrentVO) {
+        log.info("\t> 执行 DAO 层 UserDAO.userCurrentAllLike 方法");
         List<UserDO> userCurrentDO = userMapper.getAllUserBySearch(userAllCurrentVO);
         List<UserCurrentBackVO> userCurrentDOList = new ArrayList<>();
         userCurrentDO.forEach(it -> {
@@ -101,6 +108,7 @@ public class UserDAO {
 
     @Contract("_ -> param1")
     private @NotNull List<UserCurrentDO> userCurrentAll(@NotNull List<UserCurrentDO> userCurrentDO) {
+        log.info("\t> 执行 DAO 层 UserDAO.userCurrentAll 方法");
         userCurrentDO.forEach(it -> {
             it.setRole(roleMapper.getRoleUserByUid(it.getId()));
             if (it.getRole() == null) {
@@ -121,6 +129,7 @@ public class UserDAO {
      * @return {@link UserCurrentDO}
      */
     public UserCurrentDO userCurrentById(Long uid) {
+        log.info("\t> 执行 DAO 层 UserDAO.userCurrentById 方法");
         UserCurrentDO userCurrentDO = userMapper.getUserCurrentById(uid);
         return getUserCurrentForRole(userCurrentDO);
     }
@@ -132,6 +141,7 @@ public class UserDAO {
      * @return {@link UserCurrentDO}
      */
     public UserCurrentDO userCurrentByUsername(String username) {
+        log.info("\t> 执行 DAO 层 UserDAO.userCurrentByUsername 方法");
         UserCurrentDO userCurrentDO = userMapper.getUserCurrentByUsername(username);
         return getUserCurrentForRole(userCurrentDO);
     }
@@ -143,6 +153,7 @@ public class UserDAO {
      * @return {@link UserCurrentDO}
      */
     public UserCurrentDO userCurrentByEmail(String email) {
+        log.info("\t> 执行 DAO 层 UserDAO.userCurrentByEmail 方法");
         UserCurrentDO userCurrentDO = userMapper.getUserCurrentByEmail(email);
         return getUserCurrentForRole(userCurrentDO);
     }
@@ -154,11 +165,13 @@ public class UserDAO {
      * @return {@link UserCurrentDO}
      */
     public UserCurrentDO userCurrentByPhone(String phone) {
+        log.info("\t> 执行 DAO 层 UserDAO.userCurrentByPhone 方法");
         UserCurrentDO userCurrentDO = userMapper.getUserCurrentByPhone(phone);
         return getUserCurrentForRole(userCurrentDO);
     }
 
     private UserCurrentDO getUserCurrentForRole(UserCurrentDO userCurrentDO) {
+        log.info("\t> 执行 DAO 层 UserDAO.getUserCurrentForRole 方法");
         if (userCurrentDO != null) {
             RoleUserDO newRoleUserDO = new RoleUserDO();
             newRoleUserDO.setRid(0L)
@@ -179,11 +192,12 @@ public class UserDAO {
      * @Param userDO: user 数据库表实体类
      */
     public boolean userAdd(UserDO userDO) {
+        log.info("\t> 执行 DAO 层 userAdd 方法");
         return userMapper.insertUser(userDO);
     }
 
     public void userEdit(UserDO userDO) {
-        log.info("> 执行 DAO 层 userEdit 方法");
+        log.info("\t> 执行 DAO 层 userEdit 方法");
         userMapper.updateUser(userDO);
     }
 
@@ -194,10 +208,8 @@ public class UserDAO {
      * @Param username: 用户名
      **/
     public Boolean isRepeatUser(String username) {
-        if (userMapper.getUserInfoByUsername(username) == null) {
-            return false;
-        }
-        return true;
+        log.info("\t> 执行 DAO 层 isRepeatUser 方法");
+        return userMapper.getUserInfoByUsername(username) != null;
     }
 
 
@@ -219,7 +231,7 @@ public class UserDAO {
      * @Param userId
      **/
     public UserDO getUserById(Long userId) {
-        log.info("> 执行 DAO 层 getUserById 方法");
+        log.info("\t> 执行 DAO 层 getUserById 方法");
         return userMapper.getUserById(userId);
     }
 

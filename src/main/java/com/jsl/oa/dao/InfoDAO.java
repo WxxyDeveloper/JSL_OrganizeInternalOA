@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.jsl.oa.mapper.InfoMapper;
 import com.jsl.oa.model.doData.info.CarouselDO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,7 @@ import java.util.Collections;
  * @version v1.1.0
  * @since v1.1.0
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class InfoDAO {
@@ -33,6 +35,7 @@ public class InfoDAO {
      * @return {@link CarouselDO}
      */
     public CarouselDO getCarousel() {
+        log.info("\t> 执行 DAO 层 InfoDAO.getCarousel 方法");
         String getCarouselSql = infoMapper.getCarousel();
         CarouselDO getCarousel = null;
         if (getCarouselSql != null && !getCarouselSql.equals("{}")) {
@@ -78,6 +81,7 @@ public class InfoDAO {
      * @return {@link Boolean}
      */
     public boolean setCarousel(CarouselDO carouselDO) {
+        log.info("\t> 执行 DAO 层 InfoDAO.setCarousel 方法");
         sortCarousel(carouselDO);
         String setCarouselSql = gson.toJson(carouselDO);
         return infoMapper.setCarousel(setCarouselSql);

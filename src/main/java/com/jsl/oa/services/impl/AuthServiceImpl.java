@@ -44,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse authRegister(@NotNull UserRegisterVO userRegisterVO) {
+        log.info("\t> 执行 Service 层 AuthService.userEdit 方法");
         // 检查用户说是否存在
         UserDO getUserByUsername = userMapper.getUserInfoByUsername(userRegisterVO.getUsername());
         // 用户名已存在
@@ -77,23 +78,24 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse authLogin(@NotNull UserLoginVO userLoginVO) {
+        log.info("\t> 执行 Service 层 AuthService.userLogin 方法");
         // 检查用户是否存在
         UserDO userDO;
         if (Pattern.matches("^[0-9A-Za-z_]{3,40}$", userLoginVO.getUser())) {
             // 是否为用户名
-            log.info("userLogin: 用户名登陆");
+            log.info("\t\t> 用户名登陆");
             userDO = userMapper.getUserInfoByUsername(userLoginVO.getUser());
         } else if (Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", userLoginVO.getUser())) {
             // 是否为手机号
-            log.info("userLogin: 手机号登陆");
+            log.info("\t\t> 手机号登陆");
             userDO = userMapper.getUserInfoByPhone(userLoginVO.getUser());
         } else if (Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", userLoginVO.getUser())) {
             // 是否为邮箱
-            log.info("userLogin: 邮箱登陆");
+            log.info("\t\t> 邮箱登陆");
             return ResultUtil.error(ErrorCode.EMAIL_LOGIN_NOT_SUPPORT);
         } else {
             // 工号
-            log.info("userLogin: 工号登陆");
+            log.info("\t\t> 工号登陆");
             userDO = userMapper.getUserByJobId(userLoginVO.getUser());
         }
         if (userDO != null) {
@@ -102,6 +104,7 @@ public class AuthServiceImpl implements AuthService {
                 if (userDO.getAccountNoLocked()) {
                     // 获取用户并登陆
                     if (BCrypt.checkpw(userLoginVO.getPassword(), userDO.getPassword())) {
+                        log.info("\t\t> 登陆成功，用户 [{}]{}", userDO.getId(), userDO.getUsername());
                         return this.encapsulateDisplayContent(userDO);
                     } else {
                         return ResultUtil.error(ErrorCode.WRONG_PASSWORD);
@@ -119,6 +122,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse authLoginByEmail(String email, Integer code) {
+        log.info("\t> 执行 Service 层 AuthService.authLoginByEmail 方法");
         // 获取验证码是否有效
         Integer redisCode = emailRedisUtil.getData(BusinessConstants.BUSINESS_LOGIN, email);
         if (redisCode != null) {
@@ -138,6 +142,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse authLoginSendEmailCode(String email) {
+        log.info("\t> 执行 Service 层 AuthService.authLoginSendEmailCode 方法");
         // 获取用户信息
         UserDO userDO = userMapper.getUserInfoByEmail(email);
         if (userDO != null) {
@@ -163,6 +168,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse authChangePassword(HttpServletRequest request, @NotNull UserChangePasswordVO userChangePasswordVO) {
+        log.info("\t> 执行 Service 层 AuthService.authChangePassword 方法");
         // 检查新密码输入无误
         if (!userChangePasswordVO.getNewPassword().equals(userChangePasswordVO.getConfirmPassword())) {
             return ResultUtil.error(ErrorCode.PASSWORD_NOT_SAME);
@@ -188,6 +194,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse authLogout(HttpServletRequest request) {
+        log.info("\t> 执行 Service 层 AuthService.authLogout 方法");
         // 获取用户
         UserDO userDO = userMapper.getUserById(Processing.getAuthHeaderToUserId(request));
         // 删除Token
@@ -200,6 +207,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse authForgetPassword(UserForgetPasswordVO userForgetPasswordVO) {
+        log.info("\t> 执行 Service 层 AuthService.authForgetPassword 方法");
         // 获取验证码是否有效
         Integer redisCode = emailRedisUtil.getData(BusinessConstants.BUSINESS_LOGIN, userForgetPasswordVO.getEmail());
         if (redisCode != null) {

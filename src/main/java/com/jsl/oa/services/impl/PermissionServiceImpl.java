@@ -1,12 +1,9 @@
 package com.jsl.oa.services.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.PermissionMapper;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.PermissionDO;
-import com.jsl.oa.model.doData.RolePermissionDO;
 import com.jsl.oa.model.voData.PermissionContentVo;
 import com.jsl.oa.model.voData.PermissionEditVo;
 import com.jsl.oa.services.PermissionService;
@@ -15,14 +12,13 @@ import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.Processing;
 import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PermissionServiceImpl implements PermissionService {
@@ -33,6 +29,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public BaseResponse permissionAdd(HttpServletRequest request, Long rid, Long pid) {
+        log.info("\t> 执行 Service 层 PermissionService.permissionAdd 方法");
         if(!Processing.checkUserIsAdmin(request,roleMapper)){
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
@@ -42,6 +39,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public BaseResponse permissionUser(HttpServletRequest request, Long uid) {
+        log.info("\t> 执行 Service 层 PermissionService.permissionUser 方法");
         if(userDAO.isExistUser(uid)){
             List<String> permission = permissionMapper.permissionUser(uid);
            return ResultUtil.success(permission);
@@ -52,6 +50,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public BaseResponse permissionGet(HttpServletRequest request) {
+        log.info("\t> 执行 Service 层 PermissionService.permissionGet 方法");
         //检验用户权限是否为管理员
         if(!Processing.checkUserIsAdmin(request,roleMapper)){
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -66,6 +65,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public BaseResponse permissionEdit(PermissionEditVo permissionEditVo, HttpServletRequest request) {
+        log.info("\t> 执行 Service 层 PermissionService.permissionEdit 方法");
         //检验用户权限是否为管理员
         if(!Processing.checkUserIsAdmin(request,roleMapper)){
             return ResultUtil.error(ErrorCode.NOT_ADMIN);

@@ -15,6 +15,7 @@ import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.Processing;
 import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
@@ -33,13 +35,14 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse projectAdd(ProjectInfoVO projectAdd) {
-
+        log.info("\t> 执行 Service 层 ProjectService.projectAdd 方法");
         projectDAO.projectAdd(projectAdd);
         return ResultUtil.success("添加成功");
     }
 
     @Override
     public BaseResponse projectEdit(@NotNull ProjectInfoVO projectEdit) {
+        log.info("\t> 执行 Service 层 ProjectService.projectEdit 方法");
         //判断项目是否存在
         if(projectDAO.isExistProject(projectEdit.getId())) {
             projectDAO.projectEdit(projectEdit);
@@ -49,6 +52,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse projectGetUserInCutting(Long uid) {
+        log.info("\t> 执行 Service 层 ProjectService.projectGetUserInCutting 方法");
         if(userDAO.isExistUser(uid)) {
             List<ProjectCuttingDO> projectCuttingDOList =projectDAO.projectGetUserInCutting(uid);
             return ResultUtil.success(projectCuttingDOList);
@@ -58,6 +62,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse projectAddUserForCutting(Long uid, Long pid) {
+        log.info("\t> 执行 Service 层 ProjectService.projectAddUserForCutting 方法");
         if(userDAO.isExistUser(uid)){
             projectDAO.projectAddUserForCutting(uid,pid);
             return ResultUtil.success();
@@ -67,6 +72,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse getHeader(Integer id) {
+        log.info("\t> 执行 Service 层 InfoService.getHeader 方法");
         ProjectShowDO projectShowDO = projectDAO.getHeader();
         if (id != null) {
             if (id > projectShowDO.getData().size()) {
@@ -81,6 +87,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse addHeader(HttpServletRequest request, ProjectShowVO projectShowVO) {
+        log.info("\t> 执行 Service 层 InfoService.addHeader 方法");
         // 用户权限校验
         if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -110,6 +117,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse delHeader(Integer id, HttpServletRequest request) {
+        log.info("\t> 执行 Service 层 InfoService.delHeader 方法");
         // 用户权限校验
         if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -131,6 +139,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse editHeader(HttpServletRequest request, ProjectShowVO projectShowVO, Integer id) {
+        log.info("\t> 执行 Service 层 InfoService.editHeader 方法");
         // 用户权限校验
         if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -162,13 +171,14 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse get() {
+        log.info("\t> 执行 Service 层 ProjectService.get 方法");
         List<ProjectDO> projectDOList =projectDAO.get();
         return ResultUtil.success(projectDOList);
     }
 
     @Override
     public BaseResponse getByName(String name) {
-
+        log.info("\t> 执行 Service 层 ProjectService.getByName 方法");
         return projectDAO.getByName(name);
     }
 

@@ -175,7 +175,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResponse userEdit(UserEditVO userEditVO, HttpServletRequest request) {
-        log.info("> 执行 Service 层 userEdit 方法");
+        log.info("\t> 执行 Service 层 userEdit 方法");
         // 检测用户是否为管理员
         if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
