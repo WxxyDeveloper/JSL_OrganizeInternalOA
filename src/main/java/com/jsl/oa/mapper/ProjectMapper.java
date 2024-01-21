@@ -47,4 +47,8 @@ public interface ProjectMapper {
     @Delete("DELETE FROM organize_oa.oa_project where id=#{id}")
     boolean deleteProject(Long id);
 
+    @Insert("INSERT INTO organize_oa.oa_project_cutting (pid, name, tag, real_time) " +
+            "VALUES (#{pid}, #{name}, #{tag}, #{realTime})")
+    void projectCuttingAdd(ProjectCuttingDO projectCuttingDO);
+
 }

@@ -1,6 +1,6 @@
 package com.jsl.oa.controllers;
 
-import com.jsl.oa.model.voData.PermissionEditVo;
+import com.jsl.oa.model.voData.PermissionEditVO;
 import com.jsl.oa.services.PermissionService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -49,7 +49,7 @@ public class PermissionController {
 
 
     @PutMapping("/permission/edit")
-    public BaseResponse permissionEdit(@RequestBody @Validated PermissionEditVo permissionEditVo, BindingResult bindingResult, HttpServletRequest request){
+    public BaseResponse permissionEdit(@RequestBody @Validated PermissionEditVO permissionEditVo, BindingResult bindingResult, HttpServletRequest request){
         log.info("请求接口[PUT]: /permission/edit");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {

@@ -7,6 +7,7 @@ import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
+import com.jsl.oa.model.voData.ProjectCuttingAddVO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import com.jsl.oa.model.voData.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
@@ -31,7 +32,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectDAO projectDAO;
     private final UserDAO userDAO;
-
     private final RoleMapper roleMapper;
 
     @Override
@@ -195,10 +195,28 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse projectDelete(HttpServletRequest request,Long id) {
+        log.info("\t> 执行 Service 层 ProjectService.projectDelete 方法");
         if(Processing.checkUserIsAdmin(request,roleMapper)) {
             if (!projectDAO.projectDelete(id)) {
                 return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
             }else return ResultUtil.success();
+        }else return ResultUtil.error(ErrorCode.NOT_ADMIN);
+    }
+
+    @Override
+    public BaseResponse projectCuttingAdd(HttpServletRequest request, ProjectCuttingAddVO projectCuttingAddVO) {
+        log.info("\t> 执行 Service 层 ProjectService.projectCuttingAdd方法");
+        if(Processing.checkUserIsAdmin(request,roleMapper)) {
+            //赋值数据
+            ProjectCuttingDO projectCuttingDO = new ProjectCuttingDO();
+            Processing.copyProperties(projectCuttingAddVO,projectCuttingDO);
+            //根据pid检测项目是否存在
+            if(!projectDAO.isExistProjectById(projectCuttingAddVO.getPid())){
+                return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
+            }
+            //向数据库添加数据
+            projectDAO.projectCuttingAdd(projectCuttingDO);
+            return ResultUtil.success();
         }else return ResultUtil.error(ErrorCode.NOT_ADMIN);
     }
 

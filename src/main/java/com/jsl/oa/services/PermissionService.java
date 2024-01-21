@@ -1,6 +1,6 @@
 package com.jsl.oa.services;
 
-import com.jsl.oa.model.voData.PermissionEditVo;
+import com.jsl.oa.model.voData.PermissionEditVO;
 import com.jsl.oa.utils.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +13,7 @@ public interface PermissionService {
 
     BaseResponse permissionGet(HttpServletRequest request);
 
-    BaseResponse permissionEdit(PermissionEditVo permissionEditVo, HttpServletRequest request);
+    BaseResponse permissionEdit(PermissionEditVO permissionEditVo, HttpServletRequest request);
 
     BaseResponse permissionDelete(HttpServletRequest request, Long pid);
 }

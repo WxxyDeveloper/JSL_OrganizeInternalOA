@@ -5,6 +5,7 @@ import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
+import com.jsl.oa.model.voData.ProjectCuttingAddVO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -109,6 +110,19 @@ public class ProjectDAO {
     }
 
     public boolean projectDelete(Long id){
+        log.info("\t> 执行 DAO 层 ProjectDAO.projectDelete 方法");
         return projectMapper.deleteProject(id);
+    }
+
+    public void projectCuttingAdd(ProjectCuttingDO projectCuttingDO){
+        log.info("\t> 执行 DAO 层 ProjectDAO.projectCuttingAdd 方法");
+        projectMapper.projectCuttingAdd(projectCuttingDO);
+    }
+
+    public boolean isExistProjectById(Long id){
+        log.info("\t> 执行 DAO 层 ProjectDAO.isExistProjectById 方法");
+        if(projectMapper.getProjectById(id) == null){
+            return false;
+        }else {return  true;}
     }
 }

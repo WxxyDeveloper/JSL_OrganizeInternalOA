@@ -1,14 +1,13 @@
 package com.jsl.oa.model.voData;
 
 
-import lombok.Data;
 import lombok.Getter;
 
 import javax.validation.constraints.*;
 
 
 @Getter
-public class UserAddVo {
+public class UserAddVO {
 
     @NotBlank(message = "用户名不能为空")
     @Pattern(regexp = "^[0-9A-Za-z_]{3,40}$", message = "用户名只能为字母、数字或下划线")

@@ -1,6 +1,6 @@
 package com.jsl.oa.controllers;
 
-import com.jsl.oa.model.voData.UserAddVo;
+import com.jsl.oa.model.voData.UserAddVO;
 import com.jsl.oa.model.voData.UserAllCurrentVO;
 import com.jsl.oa.model.voData.UserEditProfileVO;
 import com.jsl.oa.model.voData.UserEditVO;
@@ -154,7 +154,7 @@ public class UserController {
      * @Param bindingResult:
      **/
     @PostMapping("/user/add")
-    public BaseResponse userAdd(@RequestBody @Validated UserAddVo userAddVo, BindingResult bindingResult, HttpServletRequest request) {
+    public BaseResponse userAdd(@RequestBody @Validated UserAddVO userAddVo, BindingResult bindingResult, HttpServletRequest request) {
         log.info("请求接口[POST]: /user/add");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {

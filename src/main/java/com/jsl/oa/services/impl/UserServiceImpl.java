@@ -160,7 +160,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public BaseResponse userAdd(UserAddVo userAddVo, HttpServletRequest request) {
+    public BaseResponse userAdd(UserAddVO userAddVo, HttpServletRequest request) {
         log.info("\t> 执行 Service 层 UserService.userAdd 方法");
         // 检测用户是否为管理员
         if (!Processing.checkUserIsAdmin(request, roleMapper)) {

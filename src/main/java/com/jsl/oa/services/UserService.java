@@ -1,7 +1,7 @@
 package com.jsl.oa.services;
 
 import com.jsl.oa.model.doData.UserDO;
-import com.jsl.oa.model.voData.UserAddVo;
+import com.jsl.oa.model.voData.UserAddVO;
 import com.jsl.oa.model.voData.UserAllCurrentVO;
 import com.jsl.oa.model.voData.UserEditProfileVO;
 import com.jsl.oa.model.voData.UserEditVO;
@@ -84,7 +84,7 @@ public interface UserService {
     BaseResponse userCurrent(HttpServletRequest request, String id, String username, String email, String phone);
 
 
-    BaseResponse userAdd(UserAddVo userAddVo, HttpServletRequest request);
+    BaseResponse userAdd(UserAddVO userAddVo, HttpServletRequest request);
 
     BaseResponse userEdit(UserEditVO userEditVo, HttpServletRequest request);
 

@@ -5,7 +5,7 @@ import com.jsl.oa.mapper.PermissionMapper;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.PermissionDO;
 import com.jsl.oa.model.voData.PermissionContentVo;
-import com.jsl.oa.model.voData.PermissionEditVo;
+import com.jsl.oa.model.voData.PermissionEditVO;
 import com.jsl.oa.services.PermissionService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -64,7 +64,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public BaseResponse permissionEdit(PermissionEditVo permissionEditVo, HttpServletRequest request) {
+    public BaseResponse permissionEdit(PermissionEditVO permissionEditVo, HttpServletRequest request) {
         log.info("\t> 执行 Service 层 PermissionService.permissionEdit 方法");
         //检验用户权限是否为管理员
         if(!Processing.checkUserIsAdmin(request,roleMapper)){

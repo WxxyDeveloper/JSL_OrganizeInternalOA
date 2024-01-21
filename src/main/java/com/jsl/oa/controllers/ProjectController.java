@@ -1,5 +1,6 @@
 package com.jsl.oa.controllers;
 
+import com.jsl.oa.model.voData.ProjectCuttingAddVO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import com.jsl.oa.model.voData.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
@@ -25,6 +26,7 @@ public class ProjectController {
 
     /**
      * 项目展示获取
+     *
      * @param id
      * @return
      */
@@ -36,6 +38,7 @@ public class ProjectController {
 
     /**
      * 全部项目的信息获取(打开项目页)
+     *
      * @return
      */
     @GetMapping("/project/get")
@@ -46,6 +49,7 @@ public class ProjectController {
 
     /**
      * 单个项目的详细
+     *
      * @param name
      * @return
      */
@@ -57,6 +61,7 @@ public class ProjectController {
 
     /**
      * 增加项目展示
+     *
      * @param projectShowVO
      * @param request
      * @param bindingResult
@@ -75,6 +80,7 @@ public class ProjectController {
 
     /**
      * 编辑展示的项目
+     *
      * @param projectShowVO
      * @param id
      * @param request
@@ -99,6 +105,7 @@ public class ProjectController {
 
     /**
      * 删除项目展示
+     *
      * @param id
      * @param request
      * @return
@@ -111,38 +118,41 @@ public class ProjectController {
 
     /**
      * 项目表进行，项目增加
+     *
      * @param projectAdd
      * @param bindingResult
      * @return
      */
     @PostMapping("/project/add")
-    public BaseResponse projectAdd(HttpServletRequest request,@RequestBody @Validated ProjectInfoVO projectAdd, @NotNull BindingResult bindingResult) {
+    public BaseResponse projectAdd(HttpServletRequest request, @RequestBody @Validated ProjectInfoVO projectAdd, @NotNull BindingResult bindingResult) {
         log.info("请求接口[POST]: /project/add");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return projectService.projectAdd(request,projectAdd);
+        return projectService.projectAdd(request, projectAdd);
     }
 
     /**
      * 项目表进行，项目的修改
+     *
      * @param projectEdit
      * @param bindingResult
      * @return
      */
     @PutMapping("/project/edit")
-    public BaseResponse projectEdit(HttpServletRequest request,@RequestBody @Validated ProjectInfoVO projectEdit, @NotNull BindingResult bindingResult) {
+    public BaseResponse projectEdit(HttpServletRequest request, @RequestBody @Validated ProjectInfoVO projectEdit, @NotNull BindingResult bindingResult) {
         log.info("请求接口[PUT]: /project/edit");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return projectService.projectEdit(request,projectEdit);
+        return projectService.projectEdit(request, projectEdit);
     }
 
     /**
      * 用户获取所分到的项目模块
+     *
      * @param uid
      * @return
      */
@@ -158,33 +168,53 @@ public class ProjectController {
 
     /**
      * 给某用户分配项目模块
+     *
      * @param uid
      * @param pid
      * @return
      */
     @PostMapping("/project/cut/user/add")
-    public BaseResponse projectAddUserForCutting(HttpServletRequest request,@RequestParam Long uid, @RequestParam Long pid) {
+    public BaseResponse projectAddUserForCutting(HttpServletRequest request, @RequestParam Long uid, @RequestParam Long pid) {
         log.info("请求接口[POST]: /project/cut/user/add");
         // 判断是否有参数错误
         if (uid == null || pid == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
-        return projectService.projectAddUserForCutting(request,uid, pid);
+        return projectService.projectAddUserForCutting(request, uid, pid);
     }
 
     /**
      * 删除某项目记录
+     *
      * @param id
      * @return
      */
     @DeleteMapping("/project/delete")
-    public BaseResponse projectDelete(HttpServletRequest request,@RequestParam Long id){
+    public BaseResponse projectDelete(HttpServletRequest request, @RequestParam Long id) {
         log.info("请求接口[Delete]: /project/delete");
-        if(id == null){
+        if (id == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
-        return projectService.projectDelete(request,id);
+        return projectService.projectDelete(request, id);
     }
+
+    /**
+     * @Description:  添加项目模块
+     * @Date: 2024/1/21
+     * @Param request
+     * @Param projectCuttingAddVO
+     * @Param bindingResult
+     **/
+    @PostMapping("/project/cut/add")
+    public BaseResponse projectCuttingAdd(HttpServletRequest request, @RequestBody @Validated ProjectCuttingAddVO projectCuttingAddVO, @NotNull BindingResult bindingResult) {
+        log.info("请求接口[Post]: /project/cut/add");
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        return projectService.projectCuttingAdd(request, projectCuttingAddVO);
+    }
+
 
 
 }
