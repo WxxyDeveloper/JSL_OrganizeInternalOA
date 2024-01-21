@@ -1,5 +1,7 @@
 package com.jsl.oa.dao;
 
+import com.google.gson.Gson;
+import com.jsl.oa.common.constant.BusinessConstants;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.doData.RoleDO;
@@ -9,8 +11,10 @@ import com.jsl.oa.model.voData.UserAllCurrentVO;
 import com.jsl.oa.model.voData.UserCurrentBackVO;
 import com.jsl.oa.model.voData.UserEditProfileVO;
 import com.jsl.oa.utils.Processing;
+import com.jsl.oa.utils.redis.UserRedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -23,6 +27,8 @@ public class UserDAO {
 
     public final UserMapper userMapper;
     private final RoleMapper roleMapper;
+    private final Gson gson;
+    private final UserRedisUtil<String> userRedisUtil;
 
     /**
      * <h2>用户名获取用户信息</h2>
@@ -46,14 +52,30 @@ public class UserDAO {
     }
 
     /**
+     * <h2>用户id获取用户信息</h2>
+     * <hr/>
      * 根据id判断用户是否存在
      *
-     * @param id
-     * @return
+     * @param id 用户id
+     * @return Boolean
      */
-    public Boolean isExistUser(Long id) {
+    public Boolean isExistUser(@NotNull Long id) {
         log.info("\t> 执行 DAO 层 UserDAO.isExistUser 方法");
-        return userMapper.getUserById(id) != null;
+        // 从 Redis 获取数据
+        String redisData = userRedisUtil.getData(BusinessConstants.NONE, id.toString());
+        if (redisData != null) {
+            log.info("\t\t> 从 Redis 获取数据");
+            return true;
+        } else {
+            UserDO userDO = userMapper.getUserById(id);
+            log.info("\t\t> 从 MySQL 获取数据");
+            if (userDO != null) {
+                userRedisUtil.setData(BusinessConstants.NONE, userDO.getId().toString(), gson.toJson(userDO), 120);
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     /**

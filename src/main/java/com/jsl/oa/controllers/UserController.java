@@ -42,7 +42,7 @@ public class UserController {
      * @param id 用户id
      * @return {@link BaseResponse}
      */
-    @PutMapping("/user/delete")
+    @DeleteMapping("/user/delete")
     public BaseResponse userDelete(HttpServletRequest request, @RequestParam String id) {
         log.info("请求接口[PUT]: /user/delete");
         // 判断是否有参数错误

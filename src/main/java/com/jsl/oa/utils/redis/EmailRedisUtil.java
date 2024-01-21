@@ -53,6 +53,7 @@ public class EmailRedisUtil<R> extends RedisOperating<R> {
      * @param email 邮箱
      * @return 返回是否删除成功
      */
+    @Override
     public Boolean delData(@NotNull BusinessConstants businessConstants, String email) {
         String key = RedisConstant.TYPE_EMAIL + RedisConstant.TABLE_EMAIL + businessConstants.getValue() + email;
         return redisTemplate.delete(key);
@@ -67,6 +68,7 @@ public class EmailRedisUtil<R> extends RedisOperating<R> {
      * @param email 邮箱
      * @return 返回邮箱验证码
      */
+    @Override
     public R getData(@NotNull BusinessConstants businessConstants, String email) {
         String key = RedisConstant.TYPE_EMAIL + RedisConstant.TABLE_EMAIL + businessConstants.getValue() + email;
         return redisTemplate.opsForValue().get(key);
@@ -82,6 +84,7 @@ public class EmailRedisUtil<R> extends RedisOperating<R> {
      * @param value  验证码
      * @return 返回是否添加成功
      */
+    @Override
     public Boolean setData(@NotNull BusinessConstants businessConstants, String email, R value, Integer time) {
         // 处理数据
         String key = RedisConstant.TYPE_EMAIL + RedisConstant.TABLE_EMAIL + businessConstants.getValue() + email;
