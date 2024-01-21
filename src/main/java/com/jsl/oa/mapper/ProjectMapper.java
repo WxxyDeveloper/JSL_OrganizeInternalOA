@@ -42,7 +42,7 @@ public interface ProjectMapper {
     List<ProjectDO> get();
 
     @Select("select * from organize_oa.oa_project where name=#{name}")
-    BaseResponse getByName(String name);
+    ProjectDO getByName(String name);
 
     @Delete("DELETE FROM organize_oa.oa_project where id=#{id}")
     boolean deleteProject(Long id);

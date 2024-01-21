@@ -31,25 +31,29 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectDAO projectDAO;
     private final UserDAO userDAO;
+
     private final RoleMapper roleMapper;
 
     @Override
-    public BaseResponse projectAdd(ProjectInfoVO projectAdd) {
+    public BaseResponse projectAdd(HttpServletRequest request,ProjectInfoVO projectAdd) {
         log.info("\t> 执行 Service 层 ProjectService.projectAdd 方法");
-        projectDAO.projectAdd(projectAdd);
-        return ResultUtil.success("添加成功");
+        if(Processing.checkUserIsAdmin(request,roleMapper)){
+            projectDAO.projectAdd(projectAdd);
+            return ResultUtil.success("添加成功");
+        }else return ResultUtil.error(ErrorCode.NOT_ADMIN);
+
     }
 
     @Override
-    public BaseResponse projectEdit(@NotNull ProjectInfoVO projectEdit) {
+    public BaseResponse projectEdit(HttpServletRequest request,@NotNull ProjectInfoVO projectEdit) {
         log.info("\t> 执行 Service 层 ProjectService.projectEdit 方法");
-        //判断项目是否存在
-        if (projectDAO.isExistProject(projectEdit.getId())) {
-            projectDAO.projectEdit(projectEdit);
-            return ResultUtil.success("修改成功");
-        } else {
-            return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
-        }
+        if (Processing.checkUserIsAdmin(request, roleMapper)) {
+            //判断项目是否存在
+            if (projectDAO.isExistProject(projectEdit.getId())) {
+                projectDAO.projectEdit(projectEdit);
+                return ResultUtil.success("修改成功");
+            } else return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
+        } else return ResultUtil.error(ErrorCode.NOT_ADMIN);
     }
 
     @Override
@@ -64,13 +68,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse projectAddUserForCutting(Long uid, Long pid) {
+    public BaseResponse projectAddUserForCutting(HttpServletRequest request,Long uid, Long pid) {
         log.info("\t> 执行 Service 层 ProjectService.projectAddUserForCutting 方法");
-        if (userDAO.isExistUser(uid)) {
-            projectDAO.projectAddUserForCutting(uid, pid);
-            return ResultUtil.success();
-        }
-        return null;
+        if(Processing.checkUserIsAdmin(request,roleMapper)){
+            if (userDAO.isExistUser(uid)) {
+                projectDAO.projectAddUserForCutting(uid, pid);
+                return ResultUtil.success();
+            }else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+        }else return ResultUtil.error(ErrorCode.NOT_ADMIN);
     }
 
     @Override
@@ -182,15 +187,19 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public BaseResponse getByName(String name) {
         log.info("\t> 执行 Service 层 ProjectService.getByName 方法");
-        return ResultUtil.success(projectDAO.getByName(name));
+        if (projectDAO.getByName(name)==null){
+            return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
+        }
+        else return ResultUtil.success(projectDAO.getByName(name));
     }
 
     @Override
-    public BaseResponse projectDelete(Long id) {
-        if(!projectDAO.projectDelete(id)){
-            return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
-        }
-        return ResultUtil.success();
+    public BaseResponse projectDelete(HttpServletRequest request,Long id) {
+        if(Processing.checkUserIsAdmin(request,roleMapper)) {
+            if (!projectDAO.projectDelete(id)) {
+                return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
+            }else return ResultUtil.success();
+        }else return ResultUtil.error(ErrorCode.NOT_ADMIN);
     }
 
 
