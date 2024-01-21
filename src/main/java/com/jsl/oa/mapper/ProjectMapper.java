@@ -51,4 +51,12 @@ public interface ProjectMapper {
             "VALUES (#{pid}, #{name}, #{tag}, #{realTime})")
     void projectCuttingAdd(ProjectCuttingDO projectCuttingDO);
 
+    @Update("UPDATE  organize_oa.oa_project_cutting SET name = #{name}, " +
+            "tag = #{tag}, engineering = #{engineering}, estimated_time = #{estimatedTime}, " +
+            "real_time = #{realTime}, updated_at =  CURRENT_TIMESTAMP WHERE id = #{id}")
+    boolean projectCuttingUpdate(ProjectCuttingDO projectCuttingDO);
+
+    @Select("SELECT * FROM organize_oa.oa_project_cutting WHERE id = #{id}")
+    public ProjectCuttingDO getProjectCuttingById(Long id);
+
 }

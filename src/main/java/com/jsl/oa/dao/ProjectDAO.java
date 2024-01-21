@@ -125,4 +125,19 @@ public class ProjectDAO {
             return false;
         }else {return  true;}
     }
+
+    public boolean updateProjectCutting(ProjectCuttingDO projectCuttingDO){
+        log.info("\t> 执行 DAO 层 ProjectDAO.updateProjectCutting 方法");
+        return projectMapper.projectCuttingUpdate(projectCuttingDO);
+    }
+
+    public boolean isExistProjectCutting(Long id){
+        log.info("\t> 执行 DAO 层 ProjectDAO.isExistProjectCutting 方法");
+        if(projectMapper.getProjectCuttingById(id) == null){
+            return false;
+        }else {return  true;}
+    }
+
+
+
 }

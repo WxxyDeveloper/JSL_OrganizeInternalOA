@@ -8,6 +8,7 @@ import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.ProjectCuttingAddVO;
+import com.jsl.oa.model.voData.ProjectCuttingEditVO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import com.jsl.oa.model.voData.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
@@ -216,6 +217,23 @@ public class ProjectServiceImpl implements ProjectService {
             }
             //向数据库添加数据
             projectDAO.projectCuttingAdd(projectCuttingDO);
+            return ResultUtil.success();
+        }else return ResultUtil.error(ErrorCode.NOT_ADMIN);
+    }
+
+    @Override
+    public BaseResponse projectCuttingEdit(HttpServletRequest request, ProjectCuttingEditVO projectCuttingEditVO) {
+        log.info("\t> 执行 Service 层 ProjectService.projectCuttingEdit方法");
+        if(Processing.checkUserIsAdmin(request,roleMapper)) {
+            //赋值数据
+            ProjectCuttingDO projectCuttingDO = new ProjectCuttingDO();
+            Processing.copyProperties(projectCuttingEditVO,projectCuttingDO);
+            //根据id检测项目模块是否存在
+            if(!projectDAO.isExistProjectCutting(projectCuttingEditVO.getId())){
+                return ResultUtil.error(ErrorCode.PROJECT_CUTTING_NOT_EXIST);
+            }
+            //向数据库添加数据
+            projectDAO.updateProjectCutting(projectCuttingDO);
             return ResultUtil.success();
         }else return ResultUtil.error(ErrorCode.NOT_ADMIN);
     }

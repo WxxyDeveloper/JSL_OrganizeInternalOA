@@ -38,8 +38,8 @@ public enum ErrorCode {
     DATABASE_INSERT_ERROR("DatabaseInsertError", 50010, "数据库插入错误"),
     DATABASE_UPDATE_ERROR("DatabaseUpdateError", 50011, "数据库更新错误"),
     DATABASE_DELETE_ERROR("DatabaseDeleteError", 50012, "数据库删除错误"),
-    PROJECT_NOT_EXIST("ProjectNotExist", 40016, "项目不存在");
-
+    PROJECT_NOT_EXIST("ProjectNotExist", 40016, "项目不存在"),
+    PROJECT_CUTTING_NOT_EXIST("ProjectCuttingNotExist", 40017, "项目分割模块不存在");
     private final String output;
     private final Integer code;
     private final String message;

@@ -1,6 +1,7 @@
 package com.jsl.oa.controllers;
 
 import com.jsl.oa.model.voData.ProjectCuttingAddVO;
+import com.jsl.oa.model.voData.ProjectCuttingEditVO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import com.jsl.oa.model.voData.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
@@ -216,5 +217,23 @@ public class ProjectController {
     }
 
 
+    @PutMapping("/project/cut/edit")
+    public BaseResponse projectCuttingEdit(HttpServletRequest request, @RequestBody @Validated ProjectCuttingEditVO projectCuttingEditVO, @NotNull BindingResult bindingResult) {
+        log.info("请求接口[Put]: /project/cut/edit");
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        return projectService.projectCuttingEdit(request, projectCuttingEditVO);
+    }
 
+    @PostMapping("")
+    public BaseResponse projectCuttingEdit(HttpServletRequest request, @RequestBody @Validated ProjectCuttingEditVO projectCuttingEditVO, @NotNull BindingResult bindingResult) {
+        log.info("请求接口[Put]: /project/cut/edit");
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        return projectService.projectCuttingEdit(request, projectCuttingEditVO);
+    }
 }
