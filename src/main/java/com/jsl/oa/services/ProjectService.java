@@ -8,13 +8,13 @@ import com.jsl.oa.utils.BaseResponse;
 import javax.servlet.http.HttpServletRequest;
 
 public interface ProjectService {
-    BaseResponse projectAdd(ProjectInfoVO projectAdd);
+    BaseResponse projectAdd(HttpServletRequest request,ProjectInfoVO projectAdd);
 
-    BaseResponse projectEdit(ProjectInfoVO projectEdit);
+    BaseResponse projectEdit(HttpServletRequest request,ProjectInfoVO projectEdit);
 
     BaseResponse projectGetUserInCutting(Long uid);
 
-    BaseResponse projectAddUserForCutting(Long uid, Long pid);
+    BaseResponse projectAddUserForCutting(HttpServletRequest request,Long uid, Long pid);
 
     BaseResponse getHeader(Integer id);
 
@@ -28,5 +28,5 @@ public interface ProjectService {
 
     BaseResponse getByName(String name);
 
-    BaseResponse projectDelete(Long id);
+    BaseResponse projectDelete(HttpServletRequest request,Long id);
 }

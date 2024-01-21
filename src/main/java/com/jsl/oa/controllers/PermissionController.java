@@ -60,6 +60,7 @@ public class PermissionController {
 
     @DeleteMapping("/permission/delete")
     public BaseResponse permissionDelete(@RequestParam Long pid,HttpServletRequest request){
+        log.info("请求接口[Delete]: /permission/delete");
         // 判断是否有参数错误
         if (pid == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);

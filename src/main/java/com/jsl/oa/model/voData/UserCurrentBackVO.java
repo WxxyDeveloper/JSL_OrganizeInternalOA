@@ -50,5 +50,6 @@ public class UserCurrentBackVO {
         private String description;
         private Timestamp createdAt;
         private Timestamp updatedAt;
+        private Boolean isDelete;
     }
 }

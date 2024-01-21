@@ -5,6 +5,7 @@ import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.ResultUtil;
 import com.jsl.oa.utils.redis.TokenRedisUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -25,6 +26,7 @@ import java.util.Objects;
  * @version v1.0.0
  * @since v1.0.0
  */
+@Slf4j
 @Aspect
 @Component
 @RequiredArgsConstructor
@@ -53,7 +55,6 @@ public class AuthControllerAspect {
         } else {
             return ResultUtil.error(ErrorCode.TIMESTAMP_ERROR);
         }
-
     }
 
     /**
@@ -63,7 +64,7 @@ public class AuthControllerAspect {
      *
      * @param pjp ProceedingJoinPoint对象
      * @return {@link Object}
-     * @throws Throwable
+     * @throws Throwable 异常
      */
     @Around("execution(* com.jsl.oa.controllers.AuthController.authLogout(..)) || execution(* com.jsl.oa.controllers.AuthController.authChangePassword(..))")
     public Object tokenControllerAround(ProceedingJoinPoint pjp) throws Throwable {
@@ -93,7 +94,7 @@ public class AuthControllerAspect {
      * @return {@link Boolean}
      * @since v1.0.0
      */
-    public Boolean checkTimestamp(@NotNull HttpServletRequest request) {
+    private Boolean checkTimestamp(@NotNull HttpServletRequest request) {
         // 获取请求头中的时间戳
         String getTimestamp = request.getHeader("Timestamp");
         // 判断是否为空

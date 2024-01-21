@@ -39,4 +39,5 @@ public class UserDO {
     private String description;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private Boolean isDelete;
 }

@@ -2,7 +2,6 @@ package com.jsl.oa.mapper;
 
 import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
-import com.jsl.oa.model.doData.UserCurrentDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.UserAllCurrentVO;
 import com.jsl.oa.model.voData.UserEditProfileVO;
@@ -27,7 +26,7 @@ public interface UserMapper {
             "VALUES (#{jobId}, #{username}, #{password}, #{address}, #{phone}, #{email}, #{age}, #{sex})")
     boolean insertUser(UserDO userDO);
 
-    @Update("UPDATE organize_oa.oa_user SET enabled = 0 ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}  ")
+    @Update("UPDATE organize_oa.oa_user SET is_delete = true ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}")
     void userDelete(Long id);
 
     @Update("UPDATE organize_oa.oa_user SET account_no_locked = #{isLock} ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}  ")
@@ -60,19 +59,6 @@ public interface UserMapper {
             "ORDER BY `id` LIMIT #{page},#{limit}")
     List<UserDO> getAllUserBySearch(UserAllCurrentVO userAllCurrentVO);
 
-    @Select("SELECT * FROM organize_oa.oa_user WHERE id = #{uid}")
-    UserCurrentDO getUserCurrentById(Long uid);
-
-    @Select("SELECT * FROM organize_oa.oa_user WHERE username = #{username}")
-    UserCurrentDO getUserCurrentByUsername(String username);
-
-    @Select("SELECT * FROM organize_oa.oa_user WHERE email = #{email}")
-    UserCurrentDO getUserCurrentByEmail(String email);
-
-    @Select("SELECT * FROM organize_oa.oa_user WHERE phone = #{phone}")
-    UserCurrentDO getUserCurrentByPhone(String phone);
-
-
     @Select("SELECT * FROM organize_oa.oa_role_user WHERE uid = #{userId}")
     RoleUserDO getRoleIdByUserId(Long userId);
 
@@ -96,4 +82,7 @@ public interface UserMapper {
 
     @Select("SELECT * FROM organize_oa.oa_user WHERE phone = #{phone}")
     UserDO getUserByPhone(String phone);
+
+    @Select("SELECT is_delete FROM organize_oa.oa_user WHERE id = #{id}")
+    boolean userGetDelete(Long id);
 }
