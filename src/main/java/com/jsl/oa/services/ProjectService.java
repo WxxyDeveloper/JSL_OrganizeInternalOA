@@ -32,7 +32,9 @@ public interface ProjectService {
 
     BaseResponse projectDelete(HttpServletRequest request,Long id);
 
-    BaseResponse projectCuttingAdd(HttpServletRequest request, ProjectCuttingAddVO projectCuttingAddVO);
+    BaseResponse addProjectCutting(HttpServletRequest request, ProjectCuttingAddVO projectCuttingAddVO);
 
-    BaseResponse projectCuttingEdit(HttpServletRequest request, ProjectCuttingEditVO projectCuttingEditVO);
+    BaseResponse editProjectCutting(HttpServletRequest request, ProjectCuttingEditVO projectCuttingEditVO);
+
+    BaseResponse projectToOtherUserForCutting(HttpServletRequest request, Long oldUid, Long pid, Long newUid);
 }

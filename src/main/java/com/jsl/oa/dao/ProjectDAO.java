@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
+import com.jsl.oa.model.doData.ProjectUserDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.ProjectCuttingAddVO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
@@ -138,6 +139,20 @@ public class ProjectDAO {
         }else {return  true;}
     }
 
+    public boolean isExistProjectUser(Long pid,Long uid){
+        log.info("\t> 执行 DAO 层 ProjectDAO.isExistProjectUse 方法");
+        if(projectMapper.getProjectUserByPidAndUid(pid,uid) == null){
+            return false;
+        }else {return  true;}
+    }
 
+    public boolean updateUserForProjectUserByPidAndUid(Long pid,Long oldUid,Long newUid){
+        log.info("\t> 执行 DAO 层 ProjectDAO.updateUserForProjectUserByPidAndUid 方法");
+        ProjectUserDO projectUserDO = projectMapper.getProjectUserByPidAndUid(pid,oldUid);
+        if(projectUserDO == null){
+            return false;
+        }
+        return projectMapper.updateUserForProjectUser(newUid,projectUserDO.getId());
+    }
 
 }

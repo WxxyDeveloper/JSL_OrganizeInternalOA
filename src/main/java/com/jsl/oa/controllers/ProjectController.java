@@ -200,7 +200,7 @@ public class ProjectController {
     }
 
     /**
-     * @Description:  添加项目模块
+     * @Description: 添加项目模块
      * @Date: 2024/1/21
      * @Param request
      * @Param projectCuttingAddVO
@@ -213,7 +213,7 @@ public class ProjectController {
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return projectService.projectCuttingAdd(request, projectCuttingAddVO);
+        return projectService.addProjectCutting(request, projectCuttingAddVO);
     }
 
 
@@ -224,16 +224,18 @@ public class ProjectController {
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return projectService.projectCuttingEdit(request, projectCuttingEditVO);
+        return projectService.editProjectCutting(request, projectCuttingEditVO);
     }
 
-    @PostMapping("")
-    public BaseResponse projectCuttingEdit(HttpServletRequest request, @RequestBody @Validated ProjectCuttingEditVO projectCuttingEditVO, @NotNull BindingResult bindingResult) {
-        log.info("请求接口[Put]: /project/cut/edit");
+    @PutMapping("/project/cut/user/to")
+    public BaseResponse projectToOtherUserForCutting(HttpServletRequest request, @RequestParam Long oldUid
+            , @RequestParam Long pid,@RequestParam Long newUid) {
+        log.info("请求接口[Put]: /project/cut/user/to");
         // 判断是否有参数错误
-        if (bindingResult.hasErrors()) {
-            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        if (oldUid == null || pid == null || newUid==null) {
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR);
         }
-        return projectService.projectCuttingEdit(request, projectCuttingEditVO);
+        return projectService.projectToOtherUserForCutting(request, oldUid, pid , newUid);
     }
+
 }
