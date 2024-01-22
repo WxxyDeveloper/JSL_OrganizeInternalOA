@@ -12,6 +12,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -65,5 +66,11 @@ public class ProcessException {
     public ResponseEntity<BaseResponse> businessClassCopyException(@NotNull ClassCopyException e) {
         log.error(e.getMessage(), e);
         return ResultUtil.error("ServerInternalError", 50001, "服务器内部错误");
+    }
+
+    @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<BaseResponse> businessMethodArgumentTypeMismatchException(@NotNull MethodArgumentTypeMismatchException e) {
+        log.error(e.getMessage(), e);
+        return ResultUtil.error("ServerInternalError", 50002, "服务器内部错误");
     }
 }

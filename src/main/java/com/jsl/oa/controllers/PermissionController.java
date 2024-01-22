@@ -38,7 +38,9 @@ public class PermissionController {
         // 判断是否有参数错误
         if (uid == null ) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
-        } else return permissionService.permissionUser(request,uid);
+        } else {
+            return permissionService.permissionUser(request,uid);
+        }
     }
 
     @GetMapping("/permission/get")

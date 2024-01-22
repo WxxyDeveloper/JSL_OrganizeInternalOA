@@ -9,16 +9,16 @@ import java.util.List;
 @Mapper
 public interface PermissionMapper {
 
-    @Insert("insert into organize_oa.oa_role_permissions(rid, pid) VALUE (#{rid},#{pid})")
+    @Insert("INSERT INTO organize_oa.oa_role_permissions(rid, pid) VALUE (#{rid},#{pid})")
     void permissionAdd(Long rid, Long pid);
 
-    @Select("select name from organize_oa.oa_permissions where id in(select pid " +
-            "from organize_oa.oa_role_permissions where rid=" +
-            "(select rid from organize_oa.oa_role_user where uid=#{uid}) )")
-    List<String> permissionUser(Long uid);
+    @Select("SELECT * FROM organize_oa.oa_permissions WHERE id IN " +
+            "(SELECT pid FROM organize_oa.oa_role_permissions WHERE rid IN " +
+                "(SELECT rid FROM organize_oa.oa_role_user WHERE uid = #{uid}))")
+    List<PermissionDO> permissionUserPid(Long uid);
 
     @Select("SELECT * FROM organize_oa.oa_permissions where id=#{id}")
-    PermissionDO permissionGetById(Long id);
+    PermissionDO getPermissionById(Long id);
 
     @Select("SELECT * FROM organize_oa.oa_role_permissions where pid=#{pid}")
     RolePermissionDO rolePermissionGetByPid(Long pid);
@@ -32,4 +32,13 @@ public interface PermissionMapper {
 
     @Delete("DELETE FROM organize_oa.oa_permissions where id=#{pid}")
     boolean deletePermission(Long pid);
+
+    @Select("SELECT * FROM organize_oa.oa_permissions WHERE id IN (#{permissionList})")
+    List<PermissionDO> permissionGet(String permissionList);
+
+    @Select("SELECT * FROM organize_oa.oa_permissions WHERE id = #{pid}")
+    PermissionDO getPermissionByPid(Long pid);
+
+    @Select("SELECT * FROM organize_oa.oa_permissions WHERE pid = #{id}")
+    List<PermissionDO> getChildPermission(Long id);
 }
