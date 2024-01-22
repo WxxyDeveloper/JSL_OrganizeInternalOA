@@ -22,8 +22,8 @@ import java.util.Objects;
  * <hr/>
  * 用于用户控制器的切面
  *
- * @author 筱锋xiao_lfeng
- * @version v1.0.0
+ * @author xiao_lfeng
+ * @version v1.1.0
  * @since v1.0.0
  */
 @Slf4j
@@ -66,7 +66,12 @@ public class AuthControllerAspect {
      * @return {@link Object}
      * @throws Throwable 异常
      */
-    @Around("execution(* com.jsl.oa.controllers.AuthController.authLogout(..)) || execution(* com.jsl.oa.controllers.AuthController.authChangePassword(..))")
+    @Around("execution(* com.jsl.oa.controllers.*.*(..)) " +
+            "|| !execution(* com.jsl.oa.controllers.AuthController.authSendEmailCode(..))" +
+            "|| !execution(* com.jsl.oa.controllers.AuthController.authLoginByEmail(..))" +
+            "|| !execution(* com.jsl.oa.controllers.AuthController.authForgetPassword(..))" +
+            "|| !execution(* com.jsl.oa.controllers.AuthController.authLogin(..))" +
+            "|| !execution(* com.jsl.oa.controllers.AuthController.authRegister(..))")
     public Object tokenControllerAround(ProceedingJoinPoint pjp) throws Throwable {
         // 获取 HttpServletRequest 对象
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
@@ -94,7 +99,7 @@ public class AuthControllerAspect {
      * @return {@link Boolean}
      * @since v1.0.0
      */
-    private Boolean checkTimestamp(@NotNull HttpServletRequest request) {
+    private @NotNull Boolean checkTimestamp(@NotNull HttpServletRequest request) {
         // 获取请求头中的时间戳
         String getTimestamp = request.getHeader("Timestamp");
         // 判断是否为空
