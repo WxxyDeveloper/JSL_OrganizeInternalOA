@@ -1,0 +1,35 @@
+package com.jsl.oa.model.doData;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.sql.Timestamp;
+
+/**
+ * <h1>news 数据表</h1>
+ * <hr/>
+ * 映射 oa_news数据表内容进入自定义实体类
+ *
+ * @author 张睿相
+ * @since v1.1.0
+ * @version v1.1.0
+ */
+@Data
+@Accessors(chain = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class NewsDO {
+
+    private Long id;
+    private String title;
+    private String content;
+    private String tags;
+    private Integer likes;
+    private Integer comments;
+    private Short status;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
+
+}
+
+

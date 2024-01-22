@@ -2,16 +2,16 @@ package com.jsl.oa.services.impl;
 
 
 import com.jsl.oa.mapper.MessageMapper;
-import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.MessageDO;
 import com.jsl.oa.services.MessageService;
 import com.jsl.oa.utils.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.*;
 
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
