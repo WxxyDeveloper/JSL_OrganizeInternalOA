@@ -9,63 +9,53 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <h1>Token Redis 工具类</h1>
+ * <h1>权限Redis工具类</h1>
  * <hr/>
- * 用于 Token 的 Redis 操作
+ * 权限Redis工具类
  *
  * @param <R> 泛型
- * @version v1.1.0
  * @since v1.1.0
- * @see RedisOperating
- * @see RedisTemplate
- * @see StringRedisTemplate
- * @author xiao_lfeng
+ * @version v1.1.0
+ * @see com.jsl.oa.common.constant.RedisConstant
+ * @author xiaofeng
  */
 @Slf4j
 @Component
-public class TokenRedisUtil<R> extends RedisOperating<R> {
-    public TokenRedisUtil(RedisTemplate<String, R> redisTemplate, StringRedisTemplate stringRedisTemplate) {
+public class PermissionRedisUtil<R> extends RedisOperating<R> {
+    public PermissionRedisUtil(RedisTemplate<String, R> redisTemplate, StringRedisTemplate stringRedisTemplate) {
         super(redisTemplate, stringRedisTemplate);
     }
 
     @Override
     public Long getExpiredAt(@NotNull BusinessConstants businessConstants, String field) {
-        String key = RedisConstant.TYPE_AUTH + RedisConstant.TABLE_TOKEN + businessConstants.getValue() + field;
+        String key = RedisConstant.TYPE_PERMISSION + RedisConstant.TABLE_ROLE + businessConstants.getValue() + field;
         log.info("\t\t> 读取 Redis 键为 {} 的过期时间", key);
         return redisTemplate.getExpire(key);
     }
 
     @Override
     public Boolean delData(@NotNull BusinessConstants businessConstants, String field) {
-        String key = RedisConstant.TYPE_AUTH + RedisConstant.TABLE_TOKEN + businessConstants.getValue() + field;
+        String key = RedisConstant.TYPE_PERMISSION + RedisConstant.TABLE_ROLE + businessConstants.getValue() + field;
         log.info("\t\t> 删除 Redis 键为 {} 的数据", key);
         return redisTemplate.delete(key);
     }
 
     @Override
     public R getData(@NotNull BusinessConstants businessConstants, String field) {
-        String key = RedisConstant.TYPE_AUTH + RedisConstant.TABLE_TOKEN + businessConstants.getValue() + field;
+        String key = RedisConstant.TYPE_PERMISSION + RedisConstant.TABLE_ROLE + businessConstants.getValue() + field;
         log.info("\t\t> 读取 Redis 键为 {} 的数据", key);
         return redisTemplate.opsForValue().get(key);
     }
 
     @Override
     public Boolean setData(@NotNull BusinessConstants businessConstants, String field, R value, Integer time) {
-        // 处理数据
-        String key = RedisConstant.TYPE_AUTH + RedisConstant.TABLE_TOKEN + businessConstants.getValue() + field;
+        String key = RedisConstant.TYPE_PERMISSION + RedisConstant.TABLE_ROLE + businessConstants.getValue() + field;
         log.info("\t\t> 写入 Redis 键为 {} 的数据", key);
         redisTemplate.opsForValue().set(key, value);
         redisTemplate.expire(key, time, TimeUnit.MINUTES);
         return true;
-    }
-
-    public List<R> getList(@NotNull BusinessConstants businessConstants) {
-        String key = RedisConstant.TYPE_AUTH + RedisConstant.TABLE_TOKEN + businessConstants.getValue() + "*";
-        log.info("\t\t> 读取 Redis 键为 {} 的数据", key);
-        return this.getList(key);
     }
 }

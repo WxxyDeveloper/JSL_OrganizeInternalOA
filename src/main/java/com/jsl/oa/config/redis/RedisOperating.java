@@ -9,6 +9,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * <h1>Redis工具类</h1>
+ * <hr/>
+ * 用于操作Redis
+ *
+ * @param <R> 泛型
+ * @since v1.1.0
+ * @version v1.1.0
+ * @see RedisConfiguration
+ * @see com.jsl.oa.common.constant.RedisConstant
+ * @author xiao_lfeng
+ */
 @RequiredArgsConstructor
 public abstract class RedisOperating<R> {
     protected final RedisTemplate<String, R> redisTemplate;

@@ -4,6 +4,7 @@ import com.jsl.oa.common.constant.BusinessConstants;
 import com.jsl.oa.common.constant.RedisConstant;
 import com.jsl.oa.config.redis.RedisConfiguration;
 import com.jsl.oa.config.redis.RedisOperating;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -22,6 +23,7 @@ import java.util.concurrent.TimeUnit;
  * @see com.jsl.oa.common.constant.RedisConstant
  * @since v1.1.0
  */
+@Slf4j
 @Component
 public class EmailRedisUtil<R> extends RedisOperating<R> {
 
@@ -41,6 +43,7 @@ public class EmailRedisUtil<R> extends RedisOperating<R> {
     @Override
     public Long getExpiredAt(@NotNull BusinessConstants businessConstants, String email) {
         String key = RedisConstant.TYPE_EMAIL + RedisConstant.TABLE_EMAIL + businessConstants.getValue() + email;
+        log.info("\t\t> 读取 Redis 键为 {} 的过期时间", key);
         return redisTemplate.getExpire(key);
     }
 
@@ -56,6 +59,7 @@ public class EmailRedisUtil<R> extends RedisOperating<R> {
     @Override
     public Boolean delData(@NotNull BusinessConstants businessConstants, String email) {
         String key = RedisConstant.TYPE_EMAIL + RedisConstant.TABLE_EMAIL + businessConstants.getValue() + email;
+        log.info("\t\t> 删除 Redis 键为 {} 的数据", key);
         return redisTemplate.delete(key);
     }
 
@@ -71,6 +75,7 @@ public class EmailRedisUtil<R> extends RedisOperating<R> {
     @Override
     public R getData(@NotNull BusinessConstants businessConstants, String email) {
         String key = RedisConstant.TYPE_EMAIL + RedisConstant.TABLE_EMAIL + businessConstants.getValue() + email;
+        log.info("\t\t> 读取 Redis 键为 {} 的数据", key);
         return redisTemplate.opsForValue().get(key);
     }
 
@@ -88,6 +93,7 @@ public class EmailRedisUtil<R> extends RedisOperating<R> {
     public Boolean setData(@NotNull BusinessConstants businessConstants, String email, R value, Integer time) {
         // 处理数据
         String key = RedisConstant.TYPE_EMAIL + RedisConstant.TABLE_EMAIL + businessConstants.getValue() + email;
+        log.info("\t\t> 设置 Redis 键为 {} 的数据", key);
         redisTemplate.opsForValue().set(key, value);
         redisTemplate.expire(key, time, TimeUnit.MINUTES);
         return true;

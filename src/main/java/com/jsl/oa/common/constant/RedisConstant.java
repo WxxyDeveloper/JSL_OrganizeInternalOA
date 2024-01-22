@@ -20,6 +20,8 @@ public class RedisConstant {
     public static final String TYPE_EMAIL = "mail:";
     // 登陆相关
     public static final String TYPE_AUTH = "auth:";
+    // 权限相关
+    public static final String TYPE_PERMISSION = "permission:";
 
     /*
      * 表分类
@@ -30,4 +32,6 @@ public class RedisConstant {
     public static final String TABLE_TOKEN = "token:";
     // 用户相关
     public static final String TABLE_USER = "user:";
+    // 角色相关
+    public static final String TABLE_ROLE = "role:";
 }
