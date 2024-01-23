@@ -10,10 +10,9 @@ import com.jsl.oa.utils.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
@@ -31,55 +30,55 @@ public class MessageServiceImpl implements MessageService {
         MessageDO messageDO = messageMapper.getMessageById(mid);
         //检测用户id与消息的uid是否相同
         String token = request.getHeader("Authorization").replace("Bearer ", "");
-        if (!(messageDO.getUid() == JwtUtil.getUserId(token))) {
+        if (!(messageDO.getUid().equals(JwtUtil.getUserId(token)))) {
             return ResultUtil.error(ErrorCode.MESSAGE_ONLY_DELETE_BY_THEMSELVES);
         }
         //执行删除
-        if(!messageMapper.deleteMessage(mid)){
+        if (!messageMapper.deleteMessage(mid)) {
             return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
         }
         return ResultUtil.success();
     }
 
     @Override
-    public BaseResponse messageGet(LocalDate begin,LocalDate end,Long page,Long pageSize,Long uid) {
+    public BaseResponse messageGet(LocalDate begin, LocalDate end, Long page, Long pageSize, Long uid) {
         //1.记录总数据数
         Long count = messageMapper.count(uid);
 
         //2.获取分页数据列表
         //默认获取时间为最近30天
-        if(begin == null){
+        if (begin == null) {
             begin = LocalDate.now();
-            end = begin.minus(30, ChronoUnit.DAYS);
+            end = begin.minusDays(30);
         }
-        Long start = (page-1) * pageSize;
-        List<MessageDO> empList = messageMapper.page(begin,end,uid,start,pageSize);
+        Long start = (page - 1) * pageSize;
+        List<MessageDO> empList = messageMapper.page(begin, end, uid, start, pageSize);
 
         //3.封装PageBean对象
-        PageBeanDO pageBean = new PageBeanDO(count,empList);
+        PageBeanDO<MessageDO> pageBean = new PageBeanDO<>(count, empList);
         return ResultUtil.success(pageBean);
     }
 
     @Override
-    public BaseResponse messageGetAll(HttpServletRequest request,LocalDate begin, LocalDate end, Long page, Long pageSize, Long loginId, Long uid) {
+    public BaseResponse messageGetAll(HttpServletRequest request, LocalDate begin, LocalDate end, Long page, Long pageSize, Long loginId, Long uid) {
         log.info("请求接口服务层");
-        if(!Processing.checkUserIsAdmin(request,roleMapper)){
+        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
-        }else {
+        } else {
             //1.记录总数据数
             Long count = messageMapper.count(uid);
 
             //2.获取分页数据列表
             //默认获取时间为最近30天
-            if(begin == null){
+            if (begin == null) {
                 begin = LocalDate.now();
-                end = begin.minus(30, ChronoUnit.DAYS);
+                end = begin.minusDays(30);
             }
             Long start = (page - 1) * pageSize;
-            List<MessageDO> messageDOList = messageMapper.page(begin,end,uid, start, pageSize);
+            List<MessageDO> messageDOList = messageMapper.page(begin, end, uid, start, pageSize);
 
             //3.封装PageBean对象
-            PageBeanDO pageBean = new PageBeanDO(count, messageDOList);
+            PageBeanDO<MessageDO> pageBean = new PageBeanDO<>(count, messageDOList);
             return ResultUtil.success(pageBean);
         }
     }

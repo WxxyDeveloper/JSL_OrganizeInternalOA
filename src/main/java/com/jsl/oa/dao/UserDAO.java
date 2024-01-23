@@ -19,6 +19,16 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <h1>用户 DAO</h1>
+ * <hr/>
+ * 用于用户的增删改查,以及用户权限的获取,用户信息的获取,用户信息的修改,用户信息的删除,用户信息的锁定,用户信息的解锁,用户信息的添加,用户信息的
+ * 编辑等
+ *
+ * @version v1.1.0
+ * @since v1.1.0
+ * @author xiao_lfeng | 176yunxuan | xiangZr-hhh
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -125,9 +135,7 @@ public class UserDAO {
         log.info("\t\t> 从 MySQL 获取数据");
         List<UserDO> userCurrentDO = userMapper.getAllUser(userAllCurrentVO);
         List<UserCurrentBackVO> userCurrentDOList = new ArrayList<>();
-        userCurrentDO.forEach(it -> {
-            userCurrentDOList.add(Processing.returnUserInfo(it, roleDAO, permissionDAO));
-        });
+        userCurrentDO.forEach(it -> userCurrentDOList.add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
         return userCurrentDOList;
 
     }
@@ -137,9 +145,7 @@ public class UserDAO {
         log.info("\t\t> 从 MySQL 获取数据");
         List<UserDO> userCurrentDO = userMapper.getAllUserBySearch(userAllCurrentVO);
         List<UserCurrentBackVO> userCurrentDOList = new ArrayList<>();
-        userCurrentDO.forEach(it -> {
-            userCurrentDOList.add(Processing.returnUserInfo(it, roleDAO, permissionDAO));
-        });
+        userCurrentDO.forEach(it -> userCurrentDOList.add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
         return userCurrentDOList;
     }
 

@@ -198,7 +198,7 @@ public class Processing {
             Field[] sourceFields = sourceClass.getDeclaredFields();
             for (Field sourceField : sourceFields) {
                 String fieldName = sourceField.getName();
-                Field targetField = null;
+                Field targetField;
                 try {
                     targetField = targetClass.getDeclaredField(fieldName);
                 } catch (NoSuchFieldException e) {

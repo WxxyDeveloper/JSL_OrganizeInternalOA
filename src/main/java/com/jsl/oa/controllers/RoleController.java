@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  * @version v1.1.0
  * @see RoleService
  * @since v1.1.0
+ * @author xiao_lfeng | 176yunxuan | xiangZr-hhh
  */
 @Slf4j
 @RestController
@@ -82,7 +83,7 @@ public class RoleController {
         if (id == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
-        return roleService.roleDelete(request, Long.valueOf(id));
+        return roleService.roleDelete(request, id);
     }
 
     /**
