@@ -36,7 +36,7 @@ public interface ProjectMapper {
     @Insert("insert into organize_oa.oa_config(value, data, created_at)value ('project_show',null,NOW())")
     void insertProjectShow();
 
-    @Update("UPDATE organize_oa.oa_config SET data = #{setProjectShow} WHERE value = 'project_show'")
+    @Update("UPDATE organize_oa.oa_config SET data = #{setProjectShow}, updated_at = CURRENT_TIMESTAMP WHERE value = 'project_show'")
     boolean setProjectShow(String setProjectShow);
 
     @Select("select * from organize_oa.oa_permissions")

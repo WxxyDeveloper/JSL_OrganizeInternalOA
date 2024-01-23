@@ -163,7 +163,12 @@ public class UserController {
         return userService.userAdd(userAddVo, request);
     }
 
-
+    /**
+     * @Description: 管理员编辑用户
+     * @Date: 2024/1/18
+     * @Param userEditVO:
+     * @Param bindingResult:
+     **/
     @PutMapping("/user/edit")
     public BaseResponse userEdit(@RequestBody @Validated UserEditVO userEditVO, BindingResult bindingResult, HttpServletRequest request) {
         log.info("请求接口[PUT]: /user/edit");

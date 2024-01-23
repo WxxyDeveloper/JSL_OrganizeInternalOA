@@ -74,7 +74,6 @@ public interface UserMapper {
             "signature = #{signature}, sex = #{sex}, avatar = #{avatar}, nickname = #{nickname}, " +
             "description = #{description} ,updated_at = current_timestamp " +
             "WHERE id = #{id}")
-
     void updateUser(UserDO userDO);
 
     @Select("SELECT * FROM organize_oa.oa_user WHERE email = #{email}")
