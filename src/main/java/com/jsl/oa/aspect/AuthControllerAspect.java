@@ -71,7 +71,11 @@ public class AuthControllerAspect {
             "&& !execution(* com.jsl.oa.controllers.AuthController.authLoginByEmail(..))" +
             "&& !execution(* com.jsl.oa.controllers.AuthController.authForgetPassword(..))" +
             "&& !execution(* com.jsl.oa.controllers.AuthController.authLogin(..))" +
-            "&& !execution(* com.jsl.oa.controllers.AuthController.authRegister(..))")
+            "&& !execution(* com.jsl.oa.controllers.AuthController.authRegister(..)) " +
+            "&& !execution(* com.jsl.oa.controllers.IndexController.*(..)) " +
+            "&& !execution(* com.jsl.oa.controllers.CustomController.*(..)) " +
+            "&& !execution(* com.jsl.oa.controllers.InfoController.infoGetHeaderImage(..)) " +
+            "&& !execution(* com.jsl.oa.controllers.InfoController.infoGetHeaderUser(..))")
     public Object tokenControllerAround(ProceedingJoinPoint pjp) throws Throwable {
         // 获取 HttpServletRequest 对象
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();

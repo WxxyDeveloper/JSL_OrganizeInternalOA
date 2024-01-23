@@ -5,7 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.jsl.oa.common.constant.BusinessConstants;
 import com.jsl.oa.mapper.PermissionMapper;
 import com.jsl.oa.model.doData.PermissionDO;
-import com.jsl.oa.utils.redis.PermissionRedisUtil;
+import com.jsl.oa.utils.redis.RoleRedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PermissionDAO {
     private final PermissionMapper permissionMapper;
-    private final PermissionRedisUtil<String> permissionRedisUtil;
+    private final RoleRedisUtil<String> roleRedisUtil;
     private final Gson gson;
 
     /**
@@ -42,32 +42,88 @@ public class PermissionDAO {
     public List<String> getPermission(@NotNull Long uid) {
         log.info("\t> 执行 DAO 层 PermissionDAO.getPermission 方法");
         List<String> getPermissionForString;
-        String permissionRedisString = permissionRedisUtil.getData(BusinessConstants.NONE, uid.toString());
+        String permissionRedisString = roleRedisUtil.getData(BusinessConstants.NONE, uid.toString());
         if (permissionRedisString == null) {
             log.info("\t\t> 从 MySQL 获取数据");
             List<PermissionDO> permissionList = permissionMapper.permissionUserPid(uid);
             getPermissionForString = new ArrayList<>();
-            for (PermissionDO permission : permissionList) {
-                // 寻找是否存在父亲
-                StringBuilder permissionString = new StringBuilder();
-                if (permission.getPid() != null) {
-                    // 存在父亲
-                    this.getFatherPermission(permissionString, permission.getPid());
-                } else {
-                    // 不存在父亲
-                    permissionString.append(permission.getName());
-                }
-                // 寻找子类
-                this.getChildPermission(permissionString, permission.getId(), getPermissionForString);
-                getPermissionForString.add(permissionString.toString());
-            }
+            forPermissionToBuildString(permissionList, getPermissionForString);
             // 存入 Redis
-            permissionRedisUtil.setData(BusinessConstants.NONE, uid.toString(), gson.toJson(getPermissionForString), 1440);
+            roleRedisUtil.setData(BusinessConstants.NONE, uid.toString(), gson.toJson(getPermissionForString), 1440);
         } else {
             log.info("\t\t> 从 Redis 获取数据");
             getPermissionForString = gson.fromJson(permissionRedisString, new TypeToken<List<String>>() {}.getType());
         }
         return getPermissionForString;
+    }
+
+    public List<String> getAllPermissionBuildString() {
+        log.info("\t> 执行 DAO 层 PermissionDAO.getPermission 方法");
+        List<String> getPermissionForString;
+        String getRedisData = roleRedisUtil.getData(BusinessConstants.ALL_PERMISSION, "string");
+        if (getRedisData == null) {
+            log.info("\t\t> 从 MySQL 获取数据");
+            List<PermissionDO> permissionList = permissionMapper.getAllPermission();
+            permissionList.removeIf(it -> it.getPid() != null);
+            getPermissionForString = new ArrayList<>();
+            forPermissionToBuildString(permissionList, getPermissionForString);
+            // 存入 Redis
+            roleRedisUtil.setData(BusinessConstants.ALL_PERMISSION, "string", gson.toJson(getPermissionForString), 1440);
+        } else {
+            log.info("\t\t> 从 Redis 获取数据");
+            getPermissionForString = gson.fromJson(getRedisData, new TypeToken<List<String>>() {}.getType());
+        }
+        return getPermissionForString;
+    }
+
+    public List<PermissionDO> getRootPermission() {
+        log.info("\t> 执行 DAO 层 PermissionDAO.getRootPermission 方法");
+        String getRedisData = roleRedisUtil.getData(BusinessConstants.ALL_PERMISSION, "all");
+        if (getRedisData == null) {
+            log.info("\t\t> 从 MySQL 获取数据");
+            List<PermissionDO> permissionList = permissionMapper.getAllPermission();
+            if (!permissionList.isEmpty()) {
+                List<PermissionDO> getPermissionList = new ArrayList<>();
+                for (PermissionDO permission : permissionList) {
+                    if (permission.getPid() == null) {
+                        getPermissionList.add(permission);
+                    }
+                }
+                roleRedisUtil.setData(BusinessConstants.ALL_PERMISSION, "all", gson.toJson(getPermissionList), 1440);
+                return getPermissionList;
+            } else {
+                return null;
+            }
+        } else {
+            log.info("\t\t> 从 Redis 获取数据");
+            return gson.fromJson(getRedisData, new TypeToken<List<PermissionDO>>() {
+            }.getType());
+        }
+    }
+
+    /**
+     * <h2>获取全部权限信息</h2>
+     * <hr/>
+     * 获取全部权限信息
+     *
+     * @param permissionList         权限信息
+     * @param getPermissionForString 存储权限信息
+     */
+    private void forPermissionToBuildString(@NotNull List<PermissionDO> permissionList, List<String> getPermissionForString) {
+        for (PermissionDO permission : permissionList) {
+            // 寻找是否存在父亲
+            StringBuilder permissionString = new StringBuilder();
+            if (permission.getPid() != null) {
+                // 存在父亲
+                this.getFatherPermission(permissionString, permission.getPid());
+            } else {
+                // 不存在父亲
+                permissionString.append(permission.getName());
+            }
+            // 寻找子类
+            this.getChildPermission(permissionString, permission.getId(), getPermissionForString);
+            getPermissionForString.add(permissionString.toString());
+        }
     }
 
     /**
@@ -76,8 +132,8 @@ public class PermissionDAO {
      * 通过父类 ID 获取子类权限信息<br/>
      * 递归调用
      *
-     * @param permissionString 父类权限信息
-     * @param id 父类 ID
+     * @param permissionString       父类权限信息
+     * @param id                     父类 ID
      * @param getPermissionForString 存储权限信息
      */
     private void getChildPermission(StringBuilder permissionString, Long id, List<String> getPermissionForString) {
@@ -111,7 +167,7 @@ public class PermissionDAO {
      * 递归调用
      *
      * @param permissionString 父类权限信息
-     * @param pid 父类 ID
+     * @param pid              父类 ID
      */
     public void getFatherPermission(StringBuilder permissionString, Long pid) {
         // 获取权限信息

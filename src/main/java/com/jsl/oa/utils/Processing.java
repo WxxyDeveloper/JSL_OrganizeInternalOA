@@ -1,5 +1,7 @@
 package com.jsl.oa.utils;
 
+import com.jsl.oa.dao.PermissionDAO;
+import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.exception.ClassCopyException;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.PermissionDO;
@@ -257,16 +259,26 @@ public class Processing {
      * @param userDO 用户信息
      * @return {@link BaseResponse}
      */
-    public static @NotNull UserCurrentBackVO ReturnUserInfo(@NotNull UserDO userDO, RoleMapper roleMapper) {
+    public static @NotNull UserCurrentBackVO returnUserInfo(@NotNull UserDO userDO, RoleDAO roleDAO, PermissionDAO permissionDAO) {
         UserCurrentBackVO userCurrentBackVO = new UserCurrentBackVO();
         // 获取用户角色
-        RoleUserDO getUserRole = roleMapper.getRoleUserByUid(userDO.getId());
+        RoleUserDO getUserRole = roleDAO.getRoleUserByUid(userDO.getId());
         if (getUserRole == null) {
             getUserRole = new RoleUserDO();
             getUserRole.setRid(0L)
                     .setCreatedAt(new Timestamp(System.currentTimeMillis()));
         } else {
             getUserRole.setUid(null);
+        }
+        // 获取用户权限
+        RoleUserDO roleUserDO = roleDAO.getRoleUserByUid(userDO.getId());
+        List<String> getPermissionForString;
+        if (roleUserDO != null) {
+            // 获取全部根权限
+            getPermissionForString = permissionDAO.getAllPermissionBuildString();
+        } else {
+            // 获取权限列表信息
+            getPermissionForString = permissionDAO.getPermission(userDO.getId());
         }
         userCurrentBackVO.setUser(new UserCurrentBackVO.ReturnUser()
                         .setId(userDO.getId())
@@ -291,7 +303,7 @@ public class Processing {
                         .setIsDelete(userDO.getIsDelete()))
                 .setRole(new UserCurrentBackVO.ReturnUserRole()
                         .setRid(getUserRole.getRid()))
-                .setPermission(new ArrayList<>());
+                .setPermission(getPermissionForString);
         return userCurrentBackVO;
     }
 

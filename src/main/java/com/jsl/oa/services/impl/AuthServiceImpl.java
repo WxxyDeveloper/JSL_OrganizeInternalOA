@@ -1,7 +1,9 @@
 package com.jsl.oa.services.impl;
 
+import com.jsl.oa.annotations.CheckUserAbleToUse;
 import com.jsl.oa.common.constant.BusinessConstants;
-import com.jsl.oa.mapper.RoleMapper;
+import com.jsl.oa.dao.PermissionDAO;
+import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserDO;
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -30,13 +32,15 @@ import java.util.regex.Pattern;
  * @version v1.1.0
  * @see AuthService
  * @since v1.0.0
+ * @author xiao_lfeng
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
-    private final RoleMapper roleMapper;
+    private final RoleDAO roleDAO;
+    private final PermissionDAO permissionDAO;
 
     private final MailService mailService;
     private final EmailRedisUtil<Integer> emailRedisUtil;
@@ -167,6 +171,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @CheckUserAbleToUse
     public BaseResponse authChangePassword(HttpServletRequest request, @NotNull UserChangePasswordVO userChangePasswordVO) {
         log.info("\t> 执行 Service 层 AuthService.authChangePassword 方法");
         // 检查新密码输入无误
@@ -193,6 +198,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @CheckUserAbleToUse
     public BaseResponse authLogout(HttpServletRequest request) {
         log.info("\t> 执行 Service 层 AuthService.authLogout 方法");
         // 获取用户
@@ -206,7 +212,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public BaseResponse authForgetPassword(UserForgetPasswordVO userForgetPasswordVO) {
+    public BaseResponse authForgetPassword(@NotNull UserForgetPasswordVO userForgetPasswordVO) {
         log.info("\t> 执行 Service 层 AuthService.authForgetPassword 方法");
         // 获取验证码是否有效
         Integer redisCode = emailRedisUtil.getData(BusinessConstants.BUSINESS_LOGIN, userForgetPasswordVO.getEmail());
@@ -242,8 +248,17 @@ public class AuthServiceImpl implements AuthService {
         UserReturnBackVO userReturnBackVO = new UserReturnBackVO();
         // Token 上传到 Redis
         tokenRedisUtil.setData(BusinessConstants.BUSINESS_LOGIN, userDO.getId().toString(), token, 1440);
+        RoleUserDO roleUserDO = roleDAO.getRoleUserByUid(userDO.getId());
+        List<String> getPermissionForString;
+        if (roleUserDO != null) {
+            // 获取全部根权限
+            getPermissionForString = permissionDAO.getAllPermissionBuildString();
+        } else {
+            // 获取权限列表信息
+            getPermissionForString = permissionDAO.getPermission(userDO.getId());
+        }
         // 获取用户角色
-        RoleUserDO getUserRole = roleMapper.getRoleUserByUid(userDO.getId());
+        RoleUserDO getUserRole = roleDAO.roleMapper.getRoleUserByUid(userDO.getId());
         if (getUserRole == null) {
             getUserRole = new RoleUserDO();
             getUserRole.setRid(0L)
@@ -260,7 +275,7 @@ public class AuthServiceImpl implements AuthService {
                 .setRole(new UserReturnBackVO.ReturnUserRole()
                         .setRid(getUserRole.getRid()))
                 .setToken(token)
-                .setPermission(new ArrayList<>());
+                .setPermission(getPermissionForString);
         return ResultUtil.success("登陆成功", userReturnBackVO);
     }
 }

@@ -1,5 +1,6 @@
 package com.jsl.oa.services.impl;
 
+import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.InfoDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.RoleMapper;
@@ -21,6 +22,15 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <h1>信息服务层实现类</h1>
+ * <hr/>
+ * 用于信息服务层的实现类
+ *
+ * @since v1.0.0
+ * @version v1.1.0
+ * @author xiao_lfeng
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,6 +40,7 @@ public class InfoServiceImpl implements InfoService {
     private final UserDAO userDAO;
 
     @Override
+    @CheckUserHasPermission("")
     public BaseResponse addHeaderImage(HttpServletRequest request, CarouselVO carouselVO) {
         log.info("\t> 执行 Service 层 InfoService.addHeaderImage 方法");
         // 用户权限校验

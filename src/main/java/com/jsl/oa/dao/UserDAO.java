@@ -2,7 +2,6 @@ package com.jsl.oa.dao;
 
 import com.google.gson.Gson;
 import com.jsl.oa.common.constant.BusinessConstants;
-import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
@@ -26,7 +25,8 @@ import java.util.List;
 public class UserDAO {
 
     public final UserMapper userMapper;
-    private final RoleMapper roleMapper;
+    private final RoleDAO roleDAO;
+    private final PermissionDAO permissionDAO;
     private final Gson gson;
     private final UserRedisUtil<String> userRedisUtil;
 
@@ -126,7 +126,7 @@ public class UserDAO {
         List<UserDO> userCurrentDO = userMapper.getAllUser(userAllCurrentVO);
         List<UserCurrentBackVO> userCurrentDOList = new ArrayList<>();
         userCurrentDO.forEach(it -> {
-            userCurrentDOList.add(Processing.ReturnUserInfo(it, roleMapper));
+            userCurrentDOList.add(Processing.returnUserInfo(it, roleDAO, permissionDAO));
         });
         return userCurrentDOList;
 
@@ -138,7 +138,7 @@ public class UserDAO {
         List<UserDO> userCurrentDO = userMapper.getAllUserBySearch(userAllCurrentVO);
         List<UserCurrentBackVO> userCurrentDOList = new ArrayList<>();
         userCurrentDO.forEach(it -> {
-            userCurrentDOList.add(Processing.ReturnUserInfo(it, roleMapper));
+            userCurrentDOList.add(Processing.returnUserInfo(it, roleDAO, permissionDAO));
         });
         return userCurrentDOList;
     }
