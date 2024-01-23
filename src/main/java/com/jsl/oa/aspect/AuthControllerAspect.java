@@ -102,6 +102,7 @@ public class AuthControllerAspect {
     private @NotNull Boolean checkTimestamp(@NotNull HttpServletRequest request) {
         // 获取请求头中的时间戳
         String getTimestamp = request.getHeader("Timestamp");
+        log.info("\t> 获取到的时间戳为 {} | 当前时间戳 {}", getTimestamp, System.currentTimeMillis());
         // 判断是否为空
         if (getTimestamp == null || getTimestamp.isEmpty()) {
             return false;

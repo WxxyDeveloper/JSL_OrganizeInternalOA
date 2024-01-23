@@ -8,10 +8,21 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * <h1>CORS过滤器</h1>
+ * <hr/>
+ * 用于处理跨域请求
+ *
+ * @version v1.1.0
+ * @since v1.1.0
+ * @see Filter
+ * @author xiao_lfeng
+ */
 @Slf4j
 @Component
 public class CorsFilter implements Filter {
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) {
+    @Override
+    public void doFilter(@NotNull ServletRequest req, ServletResponse res, FilterChain chain) {
         // 请求头处理
         HttpServletResponse response = (HttpServletResponse) res;
         HttpServletRequest request = (HttpServletRequest) req;
@@ -25,9 +36,11 @@ public class CorsFilter implements Filter {
         }
     }
 
+    @Override
     public void init(FilterConfig filterConfig) {
     }
 
+    @Override
     public void destroy() {
         Filter.super.destroy();
     }

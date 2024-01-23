@@ -11,14 +11,11 @@ import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 /**
  * <h1>角色控制器</h1>
@@ -44,7 +41,7 @@ public class RoleController {
      * @return {@link BaseResponse}
      */
     @GetMapping("/role/get")
-    public BaseResponse roleGet(HttpServletRequest request, @RequestParam @Nullable String id) {
+    public BaseResponse roleGet(HttpServletRequest request, @RequestParam(required = false) String id) {
         log.info("请求接口[GET]: /role/get");
         return roleService.roleGet(request, id);
     }
@@ -79,17 +76,11 @@ public class RoleController {
      * @return {@link BaseResponse}
      */
     @DeleteMapping("/role/delete")
-    public BaseResponse roleDelete(HttpServletRequest request, @RequestParam String id) {
+    public BaseResponse roleDelete(HttpServletRequest request, @RequestParam Long id) {
         log.info("请求接口[DELETE]: /role/delete");
         // 判断是否有参数错误
         if (id == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
-        } else {
-            if (Pattern.matches("^[0-9]+$", id)) {
-                ArrayList<String> error = new ArrayList<>();
-                error.add("id 只能为数字");
-                return ResultUtil.error(ErrorCode.PARAMETER_ERROR, error);
-            }
         }
         return roleService.roleDelete(request, Long.valueOf(id));
     }

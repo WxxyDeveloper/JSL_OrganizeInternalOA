@@ -3,6 +3,15 @@ package com.jsl.oa.utils;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <h1>错误码</h1>
+ * <hr/>
+ * 用于定义错误码
+ *
+ * @version v1.1.0
+ * @since v1.0.0
+ * @author xiao_lfeng
+ */
 @Slf4j
 @Getter
 public enum ErrorCode {
@@ -30,6 +39,7 @@ public enum ErrorCode {
     USER_ALREADY_DELETE("UserAlreadyDelete", 40306, "用户已被删除"),
     USER_DISABLED("UserDisabled", 40307, "用户已被禁用"),
     USER_LOCKED("UserLocked", 40308, "用户已被锁定"),
+    USER_EXPIRED("UserExpired", 40309, "用户已过期"),
     ID_NOT_EXIST("IdNotExist", 40400, "ID不存在"),
     ROLE_NOT_FOUNDED("RoleNotFounded", 40401, "角色不存在"),
     ROLE_NAME_REPEAT("RoleNameRepeat", 40402, "角色名称重复"),

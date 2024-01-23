@@ -14,10 +14,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+/**
+ * <h1>异常处理</h1>
+ * <hr/>
+ * 用于处理异常
+ *
+ * @version v1.1.0
+ * @since v1.1.0
+ * @see HttpRequestMethodNotSupportedException
+ * @see DuplicateKeyException
+ * @see HttpMessageNotReadableException
+ * @see MissingServletRequestParameterException
+ * @see Exception
+ * @see ClassCopyException
+ * @see MethodArgumentTypeMismatchException
+ * @author xiao_lfeng
+ */
 @Slf4j
 @RestControllerAdvice
 public class ProcessException {
@@ -42,32 +54,47 @@ public class ProcessException {
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     public ResponseEntity<BaseResponse> businessMissingServletRequestParameterException(MissingServletRequestParameterException e) {
         log.error(e.getMessage(), e);
-        // 使用正则表达式匹配并提取'id'部分
-        Pattern pattern = Pattern.compile("'.*?'");
-        Matcher matcher = pattern.matcher(Objects.requireNonNull(e.getMessage()));
-
-        // 查找匹配项
-        while (matcher.find()) {
-            String matchedGroup = matcher.group();
-        }
-
         return ResponseEntity
                 .status(400)
                 .body(ResultUtil.error(ErrorCode.PARAMETER_ERROR, "缺少 " + e.getParameterName() + " 参数"));
     }
 
+    /**
+     * <h2>业务异常</h2>
+     * <hr/>
+     * 用于处理业务异常
+     *
+     * @param e 异常
+     * @return {@link ResponseEntity}
+     */
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<BaseResponse> businessException(@NotNull Exception e) {
         log.error(e.getMessage(), e);
         return ResultUtil.error("ServerInternalError", 50000, "服务器内部错误");
     }
 
+    /**
+     * <h2>类拷贝异常</h2>
+     * <hr/>
+     * 用于处理类拷贝异常
+     *
+     * @param e 异常
+     * @return {@link ResponseEntity}
+     */
     @ExceptionHandler(value = ClassCopyException.class)
     public ResponseEntity<BaseResponse> businessClassCopyException(@NotNull ClassCopyException e) {
         log.error(e.getMessage(), e);
         return ResultUtil.error("ServerInternalError", 50001, "服务器内部错误");
     }
 
+    /**
+     * <h2>参数类型不匹配异常</h2>
+     * <hr/>
+     * 用于处理参数类型不匹配异常
+     *
+     * @param e 异常
+     * @return {@link ResponseEntity}
+     */
     @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
     public ResponseEntity<BaseResponse> businessMethodArgumentTypeMismatchException(@NotNull MethodArgumentTypeMismatchException e) {
         log.error(e.getMessage(), e);

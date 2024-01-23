@@ -35,21 +35,18 @@ public class TokenRedisUtil<R> extends RedisOperating<R> {
     @Override
     public Long getExpiredAt(@NotNull BusinessConstants businessConstants, String field) {
         String key = RedisConstant.TYPE_AUTH + RedisConstant.TABLE_TOKEN + businessConstants.getValue() + field;
-        log.info("\t\t> 读取 Redis 键为 {} 的过期时间", key);
         return redisTemplate.getExpire(key);
     }
 
     @Override
     public Boolean delData(@NotNull BusinessConstants businessConstants, String field) {
         String key = RedisConstant.TYPE_AUTH + RedisConstant.TABLE_TOKEN + businessConstants.getValue() + field;
-        log.info("\t\t> 删除 Redis 键为 {} 的数据", key);
         return redisTemplate.delete(key);
     }
 
     @Override
     public R getData(@NotNull BusinessConstants businessConstants, String field) {
         String key = RedisConstant.TYPE_AUTH + RedisConstant.TABLE_TOKEN + businessConstants.getValue() + field;
-        log.info("\t\t> 读取 Redis 键为 {} 的数据", key);
         return redisTemplate.opsForValue().get(key);
     }
 
@@ -57,7 +54,6 @@ public class TokenRedisUtil<R> extends RedisOperating<R> {
     public Boolean setData(@NotNull BusinessConstants businessConstants, String field, R value, Integer time) {
         // 处理数据
         String key = RedisConstant.TYPE_AUTH + RedisConstant.TABLE_TOKEN + businessConstants.getValue() + field;
-        log.info("\t\t> 写入 Redis 键为 {} 的数据", key);
         redisTemplate.opsForValue().set(key, value);
         redisTemplate.expire(key, time, TimeUnit.MINUTES);
         return true;
@@ -65,7 +61,6 @@ public class TokenRedisUtil<R> extends RedisOperating<R> {
 
     public List<R> getList(@NotNull BusinessConstants businessConstants) {
         String key = RedisConstant.TYPE_AUTH + RedisConstant.TABLE_TOKEN + businessConstants.getValue() + "*";
-        log.info("\t\t> 读取 Redis 键为 {} 的数据", key);
         return this.getList(key);
     }
 }

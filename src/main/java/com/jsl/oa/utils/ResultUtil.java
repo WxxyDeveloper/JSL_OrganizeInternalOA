@@ -5,6 +5,15 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 
+/**
+ * <h1>结果工具类</h1>
+ * <hr/>
+ * 用于返回结果
+ *
+ * @version v1.1.0
+ * @since v1.1.0
+ * @author xiao_lfeng
+ */
 @Slf4j
 public class ResultUtil {
 
@@ -60,7 +69,7 @@ public class ResultUtil {
     public static @NotNull ResponseEntity<BaseResponse> error(String output, Integer code, String message) {
         log.warn("失败: 错误码[" + code + "] {} - {}", output, message);
         log.info("==================================================");
-        return ResponseEntity.status(code)
+        return ResponseEntity.status(500)
                 .body(new BaseResponse(output, code, message));
     }
 }

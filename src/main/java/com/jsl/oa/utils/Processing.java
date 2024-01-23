@@ -1,15 +1,14 @@
 package com.jsl.oa.utils;
 
 import com.jsl.oa.exception.ClassCopyException;
-import com.jsl.oa.mapper.PermissionMapper;
 import com.jsl.oa.mapper.RoleMapper;
-import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.doData.PermissionDO;
 import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.voData.PermissionContentVo;
 import com.jsl.oa.model.voData.UserCurrentBackVO;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.validation.BindingResult;
@@ -236,7 +235,8 @@ public class Processing {
      * @Description:  将性别转为字符形式
      * @Date: 2024/1/18
      **/
-    public static String getSex(short sex){
+    @Contract(pure = true)
+    public static @NotNull String getSex(short sex){
         if(sex == 0){
             return "保密";
         }
@@ -367,33 +367,5 @@ public class Processing {
         }
 
         return vo;
-    }
-
-    public static @Nullable BaseResponse checkUserAbleToNext(HttpServletRequest request, @NotNull UserMapper userMapper) {
-        Long userId = Processing.getAuthHeaderToUserId(request);
-        // 获取用户信息
-        UserDO userDO = userMapper.getUserById(userId);
-        // 用户不存在
-        if (userDO == null) {
-            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
-        }
-        // 用户是否被禁用
-        if (!userDO.getEnabled()) {
-            return ResultUtil.error(ErrorCode.USER_DISABLED);
-        }
-        // 用户是否被封禁
-        if (!userDO.getAccountNoLocked()) {
-            return ResultUtil.error(ErrorCode.USER_LOCKED);
-        }
-        // 用户是否被删除
-        if (userDO.getIsDelete()) {
-            return ResultUtil.error(ErrorCode.USER_ALREADY_DELETE);
-        }
-        return null;
-    }
-
-    public static boolean checkUserHasPermission(HttpServletRequest request, RoleMapper roleMapper, PermissionMapper permissionMapper, String permission) {
-        // TODO: 10003-用户权限及权限组校验
-        return true;
     }
 }

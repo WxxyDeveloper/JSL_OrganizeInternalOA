@@ -53,15 +53,13 @@ public class PermissionDAO {
                 if (permission.getPid() != null) {
                     // 存在父亲
                     this.getFatherPermission(permissionString, permission.getPid());
-                    // 寻找子类
-                    this.getChildPermission(permissionString, permission.getId(), getPermissionForString);
-                    getPermissionForString.add(permissionString.toString());
                 } else {
                     // 不存在父亲
                     permissionString.append(permission.getName());
-                    this.getChildPermission(permissionString, permission.getId(), getPermissionForString);
-                    getPermissionForString.add(permissionString.toString());
                 }
+                // 寻找子类
+                this.getChildPermission(permissionString, permission.getId(), getPermissionForString);
+                getPermissionForString.add(permissionString.toString());
             }
             // 存入 Redis
             permissionRedisUtil.setData(BusinessConstants.NONE, uid.toString(), gson.toJson(getPermissionForString), 1440);
