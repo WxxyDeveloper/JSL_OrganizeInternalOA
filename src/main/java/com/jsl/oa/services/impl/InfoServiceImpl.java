@@ -40,7 +40,7 @@ public class InfoServiceImpl implements InfoService {
     private final UserDAO userDAO;
 
     @Override
-    @CheckUserHasPermission("")
+    @CheckUserHasPermission("info.image.add")
     public BaseResponse addHeaderImage(HttpServletRequest request, CarouselVO carouselVO) {
         log.info("\t> 执行 Service 层 InfoService.addHeaderImage 方法");
         // 用户权限校验
