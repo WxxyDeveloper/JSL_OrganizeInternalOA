@@ -12,6 +12,13 @@ import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
+/**
+ * <h1>用户 Mapper</h1>
+ * <hr/>
+ * 用于用户的增删改查
+ *
+ * @author xiao_lfeng | 176yunxuan | xiangZr-hhh
+ */
 @Mapper
 public interface UserMapper {
 
@@ -74,7 +81,6 @@ public interface UserMapper {
             "signature = #{signature}, sex = #{sex}, avatar = #{avatar}, nickname = #{nickname}, " +
             "description = #{description} ,updated_at = current_timestamp " +
             "WHERE id = #{id}")
-
     void updateUser(UserDO userDO);
 
     @Select("SELECT * FROM organize_oa.oa_user WHERE email = #{email}")
