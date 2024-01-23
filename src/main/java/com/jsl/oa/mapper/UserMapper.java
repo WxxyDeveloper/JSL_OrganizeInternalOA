@@ -72,7 +72,7 @@ public interface UserMapper {
     @Update("UPDATE organize_oa.oa_user " +
             "SET address = #{address}, phone = #{phone}, email = #{email}, age = #{age}, " +
             "signature = #{signature}, sex = #{sex}, avatar = #{avatar}, nickname = #{nickname}, " +
-            "description = #{description} " +
+            "description = #{description} ,updated_at = current_timestamp " +
             "WHERE id = #{id}")
 
     void updateUser(UserDO userDO);

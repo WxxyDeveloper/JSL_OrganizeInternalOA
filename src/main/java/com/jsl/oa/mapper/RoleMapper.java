@@ -12,7 +12,7 @@ public interface RoleMapper {
     @Insert("insert into organize_oa.oa_role_user (uid, rid) VALUE (#{uid},#{rid})")
     void roleAddUser(Long uid, Long rid);
 
-    @Select("INSERT INTO organize_oa.oa_role (role_name, display_name) VALUES (#{roleName}, #{displayName})")
+    @Select("INSERT INTO organize_oa.oa_role (role_name) VALUES (#{roleName})")
     void roleAdd(RoleDO roleDO);
 
     @Delete("delete from organize_oa.oa_role_user where uid=#{uid}")
@@ -30,7 +30,7 @@ public interface RoleMapper {
     @Select("SELECT * FROM organize_oa.oa_role ORDER BY id DESC")
     List<RoleDO> getRole();
 
-    @Update("UPDATE organize_oa.oa_role SET role_name=#{roleName},display_name=#{displayName} WHERE id=#{id}")
+    @Update("UPDATE organize_oa.oa_role SET role_name=#{roleName},display_name=#{displayName},updated_at=CURRENT_TIMESTAMP WHERE id=#{id}")
     boolean roleEdit(RoleDO getRole);
 
     @Update("UPDATE organize_oa.oa_role_user SET rid = #{rid} WHERE uid = #{uid}")
