@@ -9,9 +9,9 @@ import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.utils.redis.RoleRedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -22,24 +22,18 @@ public class RoleDAO {
     private final Gson gson;
     private final RoleRedisUtil<String> roleRedisUtil;
 
-    public void roleAddUser(Long uid, Long rid) {
-        log.info("\t> 执行 DAO 层 RoleDAO.roleAddUser 方法");
+    public void addRoleUser(Long uid, Long rid) {
+        log.info("\t> 执行 DAO 层 RoleDAO.addRoleUser 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         roleMapper.roleAddUser(uid, rid);
+        roleRedisUtil.setData(BusinessConstants.USER, uid.toString(), gson.toJson(roleMapper.getRoleUserByUid(uid)), 120);
     }
 
-    public void roleRemoveUser(Long uid) {
-        log.info("\t> 执行 DAO 层 RoleDAO.roleRemoveUser 方法");
+    public void delRoleUser(Long uid) {
+        log.info("\t> 执行 DAO 层 RoleDAO.delRoleUser 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         roleMapper.roleRemoveUser(uid);
-    }
-
-    public List<RoleDO> getRolesById(String id) {
-        log.info("\t> 执行 DAO 层 RoleDAO.getRolesById 方法");
-        ArrayList<RoleDO> getRoleList = new ArrayList<>();
-        log.info("\t\t> 从 MySQL 获取数据");
-        getRoleList.add(roleMapper.getRoleById(Long.valueOf(id)));
-        return getRoleList;
+        roleRedisUtil.delData(BusinessConstants.USER, uid.toString());
     }
 
     public RoleDO getRoleById(Long id) {
@@ -79,7 +73,7 @@ public class RoleDAO {
         log.info("\t\t> 从 MySQL 获取数据");
         roleMapper.roleAdd(roleDO);
         List<RoleDO> roleList = roleMapper.getRole();
-        roleRedisUtil.setData(BusinessConstants.NONE, "all", gson.toJson(roleList), 1440);
+        roleRedisUtil.setData(BusinessConstants.NONE, "all", gson.toJson(roleList), 120);
 
     }
 
@@ -114,15 +108,26 @@ public class RoleDAO {
         return roleDO != null;
     }
 
-    public boolean roleChangeUser(Long uid, Long rid) {
+    public boolean roleChangeUser(@NotNull Long uid, Long rid) {
         log.info("\t> 执行 DAO 层 RoleDAO.roleChangeUser 方法");
         log.info("\t\t> 从 MySQL 获取数据");
-        return roleMapper.roleChangeUser(uid, rid);
+        if (roleMapper.roleChangeUser(uid, rid)) {
+            roleRedisUtil.setData(BusinessConstants.USER, uid.toString(), gson.toJson(roleMapper.getRoleUserByUid(uid)), 120);
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public RoleUserDO getRoleUserByUid(Long uid) {
+    public RoleUserDO getRoleUserByUid(@NotNull Long uid) {
         log.info("\t> 执行 DAO 层 RoleDAO.getRoleUserByUid 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
-        return roleMapper.getRoleUserByUid(uid);
+        String getRedisData = roleRedisUtil.getData(BusinessConstants.USER, uid.toString());
+        if (getRedisData == null) {
+            log.info("\t\t> 从 MySQL 获取数据");
+            return roleMapper.getRoleUserByUid(uid);
+        } else {
+            log.info("\t\t> 从 Redis 获取数据");
+            return gson.fromJson(getRedisData, RoleUserDO.class);
+        }
     }
 }

@@ -12,6 +12,13 @@ import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
+/**
+ * <h1>用户 Mapper</h1>
+ * <hr/>
+ * 用于用户的增删改查
+ *
+ * @author xiao_lfeng | 176yunxuan | xiangZr-hhh
+ */
 @Mapper
 public interface UserMapper {
 

@@ -19,6 +19,18 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+/**
+ * <h1>权限服务层实现类</h1>
+ * <hr/>
+ * 用于权限服务层的实现类,实现权限的增删改查,以及用户权限的获取
+ *
+ * @since v1.1.0
+ * @version v1.1.0
+ * @see com.jsl.oa.services.RoleService
+ * @see com.jsl.oa.dao.RoleDAO
+ * @see com.jsl.oa.dao.UserDAO
+ * @author xiao_lfeng | 176yunxuan | xiangZr-hhh
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -29,20 +41,24 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public BaseResponse roleAddUser(HttpServletRequest request, Long uid, Long rid) {
-        log.info("\t> 执行 Service 层 RoleService.roleAddUser 方法");
+        log.info("\t> 执行 Service 层 RoleService.addRoleUser 方法");
         if (Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
-            roleDAO.roleAddUser(uid, rid);
+            roleDAO.addRoleUser(uid, rid);
             return ResultUtil.success();
-        } else return ResultUtil.error(ErrorCode.NOT_ADMIN);
+        } else {
+            return ResultUtil.error(ErrorCode.NOT_ADMIN);
+        }
     }
 
     @Override
     public BaseResponse roleRemoveUser(HttpServletRequest request, Long uid) {
-        log.info("\t> 执行 Service 层 RoleService.roleRemoveUser 方法");
+        log.info("\t> 执行 Service 层 RoleService.delRoleUser 方法");
         if (Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
-            roleDAO.roleRemoveUser(uid);
+            roleDAO.delRoleUser(uid);
             return ResultUtil.success();
-        } else return ResultUtil.error(ErrorCode.NOT_ADMIN);
+        } else {
+            return ResultUtil.error(ErrorCode.NOT_ADMIN);
+        }
     }
 
     @Override
@@ -63,7 +79,9 @@ public class RoleServiceImpl implements RoleService {
             } else {
                 return ResultUtil.error(ErrorCode.PLEASE_ASSIGN_ROLE_TO_USER);
             }
-        } else return ResultUtil.error(ErrorCode.NOT_ADMIN);
+        } else {
+            return ResultUtil.error(ErrorCode.NOT_ADMIN);
+        }
     }
 
     @Override
@@ -77,7 +95,9 @@ public class RoleServiceImpl implements RoleService {
         ArrayList<RoleDO> getRoleList;
         if (id != null && !id.isEmpty()) {
             if (Pattern.matches("^[0-9]+$", id)) {
-                getRoleList = (ArrayList<RoleDO>) roleDAO.getRolesById(id);
+                RoleDO getRole = roleDAO.getRoleById(Long.valueOf(id));
+                getRoleList = new ArrayList<>();
+                getRoleList.add(getRole);
             } else {
                 ArrayList<String> error = new ArrayList<>();
                 error.add("id 只能为数字");
