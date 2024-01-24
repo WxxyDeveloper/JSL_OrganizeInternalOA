@@ -10,6 +10,8 @@ import javax.validation.constraints.Pattern;
 
 @Data
 public class UserEditVO {
+    @NotNull
+    private Long rid;
 
     @NotNull
     private Long id;

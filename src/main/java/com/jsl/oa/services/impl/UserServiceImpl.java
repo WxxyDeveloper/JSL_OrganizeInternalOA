@@ -249,6 +249,7 @@ public class UserServiceImpl implements UserService {
                 .setAccountNoLocked(userEditVO.getIsLocked());
         //向数据库中修改属性
         userDAO.userEdit(userDO);
+        roleDAO.roleChangeUser(userEditVO.getId(),userEditVO.getRid());
 
         return ResultUtil.success("用户信息修改成功");
     }
