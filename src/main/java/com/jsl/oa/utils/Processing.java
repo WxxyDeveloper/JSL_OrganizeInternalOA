@@ -259,8 +259,8 @@ public class Processing {
      * @param userDO 用户信息
      * @return {@link BaseResponse}
      */
-    public static @NotNull UserCurrentBackVO returnUserInfo(@NotNull UserDO userDO, RoleDAO roleDAO, PermissionDAO permissionDAO) {
-        UserCurrentBackVO userCurrentBackVO = new UserCurrentBackVO();
+    public static @NotNull UserCurrentBackVO.UserCurrent returnUserInfo(@NotNull UserDO userDO, RoleDAO roleDAO, PermissionDAO permissionDAO) {
+        UserCurrentBackVO.UserCurrent userCurrent = new UserCurrentBackVO.UserCurrent();
         // 获取用户角色
         RoleUserDO getUserRole = roleDAO.getRoleUserByUid(userDO.getId());
         if (getUserRole == null) {
@@ -280,7 +280,7 @@ public class Processing {
             // 获取权限列表信息
             getPermissionForString = permissionDAO.getPermission(userDO.getId());
         }
-        userCurrentBackVO.setUser(new UserCurrentBackVO.ReturnUser()
+        userCurrent.setUser(new UserCurrentBackVO.ReturnUser()
                         .setId(userDO.getId())
                         .setJobId(userDO.getJobId())
                         .setUsername(userDO.getUsername())
@@ -304,7 +304,7 @@ public class Processing {
                 .setRole(new UserCurrentBackVO.ReturnUserRole()
                         .setRid(getUserRole.getRid()))
                 .setPermission(getPermissionForString);
-        return userCurrentBackVO;
+        return userCurrent;
     }
 
     public static List<UserDO> orderUser(List<UserDO> userDOS,String order,String orderBy){

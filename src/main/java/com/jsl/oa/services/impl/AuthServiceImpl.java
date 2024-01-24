@@ -74,6 +74,9 @@ public class AuthServiceImpl implements AuthService {
         // 插入数据
         if (userMapper.insertUser(userDO)) {
             userDO.setPassword(null);
+            //默认角色为学生
+            UserDO userDO1 = userMapper.getUserByUserNum(userDO.getUsername());
+            roleDAO.addRoleUser(userDO1.getId(), 2L);
             return ResultUtil.success("注册成功", userDO);
         } else {
             return ResultUtil.error(ErrorCode.DATABASE_INSERT_ERROR);

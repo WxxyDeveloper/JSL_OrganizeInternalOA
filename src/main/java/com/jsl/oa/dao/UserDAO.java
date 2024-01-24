@@ -130,23 +130,27 @@ public class UserDAO {
         userMapper.userEditProfile(userEditProfileVO);
     }
 
-    public List<UserCurrentBackVO> userCurrentAll(UserAllCurrentVO userAllCurrentVO) {
+    public UserCurrentBackVO userCurrentAll(UserAllCurrentVO userAllCurrentVO) {
         log.info("\t> 执行 DAO 层 UserDAO.userCurrentAll 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         List<UserDO> userCurrentDO = userMapper.getAllUser(userAllCurrentVO);
-        List<UserCurrentBackVO> userCurrentDOList = new ArrayList<>();
-        userCurrentDO.forEach(it -> userCurrentDOList.add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
-        return userCurrentDOList;
+        UserCurrentBackVO userCurrentBackVO = new UserCurrentBackVO();
+        userCurrentBackVO.setUsers(new ArrayList<>())
+                        .setCount(userMapper.getUsersCount());
+        userCurrentDO.forEach(it -> userCurrentBackVO.getUsers().add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
+        return userCurrentBackVO;
 
     }
 
-    public List<UserCurrentBackVO> userCurrentAllLike(UserAllCurrentVO userAllCurrentVO) {
+    public UserCurrentBackVO userCurrentAllLike(UserAllCurrentVO userAllCurrentVO) {
         log.info("\t> 执行 DAO 层 UserDAO.userCurrentAllLike 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         List<UserDO> userCurrentDO = userMapper.getAllUserBySearch(userAllCurrentVO);
-        List<UserCurrentBackVO> userCurrentDOList = new ArrayList<>();
-        userCurrentDO.forEach(it -> userCurrentDOList.add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
-        return userCurrentDOList;
+        UserCurrentBackVO userCurrentBackVO = new UserCurrentBackVO();
+        userCurrentBackVO.setUsers(new ArrayList<>())
+                        .setCount(userMapper.getUsersCount());
+        userCurrentDO.forEach(it -> userCurrentBackVO.getUsers().add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
+        return userCurrentBackVO;
     }
 
 
@@ -249,5 +253,11 @@ public class UserDAO {
         log.info("\t> 执行 DAO 层 getUserByPhone 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         return userMapper.getUserByPhone(phone);
+    }
+
+    public Long getUsersCount() {
+        log.info("\t> 执行 DAO 层 getUsersCount 方法");
+        log.info("\t\t> 从 MySQL 获取数据");
+        return userMapper.getUsersCount();
     }
 }

@@ -110,23 +110,23 @@ public class UserServiceImpl implements UserService {
             userAllCurrentVO.setPage((userAllCurrentVO.getPage() - 1) * userAllCurrentVO.getLimit());
         }
         // 检查是否处于模糊查询
-        List<UserCurrentBackVO> userAllCurrentVOList;
+        UserCurrentBackVO userCurrentBackVO;
         if (userAllCurrentVO.getSearch() != null && !userAllCurrentVO.getSearch().isEmpty()) {
             if (Pattern.matches("^[0-9A-Za-z_@]+$", userAllCurrentVO.getSearch())) {
-                userAllCurrentVOList = userDAO.userCurrentAllLike(userAllCurrentVO);
+                userCurrentBackVO = userDAO.userCurrentAllLike(userAllCurrentVO);
             } else {
                 ArrayList<String> arrayList = new ArrayList<>();
                 arrayList.add("只允许 0-9、A-Z、a-z、_和@进行查询");
                 return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, arrayList);
             }
         } else {
-            userAllCurrentVOList = userDAO.userCurrentAll(userAllCurrentVO);
+            userCurrentBackVO = userDAO.userCurrentAll(userAllCurrentVO);
         }
         // 检查是否存在 Role 筛选
         if (userAllCurrentVO.getRole() != null) {
-            userAllCurrentVOList.removeIf(it -> !userAllCurrentVO.getRole().equals(it.getRole().getRid()));
+            userCurrentBackVO.getUsers().removeIf(it -> !userAllCurrentVO.getRole().equals(it.getRole().getRid()));
         }
-        return ResultUtil.success(userAllCurrentVOList);
+        return ResultUtil.success(userCurrentBackVO);
     }
 
     @Override
@@ -249,6 +249,7 @@ public class UserServiceImpl implements UserService {
                 .setAccountNoLocked(userEditVO.getIsLocked());
         //向数据库中修改属性
         userDAO.userEdit(userDO);
+        roleDAO.roleChangeUser(userEditVO.getId(),userEditVO.getRid());
 
         return ResultUtil.success("用户信息修改成功");
     }
