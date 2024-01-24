@@ -91,4 +91,7 @@ public interface UserMapper {
 
     @Select("SELECT is_delete FROM organize_oa.oa_user WHERE id = #{id}")
     boolean userGetDelete(Long id);
+
+    @Select("SELECT COUNT(*) FROM organize_oa.oa_user")
+    Long getUsersCount();
 }

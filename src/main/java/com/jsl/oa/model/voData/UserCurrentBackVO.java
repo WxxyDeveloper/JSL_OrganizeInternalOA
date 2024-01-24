@@ -18,9 +18,16 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class UserCurrentBackVO {
-    private ReturnUser user;
-    private ReturnUserRole role;
-    private List<String> permission;
+    private Long count;
+    private List<UserCurrent> users;
+
+    @Data
+    @Accessors(chain = true)
+    public static class UserCurrent {
+        private ReturnUser user;
+        private ReturnUserRole role;
+        private List<String> permission;
+    }
 
     @Data
     @Accessors(chain = true)
