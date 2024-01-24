@@ -1,3 +1,5 @@
+maven:
+  timestamp: @buildDate@
 spring:
   profiles:
     active: @profile.active@
