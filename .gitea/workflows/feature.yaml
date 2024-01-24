@@ -1,4 +1,4 @@
-name: Qodana
+name: Qodana测试
 on:
   workflow_dispatch:
   pull_request:
@@ -19,6 +19,6 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
       - name: 'Qodana Scan'
-        uses: https://github.com/JetBrains/qodana-action@v2023.3.1
+        uses: JetBrains/qodana-action@v2023.3.1
         env:
           QODANA_TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvcmdhbml6YXRpb24iOiJwNTZYRyIsInByb2plY3QiOiIzd1JQNyIsInRva2VuIjoiQWFxVkoifQ.R3TH0E2LgVpBorJ1wyIx3zjIM1p4j-taEEShZKhH2l8
