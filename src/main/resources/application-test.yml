@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306
+    username: organize_oa
+    password: Nbxt123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    password: 123456
+  mail:
+    default-encoding: UTF-8
+    host: smtp.qiye.aliyun.com
+    username: wxxydeveloper@x-lf.cn
+    password: 114477225588Zcw
+    properties:
+      form: wxxydeveloper@x-lf.cn
+      mail-ssl: true
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
