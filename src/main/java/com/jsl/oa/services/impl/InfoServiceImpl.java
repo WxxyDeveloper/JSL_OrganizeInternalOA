@@ -15,6 +15,7 @@ import com.jsl.oa.utils.Processing;
 import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,12 +42,8 @@ public class InfoServiceImpl implements InfoService {
 
     @Override
     @CheckUserHasPermission("info.image.add")
-    public BaseResponse addHeaderImage(HttpServletRequest request, CarouselVO carouselVO) {
+    public BaseResponse addHeaderImage(HttpServletRequest request, @NotNull CarouselVO carouselVO) {
         log.info("\t> 执行 Service 层 InfoService.addHeaderImage 方法");
-        // 用户权限校验
-        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
-            return ResultUtil.error(ErrorCode.NOT_ADMIN);
-        }
         // 获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
         UserDO userDO = userDAO.getUserById(userId);
@@ -71,12 +68,9 @@ public class InfoServiceImpl implements InfoService {
     }
 
     @Override
+    @CheckUserHasPermission("info.image.edit")
     public BaseResponse editHeaderImage(HttpServletRequest request, CarouselVO carouselVO, Integer id) {
         log.info("\t> 执行 Service 层 InfoService.editHeaderImage 方法");
-        // 用户权限校验
-        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
-            return ResultUtil.error(ErrorCode.NOT_ADMIN);
-        }
         // 获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
         UserDO userDO = userDAO.getUserById(userId);
@@ -119,6 +113,7 @@ public class InfoServiceImpl implements InfoService {
     }
 
     @Override
+    @CheckUserHasPermission("info.image.del")
     public BaseResponse delHeaderImage(HttpServletRequest request, Integer id) {
         log.info("\t> 执行 Service 层 InfoService.delHeaderImage 方法");
         // 用户权限校验
@@ -141,6 +136,7 @@ public class InfoServiceImpl implements InfoService {
     }
 
     @Override
+    @CheckUserHasPermission("info.image.setting.edit")
     public BaseResponse editSettingHeaderImage(HttpServletRequest request, Boolean showType) {
         log.info("\t> 执行 Service 层 InfoService.editSettingHeaderImage 方法");
         // 用户权限校验
