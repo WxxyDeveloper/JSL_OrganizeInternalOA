@@ -18,9 +18,8 @@ public interface MailService {
      * @param sendTo  收件人
      * @param subject 主题
      * @param text    内容
-     * @return 是否发送成功
      */
-    boolean sendMail(String sendTo, String subject, String text);
+    void sendMail(String sendTo, String subject, String text);
 
     /**
      * <h2>发送邮件通用模板</h2>
@@ -29,9 +28,8 @@ public interface MailService {
      *
      * @param sendTo 收件人
      * @param model  模板
-     * @return 是否发送成功
      */
-    boolean sendMail(String sendTo, String model);
+    void sendMail(String sendTo, String model);
 
     /**
      * <h2>邮件登陆模块</h2>
