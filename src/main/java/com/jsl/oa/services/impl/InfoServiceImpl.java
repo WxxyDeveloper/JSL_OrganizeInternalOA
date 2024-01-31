@@ -69,7 +69,7 @@ public class InfoServiceImpl implements InfoService {
 
     @Override
     @CheckUserHasPermission("info.image.edit")
-    public BaseResponse editHeaderImage(HttpServletRequest request, CarouselVO carouselVO, Integer id) {
+    public BaseResponse editHeaderImage(HttpServletRequest request, @NotNull CarouselVO carouselVO) {
         log.info("\t> 执行 Service 层 InfoService.editHeaderImage 方法");
         // 获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
@@ -77,10 +77,10 @@ public class InfoServiceImpl implements InfoService {
         // 获取轮播图信息
         CarouselDO carouselDO = infoDAO.getCarousel();
         // 获取指定轮播图
-        if (id > carouselDO.getData().size()) {
+        if (carouselVO.getId() > carouselDO.getData().size()) {
             return ResultUtil.error(ErrorCode.ID_NOT_EXIST);
         }
-        CarouselDO.DataDO carousel = carouselDO.getData().get(id - 1);
+        CarouselDO.DataDO carousel = carouselDO.getData().get(carouselVO.getId() - 1);
         carousel.setDisplayOrder(carouselVO.getDisplayOrder())
                 .setImage(carouselVO.getImage())
                 .setDescription(carouselVO.getDescription())

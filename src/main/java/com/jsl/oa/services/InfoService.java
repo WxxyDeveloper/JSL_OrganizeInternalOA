@@ -36,7 +36,7 @@ public interface InfoService {
      * @param id         轮播图ID
      * @return {@link BaseResponse}
      */
-    BaseResponse editHeaderImage(HttpServletRequest request, CarouselVO carouselVO, Integer id);
+    BaseResponse editHeaderImage(HttpServletRequest request, CarouselVO carouselVO);
 
     /**
      * <h2>获取轮播图</h2>
