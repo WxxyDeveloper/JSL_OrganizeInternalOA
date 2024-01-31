@@ -1,5 +1,6 @@
 package com.jsl.oa.model.voData.business.info;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
@@ -12,7 +13,9 @@ import lombok.Data;
  * @author 筱锋xiao_lfeng
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CarouselVO {
+    private Integer id;
     private Integer displayOrder;
     private String image;
     private String title;

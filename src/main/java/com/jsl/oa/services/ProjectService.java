@@ -1,6 +1,5 @@
 package com.jsl.oa.services;
 
-import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.ProjectCuttingAddVO;
 import com.jsl.oa.model.voData.ProjectCuttingEditVO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
@@ -10,13 +9,13 @@ import com.jsl.oa.utils.BaseResponse;
 import javax.servlet.http.HttpServletRequest;
 
 public interface ProjectService {
-    BaseResponse projectAdd(HttpServletRequest request,ProjectInfoVO projectAdd);
+    BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd);
 
-    BaseResponse projectEdit(HttpServletRequest request,ProjectInfoVO projectEdit);
+    BaseResponse projectEdit(HttpServletRequest request, ProjectInfoVO projectEdit);
 
     BaseResponse projectGetUserInCutting(Long uid);
 
-    BaseResponse projectAddUserForCutting(HttpServletRequest request,Long uid, Long pid);
+    BaseResponse projectAddUserForCutting(HttpServletRequest request, Long uid, Long pid);
 
     BaseResponse getHeader(Integer id);
 
@@ -30,7 +29,7 @@ public interface ProjectService {
 
     BaseResponse getByName(String name);
 
-    BaseResponse projectDelete(HttpServletRequest request,Long id);
+    BaseResponse projectDelete(HttpServletRequest request, Long id);
 
     BaseResponse addProjectCutting(HttpServletRequest request, ProjectCuttingAddVO projectCuttingAddVO);
 

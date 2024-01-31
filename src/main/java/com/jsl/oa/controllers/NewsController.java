@@ -2,9 +2,7 @@ package com.jsl.oa.controllers;
 
 
 import com.jsl.oa.model.voData.NewsAddVO;
-import com.jsl.oa.model.voData.PermissionEditVO;
 import com.jsl.oa.services.NewsService;
-import com.jsl.oa.services.RoleService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.Processing;
@@ -37,14 +35,14 @@ public class NewsController {
     private final NewsService newsService;
 
     @PostMapping("/news/add")
-    public BaseResponse newsAdd(@RequestBody @Validated NewsAddVO newsAddVO, BindingResult bindingResult, HttpServletRequest request){
+    public BaseResponse newsAdd(@RequestBody @Validated NewsAddVO newsAddVO, BindingResult bindingResult, HttpServletRequest request) {
         log.info("请求接口[POST]: /news/add");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
 
-        return newsService.newsAdd(newsAddVO,request);
+        return newsService.newsAdd(newsAddVO, request);
     }
 
 }

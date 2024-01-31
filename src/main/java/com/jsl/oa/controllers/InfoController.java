@@ -37,18 +37,18 @@ public class InfoController {
     }
 
     @PutMapping("/info/header-image/edit")
-    public BaseResponse infoEditHeaderImage(@RequestBody @Validated CarouselVO carouselVO, @RequestParam Integer id, HttpServletRequest request, @NotNull BindingResult bindingResult) {
+    public BaseResponse infoEditHeaderImage(@RequestBody @Validated CarouselVO carouselVO, HttpServletRequest request, @NotNull BindingResult bindingResult) {
         log.info("请求接口[PUT]: /info/header-image/edit");
         // 参数校验
         if (bindingResult.hasErrors()) {
             log.warn("参数校验失败: {}", Processing.getValidatedErrorList(bindingResult));
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        if (id == null) {
+        if (carouselVO.getId() == null) {
             log.warn("参数校验失败: {}", "id不能为空");
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, "id不能为空");
         }
-        return infoService.editHeaderImage(request, carouselVO, id);
+        return infoService.editHeaderImage(request, carouselVO);
     }
 
     @DeleteMapping("/info/header-image/del")

@@ -4,7 +4,6 @@ import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.ProjectUserDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
-import com.jsl.oa.utils.BaseResponse;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -61,8 +60,8 @@ public interface ProjectMapper {
     ProjectCuttingDO getProjectCuttingById(Long id);
 
     @Select("SELECT * FROM organize_oa.oa_project_user WHERE pid = #{pid} AND uid = #{uid}")
-    ProjectUserDO getProjectUserByPidAndUid(Long pid,Long uid);
+    ProjectUserDO getProjectUserByPidAndUid(Long pid, Long uid);
 
     @Update("UPDATE organize_oa.oa_project_user SET uid = #{uid} , updated_at = CURRENT_TIMESTAMP WHERE id = #{id}")
-    boolean updateUserForProjectUser(Long uid,Long id);
+    boolean updateUserForProjectUser(Long uid, Long id);
 }
