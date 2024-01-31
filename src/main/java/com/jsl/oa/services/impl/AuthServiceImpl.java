@@ -88,11 +88,7 @@ public class AuthServiceImpl implements AuthService {
         log.info("\t> 执行 Service 层 AuthService.userLogin 方法");
         // 检查用户是否存在
         UserDO userDO;
-        if (Pattern.matches("^[0-9A-Za-z_]{3,40}$", userLoginVO.getUser())) {
-            // 是否为用户名
-            log.info("\t\t> 用户名登陆");
-            userDO = userMapper.getUserInfoByUsername(userLoginVO.getUser());
-        } else if (Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", userLoginVO.getUser())) {
+        if (Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", userLoginVO.getUser())) {
             // 是否为手机号
             log.info("\t\t> 手机号登陆");
             userDO = userMapper.getUserInfoByPhone(userLoginVO.getUser());
@@ -100,10 +96,14 @@ public class AuthServiceImpl implements AuthService {
             // 是否为邮箱
             log.info("\t\t> 邮箱登陆");
             return ResultUtil.error(ErrorCode.EMAIL_LOGIN_NOT_SUPPORT);
-        } else {
+        } else if (Pattern.matches("^(STU|TEA|OTH)[0-9]{7}", userLoginVO.getUser())) {
             // 工号
             log.info("\t\t> 工号登陆");
             userDO = userMapper.getUserByJobId(userLoginVO.getUser());
+        } else {
+            // 是否为用户名
+            log.info("\t\t> 用户名登陆");
+            userDO = userMapper.getUserInfoByUsername(userLoginVO.getUser());
         }
         if (userDO != null) {
             // 账户是否有效
