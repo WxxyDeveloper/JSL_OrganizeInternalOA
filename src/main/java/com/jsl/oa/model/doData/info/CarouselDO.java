@@ -22,6 +22,7 @@ public class CarouselDO {
     @Data
     @Accessors(chain = true)
     public static class DataDO {
+        private Integer id;
         private Integer displayOrder;
         private String image;
         private String title;

@@ -39,7 +39,7 @@ public class InfoDAO {
         log.info("\t\t> 从 MySQL 获取数据");
         String getCarouselSql = infoMapper.getCarousel();
         CarouselDO getCarousel = null;
-        if (getCarouselSql != null && !getCarouselSql.equals("{}")) {
+        if (getCarouselSql != null && !"{}".equals(getCarouselSql)) {
             getCarousel = gson.fromJson(getCarouselSql, CarouselDO.class);
         }
         if (getCarousel == null) {
@@ -54,13 +54,17 @@ public class InfoDAO {
         }
         // 获取排序
         sortCarousel(getCarousel);
+        // 添加id
+        for (int i = 0; i < getCarousel.getData().size(); i++) {
+            getCarousel.getData().get(i).setId(i + 1);
+        }
         return getCarousel;
     }
 
     private void sortCarousel(CarouselDO getCarousel) {
         for (int i = 0; i < getCarousel.getData().size(); i++) {
             for (int j = 0; j < getCarousel.getData().size(); j++) {
-                if (getCarousel.getOrder().equals("desc")) {
+                if ("desc".equals(getCarousel.getOrder())) {
                     if (getCarousel.getData().get(i).getDisplayOrder() > getCarousel.getData().get(j).getDisplayOrder()) {
                         Collections.swap(getCarousel.getData(), i, j);
                     }
@@ -84,6 +88,10 @@ public class InfoDAO {
     public boolean setCarousel(CarouselDO carouselDO) {
         log.info("\t> 执行 DAO 层 InfoDAO.setCarousel 方法");
         sortCarousel(carouselDO);
+        // 添加id
+        for (int i = 0; i < carouselDO.getData().size(); i++) {
+            carouselDO.getData().get(i).setId(i + 1);
+        }
         String setCarouselSql = gson.toJson(carouselDO);
         log.info("\t\t> 从 MySQL 获取数据");
         return infoMapper.setCarousel(setCarouselSql);
