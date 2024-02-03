@@ -17,6 +17,7 @@ import lombok.Data;
 public class CarouselVO {
     private Integer id;
     private Integer displayOrder;
+    private String author;
     private String image;
     private String title;
     private String description;

@@ -49,6 +49,13 @@ public class InfoServiceImpl implements InfoService {
         UserDO userDO = userDAO.getUserById(userId);
         // 获取轮播图信息
         CarouselDO carouselDO = infoDAO.getCarousel();
+        // 检查轮播图是否手动设置作者
+        String author;
+        if (carouselVO.getAuthor() != null && !carouselVO.getAuthor().isEmpty()) {
+            author = carouselVO.getAuthor();
+        } else {
+            author = userDO.getUsername();
+        }
         // 添加轮播图
         CarouselDO.DataDO carousel = new CarouselDO.DataDO();
         carousel.setDisplayOrder(carouselVO.getDisplayOrder())
@@ -56,7 +63,7 @@ public class InfoServiceImpl implements InfoService {
                 .setDescription(carouselVO.getDescription())
                 .setTitle(carouselVO.getTitle())
                 .setIsActive(carouselVO.getIsActive())
-                .setAuthor(userDO.getUsername())
+                .setAuthor(author)
                 .setCreatedAt(new Timestamp(System.currentTimeMillis()).toString());
         carouselDO.getData().add(carousel);
         // 保存轮播图
@@ -80,13 +87,20 @@ public class InfoServiceImpl implements InfoService {
         if (carouselVO.getId() > carouselDO.getData().size()) {
             return ResultUtil.error(ErrorCode.ID_NOT_EXIST);
         }
+        // 检查轮播图是否手动设置作者
+        String author;
+        if (carouselVO.getAuthor() != null) {
+            author = carouselVO.getAuthor();
+        } else {
+            author = userDO.getUsername();
+        }
         CarouselDO.DataDO carousel = carouselDO.getData().get(carouselVO.getId() - 1);
         carousel.setDisplayOrder(carouselVO.getDisplayOrder())
                 .setImage(carouselVO.getImage())
                 .setDescription(carouselVO.getDescription())
                 .setTitle(carouselVO.getTitle())
                 .setIsActive(carouselVO.getIsActive())
-                .setAuthor(userDO.getUsername())
+                .setAuthor(author)
                 .setUpdatedAt(new Timestamp(System.currentTimeMillis()).toString());
         // 保存轮播图
         if (infoDAO.setCarousel(carouselDO)) {
