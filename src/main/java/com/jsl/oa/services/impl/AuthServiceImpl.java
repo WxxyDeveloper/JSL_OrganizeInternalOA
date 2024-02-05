@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse authRegister(@NotNull UserRegisterVO userRegisterVO) {
-        log.info("\t> 执行 Service 层 AuthService.userEdit 方法");
+        log.info("\t> 执行 Service 层 AuthService.authRegister 方法");
         // 检查用户说是否存在
         UserDO getUserByUsername = userMapper.getUserInfoByUsername(userRegisterVO.getUsername());
         // 用户名已存在
@@ -75,8 +75,8 @@ public class AuthServiceImpl implements AuthService {
         if (userMapper.insertUser(userDO)) {
             userDO.setPassword(null);
             //默认角色为学生
-            UserDO userDO1 = userMapper.getUserByUserNum(userDO.getUsername());
-            roleDAO.addRoleUser(userDO1.getId(), 2L);
+            UserDO getUserDO = userMapper.getUserInfoByUsername(userDO.getUsername());
+            roleDAO.addRoleUser(getUserDO.getId(), 2L);
             return ResultUtil.success("注册成功", userDO);
         } else {
             return ResultUtil.error(ErrorCode.DATABASE_INSERT_ERROR);
