@@ -12,7 +12,7 @@ public interface RoleMapper {
     @Insert("insert into organize_oa.oa_role_user (uid, rid) VALUE (#{uid},#{rid})")
     void roleAddUser(Long uid, Long rid);
 
-    @Select("INSERT INTO organize_oa.oa_role (role_name,display_name) VALUES (#{roleName}, ${displayName})")
+    @Select("INSERT INTO organize_oa.oa_role (role_name,display_name) VALUES (#{roleName}, #{displayName})")
     void roleAdd(RoleDO roleDO);
 
     @Delete("delete from organize_oa.oa_role_user where uid=#{uid}")
