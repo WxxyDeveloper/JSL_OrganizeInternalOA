@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -25,12 +26,12 @@ import java.util.regex.Pattern;
  * <hr/>
  * 用于权限服务层的实现类,实现权限的增删改查,以及用户权限的获取
  *
- * @since v1.1.0
+ * @author xiao_lfeng | 176yunxuan | xiangZr-hhh
  * @version v1.1.0
  * @see com.jsl.oa.services.RoleService
  * @see com.jsl.oa.dao.RoleDAO
  * @see com.jsl.oa.dao.UserDAO
- * @author xiao_lfeng | 176yunxuan | xiangZr-hhh
+ * @since v1.1.0
  */
 @Slf4j
 @Service
@@ -171,8 +172,10 @@ public class RoleServiceImpl implements RoleService {
         String roleName = roleAddVO.getName();
         RoleDO roleDO = new RoleDO();
         if (!roleDAO.isExistRoleByRoleName(roleName)) {
-            Processing.copyProperties(roleAddVO, roleDO);
-            roleDO.setRoleName(roleAddVO.getName());
+            roleDO
+                    .setRoleName(roleAddVO.getName())
+                    .setDisplayName(roleAddVO.getDisplayName())
+                    .setCreatedAt(new Timestamp(System.currentTimeMillis()));
         } else {
             return ResultUtil.error(ErrorCode.ROLE_NAME_REPEAT);
         }
