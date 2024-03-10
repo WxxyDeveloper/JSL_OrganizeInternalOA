@@ -2,6 +2,7 @@ package com.jsl.oa.services.impl;
 
 import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.ProjectDAO;
+import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
@@ -41,6 +42,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
 
+    private final RoleDAO roleDAO;
     private final ProjectDAO projectDAO;
     private final UserDAO userDAO;
 
@@ -181,10 +183,19 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse get() {
+    public BaseResponse get(Integer listAll,HttpServletRequest request) {
         log.info("\t> 执行 Service 层 ProjectService.get 方法");
-        List<ProjectDO> projectDOList = projectDAO.get();
-        return ResultUtil.success(projectDOList);
+        //获取用户
+        Long userId= Processing.getAuthHeaderToUserId(request);
+        //判断是否是老师(项目负责人)
+        if(Processing.checkUserIsTeacher(request,roleDAO.roleMapper)){
+            List<ProjectDO> projectDOList = projectDAO.get(userId,listAll);
+            return ResultUtil.success(projectDOList);
+        }else {
+            List<ProjectDO> projectDOList = projectDAO.get(userId,0);
+            return ResultUtil.success(projectDOList);
+        }
+
     }
 
     @Override

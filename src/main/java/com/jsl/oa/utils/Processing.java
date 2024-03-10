@@ -177,6 +177,22 @@ public class Processing {
         }
     }
 
+    /**
+     * 检查用户是否是老师
+     * @param request
+     * @param roleMapper
+     * @return
+     */
+    public static @NotNull Boolean checkUserIsTeacher(HttpServletRequest request, @NotNull RoleMapper roleMapper) {
+        RoleUserDO roleUserDO = roleMapper.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
+        if (roleUserDO != null) {
+            RoleDO roleDO = roleMapper.getRoleByRoleName("teacher");
+            return roleUserDO.getRid().equals(roleDO.getId());
+        } else {
+            return false;
+        }
+    }
+
     private static char getCharFromIndex(int index) {
         // 生成字符集合，可以根据需要自定义
         String charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

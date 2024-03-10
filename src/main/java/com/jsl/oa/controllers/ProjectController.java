@@ -27,6 +27,7 @@ public class ProjectController {
 
     /**
      * 项目展示获取
+     * 项目轮播图
      *
      * @param id
      * @return
@@ -43,13 +44,14 @@ public class ProjectController {
      * @return
      */
     @GetMapping("/project/get")
-    public BaseResponse projectGet() {
+    public BaseResponse projectGet(@RequestParam(required = false) Integer listAll,HttpServletRequest request) {
         log.info("请求接口[GET]: /project/get");
-        return projectService.get();
+        return projectService.get(listAll,request);
     }
 
     /**
      * 单个项目的详细
+     * 项目轮播图
      *
      * @param name
      * @return
@@ -62,6 +64,7 @@ public class ProjectController {
 
     /**
      * 增加项目展示
+     * 项目轮播图
      *
      * @param projectShowVO
      * @param request
@@ -81,6 +84,7 @@ public class ProjectController {
 
     /**
      * 编辑展示的项目
+     * 项目轮播图
      *
      * @param projectShowVO
      * @param id
@@ -106,6 +110,7 @@ public class ProjectController {
 
     /**
      * 删除项目展示
+     * 项目轮播图
      *
      * @param id
      * @param request

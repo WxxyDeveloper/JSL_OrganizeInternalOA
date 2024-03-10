@@ -25,7 +25,7 @@ public interface ProjectService {
 
     BaseResponse editHeader(HttpServletRequest request, ProjectShowVO projectShowVO, Integer id);
 
-    BaseResponse get();
+    BaseResponse get(Integer listAll,HttpServletRequest request);
 
     BaseResponse getByName(String name);
 
