@@ -43,12 +43,15 @@ public interface ProjectMapper {
 
     //@Select("select * from organize_oa.oa_project where json_extract(tags,'$.tags')" +
             //"like concat('%',#{tags},'%')")
+    @Select("select * from organize_oa.oa_project where is_finish=#{isFinish} and is_delete=false")
+    List<ProjectDO>getByIsfinish(Integer isFinish);
+
     List<ProjectDO>getByTags(List<String> tags);
 
     @Select("select * from organize_oa.oa_project where is_delete=false and status =1")
     List<ProjectDO> get(Long userId);
 
-    @Select("select * from organize_oa.oa_project where status =1")
+    @Select("select * from organize_oa.oa_project where status =1 and status=1")
     List<ProjectDO> get1(Long userId);
 
     @Select("select * from organize_oa.oa_project where name=#{name}")

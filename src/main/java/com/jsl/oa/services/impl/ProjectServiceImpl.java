@@ -2,7 +2,6 @@ package com.jsl.oa.services.impl;
 
 import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.ProjectDAO;
-import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
@@ -22,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
@@ -184,22 +184,27 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse get(Integer listAll,HttpServletRequest request,List<String> tags) {
+    public BaseResponse get(Integer listAll, HttpServletRequest request, List<String> tags, Integer isFinish) {
         log.info("\t> 执行 Service 层 ProjectService.get 方法");
         //获取用户
         Long userId= Processing.getAuthHeaderToUserId(request);
+        //根据状态查询
+        if(isFinish != null){
+            List<ProjectDO> projectDOList = projectDAO.get(userId,listAll,tags,isFinish);
+            return ResultUtil.success(projectDOList);
+        }
         //根据标签查询
         if(tags != null && !tags.isEmpty()){
-            List<ProjectDO> projectDOList = projectDAO.get(userId,listAll,tags);
+            List<ProjectDO> projectDOList = projectDAO.get(userId,listAll,tags,isFinish);
             return ResultUtil.success(projectDOList);
         }
 
         //判断是否是老师(项目负责人)
-        if(listAll != null && Processing.checkUserIsAdmin(request,roleMapper)){
-            List<ProjectDO> projectDOList = projectDAO.get(userId,listAll,tags);
+        if(listAll != null && Processing.checkUserIsTeacher(request,roleMapper)){
+            List<ProjectDO> projectDOList = projectDAO.get(userId,listAll,tags,isFinish);
             return ResultUtil.success(projectDOList);
         }else {
-            List<ProjectDO> projectDOList = projectDAO.get(userId,0,tags);
+            List<ProjectDO> projectDOList = projectDAO.get(userId,0,tags,isFinish);
             return ResultUtil.success(projectDOList);
         }
 
