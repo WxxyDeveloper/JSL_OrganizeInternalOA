@@ -65,6 +65,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public BaseResponse tget(Integer id) {
+        log.info("\t> 执行 Service 层 ProjectService.tget 方法");
+        List<ProjectDO> projectDOList = projectDAO.tget(id);
+        return ResultUtil.success(projectDOList);
+    }
+
+    @Override
     @CheckUserHasPermission("project.edit")
     public BaseResponse projectEdit(HttpServletRequest request, @NotNull ProjectInfoVO projectEdit) {
         log.info("\t> 执行 Service 层 ProjectService.projectEdit 方法");

@@ -42,7 +42,18 @@ public class ProjectController {
     }
 
     /**
-     * 全部项目的信息获取(打开项目页)
+     * 游客获取项目
+     * @return
+     */
+    @GetMapping("/project/get/custom")
+    public BaseResponse projectGetCustom(@RequestParam(required = false) Integer id){
+        log.info("请求接口[GET]: /project/all/get");
+        return projectService.tget(id);
+    }
+
+
+    /**
+     * 我负责的界面的获取项目
      *
      * @return
      */

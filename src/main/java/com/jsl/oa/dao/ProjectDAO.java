@@ -9,6 +9,7 @@ import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import com.jsl.oa.model.voData.ProjectWorkVO;
+import com.jsl.oa.utils.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -198,5 +199,8 @@ public class ProjectDAO {
     }
 
 
-
+    public List<ProjectDO> tget(Integer id) {
+        log.info("DAO层");
+        return projectMapper.tget(id);
+    }
 }
