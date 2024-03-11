@@ -4,6 +4,7 @@ import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
+import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.UserDO;
@@ -42,7 +43,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
 
-    private final RoleDAO roleDAO;
+    private final RoleMapper roleMapper;
     private final ProjectDAO projectDAO;
     private final UserDAO userDAO;
 
@@ -183,16 +184,22 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse get(Integer listAll,HttpServletRequest request) {
+    public BaseResponse get(Integer listAll,HttpServletRequest request,String tags) {
         log.info("\t> 执行 Service 层 ProjectService.get 方法");
         //获取用户
         Long userId= Processing.getAuthHeaderToUserId(request);
+        //根据标签查询
+        if(tags != null){
+            List<ProjectDO> projectDOList = projectDAO.get(userId,listAll,tags);
+            return ResultUtil.success(projectDOList);
+        }
+
         //判断是否是老师(项目负责人)
-        if(Processing.checkUserIsTeacher(request,roleDAO.roleMapper)){
-            List<ProjectDO> projectDOList = projectDAO.get(userId,listAll);
+        if(listAll != null && Processing.checkUserIsAdmin(request,roleMapper)){
+            List<ProjectDO> projectDOList = projectDAO.get(userId,listAll,tags);
             return ResultUtil.success(projectDOList);
         }else {
-            List<ProjectDO> projectDOList = projectDAO.get(userId,0);
+            List<ProjectDO> projectDOList = projectDAO.get(userId,0,tags);
             return ResultUtil.success(projectDOList);
         }
 
