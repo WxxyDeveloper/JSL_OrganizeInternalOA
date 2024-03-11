@@ -7,6 +7,7 @@ import com.jsl.oa.model.voData.business.info.ProjectShowVO;
 import com.jsl.oa.utils.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 public interface ProjectService {
     BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd);
@@ -25,7 +26,7 @@ public interface ProjectService {
 
     BaseResponse editHeader(HttpServletRequest request, ProjectShowVO projectShowVO, Integer id);
 
-    BaseResponse get();
+    BaseResponse get(Integer listAll, HttpServletRequest request, List<String> tags, Integer isFinish);
 
     BaseResponse getByName(String name);
 

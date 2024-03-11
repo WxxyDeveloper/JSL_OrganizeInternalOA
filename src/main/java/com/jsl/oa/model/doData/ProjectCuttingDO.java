@@ -20,12 +20,17 @@ import java.sql.Timestamp;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProjectCuttingDO {
     private Long id;
+    private Long principalId;
+    private Long projectId;
     private Long pid;
+    private Long workLoad;
+    private Long cycle;
     private String name;
-    private String tag;
-    private Short engineering;
-    private Integer estimatedTime;
-    private Integer realTime;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private String description;
+    private Integer is_delete;
+    private Integer is_finish;
+    private Integer status;
+    private boolean type;
+    private Timestamp beginTime;
+    private Timestamp completeTime;
 }

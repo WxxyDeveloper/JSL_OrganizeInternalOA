@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.sql.Timestamp;
+
 /**
  * <h1>project 数据表</h1>
  * <hr/>
@@ -18,14 +20,16 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProjectDO {
     private Long id;
+    private Long principalId;
+    private String tags;
+    private Long cycle;
     private String name;
+    private String file;
     private String description;
-    private String introduction;
-    private Short codeOpen;
-    private String coreCode;
-    private String git;
-    private Short difficultyLevel;
-    private Integer type;
-    private Long reward;
-    private Short status;
+    private Integer is_delete;
+    private Integer is_finish;
+    private boolean status;
+    private Timestamp beginTime;
+    private Timestamp completeTime;
+    private Timestamp deadline;
 }

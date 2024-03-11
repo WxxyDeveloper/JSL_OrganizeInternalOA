@@ -5,6 +5,7 @@ import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.ProjectUserDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -12,8 +13,10 @@ import java.util.List;
 public interface ProjectMapper {
 
     @Insert("insert into organize_oa.oa_project " +
-            "(name, description, introduction, core_code, git,type, reward) " +
-            "value (#{name},#{description},#{introduction},#{coreCode},#{git},#{type},#{reward})")
+            "(name, description, principal_id, cycle,file,complete_time," +
+            "deadline,status,is_finish) " +
+            "value (#{name},#{description},#{principalId},#{cycle},#{file}" +
+            ",#{completeTime},#{deadline},#{status},#{isFinish})")
     void projectAdd(ProjectInfoVO projectAdd);
 
 
@@ -22,11 +25,11 @@ public interface ProjectMapper {
     @Select("select * from organize_oa.oa_project where id=#{id}")
     ProjectDO getProjectById(Long id);
 
-    @Select("select * from organize_oa.oa_project_cutting where id in" +
-            "(select pid from organize_oa.oa_project_user where uid=#{uid})")
+    @Select("select * from organize_oa.oa_project_work where principal_id=#{uid}")
+            //"(select id from organize_oa.oa_project_work where id in)")
     List<ProjectCuttingDO> projectGetUserInCutting(Long uid);
 
-    @Insert("insert into organize_oa.oa_project_user(uid, pid)value (#{uid},#{pid})")
+    @Insert("update organize_oa.oa_project_work set principal_id =#{uid} where id=#{pid}")
     void projectAddUserInCutting(Long uid, Long pid);
 
     @Select("select data from organize_oa.oa_config where value='project_show'")
@@ -38,8 +41,18 @@ public interface ProjectMapper {
     @Update("UPDATE organize_oa.oa_config SET data = #{setProjectShow}, updated_at = CURRENT_TIMESTAMP WHERE value = 'project_show'")
     boolean setProjectShow(String setProjectShow);
 
-    @Select("select * from organize_oa.oa_permissions")
-    List<ProjectDO> get();
+    //@Select("select * from organize_oa.oa_project where json_extract(tags,'$.tags')" +
+            //"like concat('%',#{tags},'%')")
+    @Select("select * from organize_oa.oa_project where is_finish=#{isFinish} and is_delete=false")
+    List<ProjectDO>getByIsfinish(Integer isFinish);
+
+    List<ProjectDO>getByTags(List<String> tags);
+
+    @Select("select * from organize_oa.oa_project where is_delete=false and status =1")
+    List<ProjectDO> get(Long userId);
+
+    @Select("select * from organize_oa.oa_project where status =1 and status=1")
+    List<ProjectDO> get1(Long userId);
 
     @Select("select * from organize_oa.oa_project where name=#{name}")
     ProjectDO getByName(String name);

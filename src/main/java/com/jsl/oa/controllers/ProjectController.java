@@ -17,6 +17,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -27,6 +29,7 @@ public class ProjectController {
 
     /**
      * 项目展示获取
+     * 项目轮播图
      *
      * @param id
      * @return
@@ -43,13 +46,17 @@ public class ProjectController {
      * @return
      */
     @GetMapping("/project/get")
-    public BaseResponse projectGet() {
+    public BaseResponse projectGet(@RequestParam(required = false) Integer listAll,
+                                   @RequestParam(required = false) List<String> tags,
+                                   @RequestParam(required = false) Integer isFinish,
+                                   HttpServletRequest request) {
         log.info("请求接口[GET]: /project/get");
-        return projectService.get();
+        return projectService.get(listAll,request,tags,isFinish);
     }
 
     /**
      * 单个项目的详细
+     * 项目轮播图
      *
      * @param name
      * @return
@@ -62,6 +69,7 @@ public class ProjectController {
 
     /**
      * 增加项目展示
+     * 项目轮播图
      *
      * @param projectShowVO
      * @param request
@@ -81,6 +89,7 @@ public class ProjectController {
 
     /**
      * 编辑展示的项目
+     * 项目轮播图
      *
      * @param projectShowVO
      * @param id
@@ -106,6 +115,7 @@ public class ProjectController {
 
     /**
      * 删除项目展示
+     * 项目轮播图
      *
      * @param id
      * @param request
