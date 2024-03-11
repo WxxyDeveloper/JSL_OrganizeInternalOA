@@ -5,8 +5,10 @@ import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.ProjectUserDO;
+import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
+import com.jsl.oa.model.voData.ProjectWorkVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +31,12 @@ public class ProjectDAO {
         log.info("\t> 执行 DAO 层 ProjectDAO.projectAdd 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         projectMapper.projectAdd(projectAdd);
+    }
 
+    public void projectWorkAdd(ProjectWorkVO projectWorkVO) {
+        log.info("\t> 执行 DAO 层 ProjectDAO.projecWorktAdd 方法");
+        log.info("\t\t> 从 MySQL 获取数据");
+        projectMapper.projectWorkAdd(projectWorkVO);
     }
 
     public void projectEdit(ProjectInfoVO projectEdit) {
@@ -121,6 +128,22 @@ public class ProjectDAO {
         }
     }
 
+    public List<ProjectWorkDO> workget(Long userId, Integer listAll, List<String> tags, Integer isFinish) {
+        log.info("\t> 执行 DAO 层 ProjectDAO.workget 方法");
+        log.info("\t\t> 从 MySQL 获取数据");
+        if(isFinish != null){
+            return projectMapper.workgetByIsfinish(userId,isFinish);
+        }
+        if(tags != null && !tags.isEmpty()){
+            return projectMapper.workgetByTags(userId,tags);
+        }
+        if(listAll == 0) {
+            return projectMapper.workget(userId);
+        }else {
+            return projectMapper.workget1(userId);
+        }
+    }
+
     public ProjectDO getByName(String name) {
         log.info("\t> 执行 DAO 层 ProjectDAO.getByName 方法");
         log.info("\t\t> 从 MySQL 获取数据");
@@ -173,5 +196,7 @@ public class ProjectDAO {
         log.info("\t\t> 从 MySQL 更新数据");
         return projectMapper.updateUserForProjectUser(newUid,projectUserDO.getId());
     }
+
+
 
 }

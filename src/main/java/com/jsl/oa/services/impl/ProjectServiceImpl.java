@@ -6,11 +6,13 @@ import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
+import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.ProjectCuttingAddVO;
 import com.jsl.oa.model.voData.ProjectCuttingEditVO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
+import com.jsl.oa.model.voData.ProjectWorkVO;
 import com.jsl.oa.model.voData.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
 import com.jsl.oa.utils.BaseResponse;
@@ -21,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
@@ -54,6 +55,13 @@ public class ProjectServiceImpl implements ProjectService {
             projectDAO.projectAdd(projectAdd);
             return ResultUtil.success("添加成功");
 
+    }
+
+    @Override
+    public BaseResponse projecWorktAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO) {
+        log.info("\t> 执行 Service 层 ProjectService.projectWorkAdd 方法");
+        projectDAO.projectWorkAdd(projectWorkVO);
+        return ResultUtil.success("添加成功");
     }
 
     @Override
@@ -186,6 +194,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public BaseResponse get(Integer listAll, HttpServletRequest request, List<String> tags, Integer isFinish) {
         log.info("\t> 执行 Service 层 ProjectService.get 方法");
+
         //获取用户
         Long userId= Processing.getAuthHeaderToUserId(request);
         //根据状态查询
@@ -210,6 +219,36 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
     }
+
+    @Override
+    public BaseResponse workget(Integer listAll, HttpServletRequest request, List<String> tags, Integer isFinish) {
+        log.info("\t> 执行 Service 层 ProjectService.workget 方法");
+
+        //获取用户
+        Long userId= Processing.getAuthHeaderToUserId(request);
+        //根据状态查询
+        if(isFinish != null){
+            List<ProjectWorkDO> projectWorkDOList = projectDAO.workget(userId,listAll,tags,isFinish);
+            return ResultUtil.success(projectWorkDOList);
+        }
+        //根据标签查询
+        if(tags != null && !tags.isEmpty()){
+            List<ProjectWorkDO> projectWorkDOList = projectDAO.workget(userId,listAll,tags,isFinish);
+            return ResultUtil.success(projectWorkDOList);
+        }
+
+        //判断是否是老师(项目负责人)
+        if(listAll != null && Processing.checkUserIsTeacher(request,roleMapper)){
+            List<ProjectWorkDO> projectWorkDOList = projectDAO.workget(userId,listAll,tags,isFinish);
+            return ResultUtil.success(projectWorkDOList);
+        }else {
+            listAll = 0;
+            List<ProjectWorkDO> projectWorkDOList = projectDAO.workget(userId,listAll,tags,isFinish);
+            return ResultUtil.success(projectWorkDOList);
+        }
+    }
+
+
 
     @Override
     public BaseResponse getByName(String name) {
@@ -282,6 +321,8 @@ public class ProjectServiceImpl implements ProjectService {
             }
             return ResultUtil.success();
     }
+
+
 
 
 }

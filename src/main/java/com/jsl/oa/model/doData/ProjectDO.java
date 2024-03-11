@@ -26,8 +26,8 @@ public class ProjectDO {
     private String name;
     private String file;
     private String description;
-    private Integer is_delete;
-    private Integer is_finish;
+    private Integer isDelete;
+    private Integer isFinish;
     private boolean status;
     private Timestamp beginTime;
     private Timestamp completeTime;

@@ -3,6 +3,7 @@ package com.jsl.oa.controllers;
 import com.jsl.oa.model.voData.ProjectCuttingAddVO;
 import com.jsl.oa.model.voData.ProjectCuttingEditVO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
+import com.jsl.oa.model.voData.ProjectWorkVO;
 import com.jsl.oa.model.voData.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
 import com.jsl.oa.utils.BaseResponse;
@@ -52,6 +53,20 @@ public class ProjectController {
                                    HttpServletRequest request) {
         log.info("请求接口[GET]: /project/get");
         return projectService.get(listAll,request,tags,isFinish);
+    }
+
+    /**
+     * 子模块子系统的查询
+     *
+     * @return
+     */
+    @GetMapping("/project/work/get")
+    public BaseResponse projectWorkGet(@RequestParam(required = false) Integer listAll,
+                                   @RequestParam(required = false) List<String> tags,
+                                   @RequestParam(required = false) Integer isFinish,
+                                   HttpServletRequest request) {
+        log.info("请求接口[GET]: /project/work/get");
+        return projectService.workget(listAll, request, tags, isFinish);
     }
 
     /**
@@ -130,8 +145,6 @@ public class ProjectController {
     /**
      * 项目表进行，项目增加
      *
-     * @param projectAdd
-     * @param bindingResult
      * @return
      */
     @PostMapping("/project/add")
@@ -142,6 +155,22 @@ public class ProjectController {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
         return projectService.projectAdd(request, projectAdd);
+    }
+
+    /**
+     * 子系统子模块的增加
+     * @param request
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping("/project/work/add")
+    public BaseResponse projectWorkAdd(HttpServletRequest request, @RequestBody @Validated ProjectWorkVO projectWorkVO, @NotNull BindingResult bindingResult) {
+        log.info("请求接口[POST]: /project/work/add");
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        return projectService.projecWorktAdd(request, projectWorkVO);
     }
 
     /**

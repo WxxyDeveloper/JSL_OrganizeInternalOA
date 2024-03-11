@@ -56,4 +56,13 @@
         </foreach>
     </select>
 
+    <select id="workgetByTags" resultType="com.jsl.oa.model.doData.ProjectWorkDO">
+        select * from organize_oa.oa_project_work where
+        <foreach collection="tags" item="tag" separator=",'%') and json_extract(tags,'$.tags')like concat('%',"
+                 open="json_extract(tags,'$.tags')like concat('%',"
+                 close=",'%') and is_delete=false and principal_id=#{userId}">
+            #{tag}
+        </foreach>
+    </select>
+
 </mapper>
