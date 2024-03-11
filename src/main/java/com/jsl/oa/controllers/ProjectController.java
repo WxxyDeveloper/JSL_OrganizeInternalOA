@@ -17,6 +17,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -45,7 +47,7 @@ public class ProjectController {
      */
     @GetMapping("/project/get")
     public BaseResponse projectGet(@RequestParam(required = false) Integer listAll,
-                                   @RequestParam(required = false) String tags,
+                                   @RequestParam(required = false) List<String> tags,
                                    HttpServletRequest request) {
         log.info("请求接口[GET]: /project/get");
         return projectService.get(listAll,request,tags);

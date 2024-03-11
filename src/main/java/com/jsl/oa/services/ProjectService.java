@@ -5,8 +5,10 @@ import com.jsl.oa.model.voData.ProjectCuttingEditVO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import com.jsl.oa.model.voData.business.info.ProjectShowVO;
 import com.jsl.oa.utils.BaseResponse;
+import org.apache.catalina.LifecycleState;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 public interface ProjectService {
     BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd);
@@ -25,7 +27,7 @@ public interface ProjectService {
 
     BaseResponse editHeader(HttpServletRequest request, ProjectShowVO projectShowVO, Integer id);
 
-    BaseResponse get(Integer listAll,HttpServletRequest request,String tags);
+    BaseResponse get(Integer listAll, HttpServletRequest request, List<String> tags);
 
     BaseResponse getByName(String name);
 

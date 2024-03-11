@@ -105,10 +105,10 @@ public class ProjectDAO {
         return projectMapper.setProjectShow(setProjectShow);
     }
 
-    public List<ProjectDO> get(Long userId,Integer listAll,String tags) {
+    public List<ProjectDO> get(Long userId,Integer listAll,List<String> tags) {
         log.info("\t> 执行 DAO 层 ProjectDAO.get 方法");
         log.info("\t\t> 从 MySQL 获取数据");
-        if(tags != null){
+        if(tags != null && !tags.isEmpty()){
             return projectMapper.getByTags(tags);
         }
         if(listAll == 0) {

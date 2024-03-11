@@ -184,12 +184,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse get(Integer listAll,HttpServletRequest request,String tags) {
+    public BaseResponse get(Integer listAll,HttpServletRequest request,List<String> tags) {
         log.info("\t> 执行 Service 层 ProjectService.get 方法");
         //获取用户
         Long userId= Processing.getAuthHeaderToUserId(request);
         //根据标签查询
-        if(tags != null){
+        if(tags != null && !tags.isEmpty()){
             List<ProjectDO> projectDOList = projectDAO.get(userId,listAll,tags);
             return ResultUtil.success(projectDOList);
         }

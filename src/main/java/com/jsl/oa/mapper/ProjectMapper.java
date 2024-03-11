@@ -5,6 +5,7 @@ import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.ProjectUserDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -40,9 +41,9 @@ public interface ProjectMapper {
     @Update("UPDATE organize_oa.oa_config SET data = #{setProjectShow}, updated_at = CURRENT_TIMESTAMP WHERE value = 'project_show'")
     boolean setProjectShow(String setProjectShow);
 
-    @Select("select * from organize_oa.oa_project where json_extract(tags,'$.tags')" +
-            "like concat('%',#{tags},'%')")
-    List<ProjectDO>getByTags(String tags);
+    //@Select("select * from organize_oa.oa_project where json_extract(tags,'$.tags')" +
+            //"like concat('%',#{tags},'%')")
+    List<ProjectDO>getByTags(List<String> tags);
 
     @Select("select * from organize_oa.oa_project where is_delete=false and status =1")
     List<ProjectDO> get(Long userId);
