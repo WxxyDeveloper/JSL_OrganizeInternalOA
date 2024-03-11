@@ -204,7 +204,8 @@ public class ProjectServiceImpl implements ProjectService {
             List<ProjectDO> projectDOList = projectDAO.get(userId,listAll,tags,isFinish);
             return ResultUtil.success(projectDOList);
         }else {
-            List<ProjectDO> projectDOList = projectDAO.get(userId,0,tags,isFinish);
+            listAll = 0;
+            List<ProjectDO> projectDOList = projectDAO.get(userId,listAll,tags,isFinish);
             return ResultUtil.success(projectDOList);
         }
 

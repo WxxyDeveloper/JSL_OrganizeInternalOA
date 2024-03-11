@@ -109,10 +109,10 @@ public class ProjectDAO {
         log.info("\t> 执行 DAO 层 ProjectDAO.get 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         if(isFinish != null){
-            return projectMapper.getByIsfinish(isFinish);
+            return projectMapper.getByIsfinish(userId,isFinish);
         }
         if(tags != null && !tags.isEmpty()){
-            return projectMapper.getByTags(tags);
+            return projectMapper.getByTags(userId,tags);
         }
         if(listAll == 0) {
             return projectMapper.get(userId);
