@@ -17,6 +17,7 @@ public class UserProfileVo {
     private String nickname;
     private String sex;
     private String description;
+    private String role;
 
 }
 

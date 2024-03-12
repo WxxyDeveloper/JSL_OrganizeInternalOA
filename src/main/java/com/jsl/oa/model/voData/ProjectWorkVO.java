@@ -1,30 +1,16 @@
 package com.jsl.oa.model.voData;
+/*
+        张睿相   Java
+*/
 
-import lombok.Data;
-
-import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
-
-@Data
+/**
+ * 总体描述
+ * <p>创建时间：2024/3/11 21:54</p>
+ *
+ * @author 张睿相
+ * @since v1.0
+ */
 public class ProjectWorkVO {
-
-    private Long pid;
-    @NotNull(message = "项目id不能为空")
-    private Long projectId;
-    @NotNull(message = "负责人id不能为空")
-    private Long principalId;
-    @NotNull(message = "周期不能为空")
-    private Integer cycle;
-
-    private Integer workLoad;
-    @NotNull(message = "类型不能为空")
-    private Integer type;
-    @NotNull(message = "名字不能为空")
-    private String name;
-    private String description;
-    private Integer isDelete;
-    private Integer isFinish;
-    private Integer status;
-    private Timestamp beginTime;
-    private Timestamp completeTime;
 }
+
+

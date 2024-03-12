@@ -257,16 +257,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseResponse userProfileGet(HttpServletRequest request) {
         log.info("\t> 执行 Service 层 UserService.userProfileGet 方法");
-        //判断用户是否为 老师 或 管理员
-        if(!Processing.checkUserIsAdmin(request,roleDAO.roleMapper) &&
-                !Processing.checkUserIsTeacher(request,roleDAO.roleMapper)){
-            return ResultUtil.error(ErrorCode.NOT_PERMISSION);
-        }
 
         // 获取用户Id
         UserDO userDO = userDAO.getUserById(Processing.getAuthHeaderToUserId(request));
         UserProfileVo userProfileVo = new UserProfileVo();
         Processing.copyProperties(userDO, userProfileVo);
+        userProfileVo.setRole(roleDAO.getRoleNameByUid(userDO.getId()).getDisplayName());
         userProfileVo.setSex(Processing.getSex(userDO.getSex()));
         return ResultUtil.success(userProfileVo);
     }
