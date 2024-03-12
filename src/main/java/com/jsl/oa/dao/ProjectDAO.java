@@ -214,8 +214,14 @@ public class ProjectDAO {
     }
 
 
-    public List<ProjectDO> tget(Integer id) {
+    public List<ProjectDO> tget(Integer id, List<String> tags, Integer isFinish) {
         log.info("DAO层");
+        if(isFinish != null){
+            return projectMapper.tgetByIsfinish(isFinish);
+        }
+        if(tags != null && !tags.isEmpty()){
+            return projectMapper.tgetByTags(tags);
+        }
         return projectMapper.tget(id);
     }
 }
