@@ -72,7 +72,6 @@ public class ProjectServiceImpl implements ProjectService {
         log.info("\t> 执行 Service 层 ProjectService.projectEdit 方法");
 
 
-
         //判断用户是否为老师 或者 项目负责人
         if (!Processing.checkUserIsTeacher(request, roleMapper) ||
                 !projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), projectId)) {
@@ -82,7 +81,7 @@ public class ProjectServiceImpl implements ProjectService {
         //判断项目是否存在
         if (projectDAO.isExistProject(projectId)) {
             //更新数据
-            return ResultUtil.success(projectDAO.projectEdit(projectEdit,projectId));
+            return ResultUtil.success(projectDAO.projectEdit(projectEdit, projectId));
         } else {
             return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
         }
@@ -278,7 +277,7 @@ public class ProjectServiceImpl implements ProjectService {
         //判断用户是否为老师 或者 项目负责人 或管理员
         if (!Processing.checkUserIsTeacher(request, roleMapper) &&
                 !projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), id)
-        && !Processing.checkUserIsAdmin(request, roleMapper)) {
+                && !Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
 

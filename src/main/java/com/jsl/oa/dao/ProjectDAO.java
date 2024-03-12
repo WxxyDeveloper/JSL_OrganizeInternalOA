@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -207,10 +208,7 @@ public class ProjectDAO {
         log.info("\t> 执行 DAO 层 ProjectDAO.isPrincipalUser 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         ProjectDO projectDO = projectMapper.getProjectById(projectId);
-        if(uid == projectDO.getPrincipalId()){
-            return true;
-        }
-        return false;
+        return Objects.equals(uid, projectDO.getPrincipalId());
     }
 
 
