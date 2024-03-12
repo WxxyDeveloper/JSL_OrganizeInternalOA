@@ -65,24 +65,23 @@ public class ProjectServiceImpl implements ProjectService {
         log.info("\t> 执行 Service 层 ProjectService.tget 方法");
 
         //根据状态查询
-        if(isFinish != null){
-            List<ProjectDO> projectDOList = projectDAO.tget(id,tags,isFinish);
+        if (isFinish != null) {
+            List<ProjectDO> projectDOList = projectDAO.tget(id, tags, isFinish);
             return ResultUtil.success(projectDOList);
         }
         //根据标签查询
-        if(tags != null && !tags.isEmpty()){
-            List<ProjectDO> projectDOList = projectDAO.tget(id,tags,isFinish);
+        if (tags != null && !tags.isEmpty()) {
+            List<ProjectDO> projectDOList = projectDAO.tget(id, tags, isFinish);
             return ResultUtil.success(projectDOList);
         }
 
-        List<ProjectDO> projectDOList = projectDAO.tget(id,tags,isFinish);
+        List<ProjectDO> projectDOList = projectDAO.tget(id, tags, isFinish);
         return ResultUtil.success(projectDOList);
     }
 
     @Override
     public BaseResponse projectEdit(HttpServletRequest request, @NotNull ProjectEditVO projectEdit, Long projectId) {
         log.info("\t> 执行 Service 层 ProjectService.projectEdit 方法");
-
 
 
         //判断用户是否为老师 或者 项目负责人
@@ -94,7 +93,7 @@ public class ProjectServiceImpl implements ProjectService {
         //判断项目是否存在
         if (projectDAO.isExistProject(projectId)) {
             //更新数据
-            return ResultUtil.success(projectDAO.projectEdit(projectEdit,projectId));
+            return ResultUtil.success(projectDAO.projectEdit(projectEdit, projectId));
         } else {
             return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
         }
@@ -290,7 +289,7 @@ public class ProjectServiceImpl implements ProjectService {
         //判断用户是否为老师 或者 项目负责人 或管理员
         if (!Processing.checkUserIsTeacher(request, roleMapper) &&
                 !projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), id)
-        && !Processing.checkUserIsAdmin(request, roleMapper)) {
+                && !Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
 
