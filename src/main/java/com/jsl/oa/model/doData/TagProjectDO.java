@@ -15,7 +15,7 @@ import java.sql.Timestamp;
  */
 @Data
 public class TagProjectDO {
-    private String id;
+    private Long id;
     private String name;
     private Long pid;
     private Timestamp createdAt;
