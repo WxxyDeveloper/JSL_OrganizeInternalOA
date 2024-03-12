@@ -1,8 +1,6 @@
 package com.jsl.oa.controllers;
 
-import com.jsl.oa.model.voData.ProjectCuttingAddVO;
-import com.jsl.oa.model.voData.ProjectCuttingEditVO;
-import com.jsl.oa.model.voData.ProjectInfoVO;
+import com.jsl.oa.model.voData.*;
 import com.jsl.oa.model.voData.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
 import com.jsl.oa.utils.BaseResponse;
@@ -17,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -41,7 +38,20 @@ public class ProjectController {
     }
 
     /**
-     * 全部项目的信息获取(打开项目页)
+     * 游客获取项目
+     * @return
+     */
+    @GetMapping("/project/get/custom")
+    public BaseResponse projectGetCustom(@RequestParam(required = false) Integer id,
+                                         @RequestParam(required = false) List<String> tags,
+                                         @RequestParam(required = false) Integer isFinish){
+        log.info("请求接口[GET]: /project/all/get");
+        return projectService.tget(id,tags,isFinish);
+    }
+
+
+    /**
+     * 我负责的界面的获取项目
      *
      * @return
      */
@@ -52,6 +62,20 @@ public class ProjectController {
                                    HttpServletRequest request) {
         log.info("请求接口[GET]: /project/get");
         return projectService.get(listAll,request,tags,isFinish);
+    }
+
+    /**
+     * 子模块子系统的查询
+     *
+     * @return
+     */
+    @GetMapping("/project/work/get")
+    public BaseResponse projectWorkGet(@RequestParam(required = false) Integer listAll,
+                                   @RequestParam(required = false) List<String> tags,
+                                   @RequestParam(required = false) Integer isFinish,
+                                   HttpServletRequest request) {
+        log.info("请求接口[GET]: /project/work/get");
+        return projectService.workget(listAll, request, tags, isFinish);
     }
 
     /**
@@ -130,8 +154,6 @@ public class ProjectController {
     /**
      * 项目表进行，项目增加
      *
-     * @param projectAdd
-     * @param bindingResult
      * @return
      */
     @PostMapping("/project/add")
@@ -144,22 +166,42 @@ public class ProjectController {
         return projectService.projectAdd(request, projectAdd);
     }
 
+
     /**
-     * 项目表进行，项目的修改
-     *
-     * @param projectEdit
-     * @param bindingResult
-     * @return
-     */
-    @PutMapping("/project/edit")
-    public BaseResponse projectEdit(HttpServletRequest request, @RequestBody @Validated ProjectInfoVO projectEdit, @NotNull BindingResult bindingResult) {
-        log.info("请求接口[PUT]: /project/edit");
+     * @Description: 项目的修改
+     * @Date: 2024/3/10
+     * @Param request:
+ * @Param projectEdit:
+ * @Param bindingResult:
+ * @Param projectId:
+     **/
+    @PutMapping("/project/edit/{projectId}")
+    public BaseResponse projectEditById(HttpServletRequest request, @RequestBody @Validated ProjectEditVO projectEdit, @NotNull BindingResult bindingResult, @PathVariable("projectId") Long projectId) {
+        log.info("请求接口[PUT]: /project/edit/{projectId}");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return projectService.projectEdit(request, projectEdit);
+        return projectService.projectEdit(request, projectEdit,projectId);
     }
+
+
+    /**
+     * 子系统子模块的增加
+     * @param request
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping("/project/work/add")
+    public BaseResponse projectWorkAdd(HttpServletRequest request, @RequestBody @Validated ProjectWorkVO projectWorkVO, @NotNull BindingResult bindingResult) {
+        log.info("请求接口[POST]: /project/work/add");
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        return projectService.projecWorktAdd(request, projectWorkVO);
+    }
+
 
     /**
      * 用户获取所分到的项目模块

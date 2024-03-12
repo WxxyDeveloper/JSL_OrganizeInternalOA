@@ -6,11 +6,10 @@ import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
+import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
-import com.jsl.oa.model.voData.ProjectCuttingAddVO;
-import com.jsl.oa.model.voData.ProjectCuttingEditVO;
-import com.jsl.oa.model.voData.ProjectInfoVO;
+import com.jsl.oa.model.voData.*;
 import com.jsl.oa.model.voData.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
 import com.jsl.oa.utils.BaseResponse;
@@ -21,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
@@ -33,10 +31,10 @@ import java.util.List;
  * <hr/>
  * 用于项目服务层的实现类
  *
- * @since v1.1.0
+ * @author xiao_lfeng | 176yunxuan | xiangZr-hhh
  * @version v1.1.0
  * @see com.jsl.oa.services.ProjectService
- * @author xiao_lfeng | 176yunxuan | xiangZr-hhh
+ * @since v1.1.0
  */
 @Slf4j
 @Service
@@ -51,22 +49,56 @@ public class ProjectServiceImpl implements ProjectService {
     @CheckUserHasPermission("project.add")
     public BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd) {
         log.info("\t> 执行 Service 层 ProjectService.projectAdd 方法");
-            projectDAO.projectAdd(projectAdd);
-            return ResultUtil.success("添加成功");
-
+        projectDAO.projectAdd(projectAdd);
+        return ResultUtil.success("添加成功");
     }
 
     @Override
-    @CheckUserHasPermission("project.edit")
-    public BaseResponse projectEdit(HttpServletRequest request, @NotNull ProjectInfoVO projectEdit) {
+    public BaseResponse projecWorktAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO) {
+        log.info("\t> 执行 Service 层 ProjectService.projectWorkAdd 方法");
+        projectDAO.projectWorkAdd(projectWorkVO);
+        return ResultUtil.success("添加成功");
+    }
+
+    @Override
+    public BaseResponse tget(Integer id, List<String> tags, Integer isFinish) {
+        log.info("\t> 执行 Service 层 ProjectService.tget 方法");
+
+        //根据状态查询
+        if(isFinish != null){
+            List<ProjectDO> projectDOList = projectDAO.tget(id,tags,isFinish);
+            return ResultUtil.success(projectDOList);
+        }
+        //根据标签查询
+        if(tags != null && !tags.isEmpty()){
+            List<ProjectDO> projectDOList = projectDAO.tget(id,tags,isFinish);
+            return ResultUtil.success(projectDOList);
+        }
+
+        List<ProjectDO> projectDOList = projectDAO.tget(id,tags,isFinish);
+        return ResultUtil.success(projectDOList);
+    }
+
+    @Override
+    public BaseResponse projectEdit(HttpServletRequest request, @NotNull ProjectEditVO projectEdit, Long projectId) {
         log.info("\t> 执行 Service 层 ProjectService.projectEdit 方法");
-            //判断项目是否存在
-            if (projectDAO.isExistProject(projectEdit.getId())) {
-                projectDAO.projectEdit(projectEdit);
-                return ResultUtil.success("修改成功");
-            } else {
-                return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
-            }
+
+
+
+        //判断用户是否为老师 或者 项目负责人
+        if (!Processing.checkUserIsTeacher(request, roleMapper) ||
+                !projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), projectId)) {
+            return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+        }
+
+        //判断项目是否存在
+        if (projectDAO.isExistProject(projectId)) {
+            //更新数据
+            return ResultUtil.success(projectDAO.projectEdit(projectEdit,projectId));
+        } else {
+            return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
+        }
+
     }
 
     @Override
@@ -85,12 +117,12 @@ public class ProjectServiceImpl implements ProjectService {
     @CheckUserHasPermission("project.cutting.user.add")
     public BaseResponse projectAddUserForCutting(HttpServletRequest request, Long uid, Long pid) {
         log.info("\t> 执行 Service 层 ProjectService.projectAddUserForCutting 方法");
-            if (userDAO.isExistUser(uid)) {
-                projectDAO.projectAddUserForCutting(uid, pid);
-                return ResultUtil.success();
-            } else {
-                return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
-            }
+        if (userDAO.isExistUser(uid)) {
+            projectDAO.projectAddUserForCutting(uid, pid);
+            return ResultUtil.success();
+        } else {
+            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+        }
     }
 
     @Override
@@ -186,29 +218,60 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public BaseResponse get(Integer listAll, HttpServletRequest request, List<String> tags, Integer isFinish) {
         log.info("\t> 执行 Service 层 ProjectService.get 方法");
+
         //获取用户
-        Long userId= Processing.getAuthHeaderToUserId(request);
+        Long userId = Processing.getAuthHeaderToUserId(request);
         //根据状态查询
-        if(isFinish != null){
-            List<ProjectDO> projectDOList = projectDAO.get(userId,listAll,tags,isFinish);
+        if (isFinish != null) {
+            List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
             return ResultUtil.success(projectDOList);
         }
         //根据标签查询
-        if(tags != null && !tags.isEmpty()){
-            List<ProjectDO> projectDOList = projectDAO.get(userId,listAll,tags,isFinish);
+        if (tags != null && !tags.isEmpty()) {
+            List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
             return ResultUtil.success(projectDOList);
         }
 
         //判断是否是老师(项目负责人)
-        if(listAll != null && Processing.checkUserIsTeacher(request,roleMapper)){
-            List<ProjectDO> projectDOList = projectDAO.get(userId,listAll,tags,isFinish);
+        if (listAll != null && Processing.checkUserIsTeacher(request, roleMapper)) {
+            List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
             return ResultUtil.success(projectDOList);
-        }else {
-            List<ProjectDO> projectDOList = projectDAO.get(userId,0,tags,isFinish);
+        } else {
+            listAll = 0;
+            List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
             return ResultUtil.success(projectDOList);
         }
 
     }
+
+    @Override
+    public BaseResponse workget(Integer listAll, HttpServletRequest request, List<String> tags, Integer isFinish) {
+        log.info("\t> 执行 Service 层 ProjectService.workget 方法");
+
+        //获取用户
+        Long userId = Processing.getAuthHeaderToUserId(request);
+        //根据状态查询
+        if (isFinish != null) {
+            List<ProjectWorkDO> projectWorkDOList = projectDAO.workget(userId, listAll, tags, isFinish);
+            return ResultUtil.success(projectWorkDOList);
+        }
+        //根据标签查询
+        if (tags != null && !tags.isEmpty()) {
+            List<ProjectWorkDO> projectWorkDOList = projectDAO.workget(userId, listAll, tags, isFinish);
+            return ResultUtil.success(projectWorkDOList);
+        }
+
+        //判断是否是老师(项目负责人)
+        if (listAll != null && Processing.checkUserIsTeacher(request, roleMapper)) {
+            List<ProjectWorkDO> projectWorkDOList = projectDAO.workget(userId, listAll, tags, isFinish);
+            return ResultUtil.success(projectWorkDOList);
+        } else {
+            listAll = 0;
+            List<ProjectWorkDO> projectWorkDOList = projectDAO.workget(userId, listAll, tags, isFinish);
+            return ResultUtil.success(projectWorkDOList);
+        }
+    }
+
 
     @Override
     public BaseResponse getByName(String name) {
@@ -221,65 +284,72 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    @CheckUserHasPermission("project.delete")
     public BaseResponse projectDelete(HttpServletRequest request, Long id) {
         log.info("\t> 执行 Service 层 ProjectService.projectDelete 方法");
-            if (!projectDAO.projectDelete(id)) {
-                return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
-            } else {
-                return ResultUtil.success();
-            }
+
+        //判断用户是否为老师 或者 项目负责人 或管理员
+        if (!Processing.checkUserIsTeacher(request, roleMapper) &&
+                !projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), id)
+        && !Processing.checkUserIsAdmin(request, roleMapper)) {
+            return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+        }
+
+        if (!projectDAO.projectDelete(id)) {
+            return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
+        } else {
+            return ResultUtil.success();
+        }
     }
 
     @Override
     @CheckUserHasPermission("project.cutting.add")
     public BaseResponse addProjectCutting(HttpServletRequest request, ProjectCuttingAddVO projectCuttingAddVO) {
         log.info("\t> 执行 Service 层 ProjectService.projectCuttingAdd方法");
-            //赋值数据
-            ProjectCuttingDO projectCuttingDO = new ProjectCuttingDO();
-            Processing.copyProperties(projectCuttingAddVO, projectCuttingDO);
-            //根据pid检测项目是否存在
-            if (!projectDAO.isExistProjectById(projectCuttingAddVO.getPid())) {
-                return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
-            }
-            //向数据库添加数据
-            projectDAO.projectCuttingAdd(projectCuttingDO);
-            return ResultUtil.success();
+        //赋值数据
+        ProjectCuttingDO projectCuttingDO = new ProjectCuttingDO();
+        Processing.copyProperties(projectCuttingAddVO, projectCuttingDO);
+        //根据pid检测项目是否存在
+        if (!projectDAO.isExistProjectById(projectCuttingAddVO.getPid())) {
+            return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
+        }
+        //向数据库添加数据
+        projectDAO.projectCuttingAdd(projectCuttingDO);
+        return ResultUtil.success();
     }
 
     @Override
     @CheckUserHasPermission("project.cutting.edit")
     public BaseResponse editProjectCutting(HttpServletRequest request, ProjectCuttingEditVO projectCuttingEditVO) {
         log.info("\t> 执行 Service 层 ProjectService.projectCuttingEdit方法");
-            //赋值数据
-            ProjectCuttingDO projectCuttingDO = new ProjectCuttingDO();
-            Processing.copyProperties(projectCuttingEditVO, projectCuttingDO);
-            //根据id检测项目模块是否存在
-            if (!projectDAO.isExistProjectCutting(projectCuttingEditVO.getId())) {
-                return ResultUtil.error(ErrorCode.PROJECT_CUTTING_NOT_EXIST);
-            }
-            //向数据库添加数据
-            projectDAO.updateProjectCutting(projectCuttingDO);
-            return ResultUtil.success();
+        //赋值数据
+        ProjectCuttingDO projectCuttingDO = new ProjectCuttingDO();
+        Processing.copyProperties(projectCuttingEditVO, projectCuttingDO);
+        //根据id检测项目模块是否存在
+        if (!projectDAO.isExistProjectCutting(projectCuttingEditVO.getId())) {
+            return ResultUtil.error(ErrorCode.PROJECT_CUTTING_NOT_EXIST);
+        }
+        //向数据库添加数据
+        projectDAO.updateProjectCutting(projectCuttingDO);
+        return ResultUtil.success();
     }
 
     @Override
     @CheckUserHasPermission("project.cutting.delete")
     public BaseResponse projectToOtherUserForCutting(HttpServletRequest request, Long oldUid, Long pid, Long newUid) {
         log.info("\t> 执行 Service 层 ProjectService.projectToOtherUserForCutting方法");
-            //检测新旧用户是否存在
-            if (!userDAO.isExistUser(oldUid) || !userDAO.isExistUser(newUid)) {
-                return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
-            }
-            //用户项目表是否含有对应记录
-            if (!projectDAO.isExistProjectUser(pid, oldUid)) {
-                return ResultUtil.error(ErrorCode.PROJECT_USER_NOT_EXIST);
-            }
-            //更新数据
-            if (!projectDAO.updateUserForProjectUserByPidAndUid(pid, oldUid, newUid)) {
-                return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
-            }
-            return ResultUtil.success();
+        //检测新旧用户是否存在
+        if (!userDAO.isExistUser(oldUid) || !userDAO.isExistUser(newUid)) {
+            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+        }
+        //用户项目表是否含有对应记录
+        if (!projectDAO.isExistProjectUser(pid, oldUid)) {
+            return ResultUtil.error(ErrorCode.PROJECT_USER_NOT_EXIST);
+        }
+        //更新数据
+        if (!projectDAO.updateUserForProjectUserByPidAndUid(pid, oldUid, newUid)) {
+            return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
+        }
+        return ResultUtil.success();
     }
 
 

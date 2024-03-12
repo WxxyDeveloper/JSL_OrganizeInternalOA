@@ -13,8 +13,8 @@
             <if test="description != null and description != ''">
                 description = #{description},
             </if>
-            <if test="principal_id != null and principal_id != ''">
-                principal_id = #{principal_id},
+            <if test="principalId != null and principalId != ''">
+                principal_id = #{principalId},
             </if>
             <if test="tags != null and tags != ''">
                 tags = #{tags},
@@ -25,11 +25,11 @@
             <if test="file != null and file != ''">
                 file = #{file},
             </if>
-            <if test="begin_time != null and begin_time != ''">
-                begin_time = #{begin_time},
+            <if test="beginTime != null and beginTime != ''">
+                begin_time = #{beginTime},
             </if>
-            <if test="complete_time != null and complete_time != ''">
-                complete_time = #{complete_time},
+            <if test="completeTime != null and completeTime != ''">
+                complete_time = #{completeTime},
             </if>
             <if test="deadline != null and deadline != ''">
                 deadline = #{deadline},
@@ -37,21 +37,43 @@
             <if test="status != null and status != ''">
                 status = #{status},
             </if>
-            <if test="is_finish != null and is_finish != ''">
-                is_finish = #{is_finish},
+            <if test="isFinish != null and isFinish != ''">
+                is_finish = #{isFinish},
             </if>
-            <if test="is_delete != null and is_delete != ''">
-                is_delete = #{is_delete},
+            <if test="isDelete != null and isDelete != ''">
+                is_delete = #{isDelete},
             </if>
         </set>
         where id = #{id}
     </update>
 
     <select id="getByTags" resultType="com.jsl.oa.model.doData.ProjectDO">
-        select * from organize_oa.oa_project where
-        <foreach collection="tags" item="tag" separator=",'%') and json_extract(tags,'$.tags')like concat('%',"
-                 open="json_extract(tags,'$.tags')like concat('%',"
-                 close=",'%') and is_delete=false">
+        select * from organize_oa.oa_project where is_delete=false and principal_id=#{userId} and json_extract(tags,'$.tags') like concat
+        <foreach collection="tags" item="tag" separator=",'%') or json_extract(tags,'$.tags') like concat('%',"
+                 open="('%," close=",'%')">
+            #{tag}
+        </foreach>
+    </select>
+
+    <select id="workgetByTags" resultType="com.jsl.oa.model.doData.ProjectWorkDO">
+        select * from organize_oa.oa_project_work where is_delete=false and principal_id=#{userId} and json_extract(tags,'$.tags') like concat
+        <foreach collection="tags" item="tag" separator=",'%') or json_extract(tags,'$.tags') like concat('%',"
+                 open="('%'," close=",'%')">
+            #{tag}
+        </foreach>
+    </select>
+
+    <select id="tget" resultType="com.jsl.oa.model.doData.ProjectDO">
+        select * from organize_oa.oa_project where is_delete=false
+        <if test="id != null">
+            and id=#{id}
+        </if>
+    </select>
+
+    <select id="tgetByTags" resultType="com.jsl.oa.model.doData.ProjectDO">
+        select * from organize_oa.oa_project where is_delete=false and json_extract(tags,'$.tags') like concat
+        <foreach collection="tags" item="tag" separator=",'%') or json_extract(tags,'$.tags') like concat('%',"
+                 open="('%'," close=",'%')">
             #{tag}
         </foreach>
     </select>

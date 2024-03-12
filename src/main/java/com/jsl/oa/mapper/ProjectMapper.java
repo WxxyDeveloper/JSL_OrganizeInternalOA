@@ -3,9 +3,10 @@ package com.jsl.oa.mapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.ProjectUserDO;
+import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
+import com.jsl.oa.model.voData.ProjectWorkVO;
 import org.apache.ibatis.annotations.*;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,8 +20,13 @@ public interface ProjectMapper {
             ",#{completeTime},#{deadline},#{status},#{isFinish})")
     void projectAdd(ProjectInfoVO projectAdd);
 
+    @Insert("insert into organize_oa.oa_project_work (project_id, pid, name, principal_id," +
+            " work_load, description, cycle, complete_time, type, is_finish,status) " +
+            "value (#{projectId},#{pid},#{name},#{principalId},#{workLoad}," +
+            "#{description},#{cycle},#{completeTime},#{type},#{isFinish},#{status})")
+    void projectWorkAdd(ProjectWorkVO projectWorkVO);
 
-    void projectEdit(ProjectInfoVO projectEdit);
+    void projectEdit(ProjectDO projectEdit);
 
     @Select("select * from organize_oa.oa_project where id=#{id}")
     ProjectDO getProjectById(Long id);
@@ -43,21 +49,21 @@ public interface ProjectMapper {
 
     //@Select("select * from organize_oa.oa_project where json_extract(tags,'$.tags')" +
             //"like concat('%',#{tags},'%')")
-    @Select("select * from organize_oa.oa_project where is_finish=#{isFinish} and is_delete=false")
-    List<ProjectDO>getByIsfinish(Integer isFinish);
+    @Select("select * from organize_oa.oa_project where is_finish=#{isFinish} and is_delete=false and principal_id=#{userId}")
+    List<ProjectDO>getByIsfinish(Long userId,Integer isFinish);
 
-    List<ProjectDO>getByTags(List<String> tags);
+    List<ProjectDO>getByTags(Long userId,List<String> tags);
 
-    @Select("select * from organize_oa.oa_project where is_delete=false and status =1")
+    @Select("select * from organize_oa.oa_project where is_delete=false and status=1 and principal_id=#{userId}")
     List<ProjectDO> get(Long userId);
 
-    @Select("select * from organize_oa.oa_project where status =1 and status=1")
+    @Select("select * from organize_oa.oa_project where status =1 and is_delete =true and principal_id=#{userId}")
     List<ProjectDO> get1(Long userId);
 
     @Select("select * from organize_oa.oa_project where name=#{name}")
     ProjectDO getByName(String name);
 
-    @Delete("DELETE FROM organize_oa.oa_project where id=#{id}")
+    @Update("UPDATE organize_oa.oa_project SET is_delete = 1 where id=#{id}")
     boolean deleteProject(Long id);
 
     @Insert("INSERT INTO organize_oa.oa_project_cutting (pid, name, tag, real_time) " +
@@ -77,4 +83,24 @@ public interface ProjectMapper {
 
     @Update("UPDATE organize_oa.oa_project_user SET uid = #{uid} , updated_at = CURRENT_TIMESTAMP WHERE id = #{id}")
     boolean updateUserForProjectUser(Long uid, Long id);
+
+    @Select("select * from organize_oa.oa_project_work where is_finish=#{isFinish} and is_delete=false and principal_id =#{userId}")
+    List<ProjectWorkDO> workgetByIsfinish(Long userId, Integer isFinish);
+
+    List<ProjectWorkDO> workgetByTags(Long userId, List<String> tags);
+
+    @Select("select * from organize_oa.oa_project_work where is_delete=false and status =1 and principal_id=#{userId}")
+    List<ProjectWorkDO> workget(Long userId);
+
+    @Select("select * from organize_oa.oa_project_work where is_delete =true and status=1 and principal_id=#{userId}")
+    List<ProjectWorkDO> workget1(Long userId);
+
+    //@Select("select * from organize_oa.oa_project where is_delete=false and status=1")
+    List<ProjectDO> tget(Integer id);
+
+    @Select("select * from organize_oa.oa_project where is_finish=#{isFinish} and is_delete=false")
+    List<ProjectDO> tgetByIsfinish(Integer isFinish);
+
+
+    List<ProjectDO> tgetByTags(List<String> tags);
 }
