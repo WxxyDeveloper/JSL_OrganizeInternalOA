@@ -65,9 +65,21 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse tget(Integer id) {
+    public BaseResponse tget(Integer id, List<String> tags, Integer isFinish) {
         log.info("\t> 执行 Service 层 ProjectService.tget 方法");
-        List<ProjectDO> projectDOList = projectDAO.tget(id);
+
+        //根据状态查询
+        if(isFinish != null){
+            List<ProjectDO> projectDOList = projectDAO.tget(id,tags,isFinish);
+            return ResultUtil.success(projectDOList);
+        }
+        //根据标签查询
+        if(tags != null && !tags.isEmpty()){
+            List<ProjectDO> projectDOList = projectDAO.tget(id,tags,isFinish);
+            return ResultUtil.success(projectDOList);
+        }
+
+        List<ProjectDO> projectDOList = projectDAO.tget(id,tags,isFinish);
         return ResultUtil.success(projectDOList);
     }
 

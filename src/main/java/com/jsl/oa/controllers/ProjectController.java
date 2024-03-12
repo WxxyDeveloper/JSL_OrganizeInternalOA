@@ -46,9 +46,11 @@ public class ProjectController {
      * @return
      */
     @GetMapping("/project/get/custom")
-    public BaseResponse projectGetCustom(@RequestParam(required = false) Integer id){
+    public BaseResponse projectGetCustom(@RequestParam(required = false) Integer id,
+                                         @RequestParam(required = false) List<String> tags,
+                                         @RequestParam(required = false) Integer isFinish){
         log.info("请求接口[GET]: /project/all/get");
-        return projectService.tget(id);
+        return projectService.tget(id,tags,isFinish);
     }
 
 

@@ -98,4 +98,10 @@ public interface ProjectMapper {
 
     //@Select("select * from organize_oa.oa_project where is_delete=false and status=1")
     List<ProjectDO> tget(Integer id);
+
+    @Select("select * from organize_oa.oa_project where is_finish=#{isFinish} and is_delete=false")
+    List<ProjectDO> tgetByIsfinish(Integer isFinish);
+
+
+    List<ProjectDO> tgetByTags(List<String> tags);
 }
