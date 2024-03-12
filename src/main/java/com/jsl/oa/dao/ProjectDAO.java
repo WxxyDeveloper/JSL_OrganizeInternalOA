@@ -212,7 +212,7 @@ public class ProjectDAO {
     }
 
 
-    public List<ProjectDO> tget(Integer id, List<String> tags, Integer isFinish) {
+    public List<ProjectDO> tget(Integer id) {
         log.info("DAO层");
         return projectMapper.tget(id);
     }
