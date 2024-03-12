@@ -7,8 +7,10 @@ import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.ProjectUserDO;
 import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
+import com.jsl.oa.model.voData.ProjectEditVO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import com.jsl.oa.model.voData.ProjectWorkVO;
+import com.jsl.oa.utils.Processing;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -39,10 +41,14 @@ public class ProjectDAO {
         projectMapper.projectWorkAdd(projectWorkVO);
     }
 
-    public void projectEdit(ProjectInfoVO projectEdit) {
+    public ProjectDO projectEdit(@NotNull ProjectEditVO projectEdit, Long projectId) {
         log.info("\t> 执行 DAO 层 ProjectDAO.projectEdit 方法");
+        log.info("\t\t> 从 MySQL 更新数据");
+        ProjectDO projectDO = new ProjectDO();
+        Processing.copyProperties(projectEdit,projectDO);
+        projectMapper.projectEdit(projectDO);
         log.info("\t\t> 从 MySQL 获取数据");
-        projectMapper.projectEdit(projectEdit);
+        return projectMapper.getProjectById(projectId);
     }
 
     public boolean isExistProject(Long id) {
@@ -197,15 +203,19 @@ public class ProjectDAO {
         return projectMapper.updateUserForProjectUser(newUid,projectUserDO.getId());
     }
 
+    public boolean isPrincipalUser(Long uid,Long projectId){
+        log.info("\t> 执行 DAO 层 ProjectDAO.isPrincipalUser 方法");
+        log.info("\t\t> 从 MySQL 获取数据");
+        ProjectDO projectDO = projectMapper.getProjectById(projectId);
+        if(uid == projectDO.getPrincipalId()){
+            return true;
+        }
+        return false;
+    }
 
-    public List<ProjectDO> tget(Integer id, List<String> tags, Integer isFinish) {
+
+    public List<ProjectDO> tget(Integer id) {
         log.info("DAO层");
-        if(isFinish != null){
-            return projectMapper.tgetByIsfinish(isFinish);
-        }
-        if(tags != null && !tags.isEmpty()){
-            return projectMapper.tgetByTags(tags);
-        }
         return projectMapper.tget(id);
     }
 }

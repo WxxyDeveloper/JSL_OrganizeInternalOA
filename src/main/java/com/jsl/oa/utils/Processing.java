@@ -193,6 +193,7 @@ public class Processing {
         }
     }
 
+
     private static char getCharFromIndex(int index) {
         // 生成字符集合，可以根据需要自定义
         String charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

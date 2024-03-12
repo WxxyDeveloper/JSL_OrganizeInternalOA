@@ -1,9 +1,6 @@
 package com.jsl.oa.controllers;
 
-import com.jsl.oa.model.voData.ProjectCuttingAddVO;
-import com.jsl.oa.model.voData.ProjectCuttingEditVO;
-import com.jsl.oa.model.voData.ProjectInfoVO;
-import com.jsl.oa.model.voData.ProjectWorkVO;
+import com.jsl.oa.model.voData.*;
 import com.jsl.oa.model.voData.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
 import com.jsl.oa.utils.BaseResponse;
@@ -18,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -170,6 +166,26 @@ public class ProjectController {
         return projectService.projectAdd(request, projectAdd);
     }
 
+
+    /**
+     * @Description: 项目的修改
+     * @Date: 2024/3/10
+     * @Param request:
+ * @Param projectEdit:
+ * @Param bindingResult:
+ * @Param projectId:
+     **/
+    @PutMapping("/project/edit/{projectId}")
+    public BaseResponse projectEditById(HttpServletRequest request, @RequestBody @Validated ProjectEditVO projectEdit, @NotNull BindingResult bindingResult, @PathVariable("projectId") Long projectId) {
+        log.info("请求接口[PUT]: /project/edit/{projectId}");
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        return projectService.projectEdit(request, projectEdit,projectId);
+    }
+
+
     /**
      * 子系统子模块的增加
      * @param request
@@ -186,22 +202,6 @@ public class ProjectController {
         return projectService.projecWorktAdd(request, projectWorkVO);
     }
 
-    /**
-     * 项目表进行，项目的修改
-     *
-     * @param projectEdit
-     * @param bindingResult
-     * @return
-     */
-    @PutMapping("/project/edit")
-    public BaseResponse projectEdit(HttpServletRequest request, @RequestBody @Validated ProjectInfoVO projectEdit, @NotNull BindingResult bindingResult) {
-        log.info("请求接口[PUT]: /project/edit");
-        // 判断是否有参数错误
-        if (bindingResult.hasErrors()) {
-            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
-        }
-        return projectService.projectEdit(request, projectEdit);
-    }
 
     /**
      * 用户获取所分到的项目模块

@@ -7,7 +7,6 @@ import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import com.jsl.oa.model.voData.ProjectWorkVO;
 import org.apache.ibatis.annotations.*;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public interface ProjectMapper {
             "#{description},#{cycle},#{completeTime},#{type},#{isFinish},#{status})")
     void projectWorkAdd(ProjectWorkVO projectWorkVO);
 
-    void projectEdit(ProjectInfoVO projectEdit);
+    void projectEdit(ProjectDO projectEdit);
 
     @Select("select * from organize_oa.oa_project where id=#{id}")
     ProjectDO getProjectById(Long id);
@@ -64,7 +63,7 @@ public interface ProjectMapper {
     @Select("select * from organize_oa.oa_project where name=#{name}")
     ProjectDO getByName(String name);
 
-    @Delete("DELETE FROM organize_oa.oa_project where id=#{id}")
+    @Update("UPDATE organize_oa.oa_project SET is_delete = 1 where id=#{id}")
     boolean deleteProject(Long id);
 
     @Insert("INSERT INTO organize_oa.oa_project_cutting (pid, name, tag, real_time) " +
