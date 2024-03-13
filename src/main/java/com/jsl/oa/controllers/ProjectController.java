@@ -42,9 +42,11 @@ public class ProjectController {
      * @return
      */
     @GetMapping("/project/get/custom")
-    public BaseResponse projectGetCustom(@RequestParam(required = false) Integer id){
+    public BaseResponse projectGetCustom(@RequestParam(required = false) Integer id,
+                                         @RequestParam(required = false) List<String> tags,
+                                         @RequestParam(required = false) List<Integer> isFinish){
         log.info("请求接口[GET]: /project/all/get");
-        return projectService.tget(id);
+        return projectService.tget(id,tags,isFinish);
     }
 
 
@@ -56,7 +58,7 @@ public class ProjectController {
     @GetMapping("/project/get")
     public BaseResponse projectGet(@RequestParam(required = false) Integer listAll,
                                    @RequestParam(required = false) List<String> tags,
-                                   @RequestParam(required = false) Integer isFinish,
+                                   @RequestParam(required = false) List<Integer> isFinish,
                                    HttpServletRequest request) {
         log.info("请求接口[GET]: /project/get");
         return projectService.get(listAll,request,tags,isFinish);
@@ -70,7 +72,7 @@ public class ProjectController {
     @GetMapping("/project/work/get")
     public BaseResponse projectWorkGet(@RequestParam(required = false) Integer listAll,
                                    @RequestParam(required = false) List<String> tags,
-                                   @RequestParam(required = false) Integer isFinish,
+                                   @RequestParam(required = false) List<Integer> isFinish,
                                    HttpServletRequest request) {
         log.info("请求接口[GET]: /project/work/get");
         return projectService.workget(listAll, request, tags, isFinish);

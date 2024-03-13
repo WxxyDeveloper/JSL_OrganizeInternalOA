@@ -49,15 +49,16 @@ public interface ProjectMapper {
 
     //@Select("select * from organize_oa.oa_project where json_extract(tags,'$.tags')" +
             //"like concat('%',#{tags},'%')")
-    @Select("select * from organize_oa.oa_project where is_finish=#{isFinish} and is_delete=false and principal_id=#{userId}")
-    List<ProjectDO>getByIsfinish(Long userId,Integer isFinish);
+    //todo
+    //@Select("select * from organize_oa.oa_project where is_finish=#{isFinish} and is_delete=false and principal_id=#{userId}")
+    List<ProjectDO>getByIsfinish(Long userId,List<Integer> isFinish);
 
     List<ProjectDO>getByTags(Long userId,List<String> tags);
 
     @Select("select * from organize_oa.oa_project where is_delete=false and status=1 and principal_id=#{userId}")
     List<ProjectDO> get(Long userId);
 
-    @Select("select * from organize_oa.oa_project where status =1 and is_delete =true and principal_id=#{userId}")
+    @Select("select * from organize_oa.oa_project where status =1 and principal_id=#{userId}")
     List<ProjectDO> get1(Long userId);
 
     @Select("select * from organize_oa.oa_project where name=#{name}")
@@ -84,17 +85,22 @@ public interface ProjectMapper {
     @Update("UPDATE organize_oa.oa_project_user SET uid = #{uid} , updated_at = CURRENT_TIMESTAMP WHERE id = #{id}")
     boolean updateUserForProjectUser(Long uid, Long id);
 
-    @Select("select * from organize_oa.oa_project_work where is_finish=#{isFinish} and is_delete=false and principal_id =#{userId}")
-    List<ProjectWorkDO> workgetByIsfinish(Long userId, Integer isFinish);
+    //todo
+    //@Select("select * from organize_oa.oa_project_work where is_finish=#{isFinish} and is_delete=false and principal_id =#{userId}")
+    List<ProjectWorkDO> workgetByIsfinish(Long userId, List<Integer> isFinish);
 
     List<ProjectWorkDO> workgetByTags(Long userId, List<String> tags);
 
     @Select("select * from organize_oa.oa_project_work where is_delete=false and status =1 and principal_id=#{userId}")
     List<ProjectWorkDO> workget(Long userId);
 
-    @Select("select * from organize_oa.oa_project_work where is_delete =true and status=1 and principal_id=#{userId}")
+    @Select("select * from organize_oa.oa_project_work where status=1 and principal_id=#{userId}")
     List<ProjectWorkDO> workget1(Long userId);
 
-    //@Select("select * from organize_oa.oa_project where is_delete=false and status=1")
+
     List<ProjectDO> tget(Integer id);
+
+    List<ProjectDO> tgetByIsfinish(List<Integer> isFinish);
+
+    List<ProjectDO> tgetBytags(List<String> tags);
 }

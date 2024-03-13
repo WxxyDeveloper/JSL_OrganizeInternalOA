@@ -61,9 +61,20 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse tget(Integer id) {
+    public BaseResponse tget(Integer id, List<String> tags, List<Integer> isFinish) {
         log.info("\t> 执行 Service 层 ProjectService.tget 方法");
-        List<ProjectDO> projectDOList = projectDAO.tget(id);
+        //根据状态查询
+        if (isFinish != null && !isFinish.isEmpty()) {
+            List<ProjectDO> projectDOList = projectDAO.tget(id,isFinish,tags);
+            return ResultUtil.success(projectDOList);
+        }
+        //根据标签查询
+        if (tags != null && !tags.isEmpty()) {
+            List<ProjectDO> projectDOList = projectDAO.tget(id,isFinish,tags);
+            return ResultUtil.success(projectDOList);
+        }
+
+        List<ProjectDO> projectDOList = projectDAO.tget(id,isFinish,tags);
         return ResultUtil.success(projectDOList);
     }
 
@@ -203,13 +214,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse get(Integer listAll, HttpServletRequest request, List<String> tags, Integer isFinish) {
+    public BaseResponse get(Integer listAll, HttpServletRequest request, List<String> tags, List<Integer> isFinish) {
         log.info("\t> 执行 Service 层 ProjectService.get 方法");
 
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
         //根据状态查询
-        if (isFinish != null) {
+        if (isFinish != null && !isFinish.isEmpty()) {
             List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
             return ResultUtil.success(projectDOList);
         }
@@ -232,13 +243,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse workget(Integer listAll, HttpServletRequest request, List<String> tags, Integer isFinish) {
+    public BaseResponse workget(Integer listAll, HttpServletRequest request, List<String> tags, List<Integer> isFinish) {
         log.info("\t> 执行 Service 层 ProjectService.workget 方法");
 
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
         //根据状态查询
-        if (isFinish != null) {
+        if (isFinish != null && !isFinish.isEmpty()) {
             List<ProjectWorkDO> projectWorkDOList = projectDAO.workget(userId, listAll, tags, isFinish);
             return ResultUtil.success(projectWorkDOList);
         }
