@@ -49,7 +49,7 @@ public interface ProjectMapper {
 
     //@Select("select * from organize_oa.oa_project where json_extract(tags,'$.tags')" +
             //"like concat('%',#{tags},'%')")
-    //todo
+
     //@Select("select * from organize_oa.oa_project where is_finish=#{isFinish} and is_delete=false and principal_id=#{userId}")
     List<ProjectDO>getByIsfinish(Long userId,List<Integer> isFinish);
 
@@ -85,7 +85,7 @@ public interface ProjectMapper {
     @Update("UPDATE organize_oa.oa_project_user SET uid = #{uid} , updated_at = CURRENT_TIMESTAMP WHERE id = #{id}")
     boolean updateUserForProjectUser(Long uid, Long id);
 
-    //todo
+
     //@Select("select * from organize_oa.oa_project_work where is_finish=#{isFinish} and is_delete=false and principal_id =#{userId}")
     List<ProjectWorkDO> workgetByIsfinish(Long userId, List<Integer> isFinish);
 
