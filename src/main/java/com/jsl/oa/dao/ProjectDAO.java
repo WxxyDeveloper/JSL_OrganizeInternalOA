@@ -119,10 +119,10 @@ public class ProjectDAO {
         return projectMapper.setProjectShow(setProjectShow);
     }
 
-    public List<ProjectDO> get(Long userId,Integer listAll,List<String> tags,Integer isFinish) {
+    public List<ProjectDO> get(Long userId,Integer listAll,List<String> tags,List<Integer> isFinish) {
         log.info("\t> 执行 DAO 层 ProjectDAO.get 方法");
         log.info("\t\t> 从 MySQL 获取数据");
-        if(isFinish != null){
+        if(isFinish != null && !isFinish.isEmpty()){
             return projectMapper.getByIsfinish(userId,isFinish);
         }
         if(tags != null && !tags.isEmpty()){
@@ -135,10 +135,10 @@ public class ProjectDAO {
         }
     }
 
-    public List<ProjectWorkDO> workget(Long userId, Integer listAll, List<String> tags, Integer isFinish) {
+    public List<ProjectWorkDO> workget(Long userId, Integer listAll, List<String> tags, List<Integer> isFinish) {
         log.info("\t> 执行 DAO 层 ProjectDAO.workget 方法");
         log.info("\t\t> 从 MySQL 获取数据");
-        if(isFinish != null){
+        if(isFinish != null && !isFinish.isEmpty()){
             return projectMapper.workgetByIsfinish(userId,isFinish);
         }
         if(tags != null && !tags.isEmpty()){
@@ -212,8 +212,14 @@ public class ProjectDAO {
     }
 
 
-    public List<ProjectDO> tget(Integer id) {
+    public List<ProjectDO> tget(Integer id, List<Integer> isFinish, List<String> tags) {
         log.info("DAO层");
+        if(isFinish != null && !isFinish.isEmpty()){
+            return projectMapper.tgetByIsfinish(isFinish);
+        }
+        if(tags != null && !tags.isEmpty()){
+            return projectMapper.tgetBytags(tags);
+        }
         return projectMapper.tget(id);
     }
 }
