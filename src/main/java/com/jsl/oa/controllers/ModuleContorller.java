@@ -4,9 +4,8 @@ import com.jsl.oa.services.ModuleService;
 import com.jsl.oa.utils.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -41,6 +40,14 @@ public class ModuleContorller {
 
         log.info("SysIdcontorller");
         return moduleService.getBySysId(sysId,request);
+    }
+
+
+
+    @DeleteMapping("/module/delete/{id}")
+    public BaseResponse moudleDeleteById( @PathVariable("id") Long id, HttpServletRequest request){
+        log.info("请求接口[DELETE]: /module/delete/{id}");
+        return moduleService.deleteById(request,id);
     }
 
 }

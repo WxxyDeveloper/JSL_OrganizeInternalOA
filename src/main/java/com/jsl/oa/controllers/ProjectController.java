@@ -176,7 +176,8 @@ public class ProjectController {
  * @Param projectId:
      **/
     @PutMapping("/project/edit/{projectId}")
-    public BaseResponse projectEditById(HttpServletRequest request, @RequestBody @Validated ProjectEditVO projectEdit, @NotNull BindingResult bindingResult, @PathVariable("projectId") Long projectId) {
+    public BaseResponse projectEditById(HttpServletRequest request, @RequestBody @Validated ProjectEditVO projectEdit,
+                                        @NotNull BindingResult bindingResult, @PathVariable("projectId") Long projectId) {
         log.info("请求接口[PUT]: /project/edit/{projectId}");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -289,5 +290,17 @@ public class ProjectController {
         }
         return projectService.projectToOtherUserForCutting(request, oldUid, pid , newUid);
     }
+
+
+    @GetMapping("/project/file")
+    public BaseResponse getProjectFile(HttpServletRequest request, @RequestParam Long projectId){
+        log.info("请求接口[Get]: /project/file");
+        //判断是否有参数错误
+        if(projectId == null){
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR);
+        }
+        return projectService.projectFileGet(request,projectId);
+    }
+
 
 }

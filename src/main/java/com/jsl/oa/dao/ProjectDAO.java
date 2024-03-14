@@ -119,6 +119,13 @@ public class ProjectDAO {
         return projectMapper.setProjectShow(setProjectShow);
     }
 
+
+    public ProjectDO getProjectById(Long id){
+        log.info("\t> 执行 DAO 层 ProjectDAO.getProjectById 方法");
+        log.info("\t\t> 从 MySQL 获取数据");
+        return projectMapper.getProjectById(id);
+    }
+
     public List<ProjectDO> get(Long userId,Integer listAll,List<String> tags,List<Integer> isFinish) {
         log.info("\t> 执行 DAO 层 ProjectDAO.get 方法");
         log.info("\t\t> 从 MySQL 获取数据");
@@ -223,5 +230,6 @@ public class ProjectDAO {
 
         return projectMapper.tget(id);
     }
+
 
 }

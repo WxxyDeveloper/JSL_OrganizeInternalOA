@@ -1,5 +1,9 @@
 package com.jsl.oa.services.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.UserDAO;
@@ -76,6 +80,31 @@ public class ProjectServiceImpl implements ProjectService {
 
         List<ProjectDO> projectDOList = projectDAO.tget(id,isFinish,tags);
         return ResultUtil.success(projectDOList);
+    }
+
+    @Override
+    public BaseResponse projectFileGet(HttpServletRequest request, Long projectId) {
+
+
+//        判断项目是否存在
+        if(!projectDAO.isExistProjectById(projectId)){
+            return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
+        }
+
+        ProjectDO projectDO = projectDAO.getProjectById(projectId);
+
+        if(projectDO.getFile() == null || projectDO.getFile().equals("{}")){
+            return ResultUtil.success(null);
+        }
+
+        // 将文件内容转换为 JSON 数组
+        try {
+            Object fileJson = new ObjectMapper().readValue(projectDO.getFile(), Object.class);
+            return ResultUtil.success(fileJson);
+        } catch (JsonProcessingException e) {
+            return ResultUtil.error(ErrorCode.PROJECT_FILE_JSON_ERROR);
+        }
+
     }
 
     @Override

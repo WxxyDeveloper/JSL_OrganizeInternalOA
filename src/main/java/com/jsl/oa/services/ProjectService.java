@@ -41,4 +41,6 @@ public interface ProjectService {
     BaseResponse projecWorktAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO);
 
     BaseResponse tget(Integer id, List<String> tags, List<Integer> isFinish);
+
+    BaseResponse projectFileGet(HttpServletRequest request, Long projectId);
 }
