@@ -250,23 +250,23 @@ public class ProjectServiceImpl implements ProjectService {
         Long userId = Processing.getAuthHeaderToUserId(request);
         //根据状态查询
         if (isFinish != null && !isFinish.isEmpty()) {
-            List<ProjectWorkDO> projectWorkDOList = projectDAO.workget(userId, listAll, tags, isFinish);
-            return ResultUtil.success(projectWorkDOList);
+            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish);
+            return ResultUtil.success(projectDOList);
         }
         //根据标签查询
         if (tags != null && !tags.isEmpty()) {
-            List<ProjectWorkDO> projectWorkDOList = projectDAO.workget(userId, listAll, tags, isFinish);
-            return ResultUtil.success(projectWorkDOList);
+            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish);
+            return ResultUtil.success(projectDOList);
         }
 
         //判断是否是老师(项目负责人)
         if (listAll != null && Processing.checkUserIsTeacher(request, roleMapper)) {
-            List<ProjectWorkDO> projectWorkDOList = projectDAO.workget(userId, listAll, tags, isFinish);
-            return ResultUtil.success(projectWorkDOList);
+            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish);
+            return ResultUtil.success(projectDOList);
         } else {
             listAll = 0;
-            List<ProjectWorkDO> projectWorkDOList = projectDAO.workget(userId, listAll, tags, isFinish);
-            return ResultUtil.success(projectWorkDOList);
+            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish);
+            return ResultUtil.success(projectDOList);
         }
     }
 

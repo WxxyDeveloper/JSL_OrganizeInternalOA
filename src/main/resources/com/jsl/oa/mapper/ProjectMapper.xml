@@ -63,20 +63,20 @@
         </foreach>
     </select>
 
-    <select id="workgetByTags" resultType="com.jsl.oa.model.doData.ProjectWorkDO">
-        select * from organize_oa.oa_project_work where is_delete=false and principal_id=#{userId} and project_id in(
+    <select id="workgetByTags" resultType="com.jsl.oa.model.doData.ProjectDO">
+        select * from organize_oa.oa_project where id in(select project_id from organize_oa.oa_project_work where is_delete=false and (principal_id=#{userId} or principal_id is null) and project_id in(
             select id from organize_oa.oa_project where
         <foreach collection="tags" item="tag" separator=",'%') or json_extract(tags,'$.tags')like concat('%',"
                  open="json_extract(tags,'$.tags')like concat('%',"
-                 close=",'%'))">
+                 close=",'%')))">
             #{tag}
         </foreach>
 
     </select>
 
-    <select id="workgetByIsfinish" resultType="com.jsl.oa.model.doData.ProjectWorkDO">
-        select * from organize_oa.oa_project_work where is_delete=false and principal_id =#{userId} and is_finish in
-        <foreach collection="isFinish" item="Finish" separator="," open="(" close=")">
+    <select id="workgetByIsfinish" resultType="com.jsl.oa.model.doData.ProjectDO">
+        select * from organize_oa.oa_project where id in(select project_id from organize_oa.oa_project_work where is_delete=false and (principal_id=#{userId} or principal_id is null) and is_finish in
+        <foreach collection="isFinish" item="Finish" separator="," open="(" close="))">
             #{Finish}
         </foreach>
     </select>
