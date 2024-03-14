@@ -50,7 +50,8 @@ public enum ErrorCode {
     DATABASE_DELETE_ERROR("DatabaseDeleteError", 50012, "数据库删除错误"),
     PROJECT_NOT_EXIST("ProjectNotExist", 40016, "项目不存在"),
     PROJECT_CUTTING_NOT_EXIST("ProjectCuttingNotExist", 40017, "项目分割模块不存在"),
-    PROJECT_USER_NOT_EXIST("ProjectUserNotExist", 40018, "用户项目表无对应记录");
+    PROJECT_USER_NOT_EXIST("ProjectUserNotExist", 40018, "用户项目表无对应记录"),
+    PROJECT_FILE_JSON_ERROR("ProjectFileJsonError", 40019, "项目文件json格式错误");
 
 
     private final String output;

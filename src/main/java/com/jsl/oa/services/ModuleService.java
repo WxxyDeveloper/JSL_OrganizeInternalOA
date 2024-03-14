@@ -11,4 +11,6 @@ public interface ModuleService {
     BaseResponse getByProjectId(Integer projectId, HttpServletRequest request);
 
     BaseResponse getBySysId(Integer sysId, HttpServletRequest request);
+
+    BaseResponse deleteById(HttpServletRequest request, Long id);
 }

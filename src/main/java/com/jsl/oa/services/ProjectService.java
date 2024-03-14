@@ -36,9 +36,11 @@ public interface ProjectService {
 
     BaseResponse projectToOtherUserForCutting(HttpServletRequest request, Long oldUid, Long pid, Long newUid);
 
-    BaseResponse workget(Integer listAll, HttpServletRequest request, List<String> tags, List<Integer> isFinish);
+    BaseResponse workget(Integer listAll, HttpServletRequest request, List<String> tags, List<Integer> isFinish, Integer is);
 
     BaseResponse projecWorktAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO);
 
     BaseResponse tget(Integer id, List<String> tags, List<Integer> isFinish);
+
+    BaseResponse projectFileGet(HttpServletRequest request, Long projectId);
 }

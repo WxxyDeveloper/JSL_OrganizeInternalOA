@@ -7,6 +7,7 @@ import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.services.ModuleService;
 import com.jsl.oa.utils.BaseResponse;
+import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.Processing;
 import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
@@ -59,4 +60,31 @@ public class ModuleServiceImpl implements ModuleService {
         List<ProjectWorkDO> projectWorkDOList = moduleMapper.getBySysId(sysId,userId,is);
         return ResultUtil.success(projectWorkDOList);
     }
+
+
+    @Override
+    public BaseResponse deleteById(HttpServletRequest request, Long id) {
+
+//        检测是否为管理员
+        if(!Processing.checkUserIsAdmin(request,roleMapper)){
+            return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+        }
+
+        deleteMoudule(id);
+
+        return ResultUtil.success("删除成功");
+    }
+
+//    删除子模块方法
+    public void deleteMoudule(Long id){
+        //获取所有父Id=id的子模块
+        List<ProjectWorkDO> projectWorkDOS = moduleMapper.getAllMoudleByPid(id);
+
+        for(ProjectWorkDO workDO: projectWorkDOS){
+            deleteMoudule(workDO.getId());
+        }
+
+        moduleMapper.deleteMoudule(id);
+    }
+
 }
