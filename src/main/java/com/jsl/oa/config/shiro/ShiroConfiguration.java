@@ -67,6 +67,7 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/tags/project/list", "anon"); // 信息接口允许匿名访问
         filterChainDefinitionMap.put("/**/**", "authc"); // 其他接口一律拦截(需要Token)
 
+
         return filterChainDefinitionMap;
     }
 }

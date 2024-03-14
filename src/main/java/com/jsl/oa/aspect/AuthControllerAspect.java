@@ -76,7 +76,8 @@ public class AuthControllerAspect {
             "&& !execution(* com.jsl.oa.controllers.CustomController.*(..)) " +
             "&& !execution(* com.jsl.oa.controllers.InfoController.infoGetHeaderImage(..)) " +
             "&& !execution(* com.jsl.oa.controllers.InfoController.infoGetHeaderUser(..))" +
-            "&& !execution(* com.jsl.oa.controllers.ProjectController.projectGetCustom(..))")
+            "&& !execution(* com.jsl.oa.controllers.ProjectController.*(..))" +
+            "&& !execution(* com.jsl.oa.controllers.TagController.*(..))")
     public Object tokenControllerAround(ProceedingJoinPoint pjp) throws Throwable {
         // 获取 HttpServletRequest 对象
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
