@@ -3,7 +3,6 @@ package com.jsl.oa.mapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.ProjectUserDO;
-import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import com.jsl.oa.model.voData.ProjectWorkVO;
 import org.apache.ibatis.annotations.*;
@@ -87,16 +86,16 @@ public interface ProjectMapper {
 
 
     //@Select("select * from organize_oa.oa_project_work where is_finish=#{isFinish} and is_delete=false and principal_id =#{userId}")
-    List<ProjectDO> workgetByIsfinish(Long userId, List<Integer> isFinish);
+    List<ProjectDO> workgetByIsfinish(Long userId, List<Integer> isFinish, Integer is);
 
-    List<ProjectDO> workgetByTags(Long userId, List<String> tags);
+    List<ProjectDO> workgetByTags(Long userId, List<String> tags, Integer is);
 
-    @Select("select * from organize_oa.oa_project where id in(select project_id from " +
-            "organize_oa.oa_project_work where is_delete=false and status =1 and principal_id=#{userId} and type=0)")
-    List<ProjectDO> workget(Long userId);
+    //@Select("select * from organize_oa.oa_project where id in(select project_id from " +
+            //"organize_oa.oa_project_work where is_delete=false and status =1 and principal_id=#{userId} and type=0)")
+    List<ProjectDO> workget(Long userId, Integer is);
 
-    @Select("select * from organize_oa.oa_project_work where status=1 and principal_id=#{userId}")
-    List<ProjectDO> workget1(Long userId);
+    //@Select("select * from organize_oa.oa_project_work where status=1 and principal_id=#{userId}")
+    List<ProjectDO> workget1(Long userId, Integer is);
 
 
     List<ProjectDO> tget(Integer id);

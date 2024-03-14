@@ -2,15 +2,12 @@ package com.jsl.oa.services.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
-import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.*;
@@ -272,29 +269,29 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse workget(Integer listAll, HttpServletRequest request, List<String> tags, List<Integer> isFinish) {
+    public BaseResponse workget(Integer listAll, HttpServletRequest request, List<String> tags, List<Integer> isFinish, Integer is) {
         log.info("\t> 执行 Service 层 ProjectService.workget 方法");
 
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
         //根据状态查询
         if (isFinish != null && !isFinish.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish);
+            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
             return ResultUtil.success(projectDOList);
         }
         //根据标签查询
         if (tags != null && !tags.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish);
+            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
             return ResultUtil.success(projectDOList);
         }
 
         //判断是否是老师(项目负责人)
         if (listAll != null && Processing.checkUserIsTeacher(request, roleMapper)) {
-            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish);
+            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
             return ResultUtil.success(projectDOList);
         } else {
             listAll = 0;
-            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish);
+            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
             return ResultUtil.success(projectDOList);
         }
     }

@@ -73,9 +73,10 @@ public class ProjectController {
     public BaseResponse projectWorkGet(@RequestParam(required = false) Integer listAll,
                                    @RequestParam(required = false) List<String> tags,
                                    @RequestParam(required = false) List<Integer> isFinish,
+                                   @RequestParam(required = false) Integer is,
                                    HttpServletRequest request) {
         log.info("请求接口[GET]: /project/work/get");
-        return projectService.workget(listAll, request, tags, isFinish);
+        return projectService.workget(listAll, request, tags, isFinish,is);
     }
 
     /**

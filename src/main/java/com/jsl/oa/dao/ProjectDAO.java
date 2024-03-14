@@ -5,7 +5,6 @@ import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.ProjectUserDO;
-import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.ProjectEditVO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
@@ -142,19 +141,19 @@ public class ProjectDAO {
         }
     }
 
-    public List<ProjectDO> workget(Long userId, Integer listAll, List<String> tags, List<Integer> isFinish) {
+    public List<ProjectDO> workget(Long userId, Integer listAll, List<String> tags, List<Integer> isFinish, Integer is) {
         log.info("\t> 执行 DAO 层 ProjectDAO.workget 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         if(isFinish != null && !isFinish.isEmpty()){
-            return projectMapper.workgetByIsfinish(userId,isFinish);
+            return projectMapper.workgetByIsfinish(userId,isFinish,is);
         }
         if(tags != null && !tags.isEmpty()){
-            return projectMapper.workgetByTags(userId,tags);
+            return projectMapper.workgetByTags(userId,tags,is);
         }
         if(listAll == 0) {
-            return projectMapper.workget(userId);
+            return projectMapper.workget(userId,is);
         }else {
-            return projectMapper.workget1(userId);
+            return projectMapper.workget1(userId,is);
         }
     }
 
