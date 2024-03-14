@@ -61,15 +61,30 @@ public class ModuleServiceImpl implements ModuleService {
         return ResultUtil.success(projectWorkDOList);
     }
 
+
     @Override
     public BaseResponse deleteById(HttpServletRequest request, Long id) {
 
+//        检测是否为管理员
         if(!Processing.checkUserIsAdmin(request,roleMapper)){
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
 
-        moduleMapper.deleteMoudule(id);
+        deleteMoudule(id);
 
         return ResultUtil.success("删除成功");
     }
+
+//    删除子模块方法
+    public void deleteMoudule(Long id){
+        //获取所有父Id=id的子模块
+        List<ProjectWorkDO> projectWorkDOS = moduleMapper.getAllMoudleByPid(id);
+
+        for(ProjectWorkDO workDO: projectWorkDOS){
+            deleteMoudule(workDO.getId());
+        }
+
+        moduleMapper.deleteMoudule(id);
+    }
+
 }

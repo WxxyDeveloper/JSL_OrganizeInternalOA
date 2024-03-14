@@ -26,4 +26,7 @@ public interface ModuleMapper {
 
     @Delete("DELETE FROM organize_oa.oa_project_work WHERE id = #{id}")
     void deleteMoudule(Long id);
+
+    @Select("select * from organize_oa.oa_project_work where pid=#{id} and is_delete=0 and type=1 ")
+    List<ProjectWorkDO> getAllMoudleByPid(Long id);
 }
