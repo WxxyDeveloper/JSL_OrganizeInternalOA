@@ -135,7 +135,7 @@ public class ProjectDAO {
         }
     }
 
-    public List<ProjectWorkDO> workget(Long userId, Integer listAll, List<String> tags, List<Integer> isFinish) {
+    public List<ProjectDO> workget(Long userId, Integer listAll, List<String> tags, List<Integer> isFinish) {
         log.info("\t> 执行 DAO 层 ProjectDAO.workget 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         if(isFinish != null && !isFinish.isEmpty()){
