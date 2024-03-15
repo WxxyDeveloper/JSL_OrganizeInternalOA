@@ -3,6 +3,7 @@ package com.jsl.oa.mapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.ProjectUserDO;
+import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import com.jsl.oa.model.voData.ProjectWorkVO;
 import org.apache.ibatis.annotations.*;
@@ -29,6 +30,9 @@ public interface ProjectMapper {
 
     @Select("select * from organize_oa.oa_project where id=#{id}")
     ProjectDO getProjectById(Long id);
+
+    @Select("select * from organize_oa.oa_project where id=#{id}")
+    ProjectDO tgetProjectById(Integer id);
 
     @Select("select * from organize_oa.oa_project_work where principal_id=#{uid}")
             //"(select id from organize_oa.oa_project_work where id in)")
@@ -103,4 +107,7 @@ public interface ProjectMapper {
     List<ProjectDO> tgetByIsfinish(List<Integer> isFinish);
 
     List<ProjectDO> tgetBytags(List<String> tags,List<Integer> isFinish);
+
+   @Select("select * from organize_oa.oa_project_work where id=#{id}")
+   ProjectWorkDO getWorkById(Integer id);
 }

@@ -43,4 +43,8 @@ public interface ProjectService {
     BaseResponse tget(Integer id, List<String> tags, List<Integer> isFinish);
 
     BaseResponse projectFileGet(HttpServletRequest request, Long projectId);
+
+    BaseResponse getById(Integer id);
+
+    BaseResponse getWorkById(Integer id);
 }
