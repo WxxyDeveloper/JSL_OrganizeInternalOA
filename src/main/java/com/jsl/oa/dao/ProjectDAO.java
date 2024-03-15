@@ -128,12 +128,16 @@ public class ProjectDAO {
     public List<ProjectDO> get(Long userId,Integer listAll,List<String> tags,List<Integer> isFinish) {
         log.info("\t> 执行 DAO 层 ProjectDAO.get 方法");
         log.info("\t\t> 从 MySQL 获取数据");
+        if(tags != null && !tags.isEmpty()){
+            log.info("tags");
+            return projectMapper.getByTags(userId,tags,isFinish);
+        }
+
         if(isFinish != null && !isFinish.isEmpty()){
+            log.info("finish");
             return projectMapper.getByIsfinish(userId,isFinish);
         }
-        if(tags != null && !tags.isEmpty()){
-            return projectMapper.getByTags(userId,tags);
-        }
+
         if(listAll == 0) {
             return projectMapper.get(userId);
         }else {
@@ -144,12 +148,14 @@ public class ProjectDAO {
     public List<ProjectDO> workget(Long userId, Integer listAll, List<String> tags, List<Integer> isFinish, Integer is) {
         log.info("\t> 执行 DAO 层 ProjectDAO.workget 方法");
         log.info("\t\t> 从 MySQL 获取数据");
+        if(tags != null && !tags.isEmpty()){
+            return projectMapper.workgetByTags(userId,tags,is,isFinish);
+        }
+
         if(isFinish != null && !isFinish.isEmpty()){
             return projectMapper.workgetByIsfinish(userId,isFinish,is);
         }
-        if(tags != null && !tags.isEmpty()){
-            return projectMapper.workgetByTags(userId,tags,is);
-        }
+
         if(listAll == 0) {
             return projectMapper.workget(userId,is);
         }else {
@@ -220,11 +226,13 @@ public class ProjectDAO {
 
     public List<ProjectDO> tget(Integer id,List<Integer> isFinish,List<String> tags) {
         log.info("DAO层");
+
+        if(tags != null && !tags.isEmpty()){
+            return projectMapper.tgetBytags(tags,isFinish);
+        }
+
         if(isFinish != null && !isFinish.isEmpty()){
             return projectMapper.tgetByIsfinish(isFinish);
-        }
-        if(tags != null && !tags.isEmpty()){
-            return projectMapper.tgetBytags(tags);
         }
 
         return projectMapper.tget(id);

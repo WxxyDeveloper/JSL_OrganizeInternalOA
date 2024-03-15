@@ -52,7 +52,7 @@ public interface ProjectMapper {
     //@Select("select * from organize_oa.oa_project where is_finish=#{isFinish} and is_delete=false and principal_id=#{userId}")
     List<ProjectDO>getByIsfinish(Long userId,List<Integer> isFinish);
 
-    List<ProjectDO>getByTags(Long userId,List<String> tags);
+    List<ProjectDO>getByTags(Long userId,List<String> tags,List<Integer> isFinish);
 
     @Select("select * from organize_oa.oa_project where is_delete=false and status=1 and principal_id=#{userId}")
     List<ProjectDO> get(Long userId);
@@ -88,7 +88,7 @@ public interface ProjectMapper {
     //@Select("select * from organize_oa.oa_project_work where is_finish=#{isFinish} and is_delete=false and principal_id =#{userId}")
     List<ProjectDO> workgetByIsfinish(Long userId, List<Integer> isFinish, Integer is);
 
-    List<ProjectDO> workgetByTags(Long userId, List<String> tags, Integer is);
+    List<ProjectDO> workgetByTags(Long userId, List<String> tags, Integer is,List<Integer> isFinish);
 
     //@Select("select * from organize_oa.oa_project where id in(select project_id from " +
             //"organize_oa.oa_project_work where is_delete=false and status =1 and principal_id=#{userId} and type=0)")
@@ -102,5 +102,5 @@ public interface ProjectMapper {
 
     List<ProjectDO> tgetByIsfinish(List<Integer> isFinish);
 
-    List<ProjectDO> tgetBytags(List<String> tags);
+    List<ProjectDO> tgetBytags(List<String> tags,List<Integer> isFinish);
 }

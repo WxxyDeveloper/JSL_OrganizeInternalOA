@@ -48,12 +48,22 @@
     </update>
 
     <select id="getByTags" resultType="com.jsl.oa.model.doData.ProjectDO">
-        select * from organize_oa.oa_project where is_delete=false and principal_id=#{userId} and status=1 and
-        <foreach collection="tags" item="tag" separator=",'%') or json_extract(tags,'$.tags')like concat('%',"
-                 open="json_extract(tags,'$.tags')like concat('%',"
-                 close=",'%')">
-            #{tag}
-        </foreach>
+        <if test="tags != null">
+            select * from organize_oa.oa_project where is_delete=false and principal_id=#{userId} and status=1 and
+
+            <if test="isFinish != null and isFinish.size() > 0">
+                is_finish in
+                <foreach collection="isFinish" item="Finish" separator="," open="(" close=") and">
+                    #{Finish}
+                </foreach>
+            </if>
+
+            <foreach collection="tags" item="tag" separator=",'%') or json_extract(tags,'$.tags')like concat('%',"
+                     open="(json_extract(tags,'$.tags')like concat('%',"
+                     close=",'%'))">
+                #{tag}
+            </foreach>
+        </if>
     </select>
 
     <select id="getByIsfinish" resultType="com.jsl.oa.model.doData.ProjectDO">
@@ -71,8 +81,14 @@
             (principal_id = #{userId} and is_delete=false) or
         </if>
         id in(select project_id from organize_oa.oa_project_work
-        where is_delete=false and (principal_id=#{userId} ) and project_id in(
-            select id from organize_oa.oa_project where
+        where is_delete=false and (principal_id=#{userId} ) and
+        <if test="isFinish != null and isFinish.size() > 0">
+            is_finish in
+            <foreach collection="isFinish" item="Finish" separator="," open="(" close=") and">
+                #{Finish}
+            </foreach>
+        </if>
+              project_id in(select id from organize_oa.oa_project where
         <foreach collection="tags" item="tag" separator=",'%') or json_extract(tags,'$.tags')like concat('%',"
                  open="json_extract(tags,'$.tags')like concat('%',"
                  close=",'%')))">
@@ -115,9 +131,16 @@
 
     <select id="tgetBytags" resultType="com.jsl.oa.model.doData.ProjectDO">
         select * from organize_oa.oa_project where is_delete=false and status=1 and
+       <if test="isFinish != null and isFinish.size() > 0">
+           is_finish in
+           <foreach collection="isFinish" item="Finish" separator="," open="(" close=") and">
+               #{Finish}
+           </foreach>
+       </if>
+
         <foreach collection="tags" item="tag" separator=",'%') or json_extract(tags,'$.tags')like concat('%',"
-                 open="json_extract(tags,'$.tags')like concat('%',"
-                 close=",'%')">
+                 open="(json_extract(tags,'$.tags')like concat('%',"
+                 close=",'%'))">
             #{tag}
         </foreach>
     </select>

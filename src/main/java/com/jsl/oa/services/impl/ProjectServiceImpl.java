@@ -64,13 +64,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public BaseResponse tget(Integer id, List<String> tags, List<Integer> isFinish) {
         log.info("\t> 执行 Service 层 ProjectService.tget 方法");
-        //根据状态查询
-        if (isFinish != null && !isFinish.isEmpty()) {
+        //根据标签查询
+        if (tags != null && !tags.isEmpty()) {
             List<ProjectDO> projectDOList = projectDAO.tget(id,isFinish,tags);
             return ResultUtil.success(projectDOList);
         }
-        //根据标签查询
-        if (tags != null && !tags.isEmpty()) {
+
+        //根据状态查询
+        if (isFinish != null && !isFinish.isEmpty()) {
             List<ProjectDO> projectDOList = projectDAO.tget(id,isFinish,tags);
             return ResultUtil.success(projectDOList);
         }
@@ -245,16 +246,18 @@ public class ProjectServiceImpl implements ProjectService {
 
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
-        //根据状态查询
-        if (isFinish != null && !isFinish.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
-            return ResultUtil.success(projectDOList);
-        }
         //根据标签查询
         if (tags != null && !tags.isEmpty()) {
             List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
             return ResultUtil.success(projectDOList);
         }
+
+        //根据状态查询
+        if (isFinish != null && !isFinish.isEmpty()) {
+            List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
+            return ResultUtil.success(projectDOList);
+        }
+
 
         //判断是否是老师(项目负责人)
         if (listAll != null && Processing.checkUserIsTeacher(request, roleMapper)) {
@@ -274,16 +277,19 @@ public class ProjectServiceImpl implements ProjectService {
 
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
-        //根据状态查询
-        if (isFinish != null && !isFinish.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
-            return ResultUtil.success(projectDOList);
-        }
+
         //根据标签查询
         if (tags != null && !tags.isEmpty()) {
             List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
             return ResultUtil.success(projectDOList);
         }
+
+        //根据状态查询
+        if (isFinish != null && !isFinish.isEmpty()) {
+            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
+            return ResultUtil.success(projectDOList);
+        }
+
 
         //判断是否是老师(项目负责人)
         if (listAll != null && Processing.checkUserIsTeacher(request, roleMapper)) {
