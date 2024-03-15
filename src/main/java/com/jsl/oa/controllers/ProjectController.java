@@ -39,14 +39,15 @@ public class ProjectController {
 
     /**
      * 游客获取项目
+     *
      * @return
      */
     @GetMapping("/project/get/custom")
     public BaseResponse projectGetCustom(@RequestParam(required = false) Integer id,
                                          @RequestParam(required = false) List<String> tags,
-                                         @RequestParam(required = false) List<Integer> isFinish){
+                                         @RequestParam(required = false) List<Integer> isFinish) {
         log.info("请求接口[GET]: /project/all/get");
-        return projectService.tget(id,tags,isFinish);
+        return projectService.tget(id, tags, isFinish);
     }
 
 
@@ -61,7 +62,7 @@ public class ProjectController {
                                    @RequestParam(required = false) List<Integer> isFinish,
                                    HttpServletRequest request) {
         log.info("请求接口[GET]: /project/get");
-        return projectService.get(listAll,request,tags,isFinish);
+        return projectService.get(listAll, request, tags, isFinish);
     }
 
     /**
@@ -71,12 +72,12 @@ public class ProjectController {
      */
     @GetMapping("/project/work/get")
     public BaseResponse projectWorkGet(@RequestParam(required = false) Integer listAll,
-                                   @RequestParam(required = false) List<String> tags,
-                                   @RequestParam(required = false) List<Integer> isFinish,
-                                   @RequestParam(required = false) Integer is,
-                                   HttpServletRequest request) {
+                                       @RequestParam(required = false) List<String> tags,
+                                       @RequestParam(required = false) List<Integer> isFinish,
+                                       @RequestParam(required = false) Integer is,
+                                       HttpServletRequest request) {
         log.info("请求接口[GET]: /project/work/get");
-        return projectService.workget(listAll, request, tags, isFinish,is);
+        return projectService.workget(listAll, request, tags, isFinish, is);
     }
 
     /**
@@ -172,9 +173,9 @@ public class ProjectController {
      * @Description: 项目的修改
      * @Date: 2024/3/10
      * @Param request:
- * @Param projectEdit:
- * @Param bindingResult:
- * @Param projectId:
+     * @Param projectEdit:
+     * @Param bindingResult:
+     * @Param projectId:
      **/
     @PutMapping("/project/edit/{projectId}")
     public BaseResponse projectEditById(HttpServletRequest request, @RequestBody @Validated ProjectEditVO projectEdit,
@@ -184,12 +185,13 @@ public class ProjectController {
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return projectService.projectEdit(request, projectEdit,projectId);
+        return projectService.projectEdit(request, projectEdit, projectId);
     }
 
 
     /**
      * 子系统子模块的增加
+     *
      * @param request
      * @param bindingResult
      * @return
@@ -283,24 +285,24 @@ public class ProjectController {
 
     @PutMapping("/project/cut/user/to")
     public BaseResponse projectToOtherUserForCutting(HttpServletRequest request, @RequestParam Long oldUid
-            , @RequestParam Long pid,@RequestParam Long newUid) {
+            , @RequestParam Long pid, @RequestParam Long newUid) {
         log.info("请求接口[Put]: /project/cut/user/to");
         // 判断是否有参数错误
-        if (oldUid == null || pid == null || newUid==null) {
+        if (oldUid == null || pid == null || newUid == null) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR);
         }
-        return projectService.projectToOtherUserForCutting(request, oldUid, pid , newUid);
+        return projectService.projectToOtherUserForCutting(request, oldUid, pid, newUid);
     }
 
 
     @GetMapping("/project/file")
-    public BaseResponse getProjectFile(HttpServletRequest request, @RequestParam Long projectId){
+    public BaseResponse getProjectFile(HttpServletRequest request, @RequestParam Long projectId) {
         log.info("请求接口[Get]: /project/file");
         //判断是否有参数错误
-        if(projectId == null){
+        if (projectId == null) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR);
         }
-        return projectService.projectFileGet(request,projectId);
+        return projectService.projectFileGet(request, projectId);
     }
 
 

@@ -47,7 +47,6 @@ public class ProjectServiceImpl implements ProjectService {
     private final UserDAO userDAO;
 
     @Override
-    @CheckUserHasPermission("project.add")
     public BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd) {
         log.info("\t> 执行 Service 层 ProjectService.projectAdd 方法");
         projectDAO.projectAdd(projectAdd);
