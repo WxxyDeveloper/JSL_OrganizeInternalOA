@@ -17,6 +17,7 @@ public class ProjectInfoVO {
     private String description;
     @NotNull(message = "周期不能为空")
     private Long cycle;
+    private String tags;
     private String file;
     private Timestamp completeTime;
     private Timestamp deadline;
