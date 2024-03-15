@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.UserDAO;
+import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
+import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.*;
@@ -42,6 +44,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
 
+    private final ProjectMapper projectMapper;
     private final RoleMapper roleMapper;
     private final ProjectDAO projectDAO;
     private final UserDAO userDAO;
@@ -64,6 +67,12 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public BaseResponse tget(Integer id, List<String> tags, List<Integer> isFinish) {
         log.info("\t> 执行 Service 层 ProjectService.tget 方法");
+        //根据id查询
+        if (id != null){
+            ProjectDO projectDO = projectMapper.tgetProjectById(id);
+            return ResultUtil.success(projectDO);
+        }
+
         //根据标签查询
         if (tags != null && !tags.isEmpty()) {
             List<ProjectDO> projectDOList = projectDAO.tget(id,isFinish,tags);
@@ -103,6 +112,18 @@ public class ProjectServiceImpl implements ProjectService {
             return ResultUtil.error(ErrorCode.PROJECT_FILE_JSON_ERROR);
         }
 
+    }
+
+    @Override
+    public BaseResponse getById(Integer id) {
+        ProjectDO projectDO = projectMapper.tgetProjectById(id);
+        return ResultUtil.success(projectDO);
+    }
+
+    @Override
+    public BaseResponse getWorkById(Integer id) {
+        ProjectWorkDO projectWorkDO = projectMapper.getWorkById(id);
+        return ResultUtil.success(projectWorkDO);
     }
 
     @Override

@@ -38,6 +38,26 @@ public class ProjectController {
     }
 
     /**
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/project/get/id")
+    public BaseResponse projectGetById(@RequestParam Integer id){
+        return projectService.getById(id);
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/project/getwork/id")
+    public BaseResponse projectWorkGetById(@RequestParam Integer id){
+        return projectService.getWorkById(id);
+    }
+
+    /**
      * 游客获取项目
      * @return
      */
