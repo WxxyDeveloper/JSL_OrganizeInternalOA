@@ -37,6 +37,7 @@ public class ModuleServiceImpl implements ModuleService {
         //判断是否是项目负责人
         int is = 1;
         if(!pid.equals(userId)){
+            log.info("不是负责人");
             is = 0;
         }
 

@@ -8,7 +8,7 @@
     <select id="getByProjectId" resultType="com.jsl.oa.model.doData.ProjectWorkDO">
         select * from organize_oa.oa_project_work where project_id=#{projectId} and type=0
         <if test="is != 1 ">
-            and principal_id=#{userId}
+            and (principal_id=#{userId} or principal_id is null)
         </if>
     </select>
 
