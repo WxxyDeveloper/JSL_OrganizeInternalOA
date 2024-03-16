@@ -3,6 +3,7 @@ package com.jsl.oa.mapper;
 import com.jsl.oa.model.doData.RoleDO;
 import com.jsl.oa.model.doData.RoleUserDO;
 import com.jsl.oa.model.doData.UserDO;
+import com.jsl.oa.model.voData.PrincipalSelectVO;
 import com.jsl.oa.model.voData.UserAllCurrentVO;
 import com.jsl.oa.model.voData.UserEditProfileVO;
 import org.apache.ibatis.annotations.Insert;
@@ -94,4 +95,8 @@ public interface UserMapper {
 
     @Select("SELECT COUNT(*) FROM organize_oa.oa_user")
     Long getUsersCount();
+
+    @Select("select oa_user.id,oa_user.username,oa_role.role_name from organize_oa.oa_user join organize_oa.oa_role_user " +
+            "on oa_user.id = oa_role_user.uid join organize_oa.oa_role on oa_role_user.rid = oa_role.id")
+    List<PrincipalSelectVO> getPrincipal();
 }

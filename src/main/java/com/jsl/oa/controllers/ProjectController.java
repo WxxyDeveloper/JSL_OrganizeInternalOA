@@ -226,6 +226,14 @@ public class ProjectController {
         return projectService.projecWorktAdd(request, projectWorkVO);
     }
 
+    /**
+     * 获取负责人id
+     * @return
+     */
+    @GetMapping("/project/pri")
+    public BaseResponse projectPrincipalGet(){
+        return projectService.projectPrincipalGet();
+    }
 
     /**
      * 用户获取所分到的项目模块

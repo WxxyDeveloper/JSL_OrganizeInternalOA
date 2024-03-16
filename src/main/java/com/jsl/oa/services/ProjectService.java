@@ -47,4 +47,6 @@ public interface ProjectService {
     BaseResponse getById(Integer id);
 
     BaseResponse getWorkById(Integer id);
+
+    BaseResponse projectPrincipalGet();
 }

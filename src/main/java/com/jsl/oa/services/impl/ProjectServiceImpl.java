@@ -8,6 +8,7 @@ import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.mapper.RoleMapper;
+import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.ProjectWorkDO;
@@ -46,6 +47,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
 
+    private final UserMapper userMapper;
     private final ProjectMapper projectMapper;
     private final RoleMapper roleMapper;
     private final ProjectDAO projectDAO;
@@ -168,6 +170,11 @@ public class ProjectServiceImpl implements ProjectService {
     public BaseResponse getWorkById(Integer id) {
         ProjectWorkDO projectWorkDO = projectMapper.getWorkById(id);
         return ResultUtil.success(projectWorkDO);
+    }
+
+    @Override
+    public BaseResponse projectPrincipalGet() {
+        return ResultUtil.success(userMapper.getPrincipal());
     }
 
     @Override
