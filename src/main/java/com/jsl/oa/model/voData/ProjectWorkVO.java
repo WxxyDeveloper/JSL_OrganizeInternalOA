@@ -11,11 +11,9 @@ public class ProjectWorkVO {
     private Long pid;
     @NotNull(message = "项目id不能为空")
     private Long projectId;
-
     private Long principalId;
     @NotNull(message = "周期不能为空")
     private Integer cycle;
-
     private Integer workLoad;
     @NotNull(message = "类型不能为空")
     private Integer type;
