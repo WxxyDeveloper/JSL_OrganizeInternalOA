@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <h1>项目服务层实现类</h1>
@@ -64,7 +65,24 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public BaseResponse projecWorktAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO) {
         log.info("\t> 执行 Service 层 ProjectService.projectWorkAdd 方法");
-        projectDAO.projectWorkAdd(projectWorkVO);
+        //获取用户id
+        Long userId = Processing.getAuthHeaderToUserId(request);
+        //是否是增加子系统
+        if(projectWorkVO.getType() == 0 ){
+            //是否是老师
+            if (Processing.checkUserIsTeacher(request, roleMapper)){
+                projectDAO.projectWorkAdd(projectWorkVO);
+            }else {
+                return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+            }
+        }//增加子模块
+        else {
+            //是否是子系统的负责人
+            if(Objects.equals(userId, projectMapper.getPirIdbyWorkid(projectWorkVO.getPid()))){
+                projectDAO.projectWorkAdd(projectWorkVO);
+            }else return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+        }
+
         return ResultUtil.success("添加成功");
     }
 
