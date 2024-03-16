@@ -1,14 +1,16 @@
 package com.jsl.oa.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
+import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.exception.ClassCopyException;
 import com.jsl.oa.mapper.RoleMapper;
-import com.jsl.oa.model.doData.PermissionDO;
-import com.jsl.oa.model.doData.RoleDO;
-import com.jsl.oa.model.doData.RoleUserDO;
-import com.jsl.oa.model.doData.UserDO;
+import com.jsl.oa.model.doData.*;
 import com.jsl.oa.model.voData.PermissionContentVo;
+import com.jsl.oa.model.voData.ProjectSimpleVO;
 import com.jsl.oa.model.voData.UserCurrentBackVO;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -346,7 +348,33 @@ public class Processing {
         return userDOS;
     }
 
+    public static void projectTosimply(ProjectSimpleVO projectSimpleVO, ProjectDO projectDO,
+                                       UserDAO userDAO,ObjectMapper objectMapper) {
 
+        projectSimpleVO.setId(projectDO.getId());
+        projectSimpleVO.setName(projectDO.getName());
+        projectSimpleVO.setTags(projectDO.getTags());
+        projectSimpleVO.setCycle(projectDO.getCycle());
+        projectSimpleVO.setIsFinish(projectDO.getIsFinish());
+        projectSimpleVO.setWorkLoad(projectDO.getWorkLoad());
+        projectSimpleVO.setPrincipalUser(userDAO.getUserById(projectDO.getPrincipalId()).getUsername());
+        // 解析JSON字符串
+        JsonNode rootNode = null;
+        try {
+            rootNode = objectMapper.readTree(projectDO.getDescription());
+            // 访问特定的key
+            JsonNode targetNode = rootNode.get("description");
+            if(targetNode != null && !rootNode.isNull()){
+                projectSimpleVO.setDescription(targetNode.asText());
+            }else{
+                projectSimpleVO.setDescription("null");
+            }
+        } catch (JsonProcessingException ignored) {
+
+        }
+
+        //return ProjectSimpleVO;
+    }
 
     /**
      * @Description:  将Permission归纳为父子关系的json形式

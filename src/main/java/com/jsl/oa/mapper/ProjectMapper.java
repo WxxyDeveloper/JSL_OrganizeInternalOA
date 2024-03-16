@@ -15,9 +15,9 @@ public interface ProjectMapper {
 
     @Insert("insert into organize_oa.oa_project " +
             "(name, description, principal_id, cycle,file,complete_time," +
-            "deadline,status,is_finish,tags) " +
+            "deadline,status,is_finish,tags,work_Load) " +
             "value (#{name},#{description},#{principalId},#{cycle},#{file}" +
-            ",#{completeTime},#{deadline},#{status},#{isFinish},#{tags})")
+            ",#{completeTime},#{deadline},#{status},#{isFinish},#{tags},#{workLoad})")
     void projectAdd(ProjectInfoVO projectAdd);
 
     @Insert("insert into organize_oa.oa_project_work (project_id, pid, name, principal_id," +

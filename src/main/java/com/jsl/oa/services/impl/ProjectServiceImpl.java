@@ -1,6 +1,7 @@
 package com.jsl.oa.services.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.ProjectDAO;
@@ -48,10 +49,14 @@ public class ProjectServiceImpl implements ProjectService {
     private final RoleMapper roleMapper;
     private final ProjectDAO projectDAO;
     private final UserDAO userDAO;
+    private final ObjectMapper objectMapper;
 
     @Override
     public BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd) {
         log.info("\t> 执行 Service 层 ProjectService.projectAdd 方法");
+        if(projectAdd.getDescription().isEmpty()){
+            projectAdd.setDescription("{}");
+        }
         projectDAO.projectAdd(projectAdd);
         return ResultUtil.success("添加成功");
     }
@@ -69,23 +74,45 @@ public class ProjectServiceImpl implements ProjectService {
         //根据id查询
         if (id != null){
             ProjectDO projectDO = projectMapper.tgetProjectById(id);
-            return ResultUtil.success(projectDO);
+            ProjectSimpleVO projectSimpleVO = new ProjectSimpleVO();
+            Processing.projectTosimply(projectSimpleVO,projectDO,userDAO,objectMapper);
+            return ResultUtil.success(projectSimpleVO);
         }
 
         //根据标签查询
         if (tags != null && !tags.isEmpty()) {
             List<ProjectDO> projectDOList = projectDAO.tget(id,isFinish,tags);
-            return ResultUtil.success(projectDOList);
+
+            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+            for (ProjectDO projectDO:projectDOList){
+                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                projectSimpleVOList.add(projectSimpleVO1);
+            }
+            return ResultUtil.success(projectSimpleVOList);
         }
 
         //根据状态查询
         if (isFinish != null && !isFinish.isEmpty()) {
             List<ProjectDO> projectDOList = projectDAO.tget(id,isFinish,tags);
-            return ResultUtil.success(projectDOList);
+
+            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+            for (ProjectDO projectDO:projectDOList){
+                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                projectSimpleVOList.add(projectSimpleVO1);
+            }
+            return ResultUtil.success(projectSimpleVOList);
         }
 
         List<ProjectDO> projectDOList = projectDAO.tget(id,isFinish,tags);
-        return ResultUtil.success(projectDOList);
+        List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+        for (ProjectDO projectDO:projectDOList){
+            ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+            Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+            projectSimpleVOList.add(projectSimpleVO1);
+        }
+        return ResultUtil.success(projectSimpleVOList);
     }
 
     @Override
@@ -269,24 +296,49 @@ public class ProjectServiceImpl implements ProjectService {
         //根据标签查询
         if (tags != null && !tags.isEmpty()) {
             List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
-            return ResultUtil.success(projectDOList);
+
+            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+            for (ProjectDO projectDO:projectDOList){
+                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                projectSimpleVOList.add(projectSimpleVO1);
+            }
+            return ResultUtil.success(projectSimpleVOList);
         }
 
         //根据状态查询
         if (isFinish != null && !isFinish.isEmpty()) {
             List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
-            return ResultUtil.success(projectDOList);
+            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+            for (ProjectDO projectDO:projectDOList){
+                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                projectSimpleVOList.add(projectSimpleVO1);
+            }
+            return ResultUtil.success(projectSimpleVOList);
         }
 
 
         //判断是否是老师(项目负责人)
         if (listAll != null && Processing.checkUserIsTeacher(request, roleMapper)) {
             List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
-            return ResultUtil.success(projectDOList);
+            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+            for (ProjectDO projectDO:projectDOList){
+                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                projectSimpleVOList.add(projectSimpleVO1);
+            }
+            return ResultUtil.success(projectSimpleVOList);
         } else {
             listAll = 0;
             List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
-            return ResultUtil.success(projectDOList);
+            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+            for (ProjectDO projectDO:projectDOList){
+                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                projectSimpleVOList.add(projectSimpleVO1);
+            }
+            return ResultUtil.success(projectSimpleVOList);
         }
 
     }
@@ -301,24 +353,48 @@ public class ProjectServiceImpl implements ProjectService {
         //根据标签查询
         if (tags != null && !tags.isEmpty()) {
             List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
-            return ResultUtil.success(projectDOList);
+            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+            for (ProjectDO projectDO:projectDOList){
+                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                projectSimpleVOList.add(projectSimpleVO1);
+            }
+            return ResultUtil.success(projectSimpleVOList);
         }
 
         //根据状态查询
         if (isFinish != null && !isFinish.isEmpty()) {
             List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
-            return ResultUtil.success(projectDOList);
+            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+            for (ProjectDO projectDO:projectDOList){
+                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                projectSimpleVOList.add(projectSimpleVO1);
+            }
+            return ResultUtil.success(projectSimpleVOList);
         }
 
 
         //判断是否是老师(项目负责人)
         if (listAll != null && Processing.checkUserIsTeacher(request, roleMapper)) {
             List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
-            return ResultUtil.success(projectDOList);
+            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+            for (ProjectDO projectDO:projectDOList){
+                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                projectSimpleVOList.add(projectSimpleVO1);
+            }
+            return ResultUtil.success(projectSimpleVOList);
         } else {
             listAll = 0;
             List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
-            return ResultUtil.success(projectDOList);
+            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+            for (ProjectDO projectDO:projectDOList){
+                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                projectSimpleVOList.add(projectSimpleVO1);
+            }
+            return ResultUtil.success(projectSimpleVOList);
         }
     }
 

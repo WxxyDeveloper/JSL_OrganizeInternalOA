@@ -1,5 +1,6 @@
 package com.jsl.oa.model.voData;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -17,6 +18,8 @@ public class ProjectInfoVO {
     private String description;
     @NotNull(message = "周期不能为空")
     private Long cycle;
+    @NotNull(message = "工作量不能为空")
+    private Long workLoad;
     private String tags;
     private String file;
     private Timestamp completeTime;
