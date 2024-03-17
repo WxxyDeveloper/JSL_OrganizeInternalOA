@@ -1,10 +1,16 @@
 package com.jsl.oa.services.impl;
 
+import ch.qos.logback.core.joran.util.beans.BeanUtil;
 import com.jsl.oa.dao.ModuleDAO;
+import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ModuleMapper;
 import com.jsl.oa.mapper.RoleMapper;
+import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.ProjectWorkDO;
+import com.jsl.oa.model.doData.UserDO;
+import com.jsl.oa.model.voData.ProjectWorkAndNameVO;
+import com.jsl.oa.model.voData.ProjectWorkVO;
 import com.jsl.oa.services.ModuleService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -16,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.transform.Result;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -24,6 +31,7 @@ import java.util.List;
 public class ModuleServiceImpl implements ModuleService {
     private final RoleMapper roleMapper;
     private final ModuleDAO moduleDAO;
+    private final ProjectDAO projectDAO;
     private final ModuleMapper moduleMapper;
     private final UserDAO userDAO;
 
@@ -36,12 +44,12 @@ public class ModuleServiceImpl implements ModuleService {
         Long pid = moduleMapper.getPidByProjectid(projectId);
         //判断是否是项目负责人
         int is = 1;
-        if(!pid.equals(userId)){
+        if (!pid.equals(userId)) {
             log.info("不是负责人");
             is = 0;
         }
 
-        List<ProjectWorkDO> projectWorkDOList= moduleMapper.getByProjectId(projectId,userId,is);
+        List<ProjectWorkDO> projectWorkDOList = moduleMapper.getByProjectId(projectId, userId, is);
         return ResultUtil.success(projectWorkDOList);
     }
 
@@ -56,12 +64,25 @@ public class ModuleServiceImpl implements ModuleService {
         Long prid = moduleMapper.getPridBySysyid(sysId);
         //判断是否是子系统/项目负责人
         int is = 1;
-        if(!pid.equals(userId) && !prid.equals(userId)){
+        if (!pid.equals(userId) && !prid.equals(userId)) {
             is = 0;
         }
 
-        List<ProjectWorkDO> projectWorkDOList = moduleMapper.getBySysId(sysId,userId,is);
-        return ResultUtil.success(projectWorkDOList);
+        List<ProjectWorkDO> projectWorkDOList = moduleMapper.getBySysId(sysId, userId, is);
+//      封装VO类
+        List<ProjectWorkAndNameVO> projectWorkAndNameVOS = new ArrayList<>();
+        for (ProjectWorkDO projectWorkDO : projectWorkDOList) {
+            ProjectWorkAndNameVO projectWorkAndNameVO = new ProjectWorkAndNameVO();
+            Processing.copyProperties(projectWorkDO,projectWorkAndNameVO);
+//        添加负责人和子系统名称
+            projectWorkAndNameVO.
+                    setChildSystemName(projectDAO.getProjectWorkerById(projectWorkDO.getPid()).getName())
+                    .setPrincipalUser(userDAO.getUserById(projectWorkDO.getPrincipalId()).getUsername());
+
+            projectWorkAndNameVOS.add(projectWorkAndNameVO);
+
+        }
+        return ResultUtil.success(projectWorkAndNameVOS);
     }
 
 
@@ -69,7 +90,7 @@ public class ModuleServiceImpl implements ModuleService {
     public BaseResponse deleteById(HttpServletRequest request, Long id) {
 
 //        检测是否为管理员
-        if(!Processing.checkUserIsAdmin(request,roleMapper)){
+        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
 
@@ -78,12 +99,12 @@ public class ModuleServiceImpl implements ModuleService {
         return ResultUtil.success("删除成功");
     }
 
-//    删除子模块方法
-    public void deleteMoudule(Long id){
+    //    删除子模块方法
+    public void deleteMoudule(Long id) {
         //获取所有父Id=id的子模块
         List<ProjectWorkDO> projectWorkDOS = moduleMapper.getAllMoudleByPid(id);
 
-        for(ProjectWorkDO workDO: projectWorkDOS){
+        for (ProjectWorkDO workDO : projectWorkDOS) {
             deleteMoudule(workDO.getId());
         }
 

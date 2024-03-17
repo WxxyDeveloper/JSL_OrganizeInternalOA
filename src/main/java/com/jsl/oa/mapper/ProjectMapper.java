@@ -111,9 +111,13 @@ public interface ProjectMapper {
 
    @Select("select * from organize_oa.oa_project_work where id=#{id}")
    ProjectWorkSimpleVO getWorkById(Integer id);
+
 @Select("select principal_id from organize_oa.oa_project_work where id=#{pid}")
     Long getPirIdbyWorkid(Long pid);
 
     @Select("select principal_id from organize_oa.oa_project_work where id=#{id}")
     Long getPid(Integer id);
+
+    @Select("select * from organize_oa.oa_project_work where id=#{id}")
+    ProjectWorkDO getProjectWorkById(Long id);
 }

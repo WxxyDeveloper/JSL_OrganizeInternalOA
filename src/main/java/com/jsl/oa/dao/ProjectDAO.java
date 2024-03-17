@@ -5,6 +5,7 @@ import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.ProjectUserDO;
+import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.ProjectEditVO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
@@ -237,6 +238,10 @@ public class ProjectDAO {
         }
 
         return projectMapper.tget(id);
+    }
+
+    public ProjectWorkDO getProjectWorkerById(Long id){
+        return projectMapper.getProjectWorkById(id);
     }
 
 

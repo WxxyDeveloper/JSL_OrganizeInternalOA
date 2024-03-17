@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProjectWorkSimpleVO {
     private String name;
+    private Long principalId;
     private String principalUser;
     private Integer isFinish;
     private String description;
