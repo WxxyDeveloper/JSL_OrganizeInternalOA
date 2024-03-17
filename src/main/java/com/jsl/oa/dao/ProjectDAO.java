@@ -46,6 +46,7 @@ public class ProjectDAO {
         log.info("\t\t> 从 MySQL 更新数据");
         ProjectDO projectDO = new ProjectDO();
         Processing.copyProperties(projectEdit,projectDO);
+        projectDO.setId(projectId);
         projectMapper.projectEdit(projectDO);
         log.info("\t\t> 从 MySQL 获取数据");
         return projectMapper.getProjectById(projectId);

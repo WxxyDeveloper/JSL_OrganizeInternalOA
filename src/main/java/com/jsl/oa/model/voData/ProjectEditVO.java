@@ -19,7 +19,8 @@ public class ProjectEditVO {
     private String file;
     private String description;
     private Integer isFinish;
-    private boolean status;
+    private Integer status;
+    private Long workLoad;
     private Timestamp beginTime;
     private Timestamp completeTime;
     private Timestamp deadline;

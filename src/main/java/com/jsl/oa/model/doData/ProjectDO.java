@@ -30,7 +30,7 @@ public class ProjectDO {
     private Integer isDelete;
     private Integer isFinish;
     private Long workLoad;
-    private boolean status;
+    private Integer status;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
     private Timestamp beginTime;
 

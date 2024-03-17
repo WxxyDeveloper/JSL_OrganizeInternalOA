@@ -5,6 +5,7 @@ import com.jsl.oa.model.doData.ProjectDO;
 import com.jsl.oa.model.doData.ProjectUserDO;
 import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
+import com.jsl.oa.model.voData.ProjectWorkSimpleVO;
 import com.jsl.oa.model.voData.ProjectWorkVO;
 import org.apache.ibatis.annotations.*;
 
@@ -109,7 +110,10 @@ public interface ProjectMapper {
     List<ProjectDO> tgetBytags(List<String> tags,List<Integer> isFinish);
 
    @Select("select * from organize_oa.oa_project_work where id=#{id}")
-   ProjectWorkDO getWorkById(Integer id);
+   ProjectWorkSimpleVO getWorkById(Integer id);
 @Select("select principal_id from organize_oa.oa_project_work where id=#{pid}")
     Long getPirIdbyWorkid(Long pid);
+
+    @Select("select principal_id from organize_oa.oa_project_work where id=#{id}")
+    Long getPid(Integer id);
 }

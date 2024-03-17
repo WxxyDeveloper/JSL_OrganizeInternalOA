@@ -168,8 +168,24 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse getWorkById(Integer id) {
-        ProjectWorkDO projectWorkDO = projectMapper.getWorkById(id);
-        return ResultUtil.success(projectWorkDO);
+        ProjectWorkSimpleVO projectWorkSimpleVO = projectMapper.getWorkById(id);
+
+        projectWorkSimpleVO.setPrincipalUser(userDAO.getUserById(projectMapper.getPid(id)).getUsername());
+        // 解析JSON字符串
+        JsonNode rootNode = null;
+        try {
+            rootNode = objectMapper.readTree(projectWorkSimpleVO.getDescription());
+            // 访问特定的key
+            JsonNode targetNode = rootNode.get("description");
+            if(targetNode != null && !rootNode.isNull()){
+                projectWorkSimpleVO.setDescription(targetNode.asText());
+            }else{
+                projectWorkSimpleVO.setDescription("null");
+            }
+        } catch (JsonProcessingException ignored) {
+
+        }
+        return ResultUtil.success(projectWorkSimpleVO);
     }
 
     @Override

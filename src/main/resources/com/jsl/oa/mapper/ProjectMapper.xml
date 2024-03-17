@@ -113,7 +113,7 @@
         <if test="is != null">
             (principal_id = #{userId} and is_delete=false) or
         </if>
-        id in(select project_id from organize_oa.oa_project_work where is_delete=false and status =1 and principal_id=#{userId})
+        id in(select project_id from organize_oa.oa_project_work where is_delete=false and principal_id=#{userId})
     </select>
 
     <select id="workget1" resultType="com.jsl.oa.model.doData.ProjectDO">
