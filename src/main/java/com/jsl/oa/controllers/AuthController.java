@@ -74,6 +74,7 @@ public class AuthController {
     @PostMapping("/auth/login")
     public BaseResponse authLogin(@RequestBody @Validated UserLoginVO userLoginVO, @NotNull BindingResult bindingResult) {
         log.info("请求接口[POST]: /auth/login");
+
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
