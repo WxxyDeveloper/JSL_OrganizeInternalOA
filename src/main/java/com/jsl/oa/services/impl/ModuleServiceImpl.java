@@ -52,9 +52,11 @@ public class ModuleServiceImpl implements ModuleService {
         Long userId = Processing.getAuthHeaderToUserId(request);
         //获取子系统负责人id
         Long pid = moduleMapper.getPidBySysid(sysId);
-        //判断是否是子系统负责人
+        //获取项目负责人id
+        Long prid = moduleMapper.getPridBySysyid(sysId);
+        //判断是否是子系统/项目负责人
         int is = 1;
-        if(!pid.equals(userId)){
+        if(!pid.equals(userId) && !prid.equals(userId)){
             is = 0;
         }
 

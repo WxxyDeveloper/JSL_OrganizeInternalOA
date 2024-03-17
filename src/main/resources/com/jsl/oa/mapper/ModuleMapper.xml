@@ -15,7 +15,7 @@
     <select id="getBySysId" resultType="com.jsl.oa.model.doData.ProjectWorkDO">
         select * from organize_oa.oa_project_work where pid=#{sysId} and type=1
         <if test="is != 1 ">
-            and principal_id=#{userId}
+            and (principal_id=#{userId} or principal_id is null)
         </if>
     </select>
 </mapper>

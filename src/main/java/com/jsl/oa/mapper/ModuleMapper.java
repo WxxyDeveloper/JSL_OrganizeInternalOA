@@ -29,4 +29,8 @@ public interface ModuleMapper {
 
     @Select("select * from organize_oa.oa_project_work where pid=#{id} and is_delete=0 and type=1 ")
     List<ProjectWorkDO> getAllMoudleByPid(Long id);
+
+    @Select("select principal_id from organize_oa.oa_project where id=(select project_id " +
+            "from organize_oa.oa_project_work where oa_project_work.id = #{sysId})")
+    Long getPridBySysyid(Integer sysId);
 }
