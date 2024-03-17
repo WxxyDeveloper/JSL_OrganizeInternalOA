@@ -34,13 +34,13 @@
             <if test="deadline != null and deadline != ''">
                 deadline = #{deadline},
             </if>
-            <if test="status != null and status != ''">
+            <if test="status != null">
                 status = #{status},
             </if>
-            <if test="isFinish != null and isFinish != ''">
+            <if test="isFinish != null">
                 is_finish = #{isFinish},
             </if>
-            <if test="isDelete != null and isDelete != ''">
+            <if test="isDelete != null">
                 is_delete = #{isDelete},
             </if>
         </set>
