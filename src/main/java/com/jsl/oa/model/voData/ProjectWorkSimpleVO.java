@@ -15,6 +15,7 @@ public class ProjectWorkSimpleVO {
     private Integer isFinish;
     private String description;
     private Long cycle;
+    private Long projectId;
     private Long workLoad;
     private Long id;
     private String tags;
