@@ -218,7 +218,7 @@ public class ProjectDAO {
         return projectMapper.updateUserForProjectUser(newUid,projectUserDO.getId());
     }
 
-    public boolean isPrincipalUser(Long uid,Long projectId){
+    public boolean isPrincipalUser(Long uid, Long projectId){
         log.info("\t> 执行 DAO 层 ProjectDAO.isPrincipalUser 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         ProjectDO projectDO = projectMapper.getProjectById(projectId);
@@ -227,7 +227,7 @@ public class ProjectDAO {
 
 
     public List<ProjectDO> tget(Integer id,List<Integer> isFinish,List<String> tags) {
-        log.info("DAO层");
+        log.info("DAO层tget");
 
         if(tags != null && !tags.isEmpty()){
             return projectMapper.tgetBytags(tags,isFinish);

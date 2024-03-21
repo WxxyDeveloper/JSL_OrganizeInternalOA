@@ -11,7 +11,6 @@ import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
-import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.doData.UserDO;
 import com.jsl.oa.model.doData.info.ProjectShowDO;
 import com.jsl.oa.model.voData.*;
@@ -89,7 +88,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse tget(Integer id, List<String> tags, List<Integer> isFinish) {
+    public BaseResponse tget(Integer id, List<String> tags, List<Integer> isFinish,Integer page,Integer pageSize){
         log.info("\t> 执行 Service 层 ProjectService.tget 方法");
         //根据id查询
         if (id != null){
@@ -109,7 +108,13 @@ public class ProjectServiceImpl implements ProjectService {
                 Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
-            return ResultUtil.success(projectSimpleVOList);
+
+            //分页返回
+            int start = (page-1) * pageSize;
+            int end = start + pageSize;
+            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
+                    Math.min(end,projectSimpleVOList.size()));
+            return ResultUtil.success(pageData);
         }
 
         //根据状态查询
@@ -122,7 +127,12 @@ public class ProjectServiceImpl implements ProjectService {
                 Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
-            return ResultUtil.success(projectSimpleVOList);
+            //分页返回
+            int start = (page-1) * pageSize;
+            int end = start + pageSize;
+            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
+                    Math.min(end,projectSimpleVOList.size()));
+            return ResultUtil.success(pageData);
         }
 
         List<ProjectDO> projectDOList = projectDAO.tget(id,isFinish,tags);
@@ -132,7 +142,12 @@ public class ProjectServiceImpl implements ProjectService {
             Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
             projectSimpleVOList.add(projectSimpleVO1);
         }
-        return ResultUtil.success(projectSimpleVOList);
+        //分页返回
+        int start = (page-1) * pageSize;
+        int end = start + pageSize;
+        List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
+                Math.min(end,projectSimpleVOList.size()));
+        return ResultUtil.success(pageData);
     }
 
     @Override
@@ -329,7 +344,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse get(Integer listAll, HttpServletRequest request, List<String> tags, List<Integer> isFinish) {
+    public BaseResponse get(Integer listAll, HttpServletRequest request, List<String> tags, List<Integer> isFinish, Integer page, Integer pageSize) {
         log.info("\t> 执行 Service 层 ProjectService.get 方法");
 
         //获取用户
@@ -344,7 +359,12 @@ public class ProjectServiceImpl implements ProjectService {
                 Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
-            return ResultUtil.success(projectSimpleVOList);
+            //分页返回
+            int start = (page-1) * pageSize;
+            int end = start + pageSize;
+            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
+                    Math.min(end,projectSimpleVOList.size()));
+            return ResultUtil.success(pageData);
         }
 
         //根据状态查询
@@ -356,7 +376,12 @@ public class ProjectServiceImpl implements ProjectService {
                 Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
-            return ResultUtil.success(projectSimpleVOList);
+            //分页返回
+            int start = (page-1) * pageSize;
+            int end = start + pageSize;
+            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
+                    Math.min(end,projectSimpleVOList.size()));
+            return ResultUtil.success(pageData);
         }
 
 
@@ -369,7 +394,12 @@ public class ProjectServiceImpl implements ProjectService {
                 Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
-            return ResultUtil.success(projectSimpleVOList);
+            //分页返回
+            int start = (page-1) * pageSize;
+            int end = start + pageSize;
+            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
+                    Math.min(end,projectSimpleVOList.size()));
+            return ResultUtil.success(pageData);
         } else {
             listAll = 0;
             List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
@@ -379,13 +409,18 @@ public class ProjectServiceImpl implements ProjectService {
                 Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
-            return ResultUtil.success(projectSimpleVOList);
+            //分页返回
+            int start = (page-1) * pageSize;
+            int end = start + pageSize;
+            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
+                    Math.min(end,projectSimpleVOList.size()));
+            return ResultUtil.success(pageData);
         }
 
     }
 
     @Override
-    public BaseResponse workget(Integer listAll, HttpServletRequest request, List<String> tags, List<Integer> isFinish, Integer is) {
+    public BaseResponse workget(Integer listAll, HttpServletRequest request, List<String> tags, List<Integer> isFinish, Integer is, Integer page, Integer pageSize) {
         log.info("\t> 执行 Service 层 ProjectService.workget 方法");
 
         //获取用户
@@ -400,7 +435,12 @@ public class ProjectServiceImpl implements ProjectService {
                 Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
-            return ResultUtil.success(projectSimpleVOList);
+            //分页返回
+            int start = (page-1) * pageSize;
+            int end = start + pageSize;
+            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
+                    Math.min(end,projectSimpleVOList.size()));
+            return ResultUtil.success(pageData);
         }
 
         //根据状态查询
@@ -412,7 +452,12 @@ public class ProjectServiceImpl implements ProjectService {
                 Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
-            return ResultUtil.success(projectSimpleVOList);
+            //分页返回
+            int start = (page-1) * pageSize;
+            int end = start + pageSize;
+            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
+                    Math.min(end,projectSimpleVOList.size()));
+            return ResultUtil.success(pageData);
         }
 
 
@@ -425,7 +470,12 @@ public class ProjectServiceImpl implements ProjectService {
                 Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
-            return ResultUtil.success(projectSimpleVOList);
+            //分页返回
+            int start = (page-1) * pageSize;
+            int end = start + pageSize;
+            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
+                    Math.min(end,projectSimpleVOList.size()));
+            return ResultUtil.success(pageData);
         } else {
             listAll = 0;
             List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
@@ -435,7 +485,12 @@ public class ProjectServiceImpl implements ProjectService {
                 Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
-            return ResultUtil.success(projectSimpleVOList);
+            //分页返回
+            int start = (page-1) * pageSize;
+            int end = start + pageSize;
+            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
+                    Math.min(end,projectSimpleVOList.size()));
+            return ResultUtil.success(pageData);
         }
     }
 
@@ -451,21 +506,23 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse projectDelete(HttpServletRequest request, Long id) {
+    public BaseResponse projectDelete(HttpServletRequest request, List<Long> id) {
         log.info("\t> 执行 Service 层 ProjectService.projectDelete 方法");
 
-        //判断用户是否为老师 或者 项目负责人 或管理员
-        if (!Processing.checkUserIsTeacher(request, roleMapper) &&
-                !projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), id)
-                && !Processing.checkUserIsAdmin(request, roleMapper)) {
+        //判断用户是否为老师 或者 项目负责人
+        if (!Processing.checkUserIsTeacher(request, roleMapper)){
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
 
-        if (!projectDAO.projectDelete(id)) {
-            return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
-        } else {
-            return ResultUtil.success();
+        for(Long id1:id){
+            if(!projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), id1)) {
+                return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
+
+            if (!projectDAO.projectDelete(id1)) {
+                return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
+            }
+        }  return ResultUtil.success();
     }
 
     @Override

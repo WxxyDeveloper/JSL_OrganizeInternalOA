@@ -65,9 +65,11 @@ public class ProjectController {
     @GetMapping("/project/get/custom")
     public BaseResponse projectGetCustom(@RequestParam(required = false) Integer id,
                                          @RequestParam(required = false) List<String> tags,
-                                         @RequestParam(required = false) List<Integer> isFinish) {
+                                         @RequestParam(required = false) List<Integer> isFinish,
+                                         @RequestParam(required = false,defaultValue = "1") Integer page,
+                                         @RequestParam(required = false,defaultValue = "10") Integer pageSize) {
         log.info("请求接口[GET]: /project/all/get");
-        return projectService.tget(id, tags, isFinish);
+        return projectService.tget(id, tags, isFinish,page,pageSize);
     }
 
 
@@ -80,9 +82,11 @@ public class ProjectController {
     public BaseResponse projectGet(@RequestParam(required = false) Integer listAll,
                                    @RequestParam(required = false) List<String> tags,
                                    @RequestParam(required = false) List<Integer> isFinish,
+                                   @RequestParam(required = false,defaultValue = "1") Integer page,
+                                   @RequestParam(required = false,defaultValue = "10") Integer pageSize,
                                    HttpServletRequest request) {
         log.info("请求接口[GET]: /project/get");
-        return projectService.get(listAll, request, tags, isFinish);
+        return projectService.get(listAll, request, tags, isFinish,page,pageSize);
     }
 
     /**
@@ -95,9 +99,11 @@ public class ProjectController {
                                        @RequestParam(required = false) List<String> tags,
                                        @RequestParam(required = false) List<Integer> isFinish,
                                        @RequestParam(required = false) Integer is,
+                                       @RequestParam(required = false,defaultValue = "1") Integer page,
+                                       @RequestParam(required = false,defaultValue = "10") Integer pageSize,
                                        HttpServletRequest request) {
         log.info("请求接口[GET]: /project/work/get");
-        return projectService.workget(listAll, request, tags, isFinish, is);
+        return projectService.workget(listAll, request, tags, isFinish, is,page,pageSize);
     }
 
     /**
@@ -275,7 +281,7 @@ public class ProjectController {
      * @return
      */
     @DeleteMapping("/project/delete")
-    public BaseResponse projectDelete(HttpServletRequest request, @RequestParam Long id) {
+    public BaseResponse projectDelete(HttpServletRequest request, @RequestParam List<Long> id) {
         log.info("请求接口[Delete]: /project/delete");
         if (id == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
