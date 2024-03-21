@@ -58,7 +58,23 @@ public class ProjectServiceImpl implements ProjectService {
         log.info("\t> 执行 Service 层 ProjectService.projectAdd 方法");
         if(projectAdd.getDescription().isEmpty()){
             projectAdd.setDescription("{}");
+        }else {
+            projectAdd.setDescription("{\"description\":\" "+ projectAdd.getDescription() + "\"}");
         }
+        String tags = projectAdd.getTags();
+        String[] split = tags.split(",");
+        String open = "{\"tags\":[\"";
+        String close = "]}";
+        String tag = "";
+        for (String tag1:split){
+            tag += tag1 + "\",\"";
+        }if (!tag.isEmpty()) {
+            tag = tag.substring(0, tag.length() - 2);
+        }
+        projectAdd.setTags(open + tag + close);
+        projectAdd.setFile("{\"URI\":\"" + projectAdd.getFile() + "\"}");
+
+
         projectDAO.projectAdd(projectAdd);
         return ResultUtil.success("添加成功");
     }
