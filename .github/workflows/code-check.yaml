@@ -5,12 +5,14 @@ on:
     branches:
       - master
   pull_request:
-    - develop
+    branches:
+      - master
+      - develop
 
 jobs:
   build:
     name: 代码检查
-    runs-on: linux_amd64
+    runs-on: ubuntu-22.04
 
     permissions:
       contents: read
