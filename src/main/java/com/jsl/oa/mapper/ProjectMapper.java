@@ -2,6 +2,7 @@ package com.jsl.oa.mapper;
 
 import com.jsl.oa.model.doData.ProjectCuttingDO;
 import com.jsl.oa.model.doData.ProjectDO;
+import com.jsl.oa.model.doData.ProjectUserDO;
 import com.jsl.oa.model.doData.ProjectWorkDO;
 import com.jsl.oa.model.voData.ProjectInfoVO;
 import com.jsl.oa.model.voData.ProjectWorkSimpleVO;
@@ -72,6 +73,25 @@ public interface ProjectMapper {
 
     @Update("UPDATE organize_oa.oa_project SET is_delete = 1 where id=#{id}")
     boolean deleteProject(Long id);
+
+    @Insert("INSERT INTO organize_oa.oa_project_cutting (pid, name, tag, real_time) " +
+            "VALUES (#{pid}, #{name}, #{tag}, #{realTime})")
+    void projectCuttingAdd(ProjectCuttingDO projectCuttingDO);
+
+    @Update("UPDATE  organize_oa.oa_project_cutting SET name = #{name}, " +
+            "tag = #{tag}, engineering = #{engineering}, estimated_time = #{estimatedTime}, " +
+            "real_time = #{realTime}, updated_at = CURRENT_TIMESTAMP WHERE id = #{id}")
+    boolean projectCuttingUpdate(ProjectCuttingDO projectCuttingDO);
+
+    @Select("SELECT * FROM organize_oa.oa_project_cutting WHERE id = #{id}")
+    ProjectCuttingDO getProjectCuttingById(Long id);
+
+    @Select("SELECT * FROM organize_oa.oa_project_user WHERE pid = #{pid} AND uid = #{uid}")
+    ProjectUserDO getProjectUserByPidAndUid(Long pid, Long uid);
+
+    @Update("UPDATE organize_oa.oa_project_user SET uid = #{uid} , updated_at = CURRENT_TIMESTAMP WHERE id = #{id}")
+    boolean updateUserForProjectUser(Long uid, Long id);
+
 
     //@Select("select * from organize_oa.oa_project_work where is_finish=#{isFinish} and is_delete=false and principal_id =#{userId}")
     List<ProjectDO> workgetByIsfinish(Long userId, List<Integer> isFinish, Integer is);
