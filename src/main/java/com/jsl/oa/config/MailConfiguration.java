@@ -27,12 +27,21 @@ public class MailConfiguration {
     @Value("${spring.mail.password}")
     private String emailPassword;
 
+    /**
+     * 配置并返回一个用于发送邮件的JavaMailSender实例。
+     * <p>
+     * 此方法使用SMTP协议设置邮件发送器，启用SMTP认证和STARTTLS。同时，为了便于故障排除，
+     * 开启了邮件调试功能，以记录邮件发送过程。配置细节如主机、端口、用户名和密码根据应用程序的属性进行设置。
+     * </p>
+     *
+     * @return 配置好的JavaMailSender实例，可用于发送邮件。
+     */
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setDefaultEncoding("UTF-8");
         mailSender.setHost(emailHost);
-        mailSender.setPort(25); // 你的邮件服务器端口
+        mailSender.setPort(25);
         mailSender.setUsername(emailUsername);
         mailSender.setPassword(emailPassword);
 

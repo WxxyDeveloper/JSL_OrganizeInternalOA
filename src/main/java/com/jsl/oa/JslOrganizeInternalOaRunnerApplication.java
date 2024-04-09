@@ -21,6 +21,7 @@ import java.sql.Timestamp;
  * @see org.springframework.boot.SpringApplication
  * @see org.springframework.boot.autoconfigure.SpringBootApplication
  * @since v1.1.0
+ * @author xiaofeng
  */
 @Component
 @RequiredArgsConstructor
@@ -28,6 +29,12 @@ public class JslOrganizeInternalOaRunnerApplication implements SmartInitializing
     private final Gson gson = new Gson();
     private final InfoMapper infoMapper;
 
+
+    /**
+     * <h1>获取安全密钥</h1>
+     * <hr/>
+     * 从数据库中获取安全密钥
+     */
     @Override
     public void afterSingletonsInstantiated() {
         // 获取数据库中的 SecurityKey

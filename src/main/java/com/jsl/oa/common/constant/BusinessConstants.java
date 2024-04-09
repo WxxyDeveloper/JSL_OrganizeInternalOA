@@ -7,9 +7,9 @@ import lombok.Getter;
  * <hr/>
  * 业务常量
  *
- * @since v1.1.0
- * @version v1.1.0
  * @author xiao_lfeng
+ * @version v1.1.0
+ * @since v1.1.0
  */
 @Getter
 public enum BusinessConstants {
@@ -21,6 +21,12 @@ public enum BusinessConstants {
     private final String value;
     private final String description;
 
+    /**
+     * 创建一个具有指定值和描述的实例 {@code BusinessConstants}。
+     *
+     * @param value       常量的value
+     * @param description 常量的描述
+     */
     BusinessConstants(String value, String description) {
         this.value = value;
         this.description = description;

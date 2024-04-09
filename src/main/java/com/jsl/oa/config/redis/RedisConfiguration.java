@@ -29,6 +29,11 @@ public class RedisConfiguration {
     @Value("${spring.redis.password}")
     private String password;
 
+    /**
+     * <h2>JedisConnectionFactory</h2>
+     * <hr/>
+     * 用于连接Redis
+     */
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
@@ -36,6 +41,11 @@ public class RedisConfiguration {
         return new JedisConnectionFactory(config);
     }
 
+    /**
+     * <h2>RedisTemplate</h2>
+     * <hr/>
+     * 用于配置RedisTemplate
+     */
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
