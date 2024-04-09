@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  * <hr/>
  * 信息控制器，包含信息获取接口
  *
- * @author 筱锋xiao_lfeng
+ * @author xiao_lfeng
  * @version v1.1.0
  * @since v1.1.0
  */
@@ -28,14 +28,31 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequiredArgsConstructor
 public class InfoController {
-    private final InfoService infoService;
 
+    /**
+     * 信息服务
+     */
+    private final InfoService infoService;
+    /**
+     * 获取头部图片信息
+     *
+     * @param id 图片id
+     * @return 图片信息
+     */
     @GetMapping("/info/header-image/get")
     public BaseResponse infoGetHeaderImage(@RequestParam(required = false) Integer id) {
         log.info("请求接口[GET]: /info/header-image/get");
         return infoService.getHeaderImage(id);
     }
 
+    /**
+     * 编辑头部图片信息
+     *
+     * @param carouselVO 图片信息
+     * @param request    请求对象
+     * @param bindingResult 数据校验结果
+     * @return 编辑结果
+     */
     @PutMapping("/info/header-image/edit")
     public BaseResponse infoEditHeaderImage(@RequestBody @Validated CarouselVO carouselVO, HttpServletRequest request, @NotNull BindingResult bindingResult) {
         log.info("请求接口[PUT]: /info/header-image/edit");
@@ -51,12 +68,27 @@ public class InfoController {
         return infoService.editHeaderImage(request, carouselVO);
     }
 
+    /**
+     * 删除头部图片信息
+     *
+     * @param id 图片id
+     * @param request 请求对象
+     * @return 删除结果
+     */
     @DeleteMapping("/info/header-image/del")
     public BaseResponse infoDelHeaderImage(@RequestParam Integer id, HttpServletRequest request) {
         log.info("请求接口[DELETE]: /info/header-image/del");
         return infoService.delHeaderImage(request, id);
     }
 
+    /**
+     * 添加头部图片信息
+     *
+     * @param carouselVO 图片信息
+     * @param request    请求对象
+     * @param bindingResult 数据校验结果
+     * @return 添加结果
+     */
     @PostMapping("/info/header-image/add")
     public BaseResponse infoAddHeaderImage(@RequestBody @Validated CarouselVO carouselVO, HttpServletRequest request, @NotNull BindingResult bindingResult) {
         log.info("请求接口[POST]: /info/header-image/add");
@@ -68,12 +100,27 @@ public class InfoController {
         return infoService.addHeaderImage(request, carouselVO);
     }
 
+    /**
+     * 编辑头部图片设置
+     *
+     * @param showType 是否显示
+     * @param request   请求对象
+     * @return 编辑结果
+     */
     @PutMapping("/info/header-image/edit-setting")
     public BaseResponse infoEditSettingHeaderImage(@RequestParam Boolean showType, HttpServletRequest request) {
         log.info("请求接口[PUT]: /info/header-image/edit-setting");
         return infoService.editSettingHeaderImage(request, showType);
     }
 
+    /**
+     * 获取头部用户信息
+     *
+     * @param order      排序方式
+     * @param orderBy    排序字段
+     * @param request     请求对象
+     * @return 用户信息
+     */
     @GetMapping("info/header-user/get")
     public BaseResponse infoGetHeaderUser(@RequestParam String order,@RequestParam String orderBy,HttpServletRequest request){
         log.info("请求接口[GET]: /info/header-user/get");

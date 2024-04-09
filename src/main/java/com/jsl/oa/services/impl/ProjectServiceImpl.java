@@ -56,20 +56,21 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd) {
         log.info("\t> 执行 Service 层 ProjectService.projectAdd 方法");
-        if(projectAdd.getDescription().isEmpty()){
+        if (projectAdd.getDescription().isEmpty()) {
             projectAdd.setDescription("{}");
-        }else {
-            projectAdd.setDescription("{\"description\":\" "+ projectAdd.getDescription() + "\"}");
+        } else {
+            projectAdd.setDescription("{\"description\":\" " + projectAdd.getDescription() + "\"}");
         }
         String tags = projectAdd.getTags();
         String[] split = tags.split(",");
         String open = "{\"tags\":[\"";
         String close = "]}";
-        String tag = "";
-        for (String tag1:split){
-            tag += tag1 + "\",\"";
-        }if (!tag.isEmpty()) {
-            tag = tag.substring(0, tag.length() - 2);
+        StringBuilder tag = new StringBuilder();
+        for (String tag1 : split) {
+            tag.append(tag1).append("\",\"");
+        }
+        if (tag.length() > 0) {
+            tag = new StringBuilder(tag.substring(0, tag.length() - 2));
         }
         projectAdd.setTags(open + tag + close);
         projectAdd.setFile("{\"URI\":\"" + projectAdd.getFile() + "\"}");
@@ -85,84 +86,84 @@ public class ProjectServiceImpl implements ProjectService {
         //获取用户id
         Long userId = Processing.getAuthHeaderToUserId(request);
         //是否是增加子系统
-        if(projectWorkVO.getType() == 0 ){
+        if (projectWorkVO.getType() == 0) {
             //是否是老师
-            if (Processing.checkUserIsTeacher(request, roleMapper)){
+            if (Processing.checkUserIsTeacher(request, roleMapper)) {
                 projectDAO.projectWorkAdd(projectWorkVO);
-            }else {
+            } else {
                 return ResultUtil.error(ErrorCode.NOT_PERMISSION);
             }
         }//增加子模块
         else {
             //是否是子系统的负责人
-            if(Objects.equals(userId, projectMapper.getPirIdbyWorkid(projectWorkVO.getPid()))){
+            if (Objects.equals(userId, projectMapper.getPirIdbyWorkid(projectWorkVO.getPid()))) {
                 projectDAO.projectWorkAdd(projectWorkVO);
-            }else return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+            } else return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
 
         return ResultUtil.success("添加成功");
     }
 
     @Override
-    public BaseResponse tget(Integer id, List<String> tags, List<Integer> isFinish,Integer page,Integer pageSize){
+    public BaseResponse tget(Integer id, List<String> tags, List<Integer> isFinish, Integer page, Integer pageSize) {
         log.info("\t> 执行 Service 层 ProjectService.tget 方法");
         //根据id查询
-        if (id != null){
+        if (id != null) {
             ProjectDO projectDO = projectMapper.tgetProjectById(id);
             ProjectSimpleVO projectSimpleVO = new ProjectSimpleVO();
-            Processing.projectTosimply(projectSimpleVO,projectDO,userDAO,objectMapper);
+            Processing.projectTosimply(projectSimpleVO, projectDO, userDAO, objectMapper);
             return ResultUtil.success(projectSimpleVO);
         }
 
         //根据标签查询
         if (tags != null && !tags.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.tget(id,isFinish,tags);
+            List<ProjectDO> projectDOList = projectDAO.tget(id, isFinish, tags);
 
             List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO:projectDOList){
+            for (ProjectDO projectDO : projectDOList) {
                 ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
 
             //分页返回
-            int start = (page-1) * pageSize;
+            int start = (page - 1) * pageSize;
             int end = start + pageSize;
             List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end,projectSimpleVOList.size()));
+                    Math.min(end, projectSimpleVOList.size()));
             return ResultUtil.success(pageData);
         }
 
         //根据状态查询
         if (isFinish != null && !isFinish.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.tget(id,isFinish,tags);
+            List<ProjectDO> projectDOList = projectDAO.tget(id, isFinish, tags);
 
             List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO:projectDOList){
+            for (ProjectDO projectDO : projectDOList) {
                 ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
             //分页返回
-            int start = (page-1) * pageSize;
+            int start = (page - 1) * pageSize;
             int end = start + pageSize;
             List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end,projectSimpleVOList.size()));
+                    Math.min(end, projectSimpleVOList.size()));
             return ResultUtil.success(pageData);
         }
 
-        List<ProjectDO> projectDOList = projectDAO.tget(id,isFinish,tags);
+        List<ProjectDO> projectDOList = projectDAO.tget(id, isFinish, tags);
         List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-        for (ProjectDO projectDO:projectDOList){
+        for (ProjectDO projectDO : projectDOList) {
             ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-            Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+            Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
             projectSimpleVOList.add(projectSimpleVO1);
         }
         //分页返回
-        int start = (page-1) * pageSize;
+        int start = (page - 1) * pageSize;
         int end = start + pageSize;
         List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                Math.min(end,projectSimpleVOList.size()));
+                Math.min(end, projectSimpleVOList.size()));
         return ResultUtil.success(pageData);
     }
 
@@ -171,13 +172,13 @@ public class ProjectServiceImpl implements ProjectService {
 
 
 //        判断项目是否存在
-        if(!projectDAO.isExistProjectById(projectId)){
+        if (!projectDAO.isExistProjectById(projectId)) {
             return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
         }
 
         ProjectDO projectDO = projectDAO.getProjectById(projectId);
 
-        if(projectDO.getFile() == null || projectDO.getFile().equals("{}")){
+        if (projectDO.getFile() == null || projectDO.getFile().equals("{}")) {
             return ResultUtil.success(null);
         }
 
@@ -203,14 +204,14 @@ public class ProjectServiceImpl implements ProjectService {
 
         projectWorkSimpleVO.setPrincipalUser(userDAO.getUserById(projectMapper.getPid(id)).getUsername());
         // 解析JSON字符串
-        JsonNode rootNode = null;
+        JsonNode rootNode;
         try {
             rootNode = objectMapper.readTree(projectWorkSimpleVO.getDescription());
             // 访问特定的key
             JsonNode targetNode = rootNode.get("description");
-            if(targetNode != null && !rootNode.isNull()){
+            if (targetNode != null && !rootNode.isNull()) {
                 projectWorkSimpleVO.setDescription(targetNode.asText());
-            }else{
+            } else {
                 projectWorkSimpleVO.setDescription("null");
             }
         } catch (JsonProcessingException ignored) {
@@ -370,16 +371,16 @@ public class ProjectServiceImpl implements ProjectService {
             List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
 
             List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO:projectDOList){
+            for (ProjectDO projectDO : projectDOList) {
                 ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
             //分页返回
-            int start = (page-1) * pageSize;
+            int start = (page - 1) * pageSize;
             int end = start + pageSize;
             List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end,projectSimpleVOList.size()));
+                    Math.min(end, projectSimpleVOList.size()));
             return ResultUtil.success(pageData);
         }
 
@@ -387,16 +388,16 @@ public class ProjectServiceImpl implements ProjectService {
         if (isFinish != null && !isFinish.isEmpty()) {
             List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
             List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO:projectDOList){
+            for (ProjectDO projectDO : projectDOList) {
                 ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
             //分页返回
-            int start = (page-1) * pageSize;
+            int start = (page - 1) * pageSize;
             int end = start + pageSize;
             List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end,projectSimpleVOList.size()));
+                    Math.min(end, projectSimpleVOList.size()));
             return ResultUtil.success(pageData);
         }
 
@@ -405,31 +406,31 @@ public class ProjectServiceImpl implements ProjectService {
         if (listAll != null && Processing.checkUserIsTeacher(request, roleMapper)) {
             List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
             List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO:projectDOList){
+            for (ProjectDO projectDO : projectDOList) {
                 ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
             //分页返回
-            int start = (page-1) * pageSize;
+            int start = (page - 1) * pageSize;
             int end = start + pageSize;
             List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end,projectSimpleVOList.size()));
+                    Math.min(end, projectSimpleVOList.size()));
             return ResultUtil.success(pageData);
         } else {
             listAll = 0;
             List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
             List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO:projectDOList){
+            for (ProjectDO projectDO : projectDOList) {
                 ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
             //分页返回
-            int start = (page-1) * pageSize;
+            int start = (page - 1) * pageSize;
             int end = start + pageSize;
             List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end,projectSimpleVOList.size()));
+                    Math.min(end, projectSimpleVOList.size()));
             return ResultUtil.success(pageData);
         }
 
@@ -444,68 +445,68 @@ public class ProjectServiceImpl implements ProjectService {
 
         //根据标签查询
         if (tags != null && !tags.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
+            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish, is);
             List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO:projectDOList){
+            for (ProjectDO projectDO : projectDOList) {
                 ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
             //分页返回
-            int start = (page-1) * pageSize;
+            int start = (page - 1) * pageSize;
             int end = start + pageSize;
             List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end,projectSimpleVOList.size()));
+                    Math.min(end, projectSimpleVOList.size()));
             return ResultUtil.success(pageData);
         }
 
         //根据状态查询
         if (isFinish != null && !isFinish.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
+            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish, is);
             List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO:projectDOList){
+            for (ProjectDO projectDO : projectDOList) {
                 ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
             //分页返回
-            int start = (page-1) * pageSize;
+            int start = (page - 1) * pageSize;
             int end = start + pageSize;
             List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end,projectSimpleVOList.size()));
+                    Math.min(end, projectSimpleVOList.size()));
             return ResultUtil.success(pageData);
         }
 
 
         //判断是否是老师(项目负责人)
         if (listAll != null && Processing.checkUserIsTeacher(request, roleMapper)) {
-            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
+            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish, is);
             List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO:projectDOList){
+            for (ProjectDO projectDO : projectDOList) {
                 ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
             //分页返回
-            int start = (page-1) * pageSize;
+            int start = (page - 1) * pageSize;
             int end = start + pageSize;
             List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end,projectSimpleVOList.size()));
+                    Math.min(end, projectSimpleVOList.size()));
             return ResultUtil.success(pageData);
         } else {
             listAll = 0;
-            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish,is);
+            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish, is);
             List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO:projectDOList){
+            for (ProjectDO projectDO : projectDOList) {
                 ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1,projectDO,userDAO,objectMapper);
+                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
                 projectSimpleVOList.add(projectSimpleVO1);
             }
             //分页返回
-            int start = (page-1) * pageSize;
+            int start = (page - 1) * pageSize;
             int end = start + pageSize;
             List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end,projectSimpleVOList.size()));
+                    Math.min(end, projectSimpleVOList.size()));
             return ResultUtil.success(pageData);
         }
     }
@@ -526,19 +527,19 @@ public class ProjectServiceImpl implements ProjectService {
         log.info("\t> 执行 Service 层 ProjectService.projectDelete 方法");
 
         //判断用户是否为老师 或者 项目负责人
-        if (!Processing.checkUserIsTeacher(request, roleMapper)){
+        if (!Processing.checkUserIsTeacher(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
 
-        for(Long id1:id){
-            if(!projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), id1)) {
+        for (Long id1 : id) {
+            if (!projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), id1)) {
                 return ResultUtil.error(ErrorCode.NOT_PERMISSION);
-        }
-
+            }
             if (!projectDAO.projectDelete(id1)) {
                 return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
             }
-        }  return ResultUtil.success();
+        }
+        return ResultUtil.success();
     }
 
     @Override

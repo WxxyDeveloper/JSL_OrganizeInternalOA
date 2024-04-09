@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
  * <hr/>
  * 用户认证控制器，包含用户注册、用户登录、用户登出接口
  *
+ * @author 筱锋xiao_lfeng|176yunxuan
  * @version v1.1.0
  * @see AuthService
  * @see UserRegisterVO
@@ -33,7 +34,6 @@ import java.util.regex.Pattern;
  * @see Processing
  * @see ResultUtil
  * @since v1.0.0
- * @author 筱锋xiao_lfeng|176yunxuan
  */
 @Slf4j
 @RestController
@@ -106,6 +106,17 @@ public class AuthController {
         }
     }
 
+    /**
+     * <h1>通过电子邮件和验证码处理用户登录。</h1>
+     * <hr/>
+     * 此方法首先验证电子邮件格式，并检查提供的验证码是否为有效整数。
+     * 如果验证通过，它尝试使用提供的电子邮件和验证码登录用户。
+     *
+     * @param email 用户尝试登录的电子邮件地址。
+     * @param code  发送到用户电子邮件的验证码，用于身份验证。
+     * @return {@link BaseResponse} 包含登录尝试的结果。这可以是带有登录详细信息的成功消息，
+     * 或者指示出了什么问题（例如，参数无效、验证码错误）的错误消息。
+     */
     @GetMapping("/auth/login/email")
     public BaseResponse authLoginByEmail(@RequestParam String email, @RequestParam String code) {
         log.info("请求接口[GET]: /auth/login/email");
@@ -140,6 +151,17 @@ public class AuthController {
         return authService.authLogout(request);
     }
 
+    /**
+     * <h2>修改密码</h2>
+     * <hr/>
+     * 修改密码
+     *
+     * @param userChangePasswordVO 用户修改密码信息
+     * @param request              HTTP请求
+     * @param bindingResult        参数校验结果
+     * @return {@link BaseResponse}
+     * @since v1.1.0
+     */
     @PutMapping("/auth/password")
     public BaseResponse authChangePassword(@RequestBody @Validated UserChangePasswordVO userChangePasswordVO, HttpServletRequest request, @NotNull BindingResult bindingResult) {
         log.info("请求接口[PUT]: /auth/password");
@@ -150,6 +172,11 @@ public class AuthController {
         return authService.authChangePassword(request, userChangePasswordVO);
     }
 
+    /**
+     * <h2>忘记密码</h2>
+     * <hr/>
+     * 忘记密码
+     */
     @PutMapping("auth/password/forget")
     public BaseResponse authForgetPassword(@RequestBody @Validated UserForgetPasswordVO userForgetPasswordVO, @NotNull BindingResult bindingResult) {
         log.info("请求接口[PUT]: /auth/password/forget");

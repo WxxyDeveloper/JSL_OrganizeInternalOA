@@ -21,7 +21,7 @@ import java.time.LocalDate;
  * <hr/>
  * 消息控制器，包含信息获取接口
  *
- * @author 张睿相
+ * @author xiangZr-hhh
  * @version v1.1.0
  * @since v1.1.0
  */
@@ -32,6 +32,13 @@ public class MessageController {
 
     private final MessageService messageService;
 
+    /**
+     * 删除消息
+     *
+     * @param id 消息id
+     * @param request 请求对象
+     * @return 删除结果
+     */
     @DeleteMapping("/message/delete")
     public BaseResponse messageDelete(@RequestParam Long id, HttpServletRequest request) {
         if (id == null) {
@@ -39,6 +46,16 @@ public class MessageController {
         } else return messageService.messageDelete(id, request);
     }
 
+    /**
+     * 获取消息列表
+     *
+     * @param page 页码
+     * @param pageSize 每页条数
+     * @param request 请求对象
+     * @param begin 开始日期
+     * @param end 结束日期
+     * @return 消息列表
+     */
     @GetMapping("/message/get")
     public BaseResponse messageGet(@RequestParam(defaultValue = "1") Long page,
                                    @RequestParam(defaultValue = "10") Long pageSize,
@@ -53,6 +70,17 @@ public class MessageController {
         } else return messageService.messageGet(begin, end, page, pageSize, uid);
     }
 
+    /**
+     * 获取所有消息列表
+     *
+     * @param page 页码
+     * @param pageSize 每页条数
+     * @param request 请求对象
+     * @param begin 开始日期
+     * @param end 结束日期
+     * @param uid 用户id
+     * @return 消息列表
+     */
     @GetMapping("/message/get/all")
     public BaseResponse messageGetAll(@RequestParam(defaultValue = "1") Long page,
                                       @RequestParam(defaultValue = "10") Long pageSize,
@@ -62,12 +90,11 @@ public class MessageController {
                                       @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
         log.info("请求接口[GET]:/message/get/all");
         String token = request.getHeader("Authorization").replace("Bearer ", "");
-        Long LoginId = JwtUtil.getUserId(token);
-        if (LoginId == null) {
+        Long loginId = JwtUtil.getUserId(token);
+        if (loginId == null) {
             return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
-        } else return messageService.messageGetAll(request, begin, end, page, pageSize, LoginId, uid);
+        } else return messageService.messageGetAll(request, begin, end, page, pageSize, loginId, uid);
     }
 
 }
-
 
