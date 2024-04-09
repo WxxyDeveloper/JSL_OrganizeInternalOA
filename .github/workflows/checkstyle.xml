@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+        "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+    <!-- 设置换行符 -->
+    <property name="lineSeparator" value="lf"/>
+
+    <!-- 检查文件头部 -->
+    <module name="FileTabCharacter">
+        <property name="eachLine" value="true"/>
+    </module>
+
+    <!-- 检查文件的末尾是否有换行符 -->
+    <module name="NewlineAtEndOfFile"/>
+
+    <!-- 检查缩进是否使用空格而不是 Tab -->
+    <module name="Checker">
+        <property name="fileExtensions" value="java"/>
+        <module name="Indentation">
+            <property name="basicOffset" value="4"/>
+            <property name="braceAdjustment" value="0"/>
+            <property name="caseIndent" value="4"/>
+            <property name="throwsIndent" value="4"/>
+            <property name="lineWrappingIndentation" value="4"/>
+        </module>
+    </module>
+
+    <!-- 检查代码中的注释 -->
+    <module name="Checker">
+        <property name="fileExtensions" value="java"/>
+        <module name="TreeWalker">
+            <module name="JavadocMethod"/>
+            <module name="JavadocVariable"/>
+            <module name="JavadocStyle"/>
+        </module>
+    </module>
+
+    <!-- 检查空白行 -->
+    <module name="Checker">
+        <property name="fileExtensions" value="java"/>
+        <module name="TreeWalker">
+            <module name="EmptyLineSeparator">
+                <property name="tokens" value="CLASS_DEF,INTERFACE_DEF,ENUM_DEF,METHOD_DEF,CTOR_DEF"/>
+            </module>
+        </module>
+    </module>
+
+    <!-- 检查行长度 -->
+    <module name="Checker">
+        <property name="fileExtensions" value="java"/>
+        <module name="TreeWalker">
+            <module name="LineLength">
+                <property name="max" value="120"/>
+                <property name="ignorePattern" value="^import .*"/>
+            </module>
+        </module>
+    </module>
+
+    <!-- 其他规则可以根据需要添加 -->
+
+</module>
