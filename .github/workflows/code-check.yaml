@@ -33,4 +33,3 @@ jobs:
           IGNORE_GITIGNORED_FILES: true
           VALIDATE_JAVA: true
           JAVA_FILE_NAME: alibaba-checkstyle.xml
-          DEFAULT_BRANCH: HEAD
