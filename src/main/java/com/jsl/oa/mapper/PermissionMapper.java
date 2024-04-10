@@ -1,7 +1,7 @@
 package com.jsl.oa.mapper;
 
-import com.jsl.oa.model.doData.PermissionDO;
-import com.jsl.oa.model.doData.RolePermissionDO;
+import com.jsl.oa.model.dodata.PermissionDO;
+import com.jsl.oa.model.dodata.RolePermissionDO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public interface PermissionMapper {
 
     @Select("SELECT * FROM organize_oa.oa_permissions WHERE id IN " +
             "(SELECT pid FROM organize_oa.oa_role_permissions WHERE rid IN " +
-                "(SELECT rid FROM organize_oa.oa_role_user WHERE uid = #{uid}))")
+            "(SELECT rid FROM organize_oa.oa_role_user WHERE uid = #{uid}))")
     List<PermissionDO> permissionUserPid(Long uid);
 
     @Select("SELECT * FROM organize_oa.oa_permissions where id=#{id}")

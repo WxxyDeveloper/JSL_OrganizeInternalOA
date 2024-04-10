@@ -1,7 +1,7 @@
 package com.jsl.oa.services.impl;
 
 import com.jsl.oa.dao.TagDAO;
-import com.jsl.oa.model.doData.TagProjectDO;
+import com.jsl.oa.model.dodata.TagProjectDO;
 import com.jsl.oa.services.TagService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ResultUtil;

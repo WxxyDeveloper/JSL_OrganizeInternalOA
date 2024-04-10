@@ -47,7 +47,7 @@
         where id = #{id}
     </update>
 
-    <select id="getByTags" resultType="com.jsl.oa.model.doData.ProjectDO">
+    <select id="getByTags" resultType="com.jsl.oa.model.dodata.ProjectDO">
         <if test="tags != null">
             select * from organize_oa.oa_project where is_delete=false and principal_id=#{userId} and status=1 and
 
@@ -66,7 +66,7 @@
         </if>
     </select>
 
-    <select id="getByIsfinish" resultType="com.jsl.oa.model.doData.ProjectDO">
+    <select id="getByIsfinish" resultType="com.jsl.oa.model.dodata.ProjectDO">
         select * from organize_oa.oa_project where is_delete=false and principal_id =#{userId} and status=1 and is_finish in
         <foreach collection="isFinish" item="Finish" separator="," open="(" close=")">
             #{Finish}
@@ -75,7 +75,7 @@
 
 
 
-    <select id="workgetByTags" resultType="com.jsl.oa.model.doData.ProjectDO">
+    <select id="workgetByTags" resultType="com.jsl.oa.model.dodata.ProjectDO">
         select * from organize_oa.oa_project where
         <if test="is != null">
             (principal_id = #{userId} and is_delete=false) or
@@ -97,7 +97,7 @@
 
     </select>
 
-    <select id="workgetByIsfinish" resultType="com.jsl.oa.model.doData.ProjectDO">
+    <select id="workgetByIsfinish" resultType="com.jsl.oa.model.dodata.ProjectDO">
         select * from organize_oa.oa_project where
         <if test="is != null">
             (principal_id = #{userId} and is_delete=false) or
@@ -108,7 +108,7 @@
         </foreach>
     </select>
 
-    <select id="workget" resultType="com.jsl.oa.model.doData.ProjectDO">
+    <select id="workget" resultType="com.jsl.oa.model.dodata.ProjectDO">
         select * from organize_oa.oa_project where
         <if test="is != null">
             (principal_id = #{userId} and is_delete=false) or
@@ -116,20 +116,20 @@
         id in(select project_id from organize_oa.oa_project_work where is_delete=false and principal_id=#{userId})
     </select>
 
-    <select id="workget1" resultType="com.jsl.oa.model.doData.ProjectDO">
+    <select id="workget1" resultType="com.jsl.oa.model.dodata.ProjectDO">
         select * from organize_oa.oa_project_work where status=1 and principal_id=#{userId}
     </select>
 
 
 
-    <select id="tget" resultType="com.jsl.oa.model.doData.ProjectDO">
+    <select id="tget" resultType="com.jsl.oa.model.dodata.ProjectDO">
         select * from organize_oa.oa_project where is_delete=false and status=1
         <if test="id != null">
             and id=#{id}
         </if>
     </select>
 
-    <select id="tgetBytags" resultType="com.jsl.oa.model.doData.ProjectDO">
+    <select id="tgetBytags" resultType="com.jsl.oa.model.dodata.ProjectDO">
         select * from organize_oa.oa_project where is_delete=false and status=1 and
        <if test="isFinish != null and isFinish.size() > 0">
            is_finish in
@@ -145,7 +145,7 @@
         </foreach>
     </select>
 
-    <select id="tgetByIsfinish" resultType="com.jsl.oa.model.doData.ProjectDO">
+    <select id="tgetByIsfinish" resultType="com.jsl.oa.model.dodata.ProjectDO">
         select * from organize_oa.oa_project where is_delete=false and status=1 and is_finish in
         <foreach collection="isFinish" item="Finish" separator="," open="(" close=") ">
             #{Finish}

@@ -8,10 +8,10 @@ import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.exception.ClassCopyException;
 import com.jsl.oa.mapper.RoleMapper;
-import com.jsl.oa.model.doData.*;
-import com.jsl.oa.model.voData.PermissionContentVo;
-import com.jsl.oa.model.voData.ProjectSimpleVO;
-import com.jsl.oa.model.voData.UserCurrentBackVO;
+import com.jsl.oa.model.dodata.*;
+import com.jsl.oa.model.vodata.PermissionContentVo;
+import com.jsl.oa.model.vodata.ProjectSimpleVO;
+import com.jsl.oa.model.vodata.UserCurrentBackVO;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -165,7 +165,7 @@ public class Processing {
      * <hr/>
      * 该方法用于检查用户是否是管理员，类型封装后字节返回结果
      *
-     * @param request 请求
+     * @param request    请求
      * @param roleMapper RoleMapper
      * @return 如果为 true 是管理员，false 不是管理员
      */
@@ -181,6 +181,7 @@ public class Processing {
 
     /**
      * 检查用户是否是老师
+     *
      * @param request
      * @param roleMapper
      * @return
@@ -204,7 +205,7 @@ public class Processing {
 
 
     /**
-     * @Description:  VO类与实体类属性赋值
+     * @Description: VO类与实体类属性赋值
      * @Date: 2024/1/18
      * @Param source:
      * @Param dest:
@@ -230,7 +231,7 @@ public class Processing {
 
                 Object value = sourceField.get(source);
 
-                if(value == null){
+                if (value == null) {
                     continue;
                 }
 
@@ -253,18 +254,18 @@ public class Processing {
 
 
     /**
-     * @Description:  将性别转为字符形式
+     * @Description: 将性别转为字符形式
      * @Date: 2024/1/18
      **/
     @Contract(pure = true)
-    public static @NotNull String getSex(short sex){
-        if(sex == 0){
+    public static @NotNull String getSex(short sex) {
+        if (sex == 0) {
             return "保密";
         }
-        if(sex == 1){
+        if (sex == 1) {
             return "男";
         }
-        if(sex == 2){
+        if (sex == 2) {
             return "女";
         }
         return " ";
@@ -284,8 +285,7 @@ public class Processing {
         RoleUserDO getUserRole = roleDAO.getRoleUserByUid(userDO.getId());
         if (getUserRole == null) {
             getUserRole = new RoleUserDO();
-            getUserRole.setRid(0L)
-                    .setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            getUserRole.setRid(0L).setCreatedAt(new Timestamp(System.currentTimeMillis()));
         } else {
             getUserRole.setUid(null);
         }
@@ -299,34 +299,11 @@ public class Processing {
             // 获取权限列表信息
             getPermissionForString = permissionDAO.getPermission(userDO.getId());
         }
-        userCurrent.setUser(new UserCurrentBackVO.ReturnUser()
-                        .setId(userDO.getId())
-                        .setJobId(userDO.getJobId())
-                        .setUsername(userDO.getUsername())
-                        .setAddress(userDO.getAddress())
-                        .setPhone(userDO.getPhone())
-                        .setEmail(userDO.getEmail())
-                        .setAge(userDO.getAge())
-                        .setSignature(userDO.getSignature())
-                        .setAvatar(userDO.getAvatar())
-                        .setNickname(userDO.getNickname())
-                        .setSex(userDO.getSex())
-                        .setEnabled(userDO.getEnabled())
-                        .setAccountNoExpired(userDO.getAccountNoExpired())
-                        .setCredentialsNoExpired(userDO.getCredentialsNoExpired())
-                        .setRecommend(userDO.getRecommend())
-                        .setAccountNoLocked(userDO.getAccountNoLocked())
-                        .setDescription(userDO.getDescription())
-                        .setCreatedAt(userDO.getCreatedAt())
-                        .setUpdatedAt(userDO.getUpdatedAt())
-                        .setIsDelete(userDO.getIsDelete()))
-                .setRole(new UserCurrentBackVO.ReturnUserRole()
-                        .setRid(getUserRole.getRid()))
-                .setPermission(getPermissionForString);
+        userCurrent.setUser(new UserCurrentBackVO.ReturnUser().setId(userDO.getId()).setJobId(userDO.getJobId()).setUsername(userDO.getUsername()).setAddress(userDO.getAddress()).setPhone(userDO.getPhone()).setEmail(userDO.getEmail()).setAge(userDO.getAge()).setSignature(userDO.getSignature()).setAvatar(userDO.getAvatar()).setNickname(userDO.getNickname()).setSex(userDO.getSex()).setEnabled(userDO.getEnabled()).setAccountNoExpired(userDO.getAccountNoExpired()).setCredentialsNoExpired(userDO.getCredentialsNoExpired()).setRecommend(userDO.getRecommend()).setAccountNoLocked(userDO.getAccountNoLocked()).setDescription(userDO.getDescription()).setCreatedAt(userDO.getCreatedAt()).setUpdatedAt(userDO.getUpdatedAt()).setIsDelete(userDO.getIsDelete())).setRole(new UserCurrentBackVO.ReturnUserRole().setRid(getUserRole.getRid())).setPermission(getPermissionForString);
         return userCurrent;
     }
 
-    public static List<UserDO> orderUser(List<UserDO> userDOS,String order,String orderBy){
+    public static List<UserDO> orderUser(List<UserDO> userDOS, String order, String orderBy) {
 
         Comparator<UserDO> comparator = null;
 
@@ -348,8 +325,7 @@ public class Processing {
         return userDOS;
     }
 
-    public static void projectTosimply(ProjectSimpleVO projectSimpleVO, ProjectDO projectDO,
-                                       UserDAO userDAO,ObjectMapper objectMapper) {
+    public static void projectTosimply(ProjectSimpleVO projectSimpleVO, ProjectDO projectDO, UserDAO userDAO, ObjectMapper objectMapper) {
 
         projectSimpleVO.setId(projectDO.getId());
         projectSimpleVO.setName(projectDO.getName());
@@ -364,9 +340,9 @@ public class Processing {
             rootNode = objectMapper.readTree(projectDO.getDescription());
             // 访问特定的key
             JsonNode targetNode = rootNode.get("description");
-            if(targetNode != null && !rootNode.isNull()){
+            if (targetNode != null && !rootNode.isNull()) {
                 projectSimpleVO.setDescription(targetNode.asText());
-            }else{
+            } else {
                 projectSimpleVO.setDescription("null");
             }
         } catch (JsonProcessingException ignored) {
@@ -377,7 +353,7 @@ public class Processing {
     }
 
     /**
-     * @Description:  将Permission归纳为父子关系的json形式
+     * @Description: 将Permission归纳为父子关系的json形式
      * @Date: 2024/1/20
      * @Param permissions: 权限实体类
      **/
@@ -404,14 +380,14 @@ public class Processing {
     }
 
     /**
-     * @Description:  封装PermissionContentVo的子类，被convertToVoList方法调用
+     * @Description: 封装PermissionContentVo的子类，被convertToVoList方法调用
      * @Date: 2024/1/20
      * @Param permission: 权限实体类
      * @Param childrenMap: 要封装的子类
      **/
     public static PermissionContentVo convertToVo(PermissionDO permission, Map<Long, List<PermissionDO>> childrenMap) {
         PermissionContentVo vo = new PermissionContentVo();
-        copyProperties(permission,vo);
+        copyProperties(permission, vo);
 
         List<PermissionDO> children = childrenMap.get(permission.getId());
         if (children != null) {

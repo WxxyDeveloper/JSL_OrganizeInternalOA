@@ -1,8 +1,8 @@
 package com.jsl.oa.services;
 
 import com.jsl.oa.exception.ClassCopyException;
-import com.jsl.oa.model.voData.RoleAddVo;
-import com.jsl.oa.model.voData.RoleEditVO;
+import com.jsl.oa.model.vodata.RoleAddVo;
+import com.jsl.oa.model.vodata.RoleEditVO;
 import com.jsl.oa.utils.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;

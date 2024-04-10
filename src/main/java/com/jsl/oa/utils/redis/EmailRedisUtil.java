@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
  * @see RedisConfiguration
  * @see com.jsl.oa.common.constant.RedisConstant
  * @since v1.1.0
+ * @param <R> 泛型
  */
 @Slf4j
 @Component

@@ -1,8 +1,8 @@
 package com.jsl.oa.controllers;
 
 import com.jsl.oa.exception.ClassCopyException;
-import com.jsl.oa.model.voData.RoleAddVo;
-import com.jsl.oa.model.voData.RoleEditVO;
+import com.jsl.oa.model.vodata.RoleAddVo;
+import com.jsl.oa.model.vodata.RoleEditVO;
 import com.jsl.oa.services.RoleService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -22,10 +22,10 @@ import javax.servlet.http.HttpServletRequest;
  * <hr/>
  * 角色控制器，包含角色获取接口
  *
+ * @author xiao_lfeng | 176yunxuan | xiangZr-hhh
  * @version v1.1.0
  * @see RoleService
  * @since v1.1.0
- * @author xiao_lfeng | 176yunxuan | xiangZr-hhh
  */
 @Slf4j
 @RestController
@@ -52,8 +52,8 @@ public class RoleController {
      * <hr/>
      * 角色编辑接口
      *
-     * @param request 请求
-     * @param roleEditVO 角色编辑VO
+     * @param request       请求
+     * @param roleEditVO    角色编辑VO
      * @param bindingResult 参数校验结果
      * @return {@link BaseResponse}
      */
@@ -73,7 +73,7 @@ public class RoleController {
      * 角色删除接口
      *
      * @param request 请求
-     * @param id 角色id
+     * @param id      角色id
      * @return {@link BaseResponse}
      */
     @DeleteMapping("/role/delete")
@@ -124,7 +124,7 @@ public class RoleController {
      * @Param uid:
      **/
     @PostMapping("role/add")
-    public BaseResponse addRole(HttpServletRequest request, @RequestBody @Validated RoleAddVo roleAddVO, @NotNull BindingResult bindingResult ) throws ClassCopyException {
+    public BaseResponse addRole(HttpServletRequest request, @RequestBody @Validated RoleAddVo roleAddVO, @NotNull BindingResult bindingResult) throws ClassCopyException {
         log.info("请求接口[POST]: /role/add");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -135,7 +135,7 @@ public class RoleController {
 
 
     /**
-     * @Description:  改变用户角色权限信息
+     * @Description: 改变用户角色权限信息
      * @Date: 2024/1/20
      * @Param request:
      * @Param uid: 用户id
@@ -150,10 +150,6 @@ public class RoleController {
         }
         return roleService.roleChangeUser(request, uid, rid);
     }
-
-
-
-
 
 
 }

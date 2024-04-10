@@ -4,10 +4,10 @@ import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.InfoDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.RoleMapper;
-import com.jsl.oa.model.doData.UserDO;
-import com.jsl.oa.model.doData.info.CarouselDO;
-import com.jsl.oa.model.voData.UserProfileVo;
-import com.jsl.oa.model.voData.business.info.CarouselVO;
+import com.jsl.oa.model.dodata.UserDO;
+import com.jsl.oa.model.dodata.info.CarouselDO;
+import com.jsl.oa.model.vodata.UserProfileVo;
+import com.jsl.oa.model.vodata.business.info.CarouselVO;
 import com.jsl.oa.services.InfoService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -28,9 +28,9 @@ import java.util.List;
  * <hr/>
  * 用于信息服务层的实现类
  *
- * @since v1.0.0
- * @version v1.1.0
  * @author xiao_lfeng
+ * @version v1.1.0
+ * @since v1.0.0
  */
 @Slf4j
 @Service
@@ -179,7 +179,11 @@ public class InfoServiceImpl implements InfoService {
             orderBy = "userId";
         }
         // 检查参数是否错误
-        if (!("asc".equals(order) || "desc".equals(order)) || !("userName".equals(orderBy) || "userId".equals(orderBy))) {
+        if (!("asc".equals(order)
+                || "desc".equals(order))
+                || !("userName".equals(orderBy)
+                || "userId".equals(orderBy))
+        ) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
         //获取用户信息

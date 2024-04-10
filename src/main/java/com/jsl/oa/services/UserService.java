@@ -1,10 +1,10 @@
 package com.jsl.oa.services;
 
-import com.jsl.oa.model.doData.UserDO;
-import com.jsl.oa.model.voData.UserAddVO;
-import com.jsl.oa.model.voData.UserAllCurrentVO;
-import com.jsl.oa.model.voData.UserEditProfileVO;
-import com.jsl.oa.model.voData.UserEditVO;
+import com.jsl.oa.model.dodata.UserDO;
+import com.jsl.oa.model.vodata.UserAddVO;
+import com.jsl.oa.model.vodata.UserAllCurrentVO;
+import com.jsl.oa.model.vodata.UserEditProfileVO;
+import com.jsl.oa.model.vodata.UserEditVO;
 import com.jsl.oa.utils.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +36,7 @@ public interface UserService {
      * @param id 用户id
      * @return {@link BaseResponse}
      */
-    BaseResponse userDelete(HttpServletRequest request,Long id);
+    BaseResponse userDelete(HttpServletRequest request, Long id);
 
     /**
      * <h2>账号锁定</h2>
@@ -46,7 +46,7 @@ public interface UserService {
      * @param id 用户id
      * @return {@link BaseResponse}
      */
-    BaseResponse userLock(HttpServletRequest request,Long id,Long isLock);
+    BaseResponse userLock(HttpServletRequest request, Long id, Long isLock);
 
     /**
      * <h2>用户编辑自己的信息</h2>

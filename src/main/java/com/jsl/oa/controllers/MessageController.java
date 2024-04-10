@@ -35,7 +35,7 @@ public class MessageController {
     /**
      * 删除消息
      *
-     * @param id 消息id
+     * @param id      消息id
      * @param request 请求对象
      * @return 删除结果
      */
@@ -43,17 +43,19 @@ public class MessageController {
     public BaseResponse messageDelete(@RequestParam Long id, HttpServletRequest request) {
         if (id == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
-        } else return messageService.messageDelete(id, request);
+        } else {
+            return messageService.messageDelete(id, request);
+        }
     }
 
     /**
      * 获取消息列表
      *
-     * @param page 页码
+     * @param page     页码
      * @param pageSize 每页条数
-     * @param request 请求对象
-     * @param begin 开始日期
-     * @param end 结束日期
+     * @param request  请求对象
+     * @param begin    开始日期
+     * @param end      结束日期
      * @return 消息列表
      */
     @GetMapping("/message/get")
@@ -67,18 +69,20 @@ public class MessageController {
         Long uid = JwtUtil.getUserId(token);
         if (uid == null) {
             return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
-        } else return messageService.messageGet(begin, end, page, pageSize, uid);
+        } else {
+            return messageService.messageGet(begin, end, page, pageSize, uid);
+        }
     }
 
     /**
      * 获取所有消息列表
      *
-     * @param page 页码
+     * @param page     页码
      * @param pageSize 每页条数
-     * @param request 请求对象
-     * @param begin 开始日期
-     * @param end 结束日期
-     * @param uid 用户id
+     * @param request  请求对象
+     * @param begin    开始日期
+     * @param end      结束日期
+     * @param uid      用户id
      * @return 消息列表
      */
     @GetMapping("/message/get/all")
@@ -93,7 +97,9 @@ public class MessageController {
         Long loginId = JwtUtil.getUserId(token);
         if (loginId == null) {
             return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
-        } else return messageService.messageGetAll(request, begin, end, page, pageSize, loginId, uid);
+        } else {
+            return messageService.messageGetAll(request, begin, end, page, pageSize, loginId, uid);
+        }
     }
 
 }

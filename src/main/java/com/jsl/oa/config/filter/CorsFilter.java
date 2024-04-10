@@ -14,20 +14,36 @@ import javax.servlet.http.HttpServletResponse;
  * <hr/>
  * 用于处理跨域请求
  *
- * @version v1.1.0
- * @since v1.1.0
- * @see Filter
  * @author xiao_lfeng
+ * @version v1.1.0
+ * @see Filter
+ * @since v1.1.0
  */
 @Slf4j
 @Component
 public class CorsFilter implements Filter {
 
     /**
+     * 设置请求头
+     *
+     * @param response 响应
+     */
+    protected static void setHeader(@NotNull HttpServletResponse response) {
+        // 允许跨域请求
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        //允许请求方式
+        response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        //需要放行header头部字段 如需鉴权字段，自行添加，如Authorization
+        response.setHeader("Access-Control-Allow-Headers", "*");
+    }
+
+    /**
      * 用于处理跨域请求
      *
-     * @param req  servlet请求
-     * @param res  servlet响应
+     * @param req   servlet请求
+     * @param res   servlet响应
      * @param chain 过滤器链
      */
     @Override
@@ -51,7 +67,8 @@ public class CorsFilter implements Filter {
      * @param filterConfig 过滤器配置
      */
     @Override
-    public void init(FilterConfig filterConfig) {}
+    public void init(FilterConfig filterConfig) {
+    }
 
     /**
      * 销毁
@@ -59,22 +76,6 @@ public class CorsFilter implements Filter {
     @Override
     public void destroy() {
         Filter.super.destroy();
-    }
-
-    /**
-     * 设置请求头
-     *
-     * @param response 响应
-     */
-    protected static void setHeader(@NotNull HttpServletResponse response) {
-        // 允许跨域请求
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        //允许请求方式
-        response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        //需要放行header头部字段 如需鉴权字段，自行添加，如Authorization
-        response.setHeader("Access-Control-Allow-Headers", "*");
     }
 
 }

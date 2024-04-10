@@ -1,9 +1,9 @@
 package com.jsl.oa.controllers;
 
-import com.jsl.oa.model.voData.UserChangePasswordVO;
-import com.jsl.oa.model.voData.UserForgetPasswordVO;
-import com.jsl.oa.model.voData.UserLoginVO;
-import com.jsl.oa.model.voData.UserRegisterVO;
+import com.jsl.oa.model.vodata.UserChangePasswordVO;
+import com.jsl.oa.model.vodata.UserForgetPasswordVO;
+import com.jsl.oa.model.vodata.UserLoginVO;
+import com.jsl.oa.model.vodata.UserRegisterVO;
 import com.jsl.oa.services.AuthService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -51,7 +51,10 @@ public class AuthController {
      * @since v1.0.0
      */
     @PostMapping("/auth/register")
-    public BaseResponse authRegister(@RequestBody @Validated UserRegisterVO userRegisterVO, @NotNull BindingResult bindingResult) {
+    public BaseResponse authRegister(
+            @RequestBody @Validated UserRegisterVO userRegisterVO,
+            @NotNull BindingResult bindingResult
+    ) {
         log.info("请求接口[POST]: /auth/register");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -72,7 +75,10 @@ public class AuthController {
      * @since v1.0.0
      */
     @PostMapping("/auth/login")
-    public BaseResponse authLogin(@RequestBody @Validated UserLoginVO userLoginVO, @NotNull BindingResult bindingResult) {
+    public BaseResponse authLogin(
+            @RequestBody @Validated UserLoginVO userLoginVO,
+            @NotNull BindingResult bindingResult
+    ) {
         log.info("请求接口[POST]: /auth/login");
 
         // 判断是否有参数错误
@@ -121,7 +127,6 @@ public class AuthController {
     public BaseResponse authLoginByEmail(@RequestParam String email, @RequestParam String code) {
         log.info("请求接口[GET]: /auth/login/email");
         if (email != null && code != null && !email.isEmpty() && !code.isEmpty()) {
-            System.out.println("测试");
             if (Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", email)) {
                 try {
                     Integer integer = Integer.valueOf(code);
@@ -163,7 +168,11 @@ public class AuthController {
      * @since v1.1.0
      */
     @PutMapping("/auth/password")
-    public BaseResponse authChangePassword(@RequestBody @Validated UserChangePasswordVO userChangePasswordVO, HttpServletRequest request, @NotNull BindingResult bindingResult) {
+    public BaseResponse authChangePassword(
+            @RequestBody @Validated UserChangePasswordVO userChangePasswordVO,
+            @NotNull BindingResult bindingResult,
+            HttpServletRequest request
+    ) {
         log.info("请求接口[PUT]: /auth/password");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -178,7 +187,10 @@ public class AuthController {
      * 忘记密码
      */
     @PutMapping("auth/password/forget")
-    public BaseResponse authForgetPassword(@RequestBody @Validated UserForgetPasswordVO userForgetPasswordVO, @NotNull BindingResult bindingResult) {
+    public BaseResponse authForgetPassword(
+            @RequestBody @Validated UserForgetPasswordVO userForgetPasswordVO,
+            @NotNull BindingResult bindingResult
+    ) {
         log.info("请求接口[PUT]: /auth/password/forget");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {

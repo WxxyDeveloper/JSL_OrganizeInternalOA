@@ -1,12 +1,12 @@
 package com.jsl.oa.mapper;
 
-import com.jsl.oa.model.doData.ProjectCuttingDO;
-import com.jsl.oa.model.doData.ProjectDO;
-import com.jsl.oa.model.doData.ProjectUserDO;
-import com.jsl.oa.model.doData.ProjectWorkDO;
-import com.jsl.oa.model.voData.ProjectInfoVO;
-import com.jsl.oa.model.voData.ProjectWorkSimpleVO;
-import com.jsl.oa.model.voData.ProjectWorkVO;
+import com.jsl.oa.model.dodata.ProjectCuttingDO;
+import com.jsl.oa.model.dodata.ProjectDO;
+import com.jsl.oa.model.dodata.ProjectUserDO;
+import com.jsl.oa.model.dodata.ProjectWorkDO;
+import com.jsl.oa.model.vodata.ProjectInfoVO;
+import com.jsl.oa.model.vodata.ProjectWorkSimpleVO;
+import com.jsl.oa.model.vodata.ProjectWorkVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

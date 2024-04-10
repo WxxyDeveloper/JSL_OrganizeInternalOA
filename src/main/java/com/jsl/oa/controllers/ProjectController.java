@@ -1,10 +1,10 @@
 package com.jsl.oa.controllers;
 
-import com.jsl.oa.model.voData.ProjectCuttingAddVO;
-import com.jsl.oa.model.voData.ProjectCuttingEditVO;
-import com.jsl.oa.model.voData.ProjectEditVO;
-import com.jsl.oa.model.voData.ProjectWorkVO;
-import com.jsl.oa.model.voData.business.info.ProjectShowVO;
+import com.jsl.oa.model.vodata.ProjectCuttingAddVO;
+import com.jsl.oa.model.vodata.ProjectCuttingEditVO;
+import com.jsl.oa.model.vodata.ProjectEditVO;
+import com.jsl.oa.model.vodata.ProjectWorkVO;
+import com.jsl.oa.model.vodata.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;

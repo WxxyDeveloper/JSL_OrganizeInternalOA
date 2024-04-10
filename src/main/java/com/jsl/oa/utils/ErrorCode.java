@@ -8,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
  * <hr/>
  * 用于定义错误码
  *
+ * @author xiao_lfeng
  * @version v1.1.0
  * @since v1.0.0
- * @author xiao_lfeng
  */
 @Slf4j
 @Getter
@@ -29,7 +29,7 @@ public enum ErrorCode {
     TOKEN_EXPIRED("TokenExpired", 40101, "Token已过期"),
     VERIFICATION_INVALID("VerificationInvalid", 40102, "验证码无效"),
     TOKEN_NOT_EXIST("TokenNotExist", 40103, "Token不存在"),
-    CLASS_COPY_EXCEPTION("ClassCopyException",40104,"实体类拷贝异常"),
+    CLASS_COPY_EXCEPTION("ClassCopyException", 40104, "实体类拷贝异常"),
     USER_IS_LOCKED("UserIsLocked", 40300, "用户已被锁定"),
     USER_IS_DEACTIVATED("UserIsDeactivated", 40301, "用户已被禁用"),
     NOT_ADMIN("NotAdmin", 40302, "不是管理员"),
@@ -43,8 +43,8 @@ public enum ErrorCode {
     ID_NOT_EXIST("IdNotExist", 40400, "ID不存在"),
     ROLE_NOT_FOUNDED("RoleNotFounded", 40401, "角色不存在"),
     ROLE_NAME_REPEAT("RoleNameRepeat", 40402, "角色名称重复"),
-    MESSAGE_ONLY_DELETE_BY_THEMSELVES("MessageOnlyDeleteByThenSelves",40500 ,"用户只能删除自己的消息" ),
-    PERMISSION_NOT_EXIST("permissionNotExist",40501,"权限不存在"),
+    MESSAGE_ONLY_DELETE_BY_THEMSELVES("MessageOnlyDeleteByThenSelves", 40500, "用户只能删除自己的消息"),
+    PERMISSION_NOT_EXIST("permissionNotExist", 40501, "权限不存在"),
     DATABASE_INSERT_ERROR("DatabaseInsertError", 50010, "数据库插入错误"),
     DATABASE_UPDATE_ERROR("DatabaseUpdateError", 50011, "数据库更新错误"),
     DATABASE_DELETE_ERROR("DatabaseDeleteError", 50012, "数据库删除错误"),

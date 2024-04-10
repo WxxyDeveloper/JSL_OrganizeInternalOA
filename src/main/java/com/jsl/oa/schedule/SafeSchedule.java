@@ -2,8 +2,8 @@ package com.jsl.oa.schedule;
 
 import com.google.gson.Gson;
 import com.jsl.oa.mapper.InfoMapper;
-import com.jsl.oa.model.doData.ConfigDO;
-import com.jsl.oa.model.voData.business.InfoAboutSecurityKey;
+import com.jsl.oa.model.dodata.ConfigDO;
+import com.jsl.oa.model.vodata.business.InfoAboutSecurityKey;
 import com.jsl.oa.utils.Processing;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;

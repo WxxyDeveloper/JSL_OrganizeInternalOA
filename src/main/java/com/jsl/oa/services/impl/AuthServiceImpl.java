@@ -5,9 +5,9 @@ import com.jsl.oa.common.constant.BusinessConstants;
 import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.mapper.UserMapper;
-import com.jsl.oa.model.doData.RoleUserDO;
-import com.jsl.oa.model.doData.UserDO;
-import com.jsl.oa.model.voData.*;
+import com.jsl.oa.model.dodata.RoleUserDO;
+import com.jsl.oa.model.dodata.UserDO;
+import com.jsl.oa.model.vodata.*;
 import com.jsl.oa.services.AuthService;
 import com.jsl.oa.services.MailService;
 import com.jsl.oa.utils.*;
@@ -88,7 +88,8 @@ public class AuthServiceImpl implements AuthService {
         log.info("\t> 执行 Service 层 AuthService.userLogin 方法");
         // 检查用户是否存在
         UserDO userDO;
-        if (Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", userLoginVO.getUser())) {
+        if (Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$",
+                userLoginVO.getUser())) {
             // 是否为手机号
             log.info("\t\t> 手机号登陆");
             userDO = userMapper.getUserInfoByPhone(userLoginVO.getUser());
@@ -175,7 +176,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @CheckUserAbleToUse
-    public BaseResponse authChangePassword(HttpServletRequest request, @NotNull UserChangePasswordVO userChangePasswordVO) {
+    public BaseResponse authChangePassword(
+            @NotNull UserChangePasswordVO userChangePasswordVO,
+            HttpServletRequest request
+    ) {
         log.info("\t> 执行 Service 层 AuthService.authChangePassword 方法");
         // 检查新密码输入无误
         if (!userChangePasswordVO.getNewPassword().equals(userChangePasswordVO.getConfirmPassword())) {
@@ -187,7 +191,11 @@ public class AuthServiceImpl implements AuthService {
             // 检查旧密码
             if (BCrypt.checkpw(userChangePasswordVO.getOldPassword(), userDO.getPassword())) {
                 // 更新密码
-                if (userMapper.updateUserPassword(userDO.getId(), BCrypt.hashpw(userChangePasswordVO.getNewPassword(), BCrypt.gensalt()))) {
+                if (userMapper.updateUserPassword(
+                        userDO.getId(),
+                        BCrypt.hashpw(userChangePasswordVO.getNewPassword(),
+                        BCrypt.gensalt()))
+                ) {
                     return ResultUtil.success("修改成功");
                 } else {
                     return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
@@ -226,7 +234,11 @@ public class AuthServiceImpl implements AuthService {
                     // 邮箱获取用户
                     UserDO userDO = userMapper.getUserInfoByEmail(userForgetPasswordVO.getEmail());
                     // 更新密码
-                    if (userMapper.updateUserPassword(userDO.getId(), BCrypt.hashpw(userForgetPasswordVO.getNewPassword(), BCrypt.gensalt()))) {
+                    if (userMapper.updateUserPassword(
+                            userDO.getId(),
+                            BCrypt.hashpw(userForgetPasswordVO.getNewPassword(),
+                            BCrypt.gensalt()))
+                    ) {
                         return ResultUtil.success("修改成功");
                     } else {
                         return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);

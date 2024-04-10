@@ -1,6 +1,6 @@
 package com.jsl.oa.mapper;
 
-import com.jsl.oa.model.doData.ConfigDO;
+import com.jsl.oa.model.dodata.ConfigDO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.Update;
  *
  * @since v1.1.0
  * @version v1.1.0
- * @see com.jsl.oa.model.doData.ConfigDO
+ * @see com.jsl.oa.model.dodata.ConfigDO
  */
 @Mapper
 public interface InfoMapper {

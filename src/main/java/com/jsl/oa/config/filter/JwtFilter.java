@@ -63,7 +63,10 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      * @throws Exception 异常
      */
     @Override
-    protected boolean onAccessDenied(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
+    protected boolean onAccessDenied(
+            ServletRequest request,
+            ServletResponse response,
+            Object mappedValue) throws Exception {
         // 添加跨域禁止
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         CorsFilter.setHeader(httpServletResponse);
@@ -80,7 +83,6 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             } else {
                 // 解析Bearer后面的令牌
                 token = token.replace("Bearer ", "");
-                System.out.println(token);
                 if (JwtUtil.verify(token)) {
                     // Token验证通过
                     return true;

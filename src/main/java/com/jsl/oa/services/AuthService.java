@@ -1,9 +1,9 @@
 package com.jsl.oa.services;
 
-import com.jsl.oa.model.voData.UserChangePasswordVO;
-import com.jsl.oa.model.voData.UserForgetPasswordVO;
-import com.jsl.oa.model.voData.UserLoginVO;
-import com.jsl.oa.model.voData.UserRegisterVO;
+import com.jsl.oa.model.vodata.UserChangePasswordVO;
+import com.jsl.oa.model.vodata.UserForgetPasswordVO;
+import com.jsl.oa.model.vodata.UserLoginVO;
+import com.jsl.oa.model.vodata.UserRegisterVO;
 import com.jsl.oa.utils.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -68,7 +68,7 @@ public interface AuthService {
      * @param userChangePasswordVO 用户修改密码信息
      * @return {@link BaseResponse}
      */
-    BaseResponse authChangePassword(HttpServletRequest request, UserChangePasswordVO userChangePasswordVO);
+    BaseResponse authChangePassword(UserChangePasswordVO userChangePasswordVO, HttpServletRequest request);
 
     /**
      * <h2>用户登出</h2>

@@ -3,8 +3,8 @@ package com.jsl.oa.services.impl;
 
 import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.NewsDAO;
-import com.jsl.oa.model.doData.NewsDO;
-import com.jsl.oa.model.voData.NewsAddVO;
+import com.jsl.oa.model.dodata.NewsDO;
+import com.jsl.oa.model.vodata.NewsAddVO;
 import com.jsl.oa.services.NewsService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.JwtUtil;

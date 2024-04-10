@@ -5,10 +5,10 @@ import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
-import com.jsl.oa.model.doData.RoleDO;
-import com.jsl.oa.model.doData.RoleUserDO;
-import com.jsl.oa.model.doData.UserDO;
-import com.jsl.oa.model.voData.*;
+import com.jsl.oa.model.dodata.RoleDO;
+import com.jsl.oa.model.dodata.RoleUserDO;
+import com.jsl.oa.model.dodata.UserDO;
+import com.jsl.oa.model.vodata.*;
 import com.jsl.oa.services.UserService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -30,11 +30,11 @@ import java.util.regex.Pattern;
  * <hr/>
  * 用户服务实现类，包含用户账号删除、用户账号锁定、用户编辑自己的信息接口
  *
+ * @author xiao_lfeng
  * @version v1.1.0
  * @see UserService
  * @see UserEditProfileVO
  * @since v1.0.0
- * @author xiao_lfeng
  */
 @Slf4j
 @Service
@@ -249,7 +249,7 @@ public class UserServiceImpl implements UserService {
                 .setAccountNoLocked(userEditVO.getIsLocked());
         //向数据库中修改属性
         userDAO.userEdit(userDO);
-        roleDAO.roleChangeUser(userEditVO.getId(),userEditVO.getRid());
+        roleDAO.roleChangeUser(userEditVO.getId(), userEditVO.getRid());
 
         return ResultUtil.success("用户信息修改成功");
     }

@@ -16,9 +16,17 @@ import java.time.LocalDate;
  */
 public interface MessageService {
 
-    BaseResponse messageDelete(Long mid,HttpServletRequest request);
+    BaseResponse messageDelete(Long mid, HttpServletRequest request);
 
-    BaseResponse messageGet(LocalDate begin,LocalDate end,Long page,Long pageSize,Long uid);
+    BaseResponse messageGet(LocalDate begin, LocalDate end, Long page, Long pageSize, Long uid);
 
-    BaseResponse messageGetAll(HttpServletRequest request,LocalDate begin, LocalDate end, Long page, Long pageSize, Long loginId, Long uid);
+    BaseResponse messageGetAll(
+            HttpServletRequest request,
+            LocalDate begin,
+            LocalDate end,
+            Long page,
+            Long pageSize,
+            Long loginId,
+            Long uid
+    );
 }

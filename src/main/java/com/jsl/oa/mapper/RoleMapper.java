@@ -1,7 +1,7 @@
 package com.jsl.oa.mapper;
 
-import com.jsl.oa.model.doData.RoleDO;
-import com.jsl.oa.model.doData.RoleUserDO;
+import com.jsl.oa.model.dodata.RoleDO;
+import com.jsl.oa.model.dodata.RoleUserDO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
