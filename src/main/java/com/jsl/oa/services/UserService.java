@@ -1,6 +1,5 @@
 package com.jsl.oa.services;
 
-import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.model.vodata.UserAddVO;
 import com.jsl.oa.model.vodata.UserAllCurrentVO;
 import com.jsl.oa.model.vodata.UserEditProfileVO;
@@ -18,15 +17,6 @@ import javax.servlet.http.HttpServletRequest;
  * @since v1.1.0
  */
 public interface UserService {
-    /**
-     * <h2>根据用户名获取用户信息</h2>
-     * <hr/>
-     * 该方法用于根据用户名获取用户信息
-     *
-     * @param username 用户名
-     * @return 用户信息
-     */
-    UserDO getUserInfoByUsername(String username);
 
     /**
      * <h2>用户账号删除</h2>
@@ -81,7 +71,7 @@ public interface UserService {
      * @param phone    手机号
      * @return {@link BaseResponse}
      */
-    BaseResponse userCurrent(HttpServletRequest request, String id, String username, String email, String phone);
+    BaseResponse userCurrent(String id, String username, String email, String phone, HttpServletRequest request);
 
 
     BaseResponse userAdd(UserAddVO userAddVo, HttpServletRequest request);

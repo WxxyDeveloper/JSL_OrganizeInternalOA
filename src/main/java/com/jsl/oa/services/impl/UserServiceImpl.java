@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -44,11 +45,6 @@ public class UserServiceImpl implements UserService {
     private final UserDAO userDAO;
     private final RoleDAO roleDAO;
     private final PermissionDAO permissionDAO;
-
-    @Override
-    public UserDO getUserInfoByUsername(String username) {
-        return userDAO.getUserInfoByUsername(username);
-    }
 
     @Override
     public BaseResponse userDelete(HttpServletRequest request, Long id) {
@@ -80,7 +76,9 @@ public class UserServiceImpl implements UserService {
         if (userDAO.isExistUser(id)) {
             userDAO.userLock(id, isLock);
             return ResultUtil.success("更改成功");
-        } else return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+        } else {
+            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+        }
     }
 
     @Override
@@ -131,7 +129,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @CheckUserAbleToUse
-    public BaseResponse userCurrent(HttpServletRequest request, String id, String username, String email, String phone) {
+    public BaseResponse userCurrent(
+            String id,
+            String username,
+            String email,
+            String phone,
+            HttpServletRequest request
+    ) {
         log.info("\t> 执行 Service 层 UserService.userCurrent 方法");
         if (id == null && username == null && email == null && phone == null) {
             // Token获取信息
@@ -150,13 +154,13 @@ public class UserServiceImpl implements UserService {
                 if (!getPermission.contains("user.current")) {
                     log.info("\t> 用户权限不足，检查是否是管理员");
                     // 检查用户是管理员
-                    RoleUserDO roleUserDO = roleDAO.roleMapper.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
-                    if (roleUserDO != null) {
-                        RoleDO roleDO = roleDAO.roleMapper.getRoleByRoleName("admin");
-                        if (!roleUserDO.getRid().equals(roleDO.getId())) {
-                            return ResultUtil.error(ErrorCode.NOT_PERMISSION);
-                        }
-                    } else {
+                    RoleUserDO roleUserDO = roleDAO
+                            .getRoleUserByUid(Objects.requireNonNull(Processing.getAuthHeaderToUserId(request)));
+                    if (roleUserDO == null) {
+                        return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+                    }
+                    RoleDO roleDO = roleDAO.roleMapper.getRoleByRoleName("admin");
+                    if (!roleUserDO.getRid().equals(roleDO.getId())) {
                         return ResultUtil.error(ErrorCode.NOT_PERMISSION);
                     }
                 }
@@ -216,7 +220,9 @@ public class UserServiceImpl implements UserService {
             } else {
                 return ResultUtil.error(ErrorCode.DATABASE_INSERT_ERROR);
             }
-        } else return ResultUtil.error(ErrorCode.USER_EXIST);
+        } else {
+            return ResultUtil.error(ErrorCode.USER_EXIST);
+        }
     }
 
 

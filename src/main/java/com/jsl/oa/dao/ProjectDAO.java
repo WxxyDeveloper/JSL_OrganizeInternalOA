@@ -101,12 +101,13 @@ public class ProjectDAO {
         log.info("\t> 执行 DAO 层 ProjectDAO.sortProject 方法");
         for (int i = 0; i < projectShowDO.getData().size(); i++) {
             for (int j = 0; j < projectShowDO.getData().size(); j++) {
+                ProjectShowDO.DataDO dataDO = projectShowDO.getData().get(i);
                 if ("desc".equals(projectShowDO.getOrder())) {
-                    if (projectShowDO.getData().get(i).getDisplayOrder() > projectShowDO.getData().get(j).getDisplayOrder()) {
+                    if (dataDO.getDisplayOrder() > projectShowDO.getData().get(j).getDisplayOrder()) {
                         Collections.swap(projectShowDO.getData(), i, j);
                     }
                 } else {
-                    if (projectShowDO.getData().get(i).getDisplayOrder() < projectShowDO.getData().get(j).getDisplayOrder()) {
+                    if (dataDO.getDisplayOrder() < projectShowDO.getData().get(j).getDisplayOrder()) {
                         Collections.swap(projectShowDO.getData(), i, j);
                     }
                 }

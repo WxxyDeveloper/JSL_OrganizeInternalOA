@@ -17,17 +17,17 @@ import java.util.List;
 @Mapper
 public interface ProjectMapper {
 
-    @Insert("insert into organize_oa.oa_project " +
-            "(name, description, principal_id, cycle,file,complete_time," +
-            "deadline,status,is_finish,tags,work_load) " +
-            "value (#{name},#{description},#{principalId},#{cycle},#{file}" +
-            ",#{completeTime},#{deadline},#{status},#{isFinish},#{tags},#{workLoad})")
+    @Insert("insert into organize_oa.oa_project "
+            + "(name, description, principal_id, cycle,file,complete_time,"
+            + "deadline,status,is_finish,tags,work_load) "
+            + "value (#{name},#{description},#{principalId},#{cycle},#{file}"
+            + ",#{completeTime},#{deadline},#{status},#{isFinish},#{tags},#{workLoad})")
     void projectAdd(ProjectInfoVO projectAdd);
 
-    @Insert("insert into organize_oa.oa_project_work (project_id, pid, name, principal_id," +
-            " work_load, description, cycle, complete_time, type, is_finish,status) " +
-            "value (#{projectId},#{pid},#{name},#{principalId},#{workLoad}," +
-            "#{description},#{cycle},#{completeTime},#{type},#{isFinish},#{status})")
+    @Insert("insert into organize_oa.oa_project_work (project_id, pid, name, principal_id,"
+            + " work_load, description, cycle, complete_time, type, is_finish,status) "
+            + "value (#{projectId},#{pid},#{name},#{principalId},#{workLoad},"
+            + "#{description},#{cycle},#{completeTime},#{type},#{isFinish},#{status})")
     void projectWorkAdd(ProjectWorkVO projectWorkVO);
 
     void projectEdit(ProjectDO projectEdit);
@@ -51,13 +51,12 @@ public interface ProjectMapper {
     @Insert("insert into organize_oa.oa_config(value, data, created_at)value ('project_show',null,NOW())")
     void insertProjectShow();
 
-    @Update("UPDATE organize_oa.oa_config SET data = #{setProjectShow}, updated_at = CURRENT_TIMESTAMP WHERE value = 'project_show'")
+    @Update("UPDATE organize_oa.oa_config"
+            + " SET data = #{setProjectShow}, updated_at = CURRENT_TIMESTAMP "
+            + " WHERE value = 'project_show'"
+    )
     boolean setProjectShow(String setProjectShow);
 
-    //@Select("select * from organize_oa.oa_project where json_extract(tags,'$.tags')" +
-    //"like concat('%',#{tags},'%')")
-
-    //@Select("select * from organize_oa.oa_project where is_finish=#{isFinish} and is_delete=false and principal_id=#{userId}")
     List<ProjectDO> getByIsfinish(Long userId, List<Integer> isFinish);
 
     List<ProjectDO> getByTags(Long userId, List<String> tags, List<Integer> isFinish);
@@ -74,13 +73,13 @@ public interface ProjectMapper {
     @Update("UPDATE organize_oa.oa_project SET is_delete = 1 where id=#{id}")
     boolean deleteProject(Long id);
 
-    @Insert("INSERT INTO organize_oa.oa_project_cutting (pid, name, tag, real_time) " +
-            "VALUES (#{pid}, #{name}, #{tag}, #{realTime})")
+    @Insert("INSERT INTO organize_oa.oa_project_cutting (pid, name, tag, real_time) "
+            + "VALUES (#{pid}, #{name}, #{tag}, #{realTime})")
     void projectCuttingAdd(ProjectCuttingDO projectCuttingDO);
 
-    @Update("UPDATE  organize_oa.oa_project_cutting SET name = #{name}, " +
-            "tag = #{tag}, engineering = #{engineering}, estimated_time = #{estimatedTime}, " +
-            "real_time = #{realTime}, updated_at = CURRENT_TIMESTAMP WHERE id = #{id}")
+    @Update("UPDATE  organize_oa.oa_project_cutting SET name = #{name}, "
+            + "tag = #{tag}, engineering = #{engineering}, estimated_time = #{estimatedTime}, "
+            + "real_time = #{realTime}, updated_at = CURRENT_TIMESTAMP WHERE id = #{id}")
     boolean projectCuttingUpdate(ProjectCuttingDO projectCuttingDO);
 
     @Select("SELECT * FROM organize_oa.oa_project_cutting WHERE id = #{id}")

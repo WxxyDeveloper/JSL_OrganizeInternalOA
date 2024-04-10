@@ -4,7 +4,6 @@ import com.jsl.oa.annotations.CheckUserAbleToUse;
 import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
-import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.dodata.RoleDO;
 import com.jsl.oa.model.dodata.RoleUserDO;
@@ -45,7 +44,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class AnnotationsAspect {
     private final RoleDAO roleDAO;
-    private final UserDAO userDAO;
+    private final UserMapper userMapper;
     private final PermissionDAO permissionDAO;
 
     /**
@@ -79,7 +78,7 @@ public class AnnotationsAspect {
         Long userId = Processing.getAuthHeaderToUserId(request);
         if (userId != null) {
             // 检查用户是否允许继续执行
-            BaseResponse checkUserAbleToNext = checkUserAbleToNext(userId, userDAO.userMapper);
+            BaseResponse checkUserAbleToNext = checkUserAbleToNext(userId, userMapper);
             if (checkUserAbleToNext != null) {
                 return checkUserAbleToNext;
             } else {
@@ -128,7 +127,7 @@ public class AnnotationsAspect {
 
         // 获取用户信息
         Long userId = Processing.getAuthHeaderToUserId(request);
-        UserDO userDO = userDAO.userMapper.getUserById(userId);
+        UserDO userDO = userMapper.getUserById(userId);
         // 用户不存在
         if (userDO == null) {
             return ResultUtil.error(ErrorCode.USER_NOT_EXIST);

@@ -274,8 +274,12 @@ public class ProjectController {
     }
 
     @PutMapping("/project/cut/user/to")
-    public BaseResponse projectToOtherUserForCutting(HttpServletRequest request, @RequestParam Long oldUid
-            , @RequestParam Long pid, @RequestParam Long newUid) {
+    public BaseResponse projectToOtherUserForCutting(
+            HttpServletRequest request,
+            @RequestParam Long oldUid,
+            @RequestParam Long pid,
+            @RequestParam Long newUid
+    ) {
         log.info("请求接口[Put]: /project/cut/user/to");
         // 判断是否有参数错误
         if (oldUid == null || pid == null || newUid == null) {

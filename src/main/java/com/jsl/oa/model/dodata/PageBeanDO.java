@@ -14,6 +14,7 @@ import java.util.List;
  * @since v1.1.0
  * @version v1.1.0
  * @author 176yunxuan
+ * @param <R> 对类型的泛型处理
  */
 @Data
 @NoArgsConstructor

@@ -29,16 +29,16 @@ public interface UserMapper {
     @Select("SELECT * FROM organize_oa.oa_user WHERE job_id = #{jobId}")
     UserDO getUserByUserNum(String jobId);
 
-    @Insert("INSERT INTO organize_oa.oa_user " +
-            "(job_id, username, password, address, phone, email, age, sex) " +
-            "VALUES (#{jobId}, #{username}, #{password}, #{address}, #{phone}, #{email}, #{age}, #{sex})")
+    @Insert("INSERT INTO organize_oa.oa_user "
+            + "(job_id, username, password, address, phone, email, age, sex) "
+            + "VALUES (#{jobId}, #{username}, #{password}, #{address}, #{phone}, #{email}, #{age}, #{sex})")
     boolean insertUser(UserDO userDO);
 
     @Update("UPDATE organize_oa.oa_user SET is_delete = true ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}")
     void userDelete(Long id);
 
     @Update("UPDATE organize_oa.oa_user SET account_no_locked = #{isLock} ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}  ")
-    void userLock(Long id,Long isLock);
+    void userLock(Long id, Long isLock);
 
     @Select("SELECT * FROM organize_oa.oa_user WHERE id = #{id}")
     UserDO getUserById(Long id);
@@ -60,11 +60,11 @@ public interface UserMapper {
     @Select("SELECT * FROM organize_oa.oa_user ORDER BY `id` DESC LIMIT #{page},#{limit}")
     List<UserDO> getAllUser(UserAllCurrentVO userAllCurrentVO);
 
-    @Select("SELECT * FROM organize_oa.oa_user " +
-            "WHERE username LIKE CONCAT('%',#{search},'%') " +
-            "OR email LIKE CONCAT('%',#{search},'%') " +
-            "OR phone LIKE CONCAT('%',#{search},'%') " +
-            "ORDER BY `id` LIMIT #{page},#{limit}")
+    @Select("SELECT * FROM organize_oa.oa_user "
+            + "WHERE username LIKE CONCAT('%',#{search},'%') "
+            + "OR email LIKE CONCAT('%',#{search},'%') "
+            + "OR phone LIKE CONCAT('%',#{search},'%') "
+            + "ORDER BY `id` LIMIT #{page},#{limit}")
     List<UserDO> getAllUserBySearch(UserAllCurrentVO userAllCurrentVO);
 
     @Select("SELECT * FROM organize_oa.oa_role_user WHERE uid = #{userId}")

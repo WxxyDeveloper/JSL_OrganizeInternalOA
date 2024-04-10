@@ -182,9 +182,9 @@ public class Processing {
     /**
      * 检查用户是否是老师
      *
-     * @param request
-     * @param roleMapper
-     * @return
+     * @param request    请求
+     * @param roleMapper RoleMapper
+     * @return 如果为 true 是老师，false 不是老师
      */
     public static @NotNull Boolean checkUserIsTeacher(HttpServletRequest request, @NotNull RoleMapper roleMapper) {
         RoleUserDO roleUserDO = roleMapper.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
@@ -205,11 +205,16 @@ public class Processing {
 
 
     /**
-     * @Description: VO类与实体类属性赋值
-     * @Date: 2024/1/18
-     * @Param source:
-     * @Param dest:
-     **/
+     * 将属性从源对象复制到目标对象。
+     *
+     * @param <T>    目标对象的类型。
+     * @param <S>    源对象的类型。
+     * @param source 从中复制属性的源对象。
+     * @param target 属性将复制到的目标对象。
+     * @return 复制属性后的目标对象。
+     * @throws ClassCopyException 如果在复制过程中出现错误。
+     */
+    @Contract(pure = true)
     public static <T, S> T copyProperties(@NotNull S source, @NotNull T target) throws ClassCopyException {
         Class<?> sourceClass = source.getClass();
         Class<?> targetClass = target.getClass();
@@ -279,7 +284,11 @@ public class Processing {
      * @param userDO 用户信息
      * @return {@link BaseResponse}
      */
-    public static @NotNull UserCurrentBackVO.UserCurrent returnUserInfo(@NotNull UserDO userDO, RoleDAO roleDAO, PermissionDAO permissionDAO) {
+    public static @NotNull UserCurrentBackVO.UserCurrent returnUserInfo(
+            @NotNull UserDO userDO,
+            RoleDAO roleDAO,
+            PermissionDAO permissionDAO
+    ) {
         UserCurrentBackVO.UserCurrent userCurrent = new UserCurrentBackVO.UserCurrent();
         // 获取用户角色
         RoleUserDO getUserRole = roleDAO.getRoleUserByUid(userDO.getId());
@@ -299,7 +308,29 @@ public class Processing {
             // 获取权限列表信息
             getPermissionForString = permissionDAO.getPermission(userDO.getId());
         }
-        userCurrent.setUser(new UserCurrentBackVO.ReturnUser().setId(userDO.getId()).setJobId(userDO.getJobId()).setUsername(userDO.getUsername()).setAddress(userDO.getAddress()).setPhone(userDO.getPhone()).setEmail(userDO.getEmail()).setAge(userDO.getAge()).setSignature(userDO.getSignature()).setAvatar(userDO.getAvatar()).setNickname(userDO.getNickname()).setSex(userDO.getSex()).setEnabled(userDO.getEnabled()).setAccountNoExpired(userDO.getAccountNoExpired()).setCredentialsNoExpired(userDO.getCredentialsNoExpired()).setRecommend(userDO.getRecommend()).setAccountNoLocked(userDO.getAccountNoLocked()).setDescription(userDO.getDescription()).setCreatedAt(userDO.getCreatedAt()).setUpdatedAt(userDO.getUpdatedAt()).setIsDelete(userDO.getIsDelete())).setRole(new UserCurrentBackVO.ReturnUserRole().setRid(getUserRole.getRid())).setPermission(getPermissionForString);
+        userCurrent.setUser(new UserCurrentBackVO.ReturnUser()
+                        .setId(userDO.getId())
+                        .setJobId(userDO.getJobId())
+                        .setUsername(userDO.getUsername())
+                        .setAddress(userDO.getAddress())
+                        .setPhone(userDO.getPhone())
+                        .setEmail(userDO.getEmail())
+                        .setAge(userDO.getAge())
+                        .setSignature(userDO.getSignature())
+                        .setAvatar(userDO.getAvatar())
+                        .setNickname(userDO.getNickname())
+                        .setSex(userDO.getSex())
+                        .setEnabled(userDO.getEnabled())
+                        .setAccountNoExpired(userDO.getAccountNoExpired())
+                        .setCredentialsNoExpired(userDO.getCredentialsNoExpired())
+                        .setRecommend(userDO.getRecommend())
+                        .setAccountNoLocked(userDO.getAccountNoLocked())
+                        .setDescription(userDO.getDescription())
+                        .setCreatedAt(userDO.getCreatedAt())
+                        .setUpdatedAt(userDO.getUpdatedAt())
+                        .setIsDelete(userDO.getIsDelete()))
+                .setRole(new UserCurrentBackVO.ReturnUserRole().setRid(getUserRole.getRid()))
+                .setPermission(getPermissionForString);
         return userCurrent;
     }
 

@@ -3,8 +3,6 @@ package com.jsl.oa.dao;
 import com.google.gson.Gson;
 import com.jsl.oa.common.constant.BusinessConstants;
 import com.jsl.oa.mapper.UserMapper;
-import com.jsl.oa.model.dodata.RoleDO;
-import com.jsl.oa.model.dodata.RoleUserDO;
 import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.model.vodata.UserAllCurrentVO;
 import com.jsl.oa.model.vodata.UserCurrentBackVO;
@@ -25,16 +23,16 @@ import java.util.List;
  * 用于用户的增删改查,以及用户权限的获取,用户信息的获取,用户信息的修改,用户信息的删除,用户信息的锁定,用户信息的解锁,用户信息的添加,用户信息的
  * 编辑等
  *
+ * @author xiao_lfeng | 176yunxuan | xiangZr-hhh
  * @version v1.1.0
  * @since v1.1.0
- * @author xiao_lfeng | 176yunxuan | xiangZr-hhh
  */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class UserDAO {
 
-    public final UserMapper userMapper;
+    private final UserMapper userMapper;
     private final RoleDAO roleDAO;
     private final PermissionDAO permissionDAO;
     private final Gson gson;
@@ -51,13 +49,11 @@ public class UserDAO {
      */
     public UserDO getUserInfoByUsername(String username) {
         log.info("\t> 执行 DAO 层 UserDAO.getUserInfoByUsername 方法");
-        UserDO userDO = null;
+        UserDO userDO;
         // 从 Redis 获取数据
         // TODO: 10000-Redis: 从 Redis 获取数据
         // 从数据库获取用户信息
-        if (userDO == null) {
-            userDO = userMapper.getUserInfoByUsername(username);
-        }
+        userDO = userMapper.getUserInfoByUsername(username);
         return userDO;
     }
 
@@ -116,12 +112,12 @@ public class UserDAO {
     /**
      * 用户账号锁定
      *
-     * @param id
+     * @param id 用户id
      */
-    public void userLock(Long id,Long isLock) {
+    public void userLock(Long id, Long isLock) {
         log.info("\t> 执行 DAO 层 UserDAO.userLock 方法");
         log.info("\t\t> 从 MySQL 获取数据");
-        userMapper.userLock(id,isLock);
+        userMapper.userLock(id, isLock);
     }
 
     public void userEditProfile(UserEditProfileVO userEditProfileVO) {
@@ -136,7 +132,7 @@ public class UserDAO {
         List<UserDO> userCurrentDO = userMapper.getAllUser(userAllCurrentVO);
         UserCurrentBackVO userCurrentBackVO = new UserCurrentBackVO();
         userCurrentBackVO.setUsers(new ArrayList<>())
-                        .setCount(userMapper.getUsersCount());
+                .setCount(userMapper.getUsersCount());
         userCurrentDO.forEach(it -> userCurrentBackVO.getUsers().add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
         return userCurrentBackVO;
 
@@ -148,17 +144,17 @@ public class UserDAO {
         List<UserDO> userCurrentDO = userMapper.getAllUserBySearch(userAllCurrentVO);
         UserCurrentBackVO userCurrentBackVO = new UserCurrentBackVO();
         userCurrentBackVO.setUsers(new ArrayList<>())
-                        .setCount(userMapper.getUsersCount());
+                .setCount(userMapper.getUsersCount());
         userCurrentDO.forEach(it -> userCurrentBackVO.getUsers().add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
         return userCurrentBackVO;
     }
 
 
     /**
-     * @return
-     * @Description 用户添加
-     * @Date: 2024/1/16
-     * @Param userDO: user 数据库表实体类
+     * Adds a new user to the database.
+     *
+     * @param userDO The UserDO object containing the user's information.
+     * @return True if the user is successfully added, false otherwise.
      */
     public boolean userAdd(UserDO userDO) {
         log.info("\t> 执行 DAO 层 userAdd 方法");
@@ -172,12 +168,14 @@ public class UserDAO {
         userMapper.updateUser(userDO);
     }
 
-
     /**
-     * @Description 根据username检测用户是否重复
-     * @Date: 2024/1/16
-     * @Param username: 用户名
-     **/
+     * <h2>用户名获取用户信息</h2>
+     * <hr/>
+     * 根据用户名获取用户信息
+     *
+     * @param username 用户名
+     * @return {@link UserDO}
+     */
     public Boolean isRepeatUser(String username) {
         log.info("\t> 执行 DAO 层 isRepeatUser 方法");
         log.info("\t\t> 从 MySQL 获取数据");
@@ -186,22 +184,21 @@ public class UserDAO {
 
 
     /**
-     * @Description 检测用户工号是否重复
-     * @Date 2024/1/18
-     * @Param userNum:
-     **/
+     * 通过用户编号获取用户信息
+     *
+     * @param userNum 用户编号
+     * @return UserDO
+     */
     public Boolean isRepeatUserNum(String userNum) {
-        if (userMapper.getUserByUserNum(userNum) != null) {
-            return true;
-        }
-        return false;
+        return userMapper.getUserByUserNum(userNum) != null;
     }
 
     /**
-     * @Description 根据用户id获取用户数据
-     * @Date 2024/1/17
-     * @Param userId
-     **/
+     * 通过 Id 获取用户信息
+     *
+     * @param userId 用户id
+     * @return UserDO
+     */
     public UserDO getUserById(Long userId) {
         log.info("\t> 执行 DAO 层 getUserById 方法");
         log.info("\t\t> 从 MySQL 获取数据");
@@ -209,35 +206,7 @@ public class UserDAO {
     }
 
 
-    /**
-     * @Description 根据用户id查询对应用户权限
-     * @Date 2024/1/18
-     * @Param uid:用户id
-     **/
-    public RoleUserDO getRoleFromUser(Long uid) {
-        log.info("\t> 执行 DAO 层 getRoleFromUser 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
-        return userMapper.getRoleIdByUserId(uid);
-    }
-
-
-    /**
-     * @Description 检验用户权限是否为管理员
-     * @Date 2024/1/18
-     * @Param null:用户id
-     **/
-    public Boolean isManagerByRoleId(Long roleId) {
-        log.info("\t> 执行 DAO 层 isManagerByRoleId 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
-        RoleDO role = userMapper.getRoleById(roleId);
-        if (role == null) {
-            return false;
-        }
-        return "admin".equals(role.getRoleName());
-    }
-
-
-    public List<UserDO> getRecommendUser(){
+    public List<UserDO> getRecommendUser() {
         log.info("\t> 执行 DAO 层 getRecommendUser 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         return userMapper.getRecommendUser();
@@ -253,11 +222,5 @@ public class UserDAO {
         log.info("\t> 执行 DAO 层 getUserByPhone 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         return userMapper.getUserByPhone(phone);
-    }
-
-    public Long getUsersCount() {
-        log.info("\t> 执行 DAO 层 getUsersCount 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
-        return userMapper.getUsersCount();
     }
 }

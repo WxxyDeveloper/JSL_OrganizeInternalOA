@@ -124,7 +124,7 @@ public class UserController {
             }
         }
         // 检查是否出现错误
-        return userService.userCurrent(request, id, username, email, phone);
+        return userService.userCurrent(id, username, email, phone, request);
     }
 
     /**

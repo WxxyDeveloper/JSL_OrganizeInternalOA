@@ -11,10 +11,9 @@ import java.util.List;
 public interface ModuleMapper {
 
 
+    List<ProjectWorkDO> getByProjectId(Integer projectId, Long userId, int is);
 
-    List<ProjectWorkDO> getByProjectId(Integer projectId, Long userId,int is);
-
-    List<ProjectWorkDO> getBySysId(Integer sysId, Long userId,int is);
+    List<ProjectWorkDO> getBySysId(Integer sysId, Long userId, int is);
 
     @Select("select principal_id from organize_oa.oa_project where id=#{projectId}")
     Long getPidByProjectid(Integer projectId);
