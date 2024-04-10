@@ -4,6 +4,7 @@
         "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
 <module name="Checker">
+    <property name="severity" value="error"/>
 
     <!-- 检查文件是否以一个空行结束 -->
     <module name="NewlineAtEndOfFile"/>
@@ -166,10 +167,6 @@
         <module name="Regexp">
             <property name="format" value="System\.out\.println"/>
             <property name="illegalPattern" value="true"/>
-        </module>
-        <!-- return个数 3个-->
-        <module name="ReturnCount">
-            <property name="max" value="3"/>
         </module>
         <!--try catch 异常处理数量 3-->
         <module name="NestedTryDepth ">
