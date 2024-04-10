@@ -1,5 +1,4 @@
 package com.jsl.oa.services.impl;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +8,6 @@ import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.mapper.UserMapper;
-import com.jsl.oa.model.dodata.ProjectCuttingDO;
 import com.jsl.oa.model.dodata.ProjectDO;
 import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.model.dodata.info.ProjectShowDO;
@@ -93,12 +91,13 @@ public class ProjectServiceImpl implements ProjectService {
             } else {
                 return ResultUtil.error(ErrorCode.NOT_PERMISSION);
             }
-        }//增加子模块
-        else {
+        } else {
             //是否是子系统的负责人
             if (Objects.equals(userId, projectMapper.getPirIdbyWorkid(projectWorkVO.getPid()))) {
                 projectDAO.projectWorkAdd(projectWorkVO);
-            } else return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+            } else {
+                return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+            }
         }
 
         return ResultUtil.success("添加成功");
@@ -231,8 +230,8 @@ public class ProjectServiceImpl implements ProjectService {
 
 
         //判断用户是否为老师 或者 项目负责人
-        if (!Processing.checkUserIsTeacher(request, roleMapper) ||
-                !projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), projectId)) {
+        if (!Processing.checkUserIsTeacher(request, roleMapper)
+                || !projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), projectId)) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
 
@@ -244,30 +243,6 @@ public class ProjectServiceImpl implements ProjectService {
             return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
         }
 
-    }
-
-    @Override
-    @CheckUserHasPermission("project.cutting.user.get")
-    public BaseResponse projectGetUserInCutting(Long uid) {
-        log.info("\t> 执行 Service 层 ProjectService.projectGetUserInCutting 方法");
-        if (userDAO.isExistUser(uid)) {
-            List<ProjectCuttingDO> projectCuttingDOList = projectDAO.projectGetUserInCutting(uid);
-            return ResultUtil.success(projectCuttingDOList);
-        } else {
-            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
-        }
-    }
-
-    @Override
-    @CheckUserHasPermission("project.cutting.user.add")
-    public BaseResponse projectAddUserForCutting(HttpServletRequest request, Long uid, Long pid) {
-        log.info("\t> 执行 Service 层 ProjectService.projectAddUserForCutting 方法");
-        if (userDAO.isExistUser(uid)) {
-            projectDAO.projectAddUserForCutting(uid, pid);
-            return ResultUtil.success();
-        } else {
-            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
-        }
     }
 
     @Override
@@ -361,7 +336,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse get(Integer listAll, HttpServletRequest request, List<String> tags, List<Integer> isFinish, Integer page, Integer pageSize) {
+    public BaseResponse get(Integer listAll, HttpServletRequest request,
+                            List<String> tags, List<Integer> isFinish, Integer page, Integer pageSize) {
         log.info("\t> 执行 Service 层 ProjectService.get 方法");
 
         //获取用户
@@ -437,7 +413,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse workget(Integer listAll, HttpServletRequest request, List<String> tags, List<Integer> isFinish, Integer is, Integer page, Integer pageSize) {
+    public BaseResponse workget(Integer listAll, HttpServletRequest request,
+                                List<String> tags, List<Integer> isFinish, Integer is,
+                                Integer page, Integer pageSize) {
         log.info("\t> 执行 Service 层 ProjectService.workget 方法");
 
         //获取用户
@@ -541,57 +519,4 @@ public class ProjectServiceImpl implements ProjectService {
         }
         return ResultUtil.success();
     }
-
-    @Override
-    @CheckUserHasPermission("project.cutting.add")
-    public BaseResponse addProjectCutting(HttpServletRequest request, ProjectCuttingAddVO projectCuttingAddVO) {
-        log.info("\t> 执行 Service 层 ProjectService.projectCuttingAdd方法");
-        //赋值数据
-        ProjectCuttingDO projectCuttingDO = new ProjectCuttingDO();
-        Processing.copyProperties(projectCuttingAddVO, projectCuttingDO);
-        //根据pid检测项目是否存在
-        if (!projectDAO.isExistProjectById(projectCuttingAddVO.getPid())) {
-            return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
-        }
-        //向数据库添加数据
-        projectDAO.projectCuttingAdd(projectCuttingDO);
-        return ResultUtil.success();
-    }
-
-    @Override
-    @CheckUserHasPermission("project.cutting.edit")
-    public BaseResponse editProjectCutting(HttpServletRequest request, ProjectCuttingEditVO projectCuttingEditVO) {
-        log.info("\t> 执行 Service 层 ProjectService.projectCuttingEdit方法");
-        //赋值数据
-        ProjectCuttingDO projectCuttingDO = new ProjectCuttingDO();
-        Processing.copyProperties(projectCuttingEditVO, projectCuttingDO);
-        //根据id检测项目模块是否存在
-        if (!projectDAO.isExistProjectCutting(projectCuttingEditVO.getId())) {
-            return ResultUtil.error(ErrorCode.PROJECT_CUTTING_NOT_EXIST);
-        }
-        //向数据库添加数据
-        projectDAO.updateProjectCutting(projectCuttingDO);
-        return ResultUtil.success();
-    }
-
-    @Override
-    @CheckUserHasPermission("project.cutting.delete")
-    public BaseResponse projectToOtherUserForCutting(HttpServletRequest request, Long oldUid, Long pid, Long newUid) {
-        log.info("\t> 执行 Service 层 ProjectService.projectToOtherUserForCutting方法");
-        //检测新旧用户是否存在
-        if (!userDAO.isExistUser(oldUid) || !userDAO.isExistUser(newUid)) {
-            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
-        }
-        //用户项目表是否含有对应记录
-        if (!projectDAO.isExistProjectUser(pid, oldUid)) {
-            return ResultUtil.error(ErrorCode.PROJECT_USER_NOT_EXIST);
-        }
-        //更新数据
-        if (!projectDAO.updateUserForProjectUserByPidAndUid(pid, oldUid, newUid)) {
-            return ResultUtil.error(ErrorCode.DATABASE_UPDATE_ERROR);
-        }
-        return ResultUtil.success();
-    }
-
-
 }

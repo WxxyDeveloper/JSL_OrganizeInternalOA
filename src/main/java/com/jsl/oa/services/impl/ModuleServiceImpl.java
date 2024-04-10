@@ -83,7 +83,6 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     public BaseResponse deleteById(HttpServletRequest request, Long id) {
-
 //        检测是否为管理员
         if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
