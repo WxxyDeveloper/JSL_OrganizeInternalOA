@@ -1,5 +1,6 @@
 package com.jsl.oa.controllers;
 import com.jsl.oa.model.vodata.ProjectEditVO;
+import com.jsl.oa.model.vodata.ProjectInfoVO;
 import com.jsl.oa.model.vodata.ProjectWorkVO;
 import com.jsl.oa.model.vodata.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
@@ -187,6 +188,19 @@ public class ProjectController {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
         return projectService.projecWorktAdd(request, projectWorkVO);
+    }
+
+
+    @PostMapping("/project/add")
+    public BaseResponse projectAdd(HttpServletRequest request,
+                                   @RequestBody @Validated ProjectInfoVO projectInfoVO,
+                                   @NotNull BindingResult bindingResult) {
+        log.info("请求接口[POST]: /project/add");
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        return ResultUtil.success(projectService.projectAdd(request, projectInfoVO));
     }
 
     /**

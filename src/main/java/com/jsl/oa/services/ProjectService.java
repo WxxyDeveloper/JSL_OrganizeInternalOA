@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface ProjectService {
-    BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd);
 
     BaseResponse projectEdit(HttpServletRequest request, ProjectEditVO projectEdit, Long projectId);
 
@@ -26,6 +25,8 @@ public interface ProjectService {
     BaseResponse getByName(String name);
 
     BaseResponse projectDelete(HttpServletRequest request, List<Long> id);
+
+    BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectVO);
 
     BaseResponse workget(Integer listAll, HttpServletRequest request,
                          List<String> tags, List<Integer> isFinish, Integer is, Integer page, Integer pageSize);
