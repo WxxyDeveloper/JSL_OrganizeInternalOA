@@ -1,6 +1,6 @@
 package com.jsl.oa.services;
 
-import com.jsl.oa.model.voData.business.info.CarouselVO;
+import com.jsl.oa.model.vodata.business.info.CarouselVO;
 import com.jsl.oa.utils.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;

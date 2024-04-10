@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jsl.oa.common.constant.BusinessConstants;
 import com.jsl.oa.mapper.RoleMapper;
-import com.jsl.oa.model.doData.RoleDO;
-import com.jsl.oa.model.doData.RoleUserDO;
+import com.jsl.oa.model.dodata.RoleDO;
+import com.jsl.oa.model.dodata.RoleUserDO;
 import com.jsl.oa.utils.redis.RoleRedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +44,8 @@ public class RoleDAO {
             return roleMapper.getRoleById(id);
         } else {
             log.info("\t\t> 从 Redis 获取数据");
-            List<RoleDO> roleList = gson.fromJson(getRedisData, new TypeToken<List<RoleDO>>() {}.getType());
+            List<RoleDO> roleList = gson.fromJson(getRedisData, new TypeToken<List<RoleDO>>() {
+            }.getType());
             for (RoleDO roleDO : roleList) {
                 if (roleDO.getId().equals(id)) {
                     return roleDO;
@@ -64,7 +65,8 @@ public class RoleDAO {
             return roleList;
         } else {
             log.info("\t\t> 从 Redis 获取数据");
-            return gson.fromJson(getRedisData, new TypeToken<List<RoleDO>>() {}.getType());
+            return gson.fromJson(getRedisData, new TypeToken<List<RoleDO>>() {
+            }.getType());
         }
     }
 
@@ -77,7 +79,7 @@ public class RoleDAO {
 
     }
 
-    public RoleDO getRoleNameByUid(Long uid){
+    public RoleDO getRoleNameByUid(Long uid) {
         log.info("\t> 执行 DAO 层 RoleDAO.getRoleNameByUid 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         RoleDO roleDO = roleMapper.getRoleById(getRoleUserByUid(uid).getRid());

@@ -2,7 +2,7 @@ package com.jsl.oa.dao;
 
 import com.google.gson.Gson;
 import com.jsl.oa.mapper.InfoMapper;
-import com.jsl.oa.model.doData.info.CarouselDO;
+import com.jsl.oa.model.dodata.info.CarouselDO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -64,12 +64,13 @@ public class InfoDAO {
     private void sortCarousel(CarouselDO getCarousel) {
         for (int i = 0; i < getCarousel.getData().size(); i++) {
             for (int j = 0; j < getCarousel.getData().size(); j++) {
+                CarouselDO.DataDO dataDO = getCarousel.getData().get(i);
                 if ("desc".equals(getCarousel.getOrder())) {
-                    if (getCarousel.getData().get(i).getDisplayOrder() > getCarousel.getData().get(j).getDisplayOrder()) {
+                    if (dataDO.getDisplayOrder() > dataDO.getDisplayOrder()) {
                         Collections.swap(getCarousel.getData(), i, j);
                     }
                 } else {
-                    if (getCarousel.getData().get(i).getDisplayOrder() < getCarousel.getData().get(j).getDisplayOrder()) {
+                    if (dataDO.getDisplayOrder() < dataDO.getDisplayOrder()) {
                         Collections.swap(getCarousel.getData(), i, j);
                     }
                 }

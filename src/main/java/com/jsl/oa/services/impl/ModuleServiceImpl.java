@@ -1,16 +1,12 @@
 package com.jsl.oa.services.impl;
 
-import ch.qos.logback.core.joran.util.beans.BeanUtil;
 import com.jsl.oa.dao.ModuleDAO;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ModuleMapper;
 import com.jsl.oa.mapper.RoleMapper;
-import com.jsl.oa.model.doData.ProjectDO;
-import com.jsl.oa.model.doData.ProjectWorkDO;
-import com.jsl.oa.model.doData.UserDO;
-import com.jsl.oa.model.voData.ProjectWorkAndNameVO;
-import com.jsl.oa.model.voData.ProjectWorkVO;
+import com.jsl.oa.model.dodata.ProjectWorkDO;
+import com.jsl.oa.model.vodata.ProjectWorkAndNameVO;
 import com.jsl.oa.services.ModuleService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -21,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.transform.Result;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +68,7 @@ public class ModuleServiceImpl implements ModuleService {
         List<ProjectWorkAndNameVO> projectWorkAndNameVOS = new ArrayList<>();
         for (ProjectWorkDO projectWorkDO : projectWorkDOList) {
             ProjectWorkAndNameVO projectWorkAndNameVO = new ProjectWorkAndNameVO();
-            Processing.copyProperties(projectWorkDO,projectWorkAndNameVO);
+            Processing.copyProperties(projectWorkDO, projectWorkAndNameVO);
 //        添加负责人和子系统名称
             projectWorkAndNameVO.
                     setChildSystemName(projectDAO.getProjectWorkerById(projectWorkDO.getPid()).getName())

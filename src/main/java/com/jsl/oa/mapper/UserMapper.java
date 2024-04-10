@@ -1,11 +1,11 @@
 package com.jsl.oa.mapper;
 
-import com.jsl.oa.model.doData.RoleDO;
-import com.jsl.oa.model.doData.RoleUserDO;
-import com.jsl.oa.model.doData.UserDO;
-import com.jsl.oa.model.voData.PrincipalSelectVO;
-import com.jsl.oa.model.voData.UserAllCurrentVO;
-import com.jsl.oa.model.voData.UserEditProfileVO;
+import com.jsl.oa.model.dodata.RoleDO;
+import com.jsl.oa.model.dodata.RoleUserDO;
+import com.jsl.oa.model.dodata.UserDO;
+import com.jsl.oa.model.vodata.PrincipalSelectVO;
+import com.jsl.oa.model.vodata.UserAllCurrentVO;
+import com.jsl.oa.model.vodata.UserEditProfileVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

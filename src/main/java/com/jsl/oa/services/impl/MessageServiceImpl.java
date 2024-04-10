@@ -5,8 +5,8 @@ import com.jsl.oa.annotations.CheckUserAbleToUse;
 import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.mapper.MessageMapper;
 import com.jsl.oa.mapper.RoleMapper;
-import com.jsl.oa.model.doData.MessageDO;
-import com.jsl.oa.model.doData.PageBeanDO;
+import com.jsl.oa.model.dodata.MessageDO;
+import com.jsl.oa.model.dodata.PageBeanDO;
 import com.jsl.oa.services.MessageService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -77,7 +77,15 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @CheckUserHasPermission("message.get")
-    public BaseResponse messageGetAll(HttpServletRequest request, LocalDate begin, LocalDate end, Long page, Long pageSize, Long loginId, Long uid) {
+    public BaseResponse messageGetAll(
+            HttpServletRequest request,
+            LocalDate begin,
+            LocalDate end,
+            Long page,
+            Long pageSize,
+            Long loginId,
+            Long uid
+    ) {
         log.info("请求接口服务层");
         //1.记录总数据数
         Long count = messageMapper.count(uid);

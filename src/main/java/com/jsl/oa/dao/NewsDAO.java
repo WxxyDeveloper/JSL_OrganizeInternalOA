@@ -1,7 +1,7 @@
 package com.jsl.oa.dao;
 
 import com.jsl.oa.mapper.NewsMapper;
-import com.jsl.oa.model.doData.NewsDO;
+import com.jsl.oa.model.dodata.NewsDO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

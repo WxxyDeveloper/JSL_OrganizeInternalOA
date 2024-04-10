@@ -1,6 +1,6 @@
 package com.jsl.oa.controllers;
 
-import com.jsl.oa.model.voData.PermissionEditVO;
+import com.jsl.oa.model.vodata.PermissionEditVO;
 import com.jsl.oa.services.PermissionService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;

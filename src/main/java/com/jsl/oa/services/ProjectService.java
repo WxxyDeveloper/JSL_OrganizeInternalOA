@@ -1,7 +1,7 @@
 package com.jsl.oa.services;
 
-import com.jsl.oa.model.voData.*;
-import com.jsl.oa.model.voData.business.info.ProjectShowVO;
+import com.jsl.oa.model.vodata.*;
+import com.jsl.oa.model.vodata.business.info.ProjectShowVO;
 import com.jsl.oa.utils.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +40,7 @@ public interface ProjectService {
 
     BaseResponse projecWorktAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO);
 
-    BaseResponse tget(Integer id, List<String> tags, List<Integer> isFinish,Integer page,Integer pageSize);
+    BaseResponse tget(Integer id, List<String> tags, List<Integer> isFinish, Integer page, Integer pageSize);
 
     BaseResponse projectFileGet(HttpServletRequest request, Long projectId);
 

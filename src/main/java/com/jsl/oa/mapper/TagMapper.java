@@ -1,6 +1,6 @@
 package com.jsl.oa.mapper;
 
-import com.jsl.oa.model.doData.TagProjectDO;
+import com.jsl.oa.model.dodata.TagProjectDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 

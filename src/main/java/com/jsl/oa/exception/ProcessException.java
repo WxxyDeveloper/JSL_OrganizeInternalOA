@@ -19,8 +19,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
  * <hr/>
  * 用于处理异常
  *
+ * @author xiao_lfeng
  * @version v1.1.0
- * @since v1.1.0
  * @see HttpRequestMethodNotSupportedException
  * @see DuplicateKeyException
  * @see HttpMessageNotReadableException
@@ -28,7 +28,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
  * @see Exception
  * @see ClassCopyException
  * @see MethodArgumentTypeMismatchException
- * @author xiao_lfeng
+ * @since v1.1.0
  */
 @Slf4j
 @RestControllerAdvice
@@ -51,6 +51,7 @@ public class ProcessException {
         log.warn(e.getMessage(), e);
         return ResultUtil.error("HttpMessageNotReadable", 400, "请求参数错误");
     }
+
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     public ResponseEntity<BaseResponse> businessMissingServletRequestParameterException(MissingServletRequestParameterException e) {
         log.error(e.getMessage(), e);

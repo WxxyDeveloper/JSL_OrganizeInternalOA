@@ -46,7 +46,9 @@ public class AuthControllerAspect {
     @Around("execution(* com.jsl.oa.controllers.*.*(..)) && !execution(* com.jsl.oa.controllers.IndexController.*(..))")
     public Object controllerAround(ProceedingJoinPoint pjp) throws Throwable {
         // 获取HttpServletRequest对象
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        HttpServletRequest request =
+                ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes()))
+                        .getRequest();
 
         // 时间戳检查
         if (checkTimestamp(request)) {
@@ -66,21 +68,23 @@ public class AuthControllerAspect {
      * @return {@link Object}
      * @throws Throwable 异常
      */
-    @Around("execution(* com.jsl.oa.controllers.*.*(..)) " +
-            "&& !execution(* com.jsl.oa.controllers.AuthController.authSendEmailCode(..))" +
-            "&& !execution(* com.jsl.oa.controllers.AuthController.authLoginByEmail(..))" +
-            "&& !execution(* com.jsl.oa.controllers.AuthController.authForgetPassword(..))" +
-            "&& !execution(* com.jsl.oa.controllers.AuthController.authLogin(..))" +
-            "&& !execution(* com.jsl.oa.controllers.AuthController.authRegister(..)) " +
-            "&& !execution(* com.jsl.oa.controllers.IndexController.*(..)) " +
-            "&& !execution(* com.jsl.oa.controllers.CustomController.*(..)) " +
-            "&& !execution(* com.jsl.oa.controllers.InfoController.infoGetHeaderImage(..)) " +
-            "&& !execution(* com.jsl.oa.controllers.InfoController.infoGetHeaderUser(..))" +
-            "&& !execution(* com.jsl.oa.controllers.ProjectController.*(..))" +
-            "&& !execution(* com.jsl.oa.controllers.TagController.*(..))")
+    @Around("execution(* com.jsl.oa.controllers.*.*(..)) "
+            + "&& !execution(* com.jsl.oa.controllers.AuthController.authSendEmailCode(..))"
+            + "&& !execution(* com.jsl.oa.controllers.AuthController.authLoginByEmail(..))"
+            + "&& !execution(* com.jsl.oa.controllers.AuthController.authForgetPassword(..))"
+            + "&& !execution(* com.jsl.oa.controllers.AuthController.authLogin(..))"
+            + "&& !execution(* com.jsl.oa.controllers.AuthController.authRegister(..)) "
+            + "&& !execution(* com.jsl.oa.controllers.IndexController.*(..)) "
+            + "&& !execution(* com.jsl.oa.controllers.CustomController.*(..)) "
+            + "&& !execution(* com.jsl.oa.controllers.InfoController.infoGetHeaderImage(..)) "
+            + "&& !execution(* com.jsl.oa.controllers.InfoController.infoGetHeaderUser(..))"
+            + "&& !execution(* com.jsl.oa.controllers.ProjectController.*(..))"
+            + "&& !execution(* com.jsl.oa.controllers.TagController.*(..))")
     public Object tokenControllerAround(ProceedingJoinPoint pjp) throws Throwable {
         // 获取 HttpServletRequest 对象
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        HttpServletRequest request =
+                ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes()))
+                        .getRequest();
 
         // 检查 Token 是否有效
         String token = request.getHeader("Authorization");
@@ -121,6 +125,7 @@ public class AuthControllerAspect {
         long nowTimestamp = System.currentTimeMillis();
 
         // 时间误差允许前后五秒钟
-        return nowTimestamp - Long.parseLong(getTimestamp) <= 10000 && nowTimestamp - Long.parseLong(getTimestamp) >= -10000;
+        return nowTimestamp - Long.parseLong(getTimestamp) <= 10000
+                && nowTimestamp - Long.parseLong(getTimestamp) >= -10000;
     }
 }

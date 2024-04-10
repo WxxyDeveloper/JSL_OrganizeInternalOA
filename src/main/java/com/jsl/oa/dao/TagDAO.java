@@ -1,7 +1,7 @@
 package com.jsl.oa.dao;
 
 import com.jsl.oa.mapper.TagMapper;
-import com.jsl.oa.model.doData.TagProjectDO;
+import com.jsl.oa.model.dodata.TagProjectDO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;

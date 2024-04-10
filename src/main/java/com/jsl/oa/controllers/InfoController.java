@@ -1,6 +1,6 @@
 package com.jsl.oa.controllers;
 
-import com.jsl.oa.model.voData.business.info.CarouselVO;
+import com.jsl.oa.model.vodata.business.info.CarouselVO;
 import com.jsl.oa.services.InfoService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -33,6 +33,7 @@ public class InfoController {
      * 信息服务
      */
     private final InfoService infoService;
+
     /**
      * 获取头部图片信息
      *
@@ -48,13 +49,17 @@ public class InfoController {
     /**
      * 编辑头部图片信息
      *
-     * @param carouselVO 图片信息
-     * @param request    请求对象
+     * @param carouselVO    图片信息
+     * @param request       请求对象
      * @param bindingResult 数据校验结果
      * @return 编辑结果
      */
     @PutMapping("/info/header-image/edit")
-    public BaseResponse infoEditHeaderImage(@RequestBody @Validated CarouselVO carouselVO, HttpServletRequest request, @NotNull BindingResult bindingResult) {
+    public BaseResponse infoEditHeaderImage(
+            @RequestBody @Validated CarouselVO carouselVO,
+            HttpServletRequest request,
+            @NotNull BindingResult bindingResult
+    ) {
         log.info("请求接口[PUT]: /info/header-image/edit");
         // 参数校验
         if (bindingResult.hasErrors()) {
@@ -71,7 +76,7 @@ public class InfoController {
     /**
      * 删除头部图片信息
      *
-     * @param id 图片id
+     * @param id      图片id
      * @param request 请求对象
      * @return 删除结果
      */
@@ -84,13 +89,17 @@ public class InfoController {
     /**
      * 添加头部图片信息
      *
-     * @param carouselVO 图片信息
-     * @param request    请求对象
+     * @param carouselVO    图片信息
+     * @param request       请求对象
      * @param bindingResult 数据校验结果
      * @return 添加结果
      */
     @PostMapping("/info/header-image/add")
-    public BaseResponse infoAddHeaderImage(@RequestBody @Validated CarouselVO carouselVO, HttpServletRequest request, @NotNull BindingResult bindingResult) {
+    public BaseResponse infoAddHeaderImage(
+            @RequestBody @Validated CarouselVO carouselVO,
+            HttpServletRequest request,
+            @NotNull BindingResult bindingResult
+    ) {
         log.info("请求接口[POST]: /info/header-image/add");
         // 参数校验
         if (bindingResult.hasErrors()) {
@@ -104,7 +113,7 @@ public class InfoController {
      * 编辑头部图片设置
      *
      * @param showType 是否显示
-     * @param request   请求对象
+     * @param request  请求对象
      * @return 编辑结果
      */
     @PutMapping("/info/header-image/edit-setting")
@@ -116,14 +125,18 @@ public class InfoController {
     /**
      * 获取头部用户信息
      *
-     * @param order      排序方式
-     * @param orderBy    排序字段
-     * @param request     请求对象
+     * @param order   排序方式
+     * @param orderBy 排序字段
+     * @param request 请求对象
      * @return 用户信息
      */
     @GetMapping("info/header-user/get")
-    public BaseResponse infoGetHeaderUser(@RequestParam String order,@RequestParam String orderBy,HttpServletRequest request){
+    public BaseResponse infoGetHeaderUser(
+            @RequestParam String order,
+            @RequestParam String orderBy,
+            HttpServletRequest request
+    ) {
         log.info("请求接口[GET]: /info/header-user/get");
-        return infoService.getHeaderUser(request,order,orderBy);
+        return infoService.getHeaderUser(request, order, orderBy);
     }
 }

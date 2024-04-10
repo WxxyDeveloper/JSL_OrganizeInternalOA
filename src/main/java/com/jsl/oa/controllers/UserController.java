@@ -1,9 +1,9 @@
 package com.jsl.oa.controllers;
 
-import com.jsl.oa.model.voData.UserAddVO;
-import com.jsl.oa.model.voData.UserAllCurrentVO;
-import com.jsl.oa.model.voData.UserEditProfileVO;
-import com.jsl.oa.model.voData.UserEditVO;
+import com.jsl.oa.model.vodata.UserAddVO;
+import com.jsl.oa.model.vodata.UserAllCurrentVO;
+import com.jsl.oa.model.vodata.UserEditProfileVO;
+import com.jsl.oa.model.vodata.UserEditVO;
 import com.jsl.oa.services.UserService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;

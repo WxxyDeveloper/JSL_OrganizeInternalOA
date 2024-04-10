@@ -6,9 +6,9 @@ import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.UserMapper;
-import com.jsl.oa.model.doData.RoleDO;
-import com.jsl.oa.model.doData.RoleUserDO;
-import com.jsl.oa.model.doData.UserDO;
+import com.jsl.oa.model.dodata.RoleDO;
+import com.jsl.oa.model.dodata.RoleUserDO;
+import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.Processing;
@@ -61,7 +61,9 @@ public class AnnotationsAspect {
     public Object checkUserHasPermission(@NotNull ProceedingJoinPoint pjp) throws Throwable {
         log.info("用户权限检查");
         // 获取 HttpServletRequest 对象
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        HttpServletRequest request =
+                ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes()))
+                        .getRequest();
 
         // 获取注解方法
         CheckUserHasPermission checkUserHasPermission = getCheckUserHasPermission(pjp);
@@ -90,16 +92,16 @@ public class AnnotationsAspect {
                     } else {
                         log.info("\t> 用户权限不足，检查是否是管理员");
                         // 检查用户是管理员
-                        RoleUserDO roleUserDO = roleDAO.roleMapper.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
-                        if (roleUserDO != null) {
-                            RoleDO roleDO = roleDAO.roleMapper.getRoleByRoleName("admin");
-                            if (roleUserDO.getRid().equals(roleDO.getId())) {
-                                return pjp.proceed();
-                            } else {
-                                return ResultUtil.error(ErrorCode.NOT_PERMISSION);
-                            }
-                        } else {
+                        RoleUserDO roleUserDO = roleDAO.roleMapper
+                                .getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
+                        if (roleUserDO == null) {
                             return ResultUtil.error(ErrorCode.NOT_ADMIN);
+                        }
+                        RoleDO roleDO = roleDAO.roleMapper.getRoleByRoleName("admin");
+                        if (roleUserDO.getRid().equals(roleDO.getId())) {
+                            return pjp.proceed();
+                        } else {
+                            return ResultUtil.error(ErrorCode.NOT_PERMISSION);
                         }
                     }
                 } else {
@@ -115,7 +117,9 @@ public class AnnotationsAspect {
     public Object checkUserAbleToUse(ProceedingJoinPoint pjp) throws Throwable {
         log.info("检查用户是否有权限继续");
         // 获取 HttpServletRequest 对象
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        HttpServletRequest request =
+                ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes()))
+                        .getRequest();
 
         // 获取注解方法
         CheckUserAbleToUse check = getCheckUserAbleToUse(pjp);

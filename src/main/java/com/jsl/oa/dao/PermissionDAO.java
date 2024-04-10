@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jsl.oa.common.constant.BusinessConstants;
 import com.jsl.oa.mapper.PermissionMapper;
-import com.jsl.oa.model.doData.PermissionDO;
+import com.jsl.oa.model.dodata.PermissionDO;
 import com.jsl.oa.utils.redis.RoleRedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
