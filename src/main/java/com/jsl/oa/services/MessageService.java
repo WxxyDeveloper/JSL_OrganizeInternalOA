@@ -3,7 +3,7 @@ package com.jsl.oa.services;
 import com.jsl.oa.utils.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * <h1>消息服务接口</h1>
@@ -18,15 +18,18 @@ public interface MessageService {
 
     BaseResponse messageDelete(Long mid, HttpServletRequest request);
 
-    BaseResponse messageGet(LocalDate begin, LocalDate end, Long page, Long pageSize, Long uid);
+    BaseResponse messageGet(
+            LocalDateTime begin,
+            LocalDateTime end,
+            Integer page,
+            Integer pageSize,
+            Long uid);
 
-    BaseResponse messageGetAll(
-            HttpServletRequest request,
-            LocalDate begin,
-            LocalDate end,
-            Long page,
-            Long pageSize,
-            Long loginId,
-            Long uid
-    );
+    void messageAdd(Integer pId, Integer systemId, Integer moddleId, Long uid, HttpServletRequest request);
+    void messageAdd(Integer pId, Integer systemId, Integer moddleId, Long uid, Long isPass, HttpServletRequest request);
+    void messageAdd(Integer pId, Integer type, Integer systemId, HttpServletRequest request);
+    void messageAdd(Integer pId, Integer systmeId, Integer moddleId, Integer type, HttpServletRequest request);
+    void messageAdd(Integer pId, Integer systemId, Integer moddleId);
+
+    void messageRemind();
 }

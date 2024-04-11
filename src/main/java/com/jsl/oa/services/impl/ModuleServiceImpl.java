@@ -1,10 +1,9 @@
 package com.jsl.oa.services.impl;
 
-import com.jsl.oa.dao.ModuleDAO;
 import com.jsl.oa.dao.ProjectDAO;
+import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ModuleMapper;
-import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.dodata.ProjectWorkDO;
 import com.jsl.oa.model.vodata.ProjectWorkAndNameVO;
 import com.jsl.oa.services.ModuleService;
@@ -24,11 +23,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ModuleServiceImpl implements ModuleService {
-    private final RoleMapper roleMapper;
-    private final ModuleDAO moduleDAO;
     private final ProjectDAO projectDAO;
     private final ModuleMapper moduleMapper;
     private final UserDAO userDAO;
+    private final RoleDAO roleDAO;
 
     @Override
     public BaseResponse getByProjectId(Integer projectId, HttpServletRequest request) {
@@ -83,9 +81,8 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     public BaseResponse deleteById(HttpServletRequest request, Long id) {
-
 //        检测是否为管理员
-        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
+        if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
 

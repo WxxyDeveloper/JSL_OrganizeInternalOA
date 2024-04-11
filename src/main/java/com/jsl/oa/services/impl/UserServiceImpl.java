@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
         log.info("\t> 执行 Service 层 UserService.userDelete 方法");
         //判断用户是否存在
         if (userDAO.isExistUser(id)) {
-            if (!Processing.checkUserIsAdmin(request, roleMapper)) {
+            if (!Processing.checkUserIsAdmin(request, roleDAO)) {
                 return ResultUtil.error(ErrorCode.NOT_ADMIN);
             }
             // 用户是否已删除
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseResponse userLock(HttpServletRequest request, Long id, Long isLock) {
         log.info("\t> 执行 Service 层 UserService.userLock 方法");
-        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
+        if (!Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         //判断用户是否存在
@@ -152,13 +152,21 @@ public class UserServiceImpl implements UserService {
         } else {
             // 检查是否是管理员用户
             Long userId = Processing.getAuthHeaderToUserId(request);
-            if (userId != null && !permissionDAO.getPermission(userId).contains("user.current")) {
-                log.info("\t> 用户权限不足，检查是否是管理员");
-
-                RoleUserDO roleUserDO = roleMapper.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
-
-                if (roleUserDO == null || !roleUserDO.getRid().equals(roleMapper.getRoleByRoleName("admin").getId())) {
-                    return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+            if (userId != null) {
+                List<String> getPermission = permissionDAO.getPermission(userId);
+                // 匹配权限
+                if (!getPermission.contains("user.current")) {
+                    log.info("\t> 用户权限不足，检查是否是管理员");
+                    // 检查用户是管理员
+                    RoleUserDO roleUserDO = roleDAO
+                            .getRoleUserByUid(Objects.requireNonNull(Processing.getAuthHeaderToUserId(request)));
+                    if (roleUserDO == null) {
+                        return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+                    }
+                    RoleDO roleDO = roleDAO.getRoleByRoleName("admin");
+                    if (!roleUserDO.getRid().equals(roleDO.getId())) {
+                        return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+                    }
                 }
             } else {
                 return ResultUtil.error(ErrorCode.TOKEN_NOT_EXIST);
@@ -188,7 +196,7 @@ public class UserServiceImpl implements UserService {
     public BaseResponse userAdd(UserAddVO userAddVo, HttpServletRequest request) {
         log.info("\t> 执行 Service 层 UserService.userAdd 方法");
         // 检测用户是否为管理员
-        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
+        if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         //如果用户不重复，添加用户
@@ -226,7 +234,7 @@ public class UserServiceImpl implements UserService {
     public BaseResponse userEdit(UserEditVO userEditVO, HttpServletRequest request) {
         log.info("\t> 执行 Service 层 userEdit 方法");
         // 检测用户是否为管理员
-        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
+        if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         //根据id获取用户信息

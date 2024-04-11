@@ -96,12 +96,12 @@ public class AnnotationsAspect {
                     } else {
                         log.info("\t> 用户权限不足，检查是否是管理员");
                         // 检查用户是管理员
-                        RoleUserDO roleUserDO = roleMapper
+                        RoleUserDO roleUserDO = roleDAO
                                 .getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
                         if (roleUserDO == null) {
                             return ResultUtil.error(ErrorCode.NOT_ADMIN);
                         }
-                        RoleDO roleDO = roleMapper.getRoleByRoleName("admin");
+                        RoleDO roleDO = roleDAO.getRoleByRoleName("admin");
                         if (roleUserDO.getRid().equals(roleDO.getId())) {
                             return pjp.proceed();
                         } else {

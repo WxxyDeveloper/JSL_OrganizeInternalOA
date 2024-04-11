@@ -8,13 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface ProjectService {
-    BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd);
 
     BaseResponse projectEdit(HttpServletRequest request, ProjectEditVO projectEdit, Long projectId);
-
-    BaseResponse projectGetUserInCutting(Long uid);
-
-    BaseResponse projectAddUserForCutting(HttpServletRequest request, Long uid, Long pid);
 
     BaseResponse getHeader(Integer id);
 
@@ -35,9 +30,7 @@ public interface ProjectService {
 
     BaseResponse projectDelete(HttpServletRequest request, List<Long> id);
 
-    BaseResponse addProjectCutting(HttpServletRequest request, ProjectCuttingAddVO projectCuttingAddVO);
-
-    BaseResponse editProjectCutting(HttpServletRequest request, ProjectCuttingEditVO projectCuttingEditVO);
+    BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectVO);
 
     BaseResponse projectToOtherUserForCutting(HttpServletRequest request, Long oldUid, Long pid, Long newUid);
 

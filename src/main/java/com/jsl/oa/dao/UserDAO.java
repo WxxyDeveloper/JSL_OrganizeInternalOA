@@ -136,9 +136,9 @@ public class UserDAO {
         List<UserDO> userCurrentDO = userMapper.getAllUser(userAllCurrentVO);
         UserCurrentBackVO userCurrentBackVO = new UserCurrentBackVO();
         userCurrentBackVO.setUsers(new ArrayList<>())
-                        .setCount(userMapper.getUsersCount());
-        userCurrentDO
-                .forEach(it -> userCurrentBackVO.getUsers().add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
+                .setCount(userMapper.getUsersCount());
+        userCurrentDO.forEach(it -> userCurrentBackVO.getUsers()
+                .add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
         return userCurrentBackVO;
 
     }
@@ -149,9 +149,9 @@ public class UserDAO {
         List<UserDO> userCurrentDO = userMapper.getAllUserBySearch(userAllCurrentVO);
         UserCurrentBackVO userCurrentBackVO = new UserCurrentBackVO();
         userCurrentBackVO.setUsers(new ArrayList<>())
-                        .setCount(userMapper.getUsersCount());
-        userCurrentDO
-                .forEach(it -> userCurrentBackVO.getUsers().add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
+                .setCount(userMapper.getUsersCount());
+        userCurrentDO.forEach(it -> userCurrentBackVO.getUsers()
+                .add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
         return userCurrentBackVO;
     }
 
