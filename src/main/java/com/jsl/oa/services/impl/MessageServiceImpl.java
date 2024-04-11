@@ -4,6 +4,7 @@ import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.MessageMapper;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.model.dodata.MessageDO;
+import com.jsl.oa.model.dodata.ProjectWorkDO;
 import com.jsl.oa.model.vodata.MessageAddVO;
 import com.jsl.oa.model.vodata.MessageGetVO;
 import com.jsl.oa.services.MessageService;
@@ -246,7 +247,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     /**
-     * 添加日报消息
+     * 添加成员填写日报消息
      *
      * @param pId      项目id
      * @param systemId 系统id
@@ -270,6 +271,76 @@ public class MessageServiceImpl implements MessageService {
                 + "刚刚填写了日报");
         messageAddVO.setType("跳转日报页");
         messageMapper.messageAdd(messageAddVO);
+    }
+
+    /**
+     * 添加提醒消息
+     * 系统/模块到期提醒
+     */
+    @Override
+    public void messageRemind() {
+        // 当前时间
+        LocalDateTime now = LocalDateTime.now();
+        // 三天后时间
+        LocalDateTime threeDaysLater = now.plusDays(3);
+        // 七天后时间
+        LocalDateTime sevenDaysLater = now.plusDays(7);
+        // 获取三天后到期的系统/模块
+        List<ProjectWorkDO> projectWorkDOList = projectMapper.getProjectWorkByTime(threeDaysLater);
+        // 获取七天后到期的系统/模块
+        List<ProjectWorkDO> projectWorkDOList1 = projectMapper.getProjectWorkByTime(sevenDaysLater);
+        if (!projectWorkDOList1.isEmpty()) {
+            for (ProjectWorkDO projectWorkDO : projectWorkDOList) {
+                // 添加消息
+                MessageAddVO messageAddVO = new MessageAddVO();
+                messageAddVO.setUid(projectWorkDO.getPrincipalId());
+                messageAddVO.setTitle("提醒消息");
+                // 0:系统 1:模块
+                String projectName = projectMapper
+                        .tgetProjectById(projectWorkDO.getProjectId().intValue()).getName();
+                String systemName;
+                if (projectWorkDO.getType() == 1) {
+                    systemName = projectMapper.getWorkById(projectWorkDO.getPid().intValue()).getName();
+                    String moddleName = projectMapper.getWorkById(projectWorkDO.getId().intValue()).getName();
+                    messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统的" + moddleName + "模块"
+                            + "还有七天就要到期了，请及时处理");
+                    messageAddVO.setType("跳转模块页");
+                } else {
+                    systemName = projectMapper.getWorkById(projectWorkDO.getId().intValue()).getName();
+                    messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统"
+                            + "还有七天就要到期了，请及时处理");
+                    messageAddVO.setType("跳转系统页");
+                }
+                messageAddVO.setToId(projectWorkDO.getId().intValue());
+                messageMapper.messageAdd(messageAddVO);
+            }
+        }
+        if (!projectWorkDOList.isEmpty()) {
+            for (ProjectWorkDO projectWorkDO : projectWorkDOList) {
+                // 添加消息
+                MessageAddVO messageAddVO = new MessageAddVO();
+                messageAddVO.setUid(projectWorkDO.getPrincipalId());
+                messageAddVO.setTitle("提醒消息");
+                // 0:系统 1:模块
+                String projectName = projectMapper
+                        .tgetProjectById(projectWorkDO.getProjectId().intValue()).getName();
+                String systemName;
+                if (projectWorkDO.getType() == 1) {
+                    systemName = projectMapper.getWorkById(projectWorkDO.getPid().intValue()).getName();
+                    String moddleName = projectMapper.getWorkById(projectWorkDO.getId().intValue()).getName();
+                    messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统的" + moddleName + "模块"
+                            + "还有三天就要到期了，请及时处理");
+                    messageAddVO.setType("跳转模块页");
+                } else {
+                    systemName = projectMapper.getWorkById(projectWorkDO.getId().intValue()).getName();
+                    messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统"
+                            + "还有三天就要到期了，请及时处理");
+                    messageAddVO.setType("跳转系统页");
+                }
+                messageAddVO.setToId(projectWorkDO.getId().intValue());
+                messageMapper.messageAdd(messageAddVO);
+            }
+        }
     }
 
 }

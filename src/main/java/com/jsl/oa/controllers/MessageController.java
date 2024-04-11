@@ -71,24 +71,5 @@ public class MessageController {
         }
     }
 
-    /**
-     * 指派时消息
-     *
-     * @param request
-     * @return
-     */
-    @PostMapping("/message/assign")
-    public BaseResponse messageAssign(
-            @RequestParam Integer pId,
-            @RequestParam Integer systemId,
-            @RequestParam Integer moddleId,
-            @RequestParam Long uId,
-            @RequestParam Long isPass,
-            HttpServletRequest request) {
-        //messageService.messageAdd(pId, systemId, moddleId, uId, isPass, request);
-        return ResultUtil.success();
-    }
-
-
 }
 

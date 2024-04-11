@@ -30,4 +30,6 @@ public interface MessageService {
     void messageAdd(Integer pId, Integer type, Integer systemId, HttpServletRequest request);
     void messageAdd(Integer pId, Integer systmeId, Integer moddleId, Integer type, HttpServletRequest request);
     void messageAdd(Integer pId, Integer systemId, Integer moddleId);
+
+    void messageRemind();
 }

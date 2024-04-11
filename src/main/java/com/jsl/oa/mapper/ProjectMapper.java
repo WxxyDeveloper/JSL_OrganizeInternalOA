@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
@@ -115,4 +116,9 @@ public interface ProjectMapper {
 
     @Select("select principal_id from organize_oa.oa_project_work where pid=#{id}")
     List <Long> getMemberBySystemId(Integer id);
+
+    @Select("select * from organize_oa.oa_project_work "
+            + "where DATE(deadline) = DATE(#{threeDayLater}) and is_finish != 1")
+    List<ProjectWorkDO> getProjectWorkByTime(LocalDateTime threeDayLater);
+
 }
