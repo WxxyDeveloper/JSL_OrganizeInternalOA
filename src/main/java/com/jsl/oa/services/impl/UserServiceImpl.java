@@ -5,8 +5,7 @@ import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
-import com.jsl.oa.mapper.RoleMapper;
-
+import com.jsl.oa.model.dodata.RoleDO;
 import com.jsl.oa.model.dodata.RoleUserDO;
 import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.model.vodata.*;
@@ -23,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -40,8 +41,6 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
-    private final RoleMapper roleMapper;
     private final UserDAO userDAO;
     private final RoleDAO roleDAO;
     private final PermissionDAO permissionDAO;
@@ -74,7 +73,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseResponse userLock(HttpServletRequest request, Long id, Long isLock) {
         log.info("\t> 执行 Service 层 UserService.userLock 方法");
-        if (!Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
+        if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         //判断用户是否存在

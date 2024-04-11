@@ -38,11 +38,7 @@ public interface ProjectMapper {
     ProjectDO tgetProjectById(Integer id);
 
     @Select("select * from organize_oa.oa_project_work where principal_id=#{uid}")
-        //"(select id from organize_oa.oa_project_work where id in)")
     List<ProjectCuttingDO> projectGetUserInCutting(Long uid);
-
-    @Insert("update organize_oa.oa_project_work set principal_id =#{uid} where id=#{pid}")
-    void projectAddUserInCutting(Long uid, Long pid);
 
     @Select("select data from organize_oa.oa_config where value='project_show'")
     String getHeader();
@@ -54,11 +50,6 @@ public interface ProjectMapper {
             + " updated_at = CURRENT_TIMESTAMP WHERE value = 'project_show'")
     boolean setProjectShow(String setProjectShow);
 
-    //@Select("select * from organize_oa.oa_project where json_extract(tags,'$.tags')" +
-    //"like concat('%',#{tags},'%')")
-
-    //@Select("select * from organize_oa.oa_project where is_finish=#{isFinish}
-    // and is_delete=false and principal_id=#{userId}")
     List<ProjectDO> getByIsfinish(Long userId, List<Integer> isFinish);
 
     List<ProjectDO> getByTags(Long userId, List<String> tags, List<Integer> isFinish);
@@ -74,15 +65,6 @@ public interface ProjectMapper {
 
     @Update("UPDATE organize_oa.oa_project SET is_delete = 1 where id=#{id}")
     boolean deleteProject(Long id);
-
-    @Update("UPDATE  organize_oa.oa_project_cutting SET name = #{name}, "
-            + "tag = #{tag}, engineering = #{engineering}, estimated_time = #{estimatedTime}, "
-            + "real_time = #{realTime}, updated_at = CURRENT_TIMESTAMP WHERE id = #{id}")
-    boolean projectCuttingUpdate(ProjectCuttingDO projectCuttingDO);
-    @Update("UPDATE organize_oa.oa_project_user SET uid = #{uid} , updated_at = CURRENT_TIMESTAMP WHERE id = #{id}")
-    boolean updateUserForProjectUser(Long uid, Long id);
-
-
 
     List<ProjectDO> workgetByIsfinish(Long userId, List<Integer> isFinish, Integer is);
 
@@ -108,11 +90,11 @@ public interface ProjectMapper {
     @Select("select principal_id from organize_oa.oa_project_work where id=#{pid}")
     Long getPirIdbyWorkid(Long pid);
 
-    @Select("select principal_id from organize_oa.oa_project_work where id=#{id} AND"
-            + "is_delete = 0")
+    @Select("select principal_id from organize_oa.oa_project_work where id=#{id} "
+            + "AND is_delete = 0")
     Long getPid(Integer id);
 
-    @Select("select * from organize_oa.oa_project_work where id=#{id}"
+    @Select("select * from organize_oa.oa_project_work where id=#{id} "
             + "AND is_delete = 0")
     ProjectWorkDO getProjectWorkById(Long id);
 
@@ -126,4 +108,9 @@ public interface ProjectMapper {
             + "where DATE(deadline) = DATE(#{threeDayLater}) and is_finish != 1")
     List<ProjectWorkDO> getProjectWorkByTime(LocalDateTime threeDayLater);
 
+    List<ProjectWorkDO> getAllSubmoduleByUserId(Long uid);
+
+    List<ProjectDO> getProjectByPrincipalUser(Long uid);
+
+    List<ProjectWorkDO> getAllSubsystemByUserId(Long uid);
 }
