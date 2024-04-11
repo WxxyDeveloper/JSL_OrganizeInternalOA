@@ -58,7 +58,8 @@ public class RoleController {
      * @return {@link BaseResponse}
      */
     @PutMapping("/role/edit")
-    public BaseResponse roleEdit(HttpServletRequest request, @RequestBody @Validated RoleEditVO roleEditVO, @NotNull BindingResult bindingResult) {
+    public BaseResponse roleEdit(HttpServletRequest request,
+                                 @RequestBody @Validated RoleEditVO roleEditVO, @NotNull BindingResult bindingResult) {
         log.info("请求接口[PUT]: /role/edit");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -124,7 +125,9 @@ public class RoleController {
      * @Param uid:
      **/
     @PostMapping("role/add")
-    public BaseResponse addRole(HttpServletRequest request, @RequestBody @Validated RoleAddVo roleAddVO, @NotNull BindingResult bindingResult) throws ClassCopyException {
+    public BaseResponse addRole(HttpServletRequest request,
+                                @RequestBody @Validated RoleAddVo roleAddVO,
+                                @NotNull BindingResult bindingResult) throws ClassCopyException {
         log.info("请求接口[POST]: /role/add");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {

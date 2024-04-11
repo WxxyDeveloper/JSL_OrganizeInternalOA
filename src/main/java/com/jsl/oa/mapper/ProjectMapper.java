@@ -51,12 +51,15 @@ public interface ProjectMapper {
     @Insert("insert into organize_oa.oa_config(value, data, created_at)value ('project_show',null,NOW())")
     void insertProjectShow();
 
-    @Update("UPDATE organize_oa.oa_config"
-            + " SET data = #{setProjectShow}, updated_at = CURRENT_TIMESTAMP "
-            + " WHERE value = 'project_show'"
-    )
+    @Update("UPDATE organize_oa.oa_config SET data = #{setProjectShow},"
+            + " updated_at = CURRENT_TIMESTAMP WHERE value = 'project_show'")
     boolean setProjectShow(String setProjectShow);
 
+    //@Select("select * from organize_oa.oa_project where json_extract(tags,'$.tags')" +
+    //"like concat('%',#{tags},'%')")
+
+    //@Select("select * from organize_oa.oa_project where is_finish=#{isFinish}
+    // and is_delete=false and principal_id=#{userId}")
     List<ProjectDO> getByIsfinish(Long userId, List<Integer> isFinish);
 
     List<ProjectDO> getByTags(Long userId, List<String> tags, List<Integer> isFinish);
@@ -92,7 +95,9 @@ public interface ProjectMapper {
     boolean updateUserForProjectUser(Long uid, Long id);
 
 
-    //@Select("select * from organize_oa.oa_project_work where is_finish=#{isFinish} and is_delete=false and principal_id =#{userId}")
+    //@Select("select * from organize_oa.oa_project_work
+    // where is_finish=#{isFinish} and is_delete=false
+    // and principal_id =#{userId}")
     List<ProjectDO> workgetByIsfinish(Long userId, List<Integer> isFinish, Integer is);
 
     List<ProjectDO> workgetByTags(Long userId, List<String> tags, Integer is, List<Integer> isFinish);
@@ -117,9 +122,23 @@ public interface ProjectMapper {
     @Select("select principal_id from organize_oa.oa_project_work where id=#{pid}")
     Long getPirIdbyWorkid(Long pid);
 
-    @Select("select principal_id from organize_oa.oa_project_work where id=#{id}")
+    @Select("select principal_id from organize_oa.oa_project_work where id=#{id} AND"
+            + "is_delete = 0")
     Long getPid(Integer id);
 
-    @Select("select * from organize_oa.oa_project_work where id=#{id}")
+    @Select("select * from organize_oa.oa_project_work where id=#{id}"
+            + "AND is_delete = 0")
     ProjectWorkDO getProjectWorkById(Long id);
+
+    @Select("SELECT * FROM  organize_oa.oa_project where principal_id = #{uid} "
+            + "AND is_delete = 0")
+    List<ProjectDO> getProjectByPrincipalUser(Long uid);
+
+    @Select("SELECT * FROM  organize_oa.oa_project_work where principal_id = #{uid} "
+            + "AND is_delete = 0 AND category = 0")
+    List<ProjectWorkDO> getAllSubsystemByUserId(Long uid);
+
+    @Select("SELECT * FROM  organize_oa.oa_project_work where principal_id = #{uid}"
+            + "AND is_delete = 0 AND category = 1")
+    List<ProjectWorkDO> getAllSubmoduleByUserId(Long uid);
 }

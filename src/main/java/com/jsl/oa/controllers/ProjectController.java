@@ -140,7 +140,8 @@ public class ProjectController {
      * @return {@link BaseResponse}
      */
     @PostMapping("/project/header/add")
-    public BaseResponse projectAddHeader(@RequestBody @Validated ProjectShowVO projectShowVO, HttpServletRequest request, @NotNull BindingResult bindingResult) {
+    public BaseResponse projectAddHeader(@RequestBody @Validated ProjectShowVO projectShowVO,
+                                         HttpServletRequest request, @NotNull BindingResult bindingResult) {
         log.info("请求接口[POST]: /project/header/add");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -160,7 +161,9 @@ public class ProjectController {
      * @return {@link BaseResponse}
      */
     @PutMapping("/project/header/edit/{projectId}")
-    public BaseResponse projectEditById(@RequestParam Long projectId, HttpServletRequest request, @RequestBody @Validated ProjectEditVO projectEdit, @NotNull BindingResult bindingResult) {
+    public BaseResponse projectEditById(@RequestParam Long projectId,
+                                        HttpServletRequest request, @RequestBody @Validated ProjectEditVO projectEdit,
+                                        @NotNull BindingResult bindingResult) {
         log.info("请求接口[PUT]: /project/header/edit/{projectId}");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -177,7 +180,9 @@ public class ProjectController {
      * @return {@link BaseResponse}
      */
     @PostMapping("/project/work/add")
-    public BaseResponse projectWorkAdd(HttpServletRequest request, @RequestBody @Validated ProjectWorkVO projectWorkVO, @NotNull BindingResult bindingResult) {
+    public BaseResponse projectWorkAdd(HttpServletRequest request,
+                                       @RequestBody @Validated ProjectWorkVO projectWorkVO,
+                                       @NotNull BindingResult bindingResult) {
         log.info("请求接口[POST]: /project/work/add");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -220,7 +225,9 @@ public class ProjectController {
      * @return {@link BaseResponse}
      */
     @PostMapping("/project/cut/user/add")
-    public BaseResponse projectAddUserForCutting(HttpServletRequest request, @RequestParam Long uid, @RequestParam Long pid) {
+    public BaseResponse projectAddUserForCutting(HttpServletRequest request,
+                                                 @RequestParam Long uid,
+                                                 @RequestParam Long pid) {
         log.info("请求接口[Post]: /project/cut/user/add");
         // 判断是否有参数错误
         if (uid == null || pid == null) {
@@ -253,7 +260,9 @@ public class ProjectController {
      * @return {@link BaseResponse}
      */
     @PostMapping("/project/cut/add")
-    public BaseResponse projectCuttingAdd(HttpServletRequest request, @RequestBody @Validated ProjectCuttingAddVO projectCuttingAddVO, @NotNull BindingResult bindingResult) {
+    public BaseResponse projectCuttingAdd(HttpServletRequest request,
+                                          @RequestBody @Validated ProjectCuttingAddVO projectCuttingAddVO,
+                                          @NotNull BindingResult bindingResult) {
         log.info("请求接口[Post]: /project/cut/add");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -264,7 +273,9 @@ public class ProjectController {
 
 
     @PutMapping("/project/cut/edit")
-    public BaseResponse projectCuttingEdit(HttpServletRequest request, @RequestBody @Validated ProjectCuttingEditVO projectCuttingEditVO, @NotNull BindingResult bindingResult) {
+    public BaseResponse projectCuttingEdit(HttpServletRequest request,
+                                           @RequestBody @Validated ProjectCuttingEditVO projectCuttingEditVO,
+                                           @NotNull BindingResult bindingResult) {
         log.info("请求接口[Put]: /project/cut/edit");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -274,12 +285,8 @@ public class ProjectController {
     }
 
     @PutMapping("/project/cut/user/to")
-    public BaseResponse projectToOtherUserForCutting(
-            HttpServletRequest request,
-            @RequestParam Long oldUid,
-            @RequestParam Long pid,
-            @RequestParam Long newUid
-    ) {
+    public BaseResponse projectToOtherUserForCutting(HttpServletRequest request, @RequestParam Long oldUid,
+                                                     @RequestParam Long pid, @RequestParam Long newUid) {
         log.info("请求接口[Put]: /project/cut/user/to");
         // 判断是否有参数错误
         if (oldUid == null || pid == null || newUid == null) {

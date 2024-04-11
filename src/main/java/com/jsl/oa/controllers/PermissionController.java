@@ -88,7 +88,8 @@ public class PermissionController {
      * @return {@link BaseResponse} 对象，包含操作结果。
      */
     @PutMapping("/permission/edit")
-    public BaseResponse permissionEdit(@RequestBody @Validated PermissionEditVO permissionEditVo, BindingResult bindingResult, HttpServletRequest request) {
+    public BaseResponse permissionEdit(@RequestBody @Validated PermissionEditVO permissionEditVo,
+                                       BindingResult bindingResult, HttpServletRequest request) {
         log.info("请求接口[PUT]: /permission/edit");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {

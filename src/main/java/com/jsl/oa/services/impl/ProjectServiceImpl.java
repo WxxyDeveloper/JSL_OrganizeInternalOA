@@ -93,12 +93,13 @@ public class ProjectServiceImpl implements ProjectService {
             } else {
                 return ResultUtil.error(ErrorCode.NOT_PERMISSION);
             }
-        }//增加子模块
-        else {
+        } else {
             //是否是子系统的负责人
             if (Objects.equals(userId, projectMapper.getPirIdbyWorkid(projectWorkVO.getPid()))) {
                 projectDAO.projectWorkAdd(projectWorkVO);
-            } else return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+            } else {
+                return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+            }
         }
 
         return ResultUtil.success("添加成功");
@@ -231,8 +232,8 @@ public class ProjectServiceImpl implements ProjectService {
 
 
         //判断用户是否为老师 或者 项目负责人
-        if (!Processing.checkUserIsTeacher(request, roleMapper) ||
-                !projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), projectId)) {
+        if (!Processing.checkUserIsTeacher(request, roleMapper)
+                || !projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), projectId)) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
 
@@ -361,7 +362,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse get(Integer listAll, HttpServletRequest request, List<String> tags, List<Integer> isFinish, Integer page, Integer pageSize) {
+    public BaseResponse get(Integer listAll,
+                            HttpServletRequest request,
+                            List<String> tags, List<Integer> isFinish,
+                            Integer page, Integer pageSize) {
         log.info("\t> 执行 Service 层 ProjectService.get 方法");
 
         //获取用户
@@ -437,7 +441,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse workget(Integer listAll, HttpServletRequest request, List<String> tags, List<Integer> isFinish, Integer is, Integer page, Integer pageSize) {
+    public BaseResponse workget(Integer listAll,
+                                HttpServletRequest request,
+                                List<String> tags,
+                                List<Integer> isFinish,
+                                Integer is, Integer page, Integer pageSize) {
         log.info("\t> 执行 Service 层 ProjectService.workget 方法");
 
         //获取用户

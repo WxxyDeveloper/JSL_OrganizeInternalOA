@@ -4,6 +4,7 @@ import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.exception.ClassCopyException;
+import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.dodata.RoleDO;
 import com.jsl.oa.model.vodata.RoleAddVo;
 import com.jsl.oa.model.vodata.RoleEditVO;
@@ -41,11 +42,13 @@ public class RoleServiceImpl implements RoleService {
     private final RoleDAO roleDAO;
     private final UserDAO userDAO;
 
+    private final RoleMapper roleMapper;
+
     @Override
     @CheckUserHasPermission("role.add")
     public BaseResponse roleAddUser(HttpServletRequest request, Long uid, Long rid) {
         log.info("\t> 执行 Service 层 RoleService.addRoleUser 方法");
-        if (Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
+        if (Processing.checkUserIsAdmin(request, roleMapper)) {
             roleDAO.addRoleUser(uid, rid);
             return ResultUtil.success();
         } else {
@@ -57,7 +60,7 @@ public class RoleServiceImpl implements RoleService {
 
     public BaseResponse roleRemoveUser(HttpServletRequest request, Long uid) {
         log.info("\t> 执行 Service 层 RoleService.delRoleUser 方法");
-        if (Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
+        if (Processing.checkUserIsAdmin(request, roleMapper)) {
             roleDAO.delRoleUser(uid);
             return ResultUtil.success();
         } else {
@@ -77,7 +80,7 @@ public class RoleServiceImpl implements RoleService {
             return ResultUtil.error(ErrorCode.USER_NOT_CHANGE_TO_THEMSELVES);
         }
         //检测用户权限是否为管理员
-        if (Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
+        if (Processing.checkUserIsAdmin(request, roleMapper)) {
             if (roleDAO.roleChangeUser(uid, rid)) {
                 return ResultUtil.success();
             } else {
@@ -92,7 +95,7 @@ public class RoleServiceImpl implements RoleService {
     public BaseResponse roleGet(HttpServletRequest request, String id) {
         log.info("\t> 执行 Service 层 RoleService.roleGet 方法");
         // 检查用户权限
-        if (!Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
+        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         // 获取 Role 权限组
@@ -119,7 +122,7 @@ public class RoleServiceImpl implements RoleService {
     public BaseResponse roleEdit(HttpServletRequest request, RoleEditVO roleEditVO) {
         log.info("\t> 执行 Service 层 RoleService.roleEdit 方法");
         // 检查用户权限
-        if (!Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
+        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         // 获取 Role 相关信息
@@ -143,7 +146,7 @@ public class RoleServiceImpl implements RoleService {
     public BaseResponse roleDelete(HttpServletRequest request, Long id) {
         log.info("\t> 执行 Service 层 RoleService.roleDelete 方法");
         // 检查用户权限
-        if (!Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
+        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         // 获取 Role 相关信息
@@ -165,7 +168,7 @@ public class RoleServiceImpl implements RoleService {
     public BaseResponse addRole(HttpServletRequest request, RoleAddVo roleAddVO) throws ClassCopyException {
         log.info("\t> 执行 Service 层 RoleService.addRole 方法");
         // 检查用户权限
-        if (!Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
+        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         // 检查权限名称是否重复

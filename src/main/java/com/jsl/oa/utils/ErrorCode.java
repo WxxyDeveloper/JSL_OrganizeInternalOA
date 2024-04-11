@@ -51,7 +51,8 @@ public enum ErrorCode {
     PROJECT_NOT_EXIST("ProjectNotExist", 40016, "项目不存在"),
     PROJECT_CUTTING_NOT_EXIST("ProjectCuttingNotExist", 40017, "项目分割模块不存在"),
     PROJECT_USER_NOT_EXIST("ProjectUserNotExist", 40018, "用户项目表无对应记录"),
-    PROJECT_FILE_JSON_ERROR("ProjectFileJsonError", 40019, "项目文件json格式错误");
+    PROJECT_FILE_JSON_ERROR("ProjectFileJsonError", 40019, "项目文件json格式错误"),
+    PROJECT_NOT_USER("ProjectNotUser", 40020, "项目无此用户");
 
 
     private final String output;

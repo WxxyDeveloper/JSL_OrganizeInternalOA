@@ -54,8 +54,7 @@ public class ProcessException {
 
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     public ResponseEntity<BaseResponse> businessMissingServletRequestParameterException(
-            MissingServletRequestParameterException e
-    ) {
+            MissingServletRequestParameterException e) {
         log.error(e.getMessage(), e);
         return ResponseEntity
                 .status(400)
@@ -100,8 +99,7 @@ public class ProcessException {
      */
     @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
     public ResponseEntity<BaseResponse> businessMethodArgumentTypeMismatchException(
-            @NotNull MethodArgumentTypeMismatchException e
-    ) {
+            @NotNull MethodArgumentTypeMismatchException e) {
         log.error(e.getMessage(), e);
         return ResultUtil.error("ServerInternalError", 50002, "服务器内部错误");
     }

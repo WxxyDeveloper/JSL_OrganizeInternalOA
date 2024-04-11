@@ -27,8 +27,8 @@ public class ProjectCuttingDO {
     private Long cycle;
     private String name;
     private String description;
-    private Integer is_delete;
-    private Integer is_finish;
+    private Integer isDelete;
+    private Integer isFinish;
     private Integer status;
     private boolean type;
     private Timestamp beginTime;

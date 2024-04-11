@@ -4,6 +4,8 @@ import com.jsl.oa.annotations.CheckUserAbleToUse;
 import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
+import com.jsl.oa.dao.UserDAO;
+import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.dodata.RoleDO;
 import com.jsl.oa.model.dodata.RoleUserDO;
@@ -43,8 +45,11 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class AnnotationsAspect {
-    private final RoleDAO roleDAO;
+
     private final UserMapper userMapper;
+    private final RoleMapper roleMapper;
+    private final RoleDAO roleDAO;
+    private final UserDAO userDAO;
     private final PermissionDAO permissionDAO;
 
     /**
@@ -91,12 +96,12 @@ public class AnnotationsAspect {
                     } else {
                         log.info("\t> 用户权限不足，检查是否是管理员");
                         // 检查用户是管理员
-                        RoleUserDO roleUserDO = roleDAO.roleMapper
+                        RoleUserDO roleUserDO = roleMapper
                                 .getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
                         if (roleUserDO == null) {
                             return ResultUtil.error(ErrorCode.NOT_ADMIN);
                         }
-                        RoleDO roleDO = roleDAO.roleMapper.getRoleByRoleName("admin");
+                        RoleDO roleDO = roleMapper.getRoleByRoleName("admin");
                         if (roleUserDO.getRid().equals(roleDO.getId())) {
                             return pjp.proceed();
                         } else {
@@ -127,7 +132,7 @@ public class AnnotationsAspect {
 
         // 获取用户信息
         Long userId = Processing.getAuthHeaderToUserId(request);
-        UserDO userDO = userMapper.getUserById(userId);
+        UserDO userDO =userMapper.getUserById(userId);
         // 用户不存在
         if (userDO == null) {
             return ResultUtil.error(ErrorCode.USER_NOT_EXIST);

@@ -18,7 +18,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class RoleDAO {
-    public final RoleMapper roleMapper;
+    private final RoleMapper roleMapper;
     private final Gson gson;
     private final RoleRedisUtil<String> roleRedisUtil;
 
@@ -26,7 +26,8 @@ public class RoleDAO {
         log.info("\t> 执行 DAO 层 RoleDAO.addRoleUser 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         roleMapper.roleAddUser(uid, rid);
-        roleRedisUtil.setData(BusinessConstants.USER, uid.toString(), gson.toJson(roleMapper.getRoleUserByUid(uid)), 120);
+        roleRedisUtil.setData(
+                BusinessConstants.USER, uid.toString(), gson.toJson(roleMapper.getRoleUserByUid(uid)), 120);
     }
 
     public void delRoleUser(Long uid) {
@@ -122,7 +123,8 @@ public class RoleDAO {
         log.info("\t> 执行 DAO 层 RoleDAO.roleChangeUser 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         if (roleMapper.roleChangeUser(uid, rid)) {
-            roleRedisUtil.setData(BusinessConstants.USER, uid.toString(), gson.toJson(roleMapper.getRoleUserByUid(uid)), 120);
+            roleRedisUtil.setData(
+                    BusinessConstants.USER, uid.toString(), gson.toJson(roleMapper.getRoleUserByUid(uid)), 120);
             return true;
         } else {
             return false;
@@ -140,4 +142,6 @@ public class RoleDAO {
             return gson.fromJson(getRedisData, RoleUserDO.class);
         }
     }
+
+
 }
