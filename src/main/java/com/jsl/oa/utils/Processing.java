@@ -7,7 +7,6 @@ import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.exception.ClassCopyException;
-import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.dodata.*;
 import com.jsl.oa.model.vodata.PermissionContentVo;
 import com.jsl.oa.model.vodata.ProjectSimpleVO;
@@ -166,13 +165,12 @@ public class Processing {
      * 该方法用于检查用户是否是管理员，类型封装后字节返回结果
      *
      * @param request    请求
-     * @param roleMapper RoleMapper
      * @return 如果为 true 是管理员，false 不是管理员
      */
-    public static @NotNull Boolean checkUserIsAdmin(HttpServletRequest request, @NotNull RoleMapper roleMapper) {
-        RoleUserDO roleUserDO = roleMapper.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
+    public static @NotNull Boolean checkUserIsAdmin(HttpServletRequest request, @NotNull RoleDAO roleDAO) {
+        RoleUserDO roleUserDO = roleDAO.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
         if (roleUserDO != null) {
-            RoleDO roleDO = roleMapper.getRoleByRoleName("admin");
+            RoleDO roleDO = roleDAO.getRoleByRoleName("admin");
             return roleUserDO.getRid().equals(roleDO.getId());
         } else {
             return false;
@@ -183,13 +181,12 @@ public class Processing {
      * 检查用户是否是老师
      *
      * @param request    请求
-     * @param roleMapper RoleMapper
      * @return 如果为 true 是老师，false 不是老师
      */
-    public static @NotNull Boolean checkUserIsTeacher(HttpServletRequest request, @NotNull RoleMapper roleMapper) {
-        RoleUserDO roleUserDO = roleMapper.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
+    public static @NotNull Boolean checkUserIsTeacher(HttpServletRequest request, @NotNull RoleDAO roleDAO) {
+        RoleUserDO roleUserDO = roleDAO.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
         if (roleUserDO != null) {
-            RoleDO roleDO = roleMapper.getRoleByRoleName("teacher");
+            RoleDO roleDO = roleDAO.getRoleByRoleName("teacher");
             return roleUserDO.getRid().equals(roleDO.getId());
         } else {
             return false;
@@ -211,11 +208,10 @@ public class Processing {
      * @param <S>    源对象的类型。
      * @param source 从中复制属性的源对象。
      * @param target 属性将复制到的目标对象。
-     * @return 复制属性后的目标对象。
      * @throws ClassCopyException 如果在复制过程中出现错误。
      */
     @Contract(pure = true)
-    public static <T, S> T copyProperties(@NotNull S source, @NotNull T target) throws ClassCopyException {
+    public static <T, S> void copyProperties(@NotNull S source, @NotNull T target) throws ClassCopyException {
         Class<?> sourceClass = source.getClass();
         Class<?> targetClass = target.getClass();
 
@@ -254,26 +250,23 @@ public class Processing {
         } catch (IllegalAccessException ignored) {
             throw new ClassCopyException();
         }
-        return null;
     }
 
-
     /**
-     * @Description: 将性别转为字符形式
-     * @Date: 2024/1/18
-     **/
+     * <h2>获取性别</h2>
+     * <hr/>
+     * 用于获取性别
+     *
+     * @param sex 性别ID
+     * @return 返回中文性别
+     */
     @Contract(pure = true)
     public static @NotNull String getSex(short sex) {
-        if (sex == 0) {
-            return "保密";
+        switch (sex) {
+            case 1: return "男";
+            case 2: return "女";
+            default: return "保密";
         }
-        if (sex == 1) {
-            return "男";
-        }
-        if (sex == 2) {
-            return "女";
-        }
-        return " ";
     }
 
     /**
@@ -356,8 +349,12 @@ public class Processing {
         return userDOS;
     }
 
-    public static void projectTosimply(ProjectSimpleVO projectSimpleVO, ProjectDO projectDO, UserDAO userDAO, ObjectMapper objectMapper) {
-
+    public static void projectTosimply(
+            ProjectSimpleVO projectSimpleVO,
+            ProjectDO projectDO,
+            UserDAO userDAO,
+            ObjectMapper objectMapper
+    ) {
         projectSimpleVO.setId(projectDO.getId());
         projectSimpleVO.setName(projectDO.getName());
         projectSimpleVO.setTags(projectDO.getTags());

@@ -133,7 +133,8 @@ public class UserDAO {
         UserCurrentBackVO userCurrentBackVO = new UserCurrentBackVO();
         userCurrentBackVO.setUsers(new ArrayList<>())
                 .setCount(userMapper.getUsersCount());
-        userCurrentDO.forEach(it -> userCurrentBackVO.getUsers().add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
+        userCurrentDO.forEach(it -> userCurrentBackVO.getUsers()
+                .add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
         return userCurrentBackVO;
 
     }
@@ -145,7 +146,8 @@ public class UserDAO {
         UserCurrentBackVO userCurrentBackVO = new UserCurrentBackVO();
         userCurrentBackVO.setUsers(new ArrayList<>())
                 .setCount(userMapper.getUsersCount());
-        userCurrentDO.forEach(it -> userCurrentBackVO.getUsers().add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
+        userCurrentDO.forEach(it -> userCurrentBackVO.getUsers()
+                .add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
         return userCurrentBackVO;
     }
 

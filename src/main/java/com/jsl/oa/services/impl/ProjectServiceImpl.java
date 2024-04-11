@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.ProjectDAO;
+import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ProjectMapper;
-import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.dodata.ProjectDO;
 import com.jsl.oa.model.dodata.UserDO;
@@ -46,10 +46,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final UserMapper userMapper;
     private final ProjectMapper projectMapper;
-    private final RoleMapper roleMapper;
     private final ProjectDAO projectDAO;
     private final UserDAO userDAO;
     private final ObjectMapper objectMapper;
+    private final RoleDAO roleDAO;
 
     @Override
     public BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd) {
@@ -86,7 +86,7 @@ public class ProjectServiceImpl implements ProjectService {
         //是否是增加子系统
         if (projectWorkVO.getType() == 0) {
             //是否是老师
-            if (Processing.checkUserIsTeacher(request, roleMapper)) {
+            if (Processing.checkUserIsTeacher(request, roleDAO)) {
                 projectDAO.projectWorkAdd(projectWorkVO);
             } else {
                 return ResultUtil.error(ErrorCode.NOT_PERMISSION);
@@ -230,7 +230,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
         //判断用户是否为老师 或者 项目负责人
-        if (!Processing.checkUserIsTeacher(request, roleMapper)
+        if (!Processing.checkUserIsTeacher(request, roleDAO)
                 || !projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), projectId)) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
@@ -379,7 +379,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
         //判断是否是老师(项目负责人)
-        if (listAll != null && Processing.checkUserIsTeacher(request, roleMapper)) {
+        if (listAll != null && Processing.checkUserIsTeacher(request, roleDAO)) {
             List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
             List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
             for (ProjectDO projectDO : projectDOList) {
@@ -457,7 +457,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
         //判断是否是老师(项目负责人)
-        if (listAll != null && Processing.checkUserIsTeacher(request, roleMapper)) {
+        if (listAll != null && Processing.checkUserIsTeacher(request, roleDAO)) {
             List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish, is);
             List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
             for (ProjectDO projectDO : projectDOList) {
@@ -505,7 +505,7 @@ public class ProjectServiceImpl implements ProjectService {
         log.info("\t> 执行 Service 层 ProjectService.projectDelete 方法");
 
         //判断用户是否为老师 或者 项目负责人
-        if (!Processing.checkUserIsTeacher(request, roleMapper)) {
+        if (!Processing.checkUserIsTeacher(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
 

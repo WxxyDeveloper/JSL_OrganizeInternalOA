@@ -273,7 +273,7 @@ public class AuthServiceImpl implements AuthService {
             getPermissionForString = permissionDAO.getPermission(userDO.getId());
         }
         // 获取用户角色
-        RoleUserDO getUserRole = roleDAO.roleMapper.getRoleUserByUid(userDO.getId());
+        RoleUserDO getUserRole = roleDAO.getRoleUserByUid(userDO.getId());
         if (getUserRole == null) {
             getUserRole = new RoleUserDO();
             getUserRole.setRid(0L)

@@ -1,4 +1,5 @@
 package com.jsl.oa.controllers;
+
 import com.jsl.oa.services.MessageService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -7,7 +8,10 @@ import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -70,6 +74,5 @@ public class MessageController {
             return messageService.messageGet(begin, end, page, pageSize, uid);
         }
     }
-
 }
 

@@ -77,7 +77,10 @@ public class UserController {
      * @return {@link BaseResponse}
      */
     @PutMapping("/user/profile/edit")
-    public BaseResponse userEditProfile(@RequestBody @Validated UserEditProfileVO userEditProfileVO, BindingResult bindingResult) {
+    public BaseResponse userEditProfile(
+            @RequestBody @Validated UserEditProfileVO userEditProfileVO,
+            BindingResult bindingResult
+    ) {
         log.info("请求接口[PUT]: /user/profile/edit");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -100,7 +103,13 @@ public class UserController {
      * @return {@link BaseResponse}
      */
     @GetMapping("/user/current")
-    public BaseResponse userCurrent(HttpServletRequest request, @RequestParam @Nullable String id, @RequestParam @Nullable String username, @RequestParam @Nullable String email, @RequestParam @Nullable String phone) {
+    public BaseResponse userCurrent(
+            @RequestParam @Nullable String id,
+            @RequestParam @Nullable String username,
+            @RequestParam @Nullable String email,
+            @RequestParam @Nullable String phone,
+            @NotNull HttpServletRequest request
+    ) {
         log.info("请求接口[GET]: /user/current");
         // 检查数据是否有问题
         if (id != null && !id.isEmpty()) {
@@ -119,7 +128,10 @@ public class UserController {
             }
         }
         if (phone != null && !phone.isEmpty()) {
-            if (!Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", phone)) {
+            if (!Pattern.matches(
+                    "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$",
+                    phone
+            )) {
                 return ResultUtil.error(ErrorCode.PARAMETER_ERROR, "手机格式不正确");
             }
         }
@@ -136,8 +148,11 @@ public class UserController {
      * @return {@link BaseResponse}
      */
     @PostMapping("/user/current/all")
-    public BaseResponse userCurrentAll(@RequestBody @Validated UserAllCurrentVO userAllCurrentVO,
-                                       HttpServletRequest request, @NotNull BindingResult bindingResult) {
+    public BaseResponse userCurrentAll(
+            @RequestBody @Validated UserAllCurrentVO userAllCurrentVO,
+            @NotNull BindingResult bindingResult,
+            HttpServletRequest request
+    ) {
         log.info("请求接口[POST]: /user/current/all");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -154,7 +169,11 @@ public class UserController {
      * @Param bindingResult:
      **/
     @PostMapping("/user/add")
-    public BaseResponse userAdd(@RequestBody @Validated UserAddVO userAddVo, BindingResult bindingResult, HttpServletRequest request) {
+    public BaseResponse userAdd(
+            @RequestBody @Validated UserAddVO userAddVo,
+            BindingResult bindingResult,
+            HttpServletRequest request
+    ) {
         log.info("请求接口[POST]: /user/add");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -170,7 +189,11 @@ public class UserController {
      * @Param bindingResult:
      **/
     @PutMapping("/user/edit")
-    public BaseResponse userEdit(@RequestBody @Validated UserEditVO userEditVO, BindingResult bindingResult, HttpServletRequest request) {
+    public BaseResponse userEdit(
+            @RequestBody @Validated UserEditVO userEditVO,
+            BindingResult bindingResult,
+            HttpServletRequest request
+    ) {
         log.info("请求接口[PUT]: /user/edit");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {

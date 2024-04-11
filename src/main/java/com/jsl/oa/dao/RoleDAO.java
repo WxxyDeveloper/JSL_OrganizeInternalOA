@@ -18,7 +18,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class RoleDAO {
-    public final RoleMapper roleMapper;
+    private final RoleMapper roleMapper;
     private final Gson gson;
     private final RoleRedisUtil<String> roleRedisUtil;
 
@@ -26,7 +26,12 @@ public class RoleDAO {
         log.info("\t> 执行 DAO 层 RoleDAO.addRoleUser 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         roleMapper.roleAddUser(uid, rid);
-        roleRedisUtil.setData(BusinessConstants.USER, uid.toString(), gson.toJson(roleMapper.getRoleUserByUid(uid)), 120);
+        roleRedisUtil.setData(
+                BusinessConstants.USER,
+                uid.toString(),
+                gson.toJson(roleMapper.getRoleUserByUid(uid)),
+                120
+        );
     }
 
     public void delRoleUser(Long uid) {
@@ -82,8 +87,7 @@ public class RoleDAO {
     public RoleDO getRoleNameByUid(Long uid) {
         log.info("\t> 执行 DAO 层 RoleDAO.getRoleNameByUid 方法");
         log.info("\t\t> 从 MySQL 获取数据");
-        RoleDO roleDO = roleMapper.getRoleById(getRoleUserByUid(uid).getRid());
-        return roleDO;
+        return roleMapper.getRoleById(getRoleUserByUid(uid).getRid());
     }
 
 
@@ -122,7 +126,12 @@ public class RoleDAO {
         log.info("\t> 执行 DAO 层 RoleDAO.roleChangeUser 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         if (roleMapper.roleChangeUser(uid, rid)) {
-            roleRedisUtil.setData(BusinessConstants.USER, uid.toString(), gson.toJson(roleMapper.getRoleUserByUid(uid)), 120);
+            roleRedisUtil.setData(
+                    BusinessConstants.USER,
+                    uid.toString(),
+                    gson.toJson(roleMapper.getRoleUserByUid(uid)),
+                    120
+            );
             return true;
         } else {
             return false;
@@ -139,5 +148,15 @@ public class RoleDAO {
             log.info("\t\t> 从 Redis 获取数据");
             return gson.fromJson(getRedisData, RoleUserDO.class);
         }
+    }
+
+    /**
+     * 根据角色名获取角色信息
+     *
+     * @param roleName 角色名
+     * @return 角色信息
+     */
+    public RoleDO getRoleByRoleName(String roleName) {
+        return roleMapper.getRoleByRoleName(roleName);
     }
 }

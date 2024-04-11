@@ -37,7 +37,8 @@ public interface UserMapper {
     @Update("UPDATE organize_oa.oa_user SET is_delete = true ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}")
     void userDelete(Long id);
 
-    @Update("UPDATE organize_oa.oa_user SET account_no_locked = #{isLock} ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}  ")
+    @Update("UPDATE organize_oa.oa_user "
+            + "SET account_no_locked = #{isLock} ,updated_at = CURRENT_TIMESTAMP WHERE id = #{id}")
     void userLock(Long id, Long isLock);
 
     @Select("SELECT * FROM organize_oa.oa_user WHERE id = #{id}")
@@ -77,11 +78,11 @@ public interface UserMapper {
     List<UserDO> getRecommendUser();
 
 
-    @Update("UPDATE organize_oa.oa_user " +
-            "SET address = #{address}, phone = #{phone}, email = #{email}, age = #{age}, " +
-            "signature = #{signature}, sex = #{sex}, avatar = #{avatar}, nickname = #{nickname}, " +
-            "description = #{description} ,updated_at = current_timestamp " +
-            "WHERE id = #{id}")
+    @Update("UPDATE organize_oa.oa_user "
+            + "SET address = #{address}, phone = #{phone}, email = #{email}, age = #{age}, "
+            + "signature = #{signature}, sex = #{sex}, avatar = #{avatar}, nickname = #{nickname}, "
+            + "description = #{description} ,updated_at = current_timestamp "
+            + "WHERE id = #{id}")
     void updateUser(UserDO userDO);
 
     @Select("SELECT * FROM organize_oa.oa_user WHERE email = #{email}")
@@ -96,7 +97,8 @@ public interface UserMapper {
     @Select("SELECT COUNT(*) FROM organize_oa.oa_user")
     Long getUsersCount();
 
-    @Select("select oa_user.id,oa_user.username,oa_role.role_name from organize_oa.oa_user join organize_oa.oa_role_user " +
-            "on oa_user.id = oa_role_user.uid join organize_oa.oa_role on oa_role_user.rid = oa_role.id")
+    @Select("select oa_user.id,oa_user.username,oa_role.role_name "
+            + "from organize_oa.oa_user join organize_oa.oa_role_user "
+            + "on oa_user.id = oa_role_user.uid join organize_oa.oa_role on oa_role_user.rid = oa_role.id")
     List<PrincipalSelectVO> getPrincipal();
 }

@@ -34,7 +34,7 @@ public class JwtUtil {
      * @return 返回生成的Token
      */
     public static String generateToken(@NotNull Long userId) {
-        Key key = Keys.hmacShaKeyFor(SafeConstants.SECRET_KEY.getBytes());
+        Key key = Keys.hmacShaKeyFor(SafeConstants.getSecretKey().getBytes());
         return Jwts.builder()
                 .setSubject(userId.toString())
                 .setExpiration(new java.util.Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -71,7 +71,7 @@ public class JwtUtil {
      * @return 返回获取到的用户名
      */
     public static Long getUserId(String token) {
-        Key key = Keys.hmacShaKeyFor(SafeConstants.SECRET_KEY.getBytes());
+        Key key = Keys.hmacShaKeyFor(SafeConstants.getSecretKey().getBytes());
         Jws<Claims> claimsJws = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
