@@ -43,8 +43,8 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class AnnotationsAspect {
-    private final RoleDAO roleDAO;
     private final UserMapper userMapper;
+    private final RoleDAO roleDAO;
     private final PermissionDAO permissionDAO;
 
     /**

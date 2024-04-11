@@ -33,7 +33,6 @@ public interface InfoService {
      *
      * @param request    请求
      * @param carouselVO 轮播图VO
-     * @param id         轮播图ID
      * @return {@link BaseResponse}
      */
     BaseResponse editHeaderImage(HttpServletRequest request, CarouselVO carouselVO);

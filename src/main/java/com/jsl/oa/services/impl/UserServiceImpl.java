@@ -41,10 +41,14 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
     private final UserDAO userDAO;
     private final RoleDAO roleDAO;
     private final PermissionDAO permissionDAO;
+
+    @Override
+    public UserDO getUserInfoByUsername(String username) {
+        return userDAO.getUserInfoByUsername(username);
+    }
 
     @Override
     public BaseResponse userDelete(HttpServletRequest request, Long id) {
@@ -127,15 +131,14 @@ public class UserServiceImpl implements UserService {
         return ResultUtil.success(userCurrentBackVO);
     }
 
+    @SuppressWarnings("checkstyle:NestedIfDepth")
     @Override
     @CheckUserAbleToUse
-    public BaseResponse userCurrent(
-            String id,
-            String username,
-            String email,
-            String phone,
-            HttpServletRequest request
-    ) {
+    public BaseResponse userCurrent(HttpServletRequest request,
+                                    String id,
+                                    String username,
+                                    String email,
+                                    String phone) {
         log.info("\t> 执行 Service 层 UserService.userCurrent 方法");
         if (id == null && username == null && email == null && phone == null) {
             // Token获取信息

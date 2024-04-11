@@ -19,8 +19,12 @@ public interface ProjectService {
 
     BaseResponse editHeader(HttpServletRequest request, ProjectShowVO projectShowVO, Integer id);
 
-    BaseResponse get(Integer listAll, HttpServletRequest request,
-                     List<String> tags, List<Integer> isFinish, Integer page, Integer pageSize);
+    BaseResponse get(Integer listAll,
+                     HttpServletRequest request,
+                     List<String> tags,
+                     List<Integer> isFinish,
+                     Integer page,
+                     Integer pageSize);
 
     BaseResponse getByName(String name);
 
@@ -28,8 +32,15 @@ public interface ProjectService {
 
     BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectVO);
 
-    BaseResponse workget(Integer listAll, HttpServletRequest request,
-                         List<String> tags, List<Integer> isFinish, Integer is, Integer page, Integer pageSize);
+    BaseResponse projectToOtherUserForCutting(HttpServletRequest request, Long oldUid, Long pid, Long newUid);
+
+    BaseResponse workget(Integer listAll,
+                         HttpServletRequest request,
+                         List<String> tags,
+                         List<Integer> isFinish,
+                         Integer is,
+                         Integer page,
+                         Integer pageSize);
 
     BaseResponse projecWorktAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO);
 

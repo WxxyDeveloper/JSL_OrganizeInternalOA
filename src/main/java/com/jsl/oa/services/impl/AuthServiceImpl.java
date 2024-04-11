@@ -4,6 +4,7 @@ import com.jsl.oa.annotations.CheckUserAbleToUse;
 import com.jsl.oa.common.constant.BusinessConstants;
 import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
+import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.dodata.RoleUserDO;
 import com.jsl.oa.model.dodata.UserDO;
@@ -39,6 +40,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
+    private final RoleMapper roleMapper;
     private final RoleDAO roleDAO;
     private final PermissionDAO permissionDAO;
 

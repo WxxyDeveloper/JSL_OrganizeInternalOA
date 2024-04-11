@@ -79,6 +79,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public BaseResponse projectToOtherUserForCutting(HttpServletRequest request, Long oldUid, Long pid, Long newUid) {
+        return null;
+    }
+
+    @Override
     public BaseResponse projecWorktAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO) {
         log.info("\t> 执行 Service 层 ProjectService.projectWorkAdd 方法");
         //获取用户id
@@ -336,8 +341,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse get(Integer listAll, HttpServletRequest request,
-                            List<String> tags, List<Integer> isFinish, Integer page, Integer pageSize) {
+    public BaseResponse get(
+            Integer listAll,
+            HttpServletRequest request,
+            List<String> tags,
+            List<Integer> isFinish,
+            Integer page,
+            Integer pageSize
+    ) {
         log.info("\t> 执行 Service 层 ProjectService.get 方法");
 
         //获取用户
@@ -413,9 +424,15 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse workget(Integer listAll, HttpServletRequest request,
-                                List<String> tags, List<Integer> isFinish, Integer is,
-                                Integer page, Integer pageSize) {
+    public BaseResponse workget(
+            Integer listAll,
+            HttpServletRequest request,
+            List<String> tags,
+            List<Integer> isFinish,
+            Integer is,
+            Integer page,
+            Integer pageSize
+    ) {
         log.info("\t> 执行 Service 层 ProjectService.workget 方法");
 
         //获取用户

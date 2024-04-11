@@ -278,10 +278,7 @@ public class Processing {
      * @return {@link BaseResponse}
      */
     public static @NotNull UserCurrentBackVO.UserCurrent returnUserInfo(
-            @NotNull UserDO userDO,
-            RoleDAO roleDAO,
-            PermissionDAO permissionDAO
-    ) {
+            @NotNull UserDO userDO, RoleDAO roleDAO, PermissionDAO permissionDAO) {
         UserCurrentBackVO.UserCurrent userCurrent = new UserCurrentBackVO.UserCurrent();
         // 获取用户角色
         RoleUserDO getUserRole = roleDAO.getRoleUserByUid(userDO.getId());
@@ -301,29 +298,30 @@ public class Processing {
             // 获取权限列表信息
             getPermissionForString = permissionDAO.getPermission(userDO.getId());
         }
-        userCurrent.setUser(new UserCurrentBackVO.ReturnUser()
-                        .setId(userDO.getId())
-                        .setJobId(userDO.getJobId())
-                        .setUsername(userDO.getUsername())
-                        .setAddress(userDO.getAddress())
-                        .setPhone(userDO.getPhone())
-                        .setEmail(userDO.getEmail())
-                        .setAge(userDO.getAge())
-                        .setSignature(userDO.getSignature())
-                        .setAvatar(userDO.getAvatar())
-                        .setNickname(userDO.getNickname())
-                        .setSex(userDO.getSex())
-                        .setEnabled(userDO.getEnabled())
-                        .setAccountNoExpired(userDO.getAccountNoExpired())
-                        .setCredentialsNoExpired(userDO.getCredentialsNoExpired())
-                        .setRecommend(userDO.getRecommend())
-                        .setAccountNoLocked(userDO.getAccountNoLocked())
-                        .setDescription(userDO.getDescription())
-                        .setCreatedAt(userDO.getCreatedAt())
-                        .setUpdatedAt(userDO.getUpdatedAt())
-                        .setIsDelete(userDO.getIsDelete()))
-                .setRole(new UserCurrentBackVO.ReturnUserRole().setRid(getUserRole.getRid()))
-                .setPermission(getPermissionForString);
+        userCurrent.setUser(new UserCurrentBackVO.ReturnUser().
+                setId(userDO.getId()).
+                setJobId(userDO.getJobId()).
+                setUsername(userDO.getUsername()).
+                setAddress(userDO.getAddress()).
+                setPhone(userDO.getPhone()).
+                setEmail(userDO.getEmail()).
+                setAge(userDO.getAge()).
+                setSignature(userDO.getSignature()).
+                setAvatar(userDO.getAvatar()).
+                setNickname(userDO.getNickname()).
+                setSex(userDO.getSex()).
+                setEnabled(userDO.getEnabled()).
+                setAccountNoExpired(userDO.getAccountNoExpired()).
+                setCredentialsNoExpired(userDO.getCredentialsNoExpired()).
+                setRecommend(userDO.getRecommend()).
+                setAccountNoLocked(userDO.getAccountNoLocked()).
+                setDescription(userDO.getDescription()).
+                setCreatedAt(userDO.getCreatedAt()).
+                setUpdatedAt(userDO.getUpdatedAt()).
+                setIsDelete(userDO.getIsDelete())).
+                setRole(new UserCurrentBackVO.ReturnUserRole().
+                        setRid(getUserRole.getRid())).
+                setPermission(getPermissionForString);
         return userCurrent;
     }
 
@@ -429,4 +427,39 @@ public class Processing {
 
         return vo;
     }
+
+
+    /**
+     * @Description: 转换审核的类别属性为字符串
+     * @Date: 2024/4/11
+     * @Param category:
+     **/
+    public static String turnReviewCategory(Integer category) {
+        switch (category) {
+            case 0:
+              return "子系统";
+            case 1:
+              return "模块";
+            default:
+              return "其他";
+        }
+    }
+
+    public static String turnReviewResult(Integer result) {
+        switch (result) {
+            case 0:
+                return "已拒绝";
+            case 1:
+                return "已审批";
+            case 2:
+                return "待审核";
+            default:
+                return "其他";
+        }
+    }
+
+
+
+
+
 }
