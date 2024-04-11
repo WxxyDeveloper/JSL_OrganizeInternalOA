@@ -2,8 +2,8 @@ package com.jsl.oa.services.impl;
 
 import com.jsl.oa.annotations.CheckUserHasPermission;
 import com.jsl.oa.dao.InfoDAO;
+import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
-import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.model.dodata.info.CarouselDO;
 import com.jsl.oa.model.vodata.UserProfileVo;
@@ -36,9 +36,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class InfoServiceImpl implements InfoService {
-    private final RoleMapper roleMapper;
     private final InfoDAO infoDAO;
     private final UserDAO userDAO;
+    private final RoleDAO roleDAO;
 
     @Override
     @CheckUserHasPermission("info.image.add")
@@ -131,7 +131,7 @@ public class InfoServiceImpl implements InfoService {
     public BaseResponse delHeaderImage(HttpServletRequest request, Integer id) {
         log.info("\t> 执行 Service 层 InfoService.delHeaderImage 方法");
         // 用户权限校验
-        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
+        if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         // 获取轮播图信息
@@ -154,7 +154,7 @@ public class InfoServiceImpl implements InfoService {
     public BaseResponse editSettingHeaderImage(HttpServletRequest request, Boolean showType) {
         log.info("\t> 执行 Service 层 InfoService.editSettingHeaderImage 方法");
         // 用户权限校验
-        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
+        if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         // 获取轮播图信息

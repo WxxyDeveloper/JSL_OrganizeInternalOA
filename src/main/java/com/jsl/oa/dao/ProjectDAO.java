@@ -1,10 +1,7 @@
 package com.jsl.oa.dao;
-
 import com.google.gson.Gson;
 import com.jsl.oa.mapper.ProjectMapper;
-import com.jsl.oa.model.dodata.ProjectCuttingDO;
 import com.jsl.oa.model.dodata.ProjectDO;
-import com.jsl.oa.model.dodata.ProjectUserDO;
 import com.jsl.oa.model.dodata.ProjectWorkDO;
 import com.jsl.oa.model.dodata.info.ProjectShowDO;
 import com.jsl.oa.model.vodata.ProjectEditVO;
@@ -59,18 +56,6 @@ public class ProjectDAO {
         log.info("\t> 执行 DAO 层 ProjectDAO.isExistProject 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         return projectMapper.getProjectById(id) != null;
-    }
-
-    public List<ProjectCuttingDO> projectGetUserInCutting(Long uid) {
-        log.info("\t> 执行 DAO 层 ProjectDAO.projectGetUserInCutting 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
-        return projectMapper.projectGetUserInCutting(uid);
-    }
-
-    public void projectAddUserForCutting(Long uid, Long pid) {
-        log.info("\t> 执行 DAO 层 ProjectDAO.projectAddUserForCutting 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
-        projectMapper.projectAddUserInCutting(uid, pid);
     }
 
     public ProjectShowDO getHeader() {
@@ -150,7 +135,8 @@ public class ProjectDAO {
         }
     }
 
-    public List<ProjectDO> workget(Long userId, Integer listAll, List<String> tags, List<Integer> isFinish, Integer is) {
+    public List<ProjectDO> workget(Long userId, Integer listAll,
+                                   List<String> tags, List<Integer> isFinish, Integer is) {
         log.info("\t> 执行 DAO 层 ProjectDAO.workget 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         if (tags != null && !tags.isEmpty()) {
@@ -180,46 +166,12 @@ public class ProjectDAO {
         return projectMapper.deleteProject(id);
     }
 
-    public void projectCuttingAdd(ProjectCuttingDO projectCuttingDO) {
-        log.info("\t> 执行 DAO 层 ProjectDAO.projectCuttingAdd 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
-        projectMapper.projectCuttingAdd(projectCuttingDO);
-    }
-
     public boolean isExistProjectById(Long id) {
         log.info("\t> 执行 DAO 层 ProjectDAO.isExistProjectById 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         return projectMapper.getProjectById(id) != null;
     }
 
-    public boolean updateProjectCutting(ProjectCuttingDO projectCuttingDO) {
-        log.info("\t> 执行 DAO 层 ProjectDAO.updateProjectCutting 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
-        return projectMapper.projectCuttingUpdate(projectCuttingDO);
-    }
-
-    public boolean isExistProjectCutting(Long id) {
-        log.info("\t> 执行 DAO 层 ProjectDAO.isExistProjectCutting 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
-        return projectMapper.getProjectCuttingById(id) != null;
-    }
-
-    public boolean isExistProjectUser(Long pid, Long uid) {
-        log.info("\t> 执行 DAO 层 ProjectDAO.isExistProjectUse 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
-        return projectMapper.getProjectUserByPidAndUid(pid, uid) != null;
-    }
-
-    public boolean updateUserForProjectUserByPidAndUid(Long pid, Long oldUid, Long newUid) {
-        log.info("\t> 执行 DAO 层 ProjectDAO.updateUserForProjectUserByPidAndUid 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
-        ProjectUserDO projectUserDO = projectMapper.getProjectUserByPidAndUid(pid, oldUid);
-        if (projectUserDO == null) {
-            return false;
-        }
-        log.info("\t\t> 从 MySQL 更新数据");
-        return projectMapper.updateUserForProjectUser(newUid, projectUserDO.getId());
-    }
 
     public boolean isPrincipalUser(Long uid, Long projectId) {
         log.info("\t> 执行 DAO 层 ProjectDAO.isPrincipalUser 方法");

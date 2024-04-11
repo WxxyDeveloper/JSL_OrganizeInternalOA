@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
         log.info("\t> 执行 Service 层 UserService.userDelete 方法");
         //判断用户是否存在
         if (userDAO.isExistUser(id)) {
-            if (!Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
+            if (!Processing.checkUserIsAdmin(request, roleDAO)) {
                 return ResultUtil.error(ErrorCode.NOT_ADMIN);
             }
             // 用户是否已删除
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseResponse userLock(HttpServletRequest request, Long id, Long isLock) {
         log.info("\t> 执行 Service 层 UserService.userLock 方法");
-        if (!Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
+        if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         //判断用户是否存在
@@ -159,7 +159,7 @@ public class UserServiceImpl implements UserService {
                     if (roleUserDO == null) {
                         return ResultUtil.error(ErrorCode.NOT_PERMISSION);
                     }
-                    RoleDO roleDO = roleDAO.roleMapper.getRoleByRoleName("admin");
+                    RoleDO roleDO = roleDAO.getRoleByRoleName("admin");
                     if (!roleUserDO.getRid().equals(roleDO.getId())) {
                         return ResultUtil.error(ErrorCode.NOT_PERMISSION);
                     }
@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
     public BaseResponse userAdd(UserAddVO userAddVo, HttpServletRequest request) {
         log.info("\t> 执行 Service 层 UserService.userAdd 方法");
         // 检测用户是否为管理员
-        if (!Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
+        if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         //如果用户不重复，添加用户
@@ -230,7 +230,7 @@ public class UserServiceImpl implements UserService {
     public BaseResponse userEdit(UserEditVO userEditVO, HttpServletRequest request) {
         log.info("\t> 执行 Service 层 userEdit 方法");
         // 检测用户是否为管理员
-        if (!Processing.checkUserIsAdmin(request, roleDAO.roleMapper)) {
+        if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         //根据id获取用户信息

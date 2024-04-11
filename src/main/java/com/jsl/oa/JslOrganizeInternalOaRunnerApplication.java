@@ -39,7 +39,7 @@ public class JslOrganizeInternalOaRunnerApplication implements SmartInitializing
     public void afterSingletonsInstantiated() {
         // 获取数据库中的 SecurityKey
         try {
-            SafeConstants.SECRET_KEY = infoMapper.getSecurityKey().getData();
+            SafeConstants.setSecretKey(infoMapper.getSecurityKey().getData());
         } catch (NullPointerException exception) {
             // 生成密钥
             String key = Processing.generateKey(System.currentTimeMillis());
@@ -53,7 +53,7 @@ public class JslOrganizeInternalOaRunnerApplication implements SmartInitializing
                     .setData(json)
                     .setCreatedAt(new Timestamp(System.currentTimeMillis()));
             infoMapper.insertSecurityKey(configDO);
-            SafeConstants.SECRET_KEY = key;
+            SafeConstants.setSecretKey(key);
         }
     }
 }
