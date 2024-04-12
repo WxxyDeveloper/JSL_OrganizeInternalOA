@@ -108,9 +108,18 @@ public interface ProjectMapper {
             + "where DATE(deadline) = DATE(#{threeDayLater}) and is_finish != 1")
     List<ProjectWorkDO> getProjectWorkByTime(LocalDateTime threeDayLater);
 
+    @Select("select * from organize_oa.oa_project_work where "
+            + "principal_id=#{uid} "
+            + "AND is_delete = 0 AND type = 1")
     List<ProjectWorkDO> getAllSubmoduleByUserId(Long uid);
 
-    List<ProjectDO> getProjectByPrincipalUser(Long uid);
-
+    @Select("select * from organize_oa.oa_project_work where "
+            + "principal_id=#{uid} "
+            + "AND is_delete = 0 AND type = 0")
     List<ProjectWorkDO> getAllSubsystemByUserId(Long uid);
+
+    @Select("select * from organize_oa.oa_project where "
+            + "principal_id=#{uid} "
+            + "AND is_delete = 0")
+    List<ProjectDO> getProjectByPrincipalUser(Long uid);
 }

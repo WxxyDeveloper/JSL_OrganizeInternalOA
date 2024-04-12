@@ -93,7 +93,6 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
 
-
     @Override
     public BaseResponse getUserReview(HttpServletRequest request) {
         log.info("\t> 执行 Service 层 ReviewService.getUserReview 方法");
@@ -147,7 +146,6 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
 
-
     @Override
     public BaseResponse addReview(ReviewAddVO reviewAddVO, HttpServletRequest request) {
         log.info("\t> 执行 Service 层 ReviewService.addReview 方法");
@@ -174,7 +172,6 @@ public class ReviewServiceImpl implements ReviewService {
 
         return ResultUtil.success("申请成功");
     }
-
 
 
     @Override
@@ -216,23 +213,25 @@ public class ReviewServiceImpl implements ReviewService {
             ReviewVO reviewVO = new ReviewVO();
 //            现将相同的属性赋值
             Processing.copyProperties(reviewDO, reviewVO);
-//            赋值其他属性
+//            赋值其他非空属性
             reviewVO.setCategory(Processing.turnReviewCategory(reviewDO.getCategory()))
                     .setSenderName(userMapper.getUserById(reviewDO.getSenderId()).getNickname())
-                    .setRecipientName(userMapper.getUserById(reviewDO.getRecipientId()).getNickname())
                     .setProjectName(projectDAO.getProjectById(reviewDO.getProjectId()).getName())
                     .setSubsystemName(reviewDAO.getNameBySubproject(reviewDO.getProjectSubsystemId()))
-                    .setSubmoduleName(reviewDAO.getNameBySubproject(reviewDO.getProjectSubmoduleId()))
                     .setResult(Processing.turnReviewResult(reviewDO.getReviewResult()));
+//            赋值可为空属性并进行判断
+            if (reviewDO.getRecipientId() != null) {
+                reviewVO.setRecipientName(userMapper.getUserById(reviewDO.getRecipientId()).getNickname());
+            }
+            if (reviewDO.getProjectSubmoduleId() != null) {
+                reviewVO.setSubmoduleName(reviewDAO.getNameBySubproject(reviewDO.getProjectSubmoduleId()));
+            }
 //            将封装好的结果添加到结果集
             resultData.add(reviewVO);
         }
 
         return resultData;
     }
-
-
-
 
 
 }

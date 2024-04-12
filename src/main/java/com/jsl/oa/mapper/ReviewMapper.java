@@ -8,11 +8,11 @@ import java.util.List;
 @Mapper
 public interface ReviewMapper {
 
-    @Select("SELECT * FROM organize_oa.oa_review WHERE project_id = #{projectId}"
+    @Select("SELECT * FROM organize_oa.oa_review WHERE project_id = #{projectId} "
             + "AND is_delete = 0")
     List<ReviewDO> selectAllReviewFromProject(Long projectId);
 
-    @Select("SELECT * FROM organize_oa.oa_review WHERE project_id = #{projectId}"
+    @Select("SELECT * FROM organize_oa.oa_review WHERE project_id = #{projectId} "
             + "AND is_delete = 0 AND review_result = #{result}")
     List<ReviewDO> selectApprovedResultReviewFromProject(Long projectId, short result);
 

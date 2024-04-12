@@ -4,118 +4,142 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.jsl.oa.mapper.ReviewMapper">
-    <insert id="addReview">
-        insert into organize_oa.oa_review
-        <set>
-
+    <insert id="addReview" >
+        INSERT INTO organize_oa.oa_review
+        <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">
-                name = #{name},
+                name,
             </if>
-
             <if test="content != null and content != ''">
-                content = #{content},
+                content,
             </if>
-
-            <if test="sender_id != null">
-                sender_id = #{sender_id},
+            <if test="senderId != null">
+                sender_id,
             </if>
-
-            <if test="recipient_id != null">
-                recipient_id = #{recipient_id},
+            <if test="recipientId != null">
+                recipient_id,
             </if>
-
             <if test="category != null">
-                category = #{category},
+                category,
             </if>
-
-            <if test="project_id != null">
-                project_id = #{project_id},
+            <if test="projectId != null">
+                project_id,
             </if>
-
-            <if test="project_subsystem_id != null">
-                project_subsystem_id = #{project_subsystem_id},
+            <if test="projectSubsystemId != null">
+                project_subsystem_id,
             </if>
-
-            <if test="project_submodule_id != null">
-                project_submodule_id = #{project_submodule_id},
+            <if test="projectSubmoduleId != null">
+                project_submodule_id,
             </if>
-
-            <if test="application_time != null">
-                application_time = #{application_time},
+            <if test="applicationTime != null">
+                application_time,
             </if>
-
-            <if test="review_time != null">
-                review_time = #{review_time},
+            <if test="reviewTime != null">
+                review_time,
             </if>
-
-            <if test="review_result != null">
-                review_result = #{review_result},
+            <if test="reviewResult != null">
+                review_result,
             </if>
-
-            <if test="is_delete != null">
-                is_delete = #{is_delete},
+            <if test="isDelete != null">
+                is_delete,
             </if>
-
-        </set>
-        where id = #{id}
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">
+                #{name},
+            </if>
+            <if test="content != null and content != ''">
+                #{content},
+            </if>
+            <if test="senderId != null">
+                #{senderId},
+            </if>
+            <if test="recipientId != null">
+                #{recipientId},
+            </if>
+            <if test="category != null">
+                #{category},
+            </if>
+            <if test="projectId != null">
+                #{projectId},
+            </if>
+            <if test="projectSubsystemId != null">
+                #{projectSubsystemId},
+            </if>
+            <if test="projectSubmoduleId != null">
+                #{projectSubmoduleId},
+            </if>
+            <if test="applicationTime != null">
+                #{applicationTime},
+            </if>
+            <if test="reviewTime != null">
+                #{reviewTime},
+            </if>
+            <if test="reviewResult != null">
+                #{reviewResult},
+            </if>
+            <if test="isDelete != null">
+                #{isDelete},
+            </if>
+        </trim>
     </insert>
 
 
     <update id="updateReview" parameterType="com.jsl.oa.model.dodata.ReviewDO">
         update organize_oa.oa_review
-        <set>
+        <trim prefix="SET" suffixOverrides=",">
+                <if test="name != null and name != ''">
+                    name = #{name},
+                </if>
 
-            <if test="name != null and name != ''">
-                name = #{name},
-            </if>
+                <if test="content != null and content != ''">
+                    content = #{content},
+                </if>
 
-            <if test="content != null and content != ''">
-                content = #{content},
-            </if>
+                <if test="senderId != null">
+                    sender_id = #{senderId},
+                </if>
 
-            <if test="sender_id != null">
-                sender_id = #{sender_id},
-            </if>
+                <if test="recipientId != null">
+                    recipient_id = #{recipientId},
+                </if>
 
-            <if test="recipient_id != null">
-                recipient_id = #{recipient_id},
-            </if>
+                <if test="category != null">
+                    category = #{category},
+                </if>
 
-            <if test="category != null">
-                category = #{category},
-            </if>
+                <if test="projectId != null">
+                    project_id = #{projectId},
+                </if>
 
-            <if test="project_id != null">
-                project_id = #{project_id},
-            </if>
+                <if test="projectSubsystemId != null">
+                    project_subsystem_id = #{projectSubsystemId},
+                </if>
 
-            <if test="project_subsystem_id != null">
-                project_subsystem_id = #{project_subsystem_id},
-            </if>
+                <if test="projectSubmoduleId != null">
+                    project_submodule_id = #{projectSubmoduleId},
+                </if>
 
-            <if test="project_submodule_id != null">
-                project_submodule_id = #{project_submodule_id},
-            </if>
+                <if test="applicationTime != null">
+                    application_time = #{applicationTime},
+                </if>
 
-            <if test="application_time != null">
-                application_time = #{application_time},
-            </if>
+                <if test="reviewTime != null">
+                    review_time = #{reviewTime},
+                </if>
 
-            <if test="review_time != null">
-                review_time = #{review_time},
-            </if>
+                <if test="reviewResult != null">
+                    review_result = #{reviewResult},
+                </if>
 
-            <if test="review_result != null">
-                review_result = #{review_result},
-            </if>
-
-            <if test="is_delete != null">
-                is_delete = #{is_delete},
-            </if>
-
-        </set>
+                <if test="isDelete != null">
+                    is_delete = #{isDelete},
+                </if>
+        </trim>
         where id = #{id}
     </update>
+
+
 
 
 </mapper>
