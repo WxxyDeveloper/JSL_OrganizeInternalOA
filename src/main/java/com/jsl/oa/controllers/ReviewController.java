@@ -1,13 +1,21 @@
 package com.jsl.oa.controllers;
 
+import com.jsl.oa.model.vodata.ReviewAddVO;
 import com.jsl.oa.services.ReviewService;
 import com.jsl.oa.utils.BaseResponse;
+import com.jsl.oa.utils.ErrorCode;
+import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 
 /**
  * 审核控制器
@@ -46,6 +54,27 @@ public class ReviewController {
         log.info("请求接口[GET]: /review/getMyReview");
         return reviewService.getUserPendingApprovalReview(request);
     }
+
+
+    /**
+     * @Description: 新增审核申请
+     * @Date: 2024/4/12
+     * @Param null:
+     **/
+    @PostMapping("/review/add")
+    public BaseResponse addReview(@RequestBody @Validated ReviewAddVO reviewAddVO,
+                                  @NotNull BindingResult bindingResult,
+                                  HttpServletRequest request) {
+        log.info("请求接口[POST]: /review/add");
+
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR);
+        }
+
+        return reviewService.addReview(reviewAddVO, request);
+    }
+
+
 
 
 }

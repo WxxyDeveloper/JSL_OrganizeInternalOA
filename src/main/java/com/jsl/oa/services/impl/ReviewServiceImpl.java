@@ -5,11 +5,11 @@ import com.jsl.oa.common.constant.ReviewConstants;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.ReviewDAO;
 import com.jsl.oa.dao.UserDAO;
-import com.jsl.oa.mapper.ReviewMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.dodata.ProjectDO;
 import com.jsl.oa.model.dodata.ProjectWorkDO;
 import com.jsl.oa.model.dodata.ReviewDO;
+import com.jsl.oa.model.vodata.ReviewAddVO;
 import com.jsl.oa.model.vodata.ReviewVO;
 import com.jsl.oa.services.ReviewService;
 import com.jsl.oa.utils.BaseResponse;
@@ -20,10 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -35,7 +32,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final ProjectDAO projectDAO;
 
     private final UserMapper userMapper;
-    private final ReviewMapper reviewMapper;
 
 
     @Override
@@ -54,7 +50,7 @@ public class ReviewServiceImpl implements ReviewService {
         //先从用户为 项目负责人 的项目中获取对应 审核信息
         for (ProjectDO projectDO : projectDAO.getProjectByPrincipalUser(userId)) {
             //查询每个项目下所有的审核信息
-            List<ReviewDO> reviewDOS = reviewMapper.
+            List<ReviewDO> reviewDOS = reviewDAO.
                     selectApprovedResultReviewFromProject(projectDO.getId(),
                             ReviewConstants.PENDING);
             //封装VO类
@@ -64,7 +60,7 @@ public class ReviewServiceImpl implements ReviewService {
         //在从用户为 子系统负责人 的项目中获取对应 审核信息
         for (ProjectWorkDO projectWorkDO : projectDAO.getAllSubsystemByUserId(userId)) {
             //查询每个项目下状态为2的审核信息
-            List<ReviewDO> reviewDOS = reviewMapper.
+            List<ReviewDO> reviewDOS = reviewDAO.
                     selectApprovedResultReviewsFromSubsystem(projectWorkDO.getId(),
                             ReviewConstants.PENDING);
             //封装VO类
@@ -75,7 +71,7 @@ public class ReviewServiceImpl implements ReviewService {
         //在从用户为 子模块负责人 的项目中获取对应 审核信息
         for (ProjectWorkDO projectWorkDO : projectDAO.getAllSubmoduleByUserId(userId)) {
             //查询每个项目下所有的审核信息
-            List<ReviewDO> reviewDOS = reviewMapper.
+            List<ReviewDO> reviewDOS = reviewDAO.
                     selectApprovedResultReviewsFromSubsystem(projectWorkDO.getId(),
                             ReviewConstants.PENDING);
             //封装VO类
@@ -112,7 +108,7 @@ public class ReviewServiceImpl implements ReviewService {
         //先从用户为 项目负责人 的项目中获取对应 审核信息
         for (ProjectDO projectDO : projectDAO.getProjectByPrincipalUser(userId)) {
             //查询每个项目下所有的审核信息
-            List<ReviewDO> reviewDOS = reviewMapper.
+            List<ReviewDO> reviewDOS = reviewDAO.
                     selectAllReviewFromProject(projectDO.getId());
             //封装VO类
             reviewData.addAll(encapsulateArrayClass(reviewDOS));
@@ -121,7 +117,7 @@ public class ReviewServiceImpl implements ReviewService {
         //在从用户为 子系统负责人 的项目中获取对应 审核信息
         for (ProjectWorkDO projectWorkDO : projectDAO.getAllSubsystemByUserId(userId)) {
             //查询每个项目下所有的审核信息
-            List<ReviewDO> reviewDOS = reviewMapper.
+            List<ReviewDO> reviewDOS = reviewDAO.
                     selectReviewFromSubsystem(projectWorkDO.getId());
             //封装VO类
             reviewData.addAll(encapsulateArrayClass(reviewDOS));
@@ -131,7 +127,7 @@ public class ReviewServiceImpl implements ReviewService {
         //在从用户为 子模块负责人 的项目中获取对应 审核信息
         for (ProjectWorkDO projectWorkDO : projectDAO.getAllSubmoduleByUserId(userId)) {
             //查询每个项目下所有的审核信息
-            List<ReviewDO> reviewDOS = reviewMapper.
+            List<ReviewDO> reviewDOS = reviewDAO.
                     selectReviewFromSubmodule(projectWorkDO.getId());
             //封装VO类
             reviewData.addAll(encapsulateArrayClass(reviewDOS));
@@ -146,6 +142,35 @@ public class ReviewServiceImpl implements ReviewService {
         });
 
         return ResultUtil.success(reviewData);
+    }
+
+
+
+    @Override
+    public BaseResponse addReview(ReviewAddVO reviewAddVO, HttpServletRequest request) {
+        log.info("\t> 执行 Service 层 ReviewService.addReview 方法");
+
+        //获取用户
+        Long userId = Processing.getAuthHeaderToUserId(request);
+
+        //定义要添加的审核实体类
+        ReviewDO reviewDO = new ReviewDO();
+        //现将属性相同的值拷贝
+        Processing.copyProperties(reviewAddVO, reviewDO);
+
+        //定义审核的类型（子模块id为空则为 子系统类型，否则为子模块类型）
+        if (reviewAddVO.getProjectSubmoduleId() == null) {
+            reviewDO.setCategory(ReviewConstants.SUBSYSTEM);
+        } else if (reviewAddVO.getProjectSubmoduleId() != null) {
+            reviewDO.setCategory(ReviewConstants.SUBMODULE);
+        }
+
+        //定义申请者id
+        reviewDO.setSenderId(userId);
+        //添加数据
+        reviewDAO.addReview(reviewDO);
+
+        return ResultUtil.success("申请成功");
     }
 
 

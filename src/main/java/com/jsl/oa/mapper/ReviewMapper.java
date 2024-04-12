@@ -32,5 +32,6 @@ public interface ReviewMapper {
     @Select("SELECT * FROM  organize_oa.oa_review WHERE id = #{id} AND is_delete = 0")
     ReviewDO selectReviewById(Long id);
 
+    void addReview(ReviewDO reviewDO);
 
 }
