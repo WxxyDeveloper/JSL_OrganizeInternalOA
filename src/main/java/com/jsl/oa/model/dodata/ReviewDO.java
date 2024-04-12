@@ -31,7 +31,7 @@ public class ReviewDO {
     //审核者用户id
     private Long recipientId;
     //审核类别（0：子系统；1：子模块）
-    private Integer category;
+    private Short category;
     //申请的项目id
     private Long projectId;
     //申请的子系统id
@@ -43,9 +43,9 @@ public class ReviewDO {
     //审核时间
     private Date reviewTime;
     //审核结果（0：未通过；1：通过；2：未审批）
-    private Integer reviewResult;
+    private Short reviewResult;
     //是否删除（0：未删除；1：已删除）
-    private Integer isDelete;
+    private String isDelete;
 
 }
 

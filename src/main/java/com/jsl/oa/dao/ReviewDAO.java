@@ -35,7 +35,7 @@ public class ReviewDAO {
     }
 
     public List<ReviewDO> selectApprovedResultReviewFromProject(Long projectId,
-                                                                Integer result) {
+                                                                short result) {
         log.info("\t> 执行 DAO 层 ReviewDAO.selectApprovedResultReviewFromProject 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         return reviewMapper.selectApprovedResultReviewFromProject(projectId,
@@ -49,7 +49,7 @@ public class ReviewDAO {
     }
 
     public List<ReviewDO> selectApprovedResultReviewsFromSubsystem(Long subsystemId,
-                                                                   Integer result) {
+                                                                   short result) {
         log.info("\t> 执行 DAO 层 ReviewDAO.selectApprovedResultReviewsFromSubsystem 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         return reviewMapper.selectApprovedResultReviewsFromSubsystem(subsystemId,
@@ -66,6 +66,18 @@ public class ReviewDAO {
         log.info("\t> 执行 DAO 层 ReviewDAO.addReview 方法");
         log.info("\t\t> 从 MySQL 插入数据");
         reviewMapper.addReview(reviewDO);
+    }
+
+    public ReviewDO selectReviewById(Long id) {
+        log.info("\t> 执行 DAO 层 ReviewDAO.selectReviewById 方法");
+        log.info("\t\t> 从 MySQL 获取数据");
+        return reviewMapper.selectReviewById(id);
+    }
+
+    public void updateReview(ReviewDO  reviewDO) {
+        log.info("\t> 执行 DAO 层 ReviewDAO.updateReview 方法");
+        log.info("\t\t> 从 MySQL 更新数据");
+        reviewMapper.updateReview(reviewDO);
     }
 
 

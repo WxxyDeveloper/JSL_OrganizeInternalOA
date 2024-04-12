@@ -14,7 +14,7 @@ public interface ReviewMapper {
 
     @Select("SELECT * FROM organize_oa.oa_review WHERE project_id = #{projectId}"
             + "AND is_delete = 0 AND review_result = #{result}")
-    List<ReviewDO> selectApprovedResultReviewFromProject(Long projectId, Integer result);
+    List<ReviewDO> selectApprovedResultReviewFromProject(Long projectId, short result);
 
     @Select("SELECT * FROM organize_oa.oa_review WHERE "
             + "project_subsystem_id = #{subsystemId} AND is_delete = 0")
@@ -23,7 +23,7 @@ public interface ReviewMapper {
     @Select("SELECT * FROM organize_oa.oa_review WHERE "
             + "project_subsystem_id = #{subsystemId} "
             + "AND is_delete = 0 AND review_result = #{result}")
-    List<ReviewDO> selectApprovedResultReviewsFromSubsystem(Long subsystemId, Integer result);
+    List<ReviewDO> selectApprovedResultReviewsFromSubsystem(Long subsystemId, short result);
 
     @Select("SELECT * FROM organize_oa.oa_review WHERE "
             + "project_submodule_id = #{subsystemId} AND is_delete = 0")
@@ -31,6 +31,8 @@ public interface ReviewMapper {
 
     @Select("SELECT * FROM  organize_oa.oa_review WHERE id = #{id} AND is_delete = 0")
     ReviewDO selectReviewById(Long id);
+
+    void updateReview(ReviewDO reviewDO);
 
     void addReview(ReviewDO reviewDO);
 

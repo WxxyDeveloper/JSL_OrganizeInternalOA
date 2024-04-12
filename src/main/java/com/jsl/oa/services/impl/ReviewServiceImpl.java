@@ -10,9 +10,11 @@ import com.jsl.oa.model.dodata.ProjectDO;
 import com.jsl.oa.model.dodata.ProjectWorkDO;
 import com.jsl.oa.model.dodata.ReviewDO;
 import com.jsl.oa.model.vodata.ReviewAddVO;
+import com.jsl.oa.model.vodata.ReviewUpdateResultVO;
 import com.jsl.oa.model.vodata.ReviewVO;
 import com.jsl.oa.services.ReviewService;
 import com.jsl.oa.utils.BaseResponse;
+import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.Processing;
 import com.jsl.oa.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
@@ -171,6 +173,32 @@ public class ReviewServiceImpl implements ReviewService {
         reviewDAO.addReview(reviewDO);
 
         return ResultUtil.success("申请成功");
+    }
+
+
+
+    @Override
+    public BaseResponse updateReviewResult(ReviewUpdateResultVO reviewUpdateResultVO, HttpServletRequest request) {
+
+        //获取当前用户
+        Long userId = Processing.getAuthHeaderToUserId(request);
+
+        //获取对应审核信息
+        ReviewDO reviewDO = reviewDAO.selectReviewById(reviewUpdateResultVO.getId());
+
+        if (reviewDO == null) {
+            return ResultUtil.error(ErrorCode.REVIEW_NOT_EXIST);
+        }
+
+        //设置对应属性
+        reviewDO.setReviewTime(new Date());
+        reviewDO.setRecipientId(userId);
+        reviewDO.setReviewResult(reviewUpdateResultVO.getResult());
+
+        //更新数据
+        reviewDAO.updateReview(reviewDO);
+
+        return ResultUtil.success();
     }
 
 

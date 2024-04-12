@@ -13,16 +13,16 @@ package com.jsl.oa.common.constant;
 public class ReviewConstants {
 
 //    审核状态 0：未通过；1：已通过；2：未审批
-    public static final int NOT_APPROVED = 0;
+    public static final short NOT_APPROVED = 0;
 
-    public static final int APPROVED = 1;
+    public static final short APPROVED = 1;
 
-    public static final int PENDING = 2;
+    public static final short PENDING = 2;
 
 //    审核类型 0：子系统；1：子模块
-    public static final int SUBSYSTEM = 0;
+    public static final short SUBSYSTEM = 0;
 
-    public static final int SUBMODULE = 1;
+    public static final short SUBMODULE = 1;
 
 }
 
