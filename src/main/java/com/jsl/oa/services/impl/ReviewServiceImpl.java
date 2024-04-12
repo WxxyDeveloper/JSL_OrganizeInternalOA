@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -43,8 +44,9 @@ public class ReviewServiceImpl implements ReviewService {
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
 
+
         //存储审核数据的数组
-        List<ReviewVO> reviewData = new ArrayList<>();
+        List<ReviewDO> reviewData = new ArrayList<>();
 
         //先获取用户为项目负责人的项目列表
         projectDAO.getProjectByPrincipalUser(userId);
@@ -56,7 +58,7 @@ public class ReviewServiceImpl implements ReviewService {
                     selectApprovedResultReviewFromProject(projectDO.getId(),
                             ReviewConstants.PENDING);
             //封装VO类
-            reviewData.addAll(encapsulateArrayClass(reviewDOS));
+            reviewData.addAll(reviewDOS);
         }
 
         //在从用户为 子系统负责人 的项目中获取对应 审核信息
@@ -66,7 +68,7 @@ public class ReviewServiceImpl implements ReviewService {
                     selectApprovedResultReviewsFromSubsystem(projectWorkDO.getId(),
                             ReviewConstants.PENDING);
             //封装VO类
-            reviewData.addAll(encapsulateArrayClass(reviewDOS));
+            reviewData.addAll(reviewDOS);
         }
 
 
@@ -77,19 +79,30 @@ public class ReviewServiceImpl implements ReviewService {
                     selectApprovedResultReviewsFromSubsystem(projectWorkDO.getId(),
                             ReviewConstants.PENDING);
             //封装VO类
-            reviewData.addAll(encapsulateArrayClass(reviewDOS));
+            reviewData.addAll(reviewDOS);
         }
 
 
+        //根据id进行去重
+        reviewData = reviewData.stream()
+                .collect(Collectors.toMap(ReviewDO::getId, review -> review, (existing, replacement) -> existing))
+                .values()
+                .stream()
+                .collect(Collectors.toList());
+
+
         //按照申请时间降序排序
-        Collections.sort(reviewData, new Comparator<ReviewVO>() {
+        Collections.sort(reviewData, new Comparator<ReviewDO>() {
             @Override
-            public int compare(ReviewVO review1, ReviewVO review2) {
+            public int compare(ReviewDO review1, ReviewDO review2) {
                 return review2.getApplicationTime().compareTo(review1.getApplicationTime());
             }
         });
 
-        return ResultUtil.success(reviewData);
+        //封装对应VO类
+        List<ReviewVO> result = encapsulateArrayClass(reviewData);
+
+        return ResultUtil.success(result);
     }
 
 
@@ -101,7 +114,7 @@ public class ReviewServiceImpl implements ReviewService {
         Long userId = Processing.getAuthHeaderToUserId(request);
 
         //存储审核数据的数组
-        List<ReviewVO> reviewData = new ArrayList<>();
+        List<ReviewDO> reviewData = new ArrayList<>();
 
         //先获取用户为项目负责人的项目列表
         projectDAO.getProjectByPrincipalUser(userId);
@@ -112,7 +125,7 @@ public class ReviewServiceImpl implements ReviewService {
             List<ReviewDO> reviewDOS = reviewDAO.
                     selectAllReviewFromProject(projectDO.getId());
             //封装VO类
-            reviewData.addAll(encapsulateArrayClass(reviewDOS));
+            reviewData.addAll(reviewDOS);
         }
 
         //在从用户为 子系统负责人 的项目中获取对应 审核信息
@@ -121,7 +134,7 @@ public class ReviewServiceImpl implements ReviewService {
             List<ReviewDO> reviewDOS = reviewDAO.
                     selectReviewFromSubsystem(projectWorkDO.getId());
             //封装VO类
-            reviewData.addAll(encapsulateArrayClass(reviewDOS));
+            reviewData.addAll(reviewDOS);
         }
 
 
@@ -131,18 +144,28 @@ public class ReviewServiceImpl implements ReviewService {
             List<ReviewDO> reviewDOS = reviewDAO.
                     selectReviewFromSubmodule(projectWorkDO.getId());
             //封装VO类
-            reviewData.addAll(encapsulateArrayClass(reviewDOS));
+            reviewData.addAll(reviewDOS);
         }
 
+        //根据id进行去重
+        reviewData = reviewData.stream()
+                .collect(Collectors.toMap(ReviewDO::getId, review -> review, (existing, replacement) -> existing))
+                .values()
+                .stream()
+                .collect(Collectors.toList());
+
         //按照申请时间降序排序
-        Collections.sort(reviewData, new Comparator<ReviewVO>() {
+        Collections.sort(reviewData, new Comparator<ReviewDO>() {
             @Override
-            public int compare(ReviewVO review1, ReviewVO review2) {
+            public int compare(ReviewDO review1, ReviewDO review2) {
                 return review2.getApplicationTime().compareTo(review1.getApplicationTime());
             }
         });
 
-        return ResultUtil.success(reviewData);
+        //封装对应VO类
+        List<ReviewVO> result = encapsulateArrayClass(reviewData);
+
+        return ResultUtil.success(result);
     }
 
 
@@ -231,7 +254,7 @@ public class ReviewServiceImpl implements ReviewService {
             if (reviewDO.getProjectSubmoduleId() != null) {
                 reviewVO.setSubmoduleName(reviewDAO.getNameBySubproject(reviewDO.getProjectSubmoduleId()));
             } else {
-                reviewVO.setSubsystemName("无");
+                reviewVO.setSubmoduleName("无");
             }
 //            将封装好的结果添加到结果集
             resultData.add(reviewVO);
