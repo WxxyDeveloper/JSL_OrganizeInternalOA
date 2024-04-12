@@ -1,6 +1,7 @@
 package com.jsl.oa.services.impl;
 
 
+import com.jsl.oa.common.constant.ReviewConstants;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.ReviewDAO;
 import com.jsl.oa.dao.UserDAO;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -36,7 +39,65 @@ public class ReviewServiceImpl implements ReviewService {
 
 
     @Override
-    public BaseResponse getUserReview(Long projectId, HttpServletRequest request) {
+    public BaseResponse getUserPendingApprovalReview(HttpServletRequest request) {
+        log.info("\t> 执行 Service 层 ReviewService.getUserPendingApprovalReview 方法");
+
+        //获取用户
+        Long userId = Processing.getAuthHeaderToUserId(request);
+
+        //存储审核数据的数组
+        List<ReviewVO> reviewData = new ArrayList<>();
+
+        //先获取用户为项目负责人的项目列表
+        projectDAO.getProjectByPrincipalUser(userId);
+
+        //先从用户为 项目负责人 的项目中获取对应 审核信息
+        for (ProjectDO projectDO : projectDAO.getProjectByPrincipalUser(userId)) {
+            //查询每个项目下所有的审核信息
+            List<ReviewDO> reviewDOS = reviewMapper.
+                    selectApprovedResultReviewFromProject(projectDO.getId(),
+                            ReviewConstants.PENDING);
+            //封装VO类
+            reviewData.addAll(encapsulateArrayClass(reviewDOS));
+        }
+
+        //在从用户为 子系统负责人 的项目中获取对应 审核信息
+        for (ProjectWorkDO projectWorkDO : projectDAO.getAllSubsystemByUserId(userId)) {
+            //查询每个项目下状态为2的审核信息
+            List<ReviewDO> reviewDOS = reviewMapper.
+                    selectApprovedResultReviewsFromSubsystem(projectWorkDO.getId(),
+                            ReviewConstants.PENDING);
+            //封装VO类
+            reviewData.addAll(encapsulateArrayClass(reviewDOS));
+        }
+
+
+        //在从用户为 子模块负责人 的项目中获取对应 审核信息
+        for (ProjectWorkDO projectWorkDO : projectDAO.getAllSubmoduleByUserId(userId)) {
+            //查询每个项目下所有的审核信息
+            List<ReviewDO> reviewDOS = reviewMapper.
+                    selectApprovedResultReviewsFromSubsystem(projectWorkDO.getId(),
+                            ReviewConstants.PENDING);
+            //封装VO类
+            reviewData.addAll(encapsulateArrayClass(reviewDOS));
+        }
+
+
+        //按照申请时间降序排序
+        Collections.sort(reviewData, new Comparator<ReviewVO>() {
+            @Override
+            public int compare(ReviewVO review1, ReviewVO review2) {
+                return review2.getApplicationTime().compareTo(review1.getApplicationTime());
+            }
+        });
+
+        return ResultUtil.success(reviewData);
+    }
+
+
+
+    @Override
+    public BaseResponse getUserReview(HttpServletRequest request) {
         log.info("\t> 执行 Service 层 ReviewService.getUserReview 方法");
 
         //获取用户
@@ -75,6 +136,14 @@ public class ReviewServiceImpl implements ReviewService {
             //封装VO类
             reviewData.addAll(encapsulateArrayClass(reviewDOS));
         }
+
+        //按照申请时间降序排序
+        Collections.sort(reviewData, new Comparator<ReviewVO>() {
+            @Override
+            public int compare(ReviewVO review1, ReviewVO review2) {
+                return review2.getApplicationTime().compareTo(review1.getApplicationTime());
+            }
+        });
 
         return ResultUtil.success(reviewData);
     }

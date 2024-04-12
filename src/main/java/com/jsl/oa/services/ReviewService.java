@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface ReviewService {
 
-    BaseResponse getUserReview(Long projectId, HttpServletRequest request);
+    BaseResponse getUserPendingApprovalReview(HttpServletRequest request);
+
+    BaseResponse getUserReview(HttpServletRequest request);
 
 }

@@ -12,9 +12,18 @@ public interface ReviewMapper {
             + "AND is_delete = 0")
     List<ReviewDO> selectAllReviewFromProject(Long projectId);
 
+    @Select("SELECT * FROM organize_oa.oa_review WHERE project_id = #{projectId}"
+            + "AND is_delete = 0 AND review_result = #{result}")
+    List<ReviewDO> selectApprovedResultReviewFromProject(Long projectId, Integer result);
+
     @Select("SELECT * FROM organize_oa.oa_review WHERE "
             + "project_subsystem_id = #{subsystemId} AND is_delete = 0")
     List<ReviewDO> selectReviewFromSubsystem(Long subsystemId);
+
+    @Select("SELECT * FROM organize_oa.oa_review WHERE "
+            + "project_subsystem_id = #{subsystemId} "
+            + "AND is_delete = 0 AND review_result = #{result}")
+    List<ReviewDO> selectApprovedResultReviewsFromSubsystem(Long subsystemId, Integer result);
 
     @Select("SELECT * FROM organize_oa.oa_review WHERE "
             + "project_submodule_id = #{subsystemId} AND is_delete = 0")

@@ -5,7 +5,6 @@ import com.jsl.oa.utils.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,15 +25,28 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     /**
-     * @Description: 获取我的审核列表
+     * @Description: 获取审核记录列表
      * @Date: 2024/4/11
      * @Param request:
      **/
-    @GetMapping("/review/getMyReview")
-    public BaseResponse getUserReview(@RequestParam Long projectId, HttpServletRequest request) {
+    @GetMapping("/review/getReviewRecords")
+    public BaseResponse getUserReviewRecords(HttpServletRequest request) {
         log.info("请求接口[GET]: /review/getMyReview");
-        return reviewService.getUserReview(projectId, request);
+        return reviewService.getUserReview(request);
     }
+
+
+    /**
+     * @Description: 获取我的审核数据
+     * @Date: 2024/4/12
+     * @Param request:
+     **/
+    @GetMapping("/review/getMyReview")
+    public BaseResponse getMyReview(HttpServletRequest request) {
+        log.info("请求接口[GET]: /review/getMyReview");
+        return reviewService.getUserPendingApprovalReview(request);
+    }
+
 
 }
 
