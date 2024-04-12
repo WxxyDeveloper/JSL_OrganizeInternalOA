@@ -153,6 +153,11 @@ public class ReviewServiceImpl implements ReviewService {
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
 
+        //检查审核事项名称是否重复
+        if (!reviewDAO.checkNameIsExist(reviewAddVO.getName())) {
+            return ResultUtil.error(ErrorCode.REVIEW_NAME_REPEAT);
+        }
+
         //定义要添加的审核实体类
         ReviewDO reviewDO = new ReviewDO();
         //现将属性相同的值拷贝
@@ -225,6 +230,8 @@ public class ReviewServiceImpl implements ReviewService {
             }
             if (reviewDO.getProjectSubmoduleId() != null) {
                 reviewVO.setSubmoduleName(reviewDAO.getNameBySubproject(reviewDO.getProjectSubmoduleId()));
+            } else {
+                reviewVO.setSubsystemName("无");
             }
 //            将封装好的结果添加到结果集
             resultData.add(reviewVO);

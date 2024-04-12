@@ -36,4 +36,6 @@ public interface ReviewMapper {
 
     void addReview(ReviewDO reviewDO);
 
+    @Select("SELECT * FROM  organize_oa.oa_review WHERE name = #{name} AND is_delete = 0")
+    List<ReviewDO> selectReviewByName(String name);
 }
