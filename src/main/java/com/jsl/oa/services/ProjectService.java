@@ -19,10 +19,10 @@ public interface ProjectService {
 
     BaseResponse editHeader(HttpServletRequest request, ProjectShowVO projectShowVO, Integer id);
 
-    BaseResponse get(Integer listAll,
+    BaseResponse get(
                      HttpServletRequest request,
                      List<String> tags,
-                     List<Integer> isFinish,
+                     List<String> isFinish,
                      Integer page,
                      Integer pageSize);
 
@@ -34,17 +34,17 @@ public interface ProjectService {
 
     BaseResponse projectToOtherUserForCutting(HttpServletRequest request, Long oldUid, Long pid, Long newUid);
 
-    BaseResponse workget(Integer listAll,
+    BaseResponse workget(
                          HttpServletRequest request,
                          List<String> tags,
-                         List<Integer> isFinish,
+                         List<String> isFinish,
                          Integer is,
                          Integer page,
                          Integer pageSize);
 
     BaseResponse projecWorktAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO);
 
-    BaseResponse tget(Integer id, List<String> tags, List<Integer> isFinish, Integer page, Integer pageSize);
+    BaseResponse tget(List<String> tags, List<String> isFinish, Integer page, Integer pageSize);
 
     BaseResponse projectFileGet(HttpServletRequest request, Long projectId);
 

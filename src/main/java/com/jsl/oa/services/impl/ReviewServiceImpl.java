@@ -7,7 +7,7 @@ import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ReviewMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.dodata.ProjectDO;
-import com.jsl.oa.model.dodata.ProjectWorkDO;
+import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.dodata.ReviewDO;
 import com.jsl.oa.model.vodata.ReviewVO;
 import com.jsl.oa.services.ReviewService;
@@ -58,7 +58,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         //在从用户为 子系统负责人 的项目中获取对应 审核信息
-        for (ProjectWorkDO projectWorkDO : projectDAO.getAllSubsystemByUserId(userId)) {
+        for (ProjectModuleDO projectWorkDO : projectDAO.getAllSubsystemByUserId(userId)) {
             //查询每个项目下所有的审核信息
             List<ReviewDO> reviewDOS = reviewMapper.
                     selectReviewFromSubsystem(projectWorkDO.getId());
@@ -68,7 +68,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 
         //在从用户为 子模块负责人 的项目中获取对应 审核信息
-        for (ProjectWorkDO projectWorkDO : projectDAO.getAllSubmoduleByUserId(userId)) {
+        for (ProjectModuleDO projectWorkDO : projectDAO.getAllSubmoduleByUserId(userId)) {
             //查询每个项目下所有的审核信息
             List<ReviewDO> reviewDOS = reviewMapper.
                     selectReviewFromSubmodule(projectWorkDO.getId());

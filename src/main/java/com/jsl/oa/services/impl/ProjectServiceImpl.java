@@ -13,6 +13,7 @@ import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.model.dodata.info.ProjectShowDO;
 import com.jsl.oa.model.vodata.*;
 import com.jsl.oa.model.vodata.business.info.ProjectShowVO;
+import com.jsl.oa.services.MessageService;
 import com.jsl.oa.services.ProjectService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -22,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -50,6 +50,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final UserDAO userDAO;
     private final ObjectMapper objectMapper;
     private final RoleDAO roleDAO;
+    private final MessageService messageService;
 
     @Override
     public BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd) {
@@ -71,7 +72,7 @@ public class ProjectServiceImpl implements ProjectService {
             tag = new StringBuilder(tag.substring(0, tag.length() - 2));
         }
         projectAdd.setTags(open + tag + close);
-        projectAdd.setFile("{\"URI\":\"" + projectAdd.getFile() + "\"}");
+        projectAdd.setFiles("{\"URI\":\"" + projectAdd.getFiles() + "\"}");
 
 
         projectDAO.projectAdd(projectAdd);
@@ -109,54 +110,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse tget(Integer id, List<String> tags, List<Integer> isFinish, Integer page, Integer pageSize) {
+    public BaseResponse tget(List<String> tags, List<String> isFinish, Integer page, Integer pageSize) {
         log.info("\t> 执行 Service 层 ProjectService.tget 方法");
-        //根据id查询
-        if (id != null) {
-            ProjectDO projectDO = projectMapper.tgetProjectById(id);
-            ProjectSimpleVO projectSimpleVO = new ProjectSimpleVO();
-            Processing.projectTosimply(projectSimpleVO, projectDO, userDAO, objectMapper);
-            return ResultUtil.success(projectSimpleVO);
-        }
 
-        //根据标签查询
-        if (tags != null && !tags.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.tget(id, isFinish, tags);
+        List<ProjectDO> projectDOList = projectDAO.tget(isFinish, tags);
 
-            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO : projectDOList) {
-                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
-                projectSimpleVOList.add(projectSimpleVO1);
-            }
-
-            //分页返回
-            int start = (page - 1) * pageSize;
-            int end = start + pageSize;
-            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end, projectSimpleVOList.size()));
-            return ResultUtil.success(pageData);
-        }
-
-        //根据状态查询
-        if (isFinish != null && !isFinish.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.tget(id, isFinish, tags);
-
-            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO : projectDOList) {
-                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
-                projectSimpleVOList.add(projectSimpleVO1);
-            }
-            //分页返回
-            int start = (page - 1) * pageSize;
-            int end = start + pageSize;
-            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end, projectSimpleVOList.size()));
-            return ResultUtil.success(pageData);
-        }
-
-        List<ProjectDO> projectDOList = projectDAO.tget(id, isFinish, tags);
         List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
         for (ProjectDO projectDO : projectDOList) {
             ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
@@ -169,6 +127,7 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
                 Math.min(end, projectSimpleVOList.size()));
         return ResultUtil.success(pageData);
+
     }
 
     @Override
@@ -342,10 +301,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse get(
-            Integer listAll,
             HttpServletRequest request,
             List<String> tags,
-            List<Integer> isFinish,
+            List<String> isFinish,
             Integer page,
             Integer pageSize
     ) {
@@ -355,7 +313,7 @@ public class ProjectServiceImpl implements ProjectService {
         Long userId = Processing.getAuthHeaderToUserId(request);
         //根据标签查询
         if (tags != null && !tags.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
+            List<ProjectDO> projectDOList = projectDAO.get(userId, tags, isFinish);
 
             List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
             for (ProjectDO projectDO : projectDOList) {
@@ -373,7 +331,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         //根据状态查询
         if (isFinish != null && !isFinish.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
+            List<ProjectDO> projectDOList = projectDAO.get(userId, tags, isFinish);
             List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
             for (ProjectDO projectDO : projectDOList) {
                 ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
@@ -387,123 +345,38 @@ public class ProjectServiceImpl implements ProjectService {
                     Math.min(end, projectSimpleVOList.size()));
             return ResultUtil.success(pageData);
         }
-
-
-        //判断是否是老师(项目负责人)
-        if (listAll != null && Processing.checkUserIsTeacher(request, roleDAO)) {
-            List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
-            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO : projectDOList) {
-                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
-                projectSimpleVOList.add(projectSimpleVO1);
-            }
-            //分页返回
-            int start = (page - 1) * pageSize;
-            int end = start + pageSize;
-            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end, projectSimpleVOList.size()));
-            return ResultUtil.success(pageData);
-        } else {
-            listAll = 0;
-            List<ProjectDO> projectDOList = projectDAO.get(userId, listAll, tags, isFinish);
-            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO : projectDOList) {
-                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
-                projectSimpleVOList.add(projectSimpleVO1);
-            }
-            //分页返回
-            int start = (page - 1) * pageSize;
-            int end = start + pageSize;
-            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end, projectSimpleVOList.size()));
-            return ResultUtil.success(pageData);
-        }
+        return ResultUtil.success(projectMapper.get(userId));
 
     }
 
     @Override
     public BaseResponse workget(
-            Integer listAll,
             HttpServletRequest request,
             List<String> tags,
-            List<Integer> isFinish,
+            List<String> isFinish,
             Integer is,
             Integer page,
             Integer pageSize
     ) {
         log.info("\t> 执行 Service 层 ProjectService.workget 方法");
-
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
 
-        //根据标签查询
-        if (tags != null && !tags.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish, is);
-            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO : projectDOList) {
-                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
-                projectSimpleVOList.add(projectSimpleVO1);
-            }
-            //分页返回
-            int start = (page - 1) * pageSize;
-            int end = start + pageSize;
-            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end, projectSimpleVOList.size()));
-            return ResultUtil.success(pageData);
+        List<ProjectDO> projectDOList = projectDAO.workget(userId, tags, isFinish, is);
+        List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+        for (ProjectDO projectDO : projectDOList) {
+            ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+            Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
+            projectSimpleVOList.add(projectSimpleVO1);
         }
+        //分页返回
+        int start = (page - 1) * pageSize;
+        int end = start + pageSize;
+        List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
+                Math.min(end, projectSimpleVOList.size()));
 
-        //根据状态查询
-        if (isFinish != null && !isFinish.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish, is);
-            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO : projectDOList) {
-                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
-                projectSimpleVOList.add(projectSimpleVO1);
-            }
-            //分页返回
-            int start = (page - 1) * pageSize;
-            int end = start + pageSize;
-            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end, projectSimpleVOList.size()));
-            return ResultUtil.success(pageData);
-        }
+        return ResultUtil.success(pageData);
 
-
-        //判断是否是老师(项目负责人)
-        if (listAll != null && Processing.checkUserIsTeacher(request, roleDAO)) {
-            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish, is);
-            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO : projectDOList) {
-                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
-                projectSimpleVOList.add(projectSimpleVO1);
-            }
-            //分页返回
-            int start = (page - 1) * pageSize;
-            int end = start + pageSize;
-            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end, projectSimpleVOList.size()));
-            return ResultUtil.success(pageData);
-        } else {
-            listAll = 0;
-            List<ProjectDO> projectDOList = projectDAO.workget(userId, listAll, tags, isFinish, is);
-            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO : projectDOList) {
-                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
-                projectSimpleVOList.add(projectSimpleVO1);
-            }
-            //分页返回
-            int start = (page - 1) * pageSize;
-            int end = start + pageSize;
-            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end, projectSimpleVOList.size()));
-            return ResultUtil.success(pageData);
-        }
     }
 
 

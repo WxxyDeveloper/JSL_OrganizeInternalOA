@@ -25,11 +25,17 @@ public interface MessageService {
             Integer pageSize,
             Long uid);
 
-    void messageAdd(Integer pId, Integer systemId, Integer moddleId, Long uid, HttpServletRequest request);
-    void messageAdd(Integer pId, Integer systemId, Integer moddleId, Long uid, Long isPass, HttpServletRequest request);
-    void messageAdd(Integer pId, Integer type, Integer systemId, HttpServletRequest request);
-    void messageAdd(Integer pId, Integer systmeId, Integer moddleId, Integer type, HttpServletRequest request);
+    void messageAdd(Integer pId, Integer systemId, Integer moddleId, Long uid,
+                    HttpServletRequest request);
+    void messageAdd(Integer pId, Integer systemId, Integer moddleId, Long uid, Long isPass,
+                    HttpServletRequest request);
+    void messageAdd(Integer pId, Integer type, Integer systemId,
+                    HttpServletRequest request);
+    void messageAdd(Integer pId, Integer systmeId, Integer moddleId, Integer type,
+                    HttpServletRequest request);
     void messageAdd(Integer pId, Integer systemId, Integer moddleId);
 
     void messageRemind();
+
+    BaseResponse messageGetById(Long id, Long uid);
 }

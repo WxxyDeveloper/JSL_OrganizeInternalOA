@@ -4,7 +4,8 @@ import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.MessageMapper;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.model.dodata.MessageDO;
-import com.jsl.oa.model.dodata.ProjectWorkDO;
+import com.jsl.oa.model.dodata.ProjectChildDO;
+import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.vodata.MessageAddVO;
 import com.jsl.oa.model.vodata.MessageGetVO;
 import com.jsl.oa.services.MessageService;
@@ -117,12 +118,13 @@ public class MessageServiceImpl implements MessageService {
         if (moddleId == null) {
             messageAddVO.setText(senderName + "指派了" + projectName + "项目的" + systemName + "子系统给您");
         } else {
-            String moddleName = projectMapper.getWorkById(moddleId).getName();
+            String moddleName = projectMapper.getModuleById(moddleId).getName();
             messageAddVO.setText(senderName + "指派了" + projectName + "项目的" + systemName + "子系统的" + moddleName + "子模块给您");
         }
         messageAddVO.setType("跳转审批页");
         messageMapper.messageAdd(messageAddVO);
     }
+
 
     /**
      * 添加审批消息
@@ -149,7 +151,7 @@ public class MessageServiceImpl implements MessageService {
         MessageAddVO messageAddVO = new MessageAddVO();
         messageAddVO.setUid(uid);
         messageAddVO.setTitle("审批消息");
-        String moddleName = projectMapper.getWorkById(moddleId).getName();
+        String moddleName = projectMapper.getModuleById(moddleId).getName();
         if (isPass == 1) {
             messageAddVO.setText("您申请的" + projectName + "项目的" + systemName + "系统的" + moddleName + "模块负责人已通过");
         } else {
@@ -216,7 +218,7 @@ public class MessageServiceImpl implements MessageService {
         String projectName = projectMapper.tgetProjectById(pId).getName();
         String senderName = userDAO.getUserById(Processing.getAuthHeaderToUserId(request)).getUsername();
         String systemName = projectMapper.getWorkById(systmeId).getName();
-        String moddleName = projectMapper.getWorkById(moddleId).getName();
+        String moddleName = projectMapper.getModuleById(moddleId).getName();
         // 添加消息
         // 1:删除模块 2:修改简介 3:修改周期
         if (type == 1) {
@@ -261,7 +263,7 @@ public class MessageServiceImpl implements MessageService {
         // 获取项目名,系统名,模块名,负责人名
         String projectName = projectMapper.tgetProjectById(pId).getName();
         String systemName = projectMapper.getWorkById(systemId).getName();
-        String moddleName = projectMapper.getWorkById(moddleId).getName();
+        String moddleName = projectMapper.getModuleById(moddleId).getName();
         String principalName = userDAO.getUserById(projectMapper.getPid(moddleId)).getUsername();
         // 添加消息
         MessageAddVO messageAddVO = new MessageAddVO();
@@ -285,62 +287,87 @@ public class MessageServiceImpl implements MessageService {
         LocalDateTime threeDaysLater = now.plusDays(3);
         // 七天后时间
         LocalDateTime sevenDaysLater = now.plusDays(7);
-        // 获取三天后到期的系统/模块
-        List<ProjectWorkDO> projectWorkDOList = projectMapper.getProjectWorkByTime(threeDaysLater);
-        // 获取七天后到期的系统/模块
-        List<ProjectWorkDO> projectWorkDOList1 = projectMapper.getProjectWorkByTime(sevenDaysLater);
+        // 获取三天后到期的模块
+        List<ProjectModuleDO> projectWorkDOList = projectMapper.getProjectWorkByTime(threeDaysLater);
+        // 获取七天后到期的模块
+        List<ProjectModuleDO> projectWorkDOList1 = projectMapper.getProjectWorkByTime(sevenDaysLater);
         if (!projectWorkDOList1.isEmpty()) {
-            for (ProjectWorkDO projectWorkDO : projectWorkDOList) {
+            for (ProjectModuleDO projectWorkDO : projectWorkDOList) {
                 // 添加消息
                 MessageAddVO messageAddVO = new MessageAddVO();
                 messageAddVO.setUid(projectWorkDO.getPrincipalId());
                 messageAddVO.setTitle("提醒消息");
-                // 0:系统 1:模块
                 String projectName = projectMapper
-                        .tgetProjectById(projectWorkDO.getProjectId().intValue()).getName();
-                String systemName;
-                if (projectWorkDO.getType() == 1) {
-                    systemName = projectMapper.getWorkById(projectWorkDO.getPid().intValue()).getName();
-                    String moddleName = projectMapper.getWorkById(projectWorkDO.getId().intValue()).getName();
-                    messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统的" + moddleName + "模块"
-                            + "还有七天就要到期了，请及时处理");
-                    messageAddVO.setType("跳转模块页");
-                } else {
-                    systemName = projectMapper.getWorkById(projectWorkDO.getId().intValue()).getName();
-                    messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统"
-                            + "还有七天就要到期了，请及时处理");
-                    messageAddVO.setType("跳转系统页");
-                }
+                        .tgetProjectById(projectMapper.getWorkById(projectWorkDO.getProjectChildId().intValue())
+                                .getProjectId().intValue()).getName();
+
+                String systemName = projectMapper.getWorkById(projectWorkDO.getProjectChildId().intValue()).getName();
+                String moddleName = projectWorkDO.getName();
+                messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统的" + moddleName + "模块"
+                        + "还有七天就要到期了，请及时处理");
+                messageAddVO.setType("跳转模块页");
                 messageAddVO.setToId(projectWorkDO.getId().intValue());
                 messageMapper.messageAdd(messageAddVO);
             }
         }
         if (!projectWorkDOList.isEmpty()) {
-            for (ProjectWorkDO projectWorkDO : projectWorkDOList) {
+            for (ProjectModuleDO projectWorkDO : projectWorkDOList) {
                 // 添加消息
                 MessageAddVO messageAddVO = new MessageAddVO();
                 messageAddVO.setUid(projectWorkDO.getPrincipalId());
                 messageAddVO.setTitle("提醒消息");
-                // 0:系统 1:模块
                 String projectName = projectMapper
-                        .tgetProjectById(projectWorkDO.getProjectId().intValue()).getName();
-                String systemName;
-                if (projectWorkDO.getType() == 1) {
-                    systemName = projectMapper.getWorkById(projectWorkDO.getPid().intValue()).getName();
-                    String moddleName = projectMapper.getWorkById(projectWorkDO.getId().intValue()).getName();
-                    messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统的" + moddleName + "模块"
+                        .tgetProjectById(projectMapper.getWorkById(projectWorkDO.getProjectChildId().intValue())
+                                .getPrincipalId().intValue()).getName();
+
+                String systemName = projectMapper.getWorkById(projectWorkDO.getProjectChildId().intValue()).getName();
+                String moddleName = projectWorkDO.getName();
+                messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统的" + moddleName + "模块"
                             + "还有三天就要到期了，请及时处理");
                     messageAddVO.setType("跳转模块页");
-                } else {
-                    systemName = projectMapper.getWorkById(projectWorkDO.getId().intValue()).getName();
-                    messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统"
-                            + "还有三天就要到期了，请及时处理");
-                    messageAddVO.setType("跳转系统页");
-                }
                 messageAddVO.setToId(projectWorkDO.getId().intValue());
                 messageMapper.messageAdd(messageAddVO);
             }
         }
+
+        // 获取七天后到期的系统
+        List<ProjectChildDO> projectChildDOList = projectMapper.getProjectChildByTime(sevenDaysLater);
+        if (!projectChildDOList.isEmpty()) {
+            for (ProjectChildDO projectChildDO : projectChildDOList) {
+                // 添加消息
+                MessageAddVO messageAddVO = new MessageAddVO();
+                messageAddVO.setUid(projectChildDO.getPrincipalId());
+                messageAddVO.setTitle("提醒消息");
+                String projectName = projectMapper.tgetProjectById(projectChildDO.getProjectId().intValue()).getName();
+                String systemName = projectChildDO.getName();
+                messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统还有七天就要到期了，请及时处理");
+                messageAddVO.setType("跳转系统页");
+                messageAddVO.setToId(projectChildDO.getId().intValue());
+                messageMapper.messageAdd(messageAddVO);
+            }
+        }
+        // 获取三天后到期的系统
+        List<ProjectChildDO> projectChildDOList1 = projectMapper.getProjectChildByTime(threeDaysLater);
+        if (!projectChildDOList1.isEmpty()) {
+            for (ProjectChildDO projectChildDO : projectChildDOList1) {
+                // 添加消息
+                MessageAddVO messageAddVO = new MessageAddVO();
+                messageAddVO.setUid(projectChildDO.getPrincipalId());
+                messageAddVO.setTitle("提醒消息");
+                String projectName = projectMapper.tgetProjectById(projectChildDO.getProjectId().intValue()).getName();
+                String systemName = projectChildDO.getName();
+                messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统还有三天就要到期了，请及时处理");
+                messageAddVO.setType("跳转系统页");
+                messageAddVO.setToId(projectChildDO.getId().intValue());
+                messageMapper.messageAdd(messageAddVO);
+            }
+
+        }
+    }
+
+    @Override
+    public BaseResponse messageGetById(Long id, Long uid) {
+        return ResultUtil.success(messageMapper.getMessageById(id));
     }
 
 }
