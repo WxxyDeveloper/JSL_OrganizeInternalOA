@@ -2,7 +2,9 @@ package com.jsl.oa.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseResponse {
@@ -16,12 +18,6 @@ public class BaseResponse {
         this.code = code;
         this.message = message;
         this.data = data;
-    }
-
-    public BaseResponse(String output, Integer code, String message) {
-        this.output = output;
-        this.code = code;
-        this.message = message;
-        this.data = null;
+        log.info("==================================================");
     }
 }

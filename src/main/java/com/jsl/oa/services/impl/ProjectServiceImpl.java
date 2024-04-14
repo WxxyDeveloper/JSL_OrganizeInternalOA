@@ -136,13 +136,13 @@ public class ProjectServiceImpl implements ProjectService {
 
         ProjectDO projectDO = projectDAO.getProjectById(projectId);
 
-        if (projectDO.getFile() == null || projectDO.getFile().equals("{}")) {
+        if (projectDO.getFiles() == null || projectDO.getFiles().equals("{}")) {
             return ResultUtil.success(null);
         }
 
         // 将文件内容转换为 JSON 数组
         try {
-            Object fileJson = new ObjectMapper().readValue(projectDO.getFile(), Object.class);
+            Object fileJson = new ObjectMapper().readValue(projectDO.getFiles(), Object.class);
             return ResultUtil.success(fileJson);
         } catch (JsonProcessingException e) {
             return ResultUtil.error(ErrorCode.PROJECT_FILE_JSON_ERROR);
@@ -181,6 +181,22 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public BaseResponse projectPrincipalGet() {
         return ResultUtil.success(userMapper.getPrincipal());
+    }
+
+    @Override
+    public BaseResponse getProjectById(HttpServletRequest request, Long projectId) {
+        // 对项目 id 进行数据库校验
+        ProjectDO getProject = projectDAO.getProjectById(projectId);
+        if (getProject == null) {
+            return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
+        }
+        // 检查项目是否被删除
+        if (getProject.getIsDelete()) {
+            return ResultUtil.error("项目已删除", ErrorCode.PROJECT_NOT_EXIST);
+        }
+        // 对项目具体信息进行检查
+        // TODO: [10001] 需要检查普通用户是否有权限可以看到这一篇项目内容
+        return ResultUtil.success(getProject);
     }
 
     @Override
@@ -295,56 +311,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse get(
-            HttpServletRequest request,
-            List<String> tags,
-            List<String> isFinish,
-            Integer page,
-            Integer pageSize
-    ) {
-        log.info("\t> 执行 Service 层 ProjectService.get 方法");
-
-        //获取用户
-        Long userId = Processing.getAuthHeaderToUserId(request);
-        //根据标签查询
-        if (tags != null && !tags.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.get(userId, tags, isFinish);
-
-            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO : projectDOList) {
-                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
-                projectSimpleVOList.add(projectSimpleVO1);
-            }
-            //分页返回
-            int start = (page - 1) * pageSize;
-            int end = start + pageSize;
-            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end, projectSimpleVOList.size()));
-            return ResultUtil.success(pageData);
-        }
-
-        //根据状态查询
-        if (isFinish != null && !isFinish.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.get(userId, tags, isFinish);
-            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO : projectDOList) {
-                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
-                projectSimpleVOList.add(projectSimpleVO1);
-            }
-            //分页返回
-            int start = (page - 1) * pageSize;
-            int end = start + pageSize;
-            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end, projectSimpleVOList.size()));
-            return ResultUtil.success(pageData);
-        }
-        return ResultUtil.success(projectMapper.get(userId));
-
-    }
-
-    @Override
     public BaseResponse workGet(
             HttpServletRequest request,
             List<String> tags,
@@ -373,7 +339,6 @@ public class ProjectServiceImpl implements ProjectService {
         return ResultUtil.success(pageData);
 
     }
-
 
     @Override
     public BaseResponse getByName(String name) {

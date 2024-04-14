@@ -51,7 +51,6 @@ public class ProjectController {
     }
 
 
-
     /**
      * @param id 要查询的 id
      * @return {@link BaseResponse}
@@ -77,28 +76,34 @@ public class ProjectController {
      */
     @GetMapping("/project/get/custom")
     public BaseResponse projectGetCustom(
-                                         @RequestParam(required = false) List<String> tags,
-                                         @RequestParam(required = false) List<String> isFinish,
-                                         @RequestParam(required = false, defaultValue = "1") Integer page,
-                                         @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+            @RequestParam(required = false) List<String> tags,
+            @RequestParam(required = false) List<String> isFinish,
+            @RequestParam(required = false, defaultValue = "1") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
         log.info("请求接口[GET]: /project/get/custom");
         return projectService.tGet(tags, isFinish, page, pageSize);
     }
 
     /**
-     * 我负责的界面的获取项目
+     * 根据项目 id 获取项目详细信息
+     * <hr/>
+     * 根据项目 id 获取项目的详细信息，在地址后面有 projectId 的 path 部分需要补充完整（不可缺少）
      *
+     * @param projectId 项目 id
+     * @param request   请求
      * @return {@link BaseResponse}
      */
-    @GetMapping("/project/get")
-    public BaseResponse projectGet(
-                                   @RequestParam(required = false) List<String> tags,
-                                   @RequestParam(required = false) List<String> isFinish,
-                                   @RequestParam(required = false, defaultValue = "1") Integer page,
-                                   @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                   HttpServletRequest request) {
+    @GetMapping("/project/get/{projectId}")
+    public BaseResponse getProjectById(
+            @PathVariable String projectId,
+            HttpServletRequest request
+    ) {
         log.info("请求接口[GET]: /project/get");
-        return projectService.get(request, tags, isFinish, page, pageSize);
+        // 对 projectId 进行判断
+        if (!projectId.matches("^[0-9]+$")) {
+            return ResultUtil.error("参数 projectId 不是一个数字", ErrorCode.PARAMETER_ERROR);
+        }
+        return projectService.getProjectById(request, Long.parseLong(projectId));
     }
 
     /**
@@ -108,12 +113,12 @@ public class ProjectController {
      */
     @GetMapping("/project/child/get")
     public BaseResponse projectWorkGet(
-                                       @RequestParam(required = false) List<String> tags,
-                                       @RequestParam(required = false) List<String> isFinish,
-                                       @RequestParam(required = false) Integer is,
-                                       @RequestParam(required = false, defaultValue = "1") Integer page,
-                                       @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                       HttpServletRequest request) {
+            @RequestParam(required = false) List<String> tags,
+            @RequestParam(required = false) List<String> isFinish,
+            @RequestParam(required = false) Integer is,
+            @RequestParam(required = false, defaultValue = "1") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+            HttpServletRequest request) {
         log.info("请求接口[GET]: /project/work/get");
         return projectService.workGet(request, tags, isFinish, is, page, pageSize);
     }
