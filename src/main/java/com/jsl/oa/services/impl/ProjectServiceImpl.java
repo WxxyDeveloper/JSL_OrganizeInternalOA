@@ -1,4 +1,5 @@
 package com.jsl.oa.services.impl;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +14,6 @@ import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.model.dodata.info.ProjectShowDO;
 import com.jsl.oa.model.vodata.*;
 import com.jsl.oa.model.vodata.business.info.ProjectShowVO;
-import com.jsl.oa.services.MessageService;
 import com.jsl.oa.services.ProjectService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -50,7 +51,6 @@ public class ProjectServiceImpl implements ProjectService {
     private final UserDAO userDAO;
     private final ObjectMapper objectMapper;
     private final RoleDAO roleDAO;
-    private final MessageService messageService;
 
     @Override
     public BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd) {
@@ -80,12 +80,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse projectToOtherUserForCutting(HttpServletRequest request, Long oldUid, Long pid, Long newUid) {
-        return null;
-    }
-
-    @Override
-    public BaseResponse projecWorktAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO) {
+    public BaseResponse projectWorkAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO) {
         log.info("\t> 执行 Service 层 ProjectService.projectWorkAdd 方法");
         //获取用户id
         Long userId = Processing.getAuthHeaderToUserId(request);
@@ -110,8 +105,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse tget(List<String> tags, List<String> isFinish, Integer page, Integer pageSize) {
-        log.info("\t> 执行 Service 层 ProjectService.tget 方法");
+    public BaseResponse tGet(List<String> tags, List<String> isFinish, Integer page, Integer pageSize) {
+        log.info("\t> 执行 Service 层 ProjectService.tGet 方法");
 
         List<ProjectDO> projectDOList = projectDAO.tget(isFinish, tags);
 
@@ -350,7 +345,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse workget(
+    public BaseResponse workGet(
             HttpServletRequest request,
             List<String> tags,
             List<String> isFinish,
@@ -358,7 +353,7 @@ public class ProjectServiceImpl implements ProjectService {
             Integer page,
             Integer pageSize
     ) {
-        log.info("\t> 执行 Service 层 ProjectService.workget 方法");
+        log.info("\t> 执行 Service 层 ProjectService.workGet 方法");
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
 

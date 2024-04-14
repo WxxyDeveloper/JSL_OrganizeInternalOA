@@ -35,7 +35,7 @@ public class ProjectDAO {
     }
 
     public void projectWorkAdd(ProjectWorkVO projectWorkVO) {
-        log.info("\t> 执行 DAO 层 ProjectDAO.projecWorktAdd 方法");
+        log.info("\t> 执行 DAO 层 ProjectDAO.projectWorkAdd 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         projectMapper.projectWorkAdd(projectWorkVO);
     }
@@ -133,7 +133,7 @@ public class ProjectDAO {
     }
 
     public List<ProjectDO> workget(Long userId, List<String> tags, List<String> isFinish, Integer is) {
-        log.info("\t> 执行 DAO 层 ProjectDAO.workget 方法");
+        log.info("\t> 执行 DAO 层 ProjectDAO.workGet 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         if (tags != null && !tags.isEmpty()) {
             return projectMapper.workgetByTags(userId, tags, is, isFinish);

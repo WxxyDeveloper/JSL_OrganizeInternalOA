@@ -1,4 +1,5 @@
 package com.jsl.oa.controllers;
+
 import com.jsl.oa.model.vodata.ProjectEditVO;
 import com.jsl.oa.model.vodata.ProjectInfoVO;
 import com.jsl.oa.model.vodata.ProjectWorkVO;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -80,7 +82,7 @@ public class ProjectController {
                                          @RequestParam(required = false, defaultValue = "1") Integer page,
                                          @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
         log.info("请求接口[GET]: /project/get/custom");
-        return projectService.tget(tags, isFinish, page, pageSize);
+        return projectService.tGet(tags, isFinish, page, pageSize);
     }
 
     /**
@@ -113,7 +115,7 @@ public class ProjectController {
                                        @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                                        HttpServletRequest request) {
         log.info("请求接口[GET]: /project/work/get");
-        return projectService.workget(request, tags, isFinish, is, page, pageSize);
+        return projectService.workGet(request, tags, isFinish, is, page, pageSize);
     }
 
     /**
@@ -189,7 +191,7 @@ public class ProjectController {
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return projectService.projecWorktAdd(request, projectWorkVO);
+        return projectService.projectWorkAdd(request, projectWorkVO);
     }
 
 
