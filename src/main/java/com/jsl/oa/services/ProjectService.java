@@ -1,6 +1,8 @@
 package com.jsl.oa.services;
 
-import com.jsl.oa.model.vodata.*;
+import com.jsl.oa.model.vodata.ProjectEditVO;
+import com.jsl.oa.model.vodata.ProjectInfoVO;
+import com.jsl.oa.model.vodata.ProjectWorkVO;
 import com.jsl.oa.model.vodata.business.info.ProjectShowVO;
 import com.jsl.oa.utils.BaseResponse;
 
@@ -19,10 +21,10 @@ public interface ProjectService {
 
     BaseResponse editHeader(HttpServletRequest request, ProjectShowVO projectShowVO, Integer id);
 
-    BaseResponse get(Integer listAll,
+    BaseResponse get(
                      HttpServletRequest request,
                      List<String> tags,
-                     List<Integer> isFinish,
+                     List<String> isFinish,
                      Integer page,
                      Integer pageSize);
 
@@ -32,19 +34,17 @@ public interface ProjectService {
 
     BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectVO);
 
-    BaseResponse projectToOtherUserForCutting(HttpServletRequest request, Long oldUid, Long pid, Long newUid);
-
-    BaseResponse workget(Integer listAll,
+    BaseResponse workGet(
                          HttpServletRequest request,
                          List<String> tags,
-                         List<Integer> isFinish,
+                         List<String> isFinish,
                          Integer is,
                          Integer page,
                          Integer pageSize);
 
-    BaseResponse projecWorktAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO);
+    BaseResponse projectWorkAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO);
 
-    BaseResponse tget(Integer id, List<String> tags, List<Integer> isFinish, Integer page, Integer pageSize);
+    BaseResponse tGet(List<String> tags, List<String> isFinish, Integer page, Integer pageSize);
 
     BaseResponse projectFileGet(HttpServletRequest request, Long projectId);
 

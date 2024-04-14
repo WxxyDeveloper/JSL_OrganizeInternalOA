@@ -18,19 +18,17 @@ import java.sql.Timestamp;
 @Data
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProjectCuttingDO {
+public class ProjectChildDO {
     private Long id;
     private Long principalId;
     private Long projectId;
-    private Long pid;
-    private Long workLoad;
-    private Long cycle;
+    private Integer workLoad;
+    private Integer cycle;
     private String name;
     private String description;
     private Integer isDelete;
-    private Integer isFinish;
-    private Integer status;
-    private boolean type;
-    private Timestamp beginTime;
+    private String files;
+    private Timestamp createdAt;
     private Timestamp completeTime;
+    private Timestamp updatedAt;
 }

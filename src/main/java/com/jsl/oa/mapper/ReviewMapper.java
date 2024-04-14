@@ -1,14 +1,15 @@
 package com.jsl.oa.mapper;
 
 import com.jsl.oa.model.dodata.ReviewDO;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
 @Mapper
 public interface ReviewMapper {
 
-    @Select("SELECT * FROM organize_oa.oa_review WHERE project_id = #{projectId}"
+    @Select("SELECT * FROM organize_oa.oa_review WHERE project_id = #{projectId} "
             + "AND is_delete = 0")
     List<ReviewDO> selectAllReviewFromProject(Long projectId);
 

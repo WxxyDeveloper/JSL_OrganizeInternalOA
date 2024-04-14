@@ -20,10 +20,10 @@ public class ProjectInfoVO {
     @NotNull(message = "工作量不能为空")
     private Long workLoad;
     private String tags;
-    private String file;
+    private String files;
+    private Timestamp beginTime;
     private Timestamp completeTime;
-    private Timestamp deadline;
-    private Integer status;
-    private Integer isFinish;
+    private Timestamp deadLine;
+    private String status;
 
 }

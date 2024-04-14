@@ -74,5 +74,19 @@ public class MessageController {
             return messageService.messageGet(begin, end, page, pageSize, uid);
         }
     }
+
+    @GetMapping("/message/get/id")
+    public BaseResponse messageGetById(
+            @RequestParam Long id,
+            HttpServletRequest request) {
+        log.info("请求接口[GET]:/message/get/id");
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        Long uid = JwtUtil.getUserId(token);
+        if (uid == null) {
+            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
+        } else {
+            return messageService.messageGetById(id, uid);
+        }
+    }
 }
 

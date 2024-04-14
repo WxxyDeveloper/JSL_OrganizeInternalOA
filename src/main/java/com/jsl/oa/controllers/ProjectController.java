@@ -1,4 +1,5 @@
 package com.jsl.oa.controllers;
+
 import com.jsl.oa.model.vodata.ProjectEditVO;
 import com.jsl.oa.model.vodata.ProjectInfoVO;
 import com.jsl.oa.model.vodata.ProjectWorkVO;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -48,17 +50,10 @@ public class ProjectController {
         return projectService.getHeader(id);
     }
 
-    /**
-     * @param id 获取项目 id
-     * @return {@link BaseResponse}
-     */
-    @GetMapping("/project/get/id")
-    public BaseResponse projectGetById(@RequestParam Integer id) {
-        return projectService.getById(id);
-    }
+
 
     /**
-     * @param id 获取项目 id
+     * @param id 要查询的 id
      * @return {@link BaseResponse}
      */
     @GetMapping("/project/getwork/id")
@@ -67,18 +62,27 @@ public class ProjectController {
     }
 
     /**
+     * @param id 要查询项目的 id
+     * @return {@link BaseResponse}
+     */
+    @GetMapping("/project/get/id")
+    public BaseResponse projectGetById(@RequestParam Integer id) {
+        return projectService.getById(id);
+    }
+
+    /**
      * 游客获取项目
      *
      * @return {@link BaseResponse}
      */
     @GetMapping("/project/get/custom")
-    public BaseResponse projectGetCustom(@RequestParam(required = false) Integer id,
+    public BaseResponse projectGetCustom(
                                          @RequestParam(required = false) List<String> tags,
-                                         @RequestParam(required = false) List<Integer> isFinish,
+                                         @RequestParam(required = false) List<String> isFinish,
                                          @RequestParam(required = false, defaultValue = "1") Integer page,
                                          @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
-        log.info("请求接口[GET]: /project/all/get");
-        return projectService.tget(id, tags, isFinish, page, pageSize);
+        log.info("请求接口[GET]: /project/get/custom");
+        return projectService.tGet(tags, isFinish, page, pageSize);
     }
 
     /**
@@ -87,31 +91,31 @@ public class ProjectController {
      * @return {@link BaseResponse}
      */
     @GetMapping("/project/get")
-    public BaseResponse projectGet(@RequestParam(required = false) Integer listAll,
+    public BaseResponse projectGet(
                                    @RequestParam(required = false) List<String> tags,
-                                   @RequestParam(required = false) List<Integer> isFinish,
+                                   @RequestParam(required = false) List<String> isFinish,
                                    @RequestParam(required = false, defaultValue = "1") Integer page,
                                    @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                                    HttpServletRequest request) {
         log.info("请求接口[GET]: /project/get");
-        return projectService.get(listAll, request, tags, isFinish, page, pageSize);
+        return projectService.get(request, tags, isFinish, page, pageSize);
     }
 
     /**
-     * 我管理的查询
+     * 我管理的页面的项目查询
      *
      * @return {@link BaseResponse}
      */
-    @GetMapping("/project/work/get")
-    public BaseResponse projectWorkGet(@RequestParam(required = false) Integer listAll,
+    @GetMapping("/project/child/get")
+    public BaseResponse projectWorkGet(
                                        @RequestParam(required = false) List<String> tags,
-                                       @RequestParam(required = false) List<Integer> isFinish,
+                                       @RequestParam(required = false) List<String> isFinish,
                                        @RequestParam(required = false) Integer is,
                                        @RequestParam(required = false, defaultValue = "1") Integer page,
                                        @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                                        HttpServletRequest request) {
         log.info("请求接口[GET]: /project/work/get");
-        return projectService.workget(listAll, request, tags, isFinish, is, page, pageSize);
+        return projectService.workGet(request, tags, isFinish, is, page, pageSize);
     }
 
     /**
@@ -187,9 +191,18 @@ public class ProjectController {
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return projectService.projecWorktAdd(request, projectWorkVO);
+        return projectService.projectWorkAdd(request, projectWorkVO);
     }
 
+
+    /**
+     * 项目添加
+     *
+     * @param request       请求
+     * @param projectInfoVO 项目信息
+     * @param bindingResult 参数校验
+     * @return {@link BaseResponse}
+     */
 
     @PostMapping("/project/add")
     public BaseResponse projectAdd(HttpServletRequest request,

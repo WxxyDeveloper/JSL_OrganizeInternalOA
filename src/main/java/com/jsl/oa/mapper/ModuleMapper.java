@@ -1,6 +1,6 @@
 package com.jsl.oa.mapper;
 
-import com.jsl.oa.model.dodata.ProjectWorkDO;
+import com.jsl.oa.model.dodata.ProjectModuleDO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -12,9 +12,9 @@ public interface ModuleMapper {
 
 
 
-    List<ProjectWorkDO> getByProjectId(Integer projectId, Long userId, int is);
+    List<ProjectModuleDO> getByProjectId(Integer projectId, Long userId, int is);
 
-    List<ProjectWorkDO> getBySysId(Integer sysId, Long userId, int is);
+    List<ProjectModuleDO> getBySysId(Integer sysId, Long userId, int is);
 
     @Select("select principal_id from organize_oa.oa_project where id=#{projectId}")
     Long getPidByProjectid(Integer projectId);
@@ -26,7 +26,7 @@ public interface ModuleMapper {
     void deleteMoudule(Long id);
 
     @Select("select * from organize_oa.oa_project_work where pid=#{id} and is_delete=0 and type=1 ")
-    List<ProjectWorkDO> getAllMoudleByPid(Long id);
+    List<ProjectModuleDO> getAllMoudleByPid(Long id);
 
     @Select("select principal_id from organize_oa.oa_project where id=(select project_id "
             + "from organize_oa.oa_project_work where oa_project_work.id = #{sysId})")
