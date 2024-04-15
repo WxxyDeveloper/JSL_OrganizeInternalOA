@@ -328,7 +328,7 @@ public class Processing {
                         .setCreatedAt(userDO.getCreatedAt())
                         .setUpdatedAt(userDO.getUpdatedAt())
                         .setIsDelete(userDO.getIsDelete()))
-                .setRole(new UserCurrentBackVO.ReturnUserRole().setName(getRoleString))
+                .setRole(getRoleString)
                 .setPermission(getPermissionForString);
         return userCurrent;
     }

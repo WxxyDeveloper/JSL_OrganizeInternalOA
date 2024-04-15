@@ -296,7 +296,7 @@ public class AuthServiceImpl implements AuthService {
                         .setUsername(userDO.getUsername())
                         .setEmail(userDO.getEmail())
                         .setPhone(userDO.getPhone()))
-                .setRole(new UserReturnBackVO.ReturnUserRole().setName(getRoleString))
+                .setRole(getRoleString)
                 .setToken(token)
                 .setPermission(getPermissionForString);
         return ResultUtil.success("登陆成功", userReturnBackVO);

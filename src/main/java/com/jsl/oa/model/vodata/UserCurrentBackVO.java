@@ -25,14 +25,8 @@ public class UserCurrentBackVO {
     @Accessors(chain = true)
     public static class UserCurrent {
         private ReturnUser user;
-        private ReturnUserRole role;
+        private String role;
         private List<String> permission;
-    }
-
-    @Data
-    @Accessors(chain = true)
-    public static class ReturnUserRole {
-        private String name;
     }
 
     @Data

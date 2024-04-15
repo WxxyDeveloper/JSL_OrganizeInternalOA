@@ -9,5 +9,5 @@ public class UserAllCurrentVO {
     private Long page;
     private Long limit;
     private String search;
-    private Long role;
+    private String role;
 }
