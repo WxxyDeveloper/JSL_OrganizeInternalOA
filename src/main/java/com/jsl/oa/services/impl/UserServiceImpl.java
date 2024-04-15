@@ -262,7 +262,7 @@ public class UserServiceImpl implements UserService {
         UserDO userDO = userDAO.getUserById(Processing.getAuthHeaderToUserId(request));
         UserProfileVo userProfileVo = new UserProfileVo();
         Processing.copyProperties(userDO, userProfileVo);
-        userProfileVo.setRole(roleDAO.getRoleNameByUid(userDO.getId()).getDisplayName());
+        userProfileVo.setRole(roleDAO.getRoleNameByUid(userDO.getId()).getRoleName());
         userProfileVo.setSex(Processing.getSex(userDO.getSex()));
         return ResultUtil.success(userProfileVo);
     }
