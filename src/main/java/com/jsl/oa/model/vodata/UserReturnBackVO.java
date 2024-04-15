@@ -25,7 +25,7 @@ public class UserReturnBackVO {
     @Data
     @Accessors(chain = true)
     public static class ReturnUserRole {
-        private Long rid;
+        private String name;
     }
 
     @Data

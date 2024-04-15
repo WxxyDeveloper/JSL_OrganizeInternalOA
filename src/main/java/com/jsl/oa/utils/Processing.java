@@ -299,7 +299,37 @@ public class Processing {
             // 获取权限列表信息
             getPermissionForString = permissionDAO.getPermission(userDO.getId());
         }
-        userCurrent.setUser(new UserCurrentBackVO.ReturnUser().setId(userDO.getId()).setJobId(userDO.getJobId()).setUsername(userDO.getUsername()).setAddress(userDO.getAddress()).setPhone(userDO.getPhone()).setEmail(userDO.getEmail()).setAge(userDO.getAge()).setSignature(userDO.getSignature()).setAvatar(userDO.getAvatar()).setNickname(userDO.getNickname()).setSex(userDO.getSex()).setEnabled(userDO.getEnabled()).setAccountNoExpired(userDO.getAccountNoExpired()).setCredentialsNoExpired(userDO.getCredentialsNoExpired()).setRecommend(userDO.getRecommend()).setAccountNoLocked(userDO.getAccountNoLocked()).setDescription(userDO.getDescription()).setCreatedAt(userDO.getCreatedAt()).setUpdatedAt(userDO.getUpdatedAt()).setIsDelete(userDO.getIsDelete())).setRole(new UserCurrentBackVO.ReturnUserRole().setRid(getUserRole.getRid())).setPermission(getPermissionForString);
+        RoleDO getRole = roleDAO.getRoleById(getUserRole.getRid());
+        String getRoleString;
+        if (getRole != null) {
+            getRoleString = getRole.getRoleName();
+        } else {
+            getRoleString = "default";
+        }
+        userCurrent
+                .setUser(new UserCurrentBackVO.ReturnUser()
+                        .setId(userDO.getId())
+                        .setJobId(userDO.getJobId())
+                        .setUsername(userDO.getUsername())
+                        .setAddress(userDO.getAddress())
+                        .setPhone(userDO.getPhone())
+                        .setEmail(userDO.getEmail())
+                        .setAge(userDO.getAge())
+                        .setSignature(userDO.getSignature())
+                        .setAvatar(userDO.getAvatar())
+                        .setNickname(userDO.getNickname())
+                        .setSex(userDO.getSex())
+                        .setEnabled(userDO.getEnabled())
+                        .setAccountNoExpired(userDO.getAccountNoExpired())
+                        .setCredentialsNoExpired(userDO.getCredentialsNoExpired())
+                        .setRecommend(userDO.getRecommend())
+                        .setAccountNoLocked(userDO.getAccountNoLocked())
+                        .setDescription(userDO.getDescription())
+                        .setCreatedAt(userDO.getCreatedAt())
+                        .setUpdatedAt(userDO.getUpdatedAt())
+                        .setIsDelete(userDO.getIsDelete()))
+                .setRole(new UserCurrentBackVO.ReturnUserRole().setName(getRoleString))
+                .setPermission(getPermissionForString);
         return userCurrent;
     }
 

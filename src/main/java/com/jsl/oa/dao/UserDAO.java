@@ -118,10 +118,10 @@ public class UserDAO {
      *
      * @param id
      */
-    public void userLock(Long id,Long isLock) {
+    public void userLock(Long id, Long isLock) {
         log.info("\t> 执行 DAO 层 UserDAO.userLock 方法");
         log.info("\t\t> 从 MySQL 获取数据");
-        userMapper.userLock(id,isLock);
+        userMapper.userLock(id, isLock);
     }
 
     public void userEditProfile(UserEditProfileVO userEditProfileVO) {

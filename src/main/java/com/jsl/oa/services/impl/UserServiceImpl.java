@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
         }
         // 检查是否存在 Role 筛选
         if (userAllCurrentVO.getRole() != null) {
-            userCurrentBackVO.getUsers().removeIf(it -> !userAllCurrentVO.getRole().equals(it.getRole().getRid()));
+            userCurrentBackVO.getUsers().removeIf(it -> !userAllCurrentVO.getRole().equals(it.getRole().getName()));
         }
         return ResultUtil.success(userCurrentBackVO);
     }

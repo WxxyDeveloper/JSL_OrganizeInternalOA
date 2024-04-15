@@ -5,6 +5,7 @@ import com.jsl.oa.common.constant.BusinessConstants;
 import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.mapper.UserMapper;
+import com.jsl.oa.model.dodata.RoleDO;
 import com.jsl.oa.model.dodata.RoleUserDO;
 import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.model.vodata.*;
@@ -281,14 +282,21 @@ public class AuthServiceImpl implements AuthService {
         } else {
             getUserRole.setUid(null);
         }
+        // 获取角色信息
+        RoleDO getRole = roleDAO.getRoleById(getUserRole.getRid());
+        String getRoleString;
+        if (getRole != null) {
+            getRoleString = getRole.getRoleName();
+        } else {
+            getRoleString = "default";
+        }
         userReturnBackVO.setUser(new UserReturnBackVO.ReturnUser()
                         .setId(userDO.getId())
                         .setJobId(userDO.getJobId())
                         .setUsername(userDO.getUsername())
                         .setEmail(userDO.getEmail())
                         .setPhone(userDO.getPhone()))
-                .setRole(new UserReturnBackVO.ReturnUserRole()
-                        .setRid(getUserRole.getRid()))
+                .setRole(new UserReturnBackVO.ReturnUserRole().setName(getRoleString))
                 .setToken(token)
                 .setPermission(getPermissionForString);
         return ResultUtil.success("登陆成功", userReturnBackVO);
