@@ -353,7 +353,7 @@ public class ReviewServiceImpl implements ReviewService {
             reviewVO.setCategory(Processing.turnReviewCategory(reviewDO.getCategory()))
                     .setSenderName(userMapper.getUserById(reviewDO.getSenderId()).getNickname())
                     .setProjectName(projectDAO.getProjectById(reviewDO.getProjectId()).getName())
-                    .setSubsystemName(projectMapper.getProjectChildById(
+                    .setProjectChildName(projectMapper.getProjectChildById(
                                     Math.toIntExact(reviewDO.getProjectChildId())).getName())
                     .setResult(Processing.turnReviewResult(reviewDO.getReviewResult()));
 //            赋值可为空属性并进行判断
@@ -361,9 +361,10 @@ public class ReviewServiceImpl implements ReviewService {
                 reviewVO.setRecipientName(userMapper.getUserById(reviewDO.getRecipientId()).getNickname());
             }
             if (reviewDO.getProjectModuleId() != null) {
-                reviewVO.setSubmoduleName(reviewDAO.getNameByModule(Math.toIntExact(reviewDO.getProjectModuleId())));
+                reviewVO.setProjectModuleName(
+                        reviewDAO.getNameByModule(Math.toIntExact(reviewDO.getProjectModuleId())));
             } else {
-                reviewVO.setSubmoduleName("无");
+                reviewVO.setProjectModuleName("无");
             }
 //            将封装好的结果添加到结果集
             resultData.add(reviewVO);

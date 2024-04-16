@@ -30,13 +30,13 @@ public class ReviewVO {
     //申请的项目名称
     private String projectName;
     //申请的子系统id
-    private Long projectSubsystemId;
+    private Long projectChildId;
     //申请的子系统名称
-    private String subsystemName;
+    private String projectChildName;
     //申请的子模块id
-    private Long projectSubmoduleId;
+    private Long projectModuleId;
     //申请的模块名称
-    private String submoduleName;
+    private String projectModuleName;
     //申请时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date applicationTime;
