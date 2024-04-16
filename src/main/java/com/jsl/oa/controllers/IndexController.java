@@ -35,7 +35,6 @@ public class IndexController {
      */
     @RequestMapping("/")
     public BaseResponse index() {
-        log.info("请求接口[GET]: /");
         HashMap<String, String> newMap = new HashMap<>();
         newMap.put("timestamp", "构建时间：" + timestamp);
         return ResultUtil.success("欢迎使用JSL-OA系统，服务器处于正常状态", newMap);

@@ -21,13 +21,6 @@ public interface ProjectService {
 
     BaseResponse editHeader(HttpServletRequest request, ProjectShowVO projectShowVO, Integer id);
 
-    BaseResponse get(
-                     HttpServletRequest request,
-                     List<String> tags,
-                     List<String> isFinish,
-                     Integer page,
-                     Integer pageSize);
-
     BaseResponse getByName(String name);
 
     BaseResponse projectDelete(HttpServletRequest request, List<Long> id);
@@ -35,12 +28,12 @@ public interface ProjectService {
     BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectVO);
 
     BaseResponse workGet(
-                         HttpServletRequest request,
-                         List<String> tags,
-                         List<String> isFinish,
-                         Integer is,
-                         Integer page,
-                         Integer pageSize);
+            HttpServletRequest request,
+            List<String> tags,
+            List<String> isFinish,
+            Integer is,
+            Integer page,
+            Integer pageSize);
 
     BaseResponse projectWorkAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO);
 
@@ -53,4 +46,15 @@ public interface ProjectService {
     BaseResponse getWorkById(Integer id);
 
     BaseResponse projectPrincipalGet();
+
+    /**
+     * 从项目 id 获取项目的详细信息
+     * <hr/>
+     * 根据项目所属 id 获取项目的详细信息，根据用户所属角色组的不同返回不同的内容
+     *
+     * @param request   获取请求体
+     * @param projectId 项目 id
+     * @return 根据用户所属角色组的不同返回不同的内容
+     */
+    BaseResponse getProjectById(HttpServletRequest request, Long projectId);
 }

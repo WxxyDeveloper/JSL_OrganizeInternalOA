@@ -15,8 +15,6 @@ public class NewsDAO {
     private final NewsMapper newsMapper;
 
     public void addNews(NewsDO newsVO, Long uid) {
-        log.info("\t> 执行 DAO 层 NewsDAO.addNews 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
 //        添加新闻数据
         newsMapper.addNews(newsVO);
 //        添加作者

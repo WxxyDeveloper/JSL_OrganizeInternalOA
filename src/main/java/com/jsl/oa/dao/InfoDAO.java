@@ -35,8 +35,6 @@ public class InfoDAO {
      * @return {@link CarouselDO}
      */
     public CarouselDO getCarousel() {
-        log.info("\t> 执行 DAO 层 InfoDAO.getCarousel 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         String getCarouselSql = infoMapper.getCarousel();
         CarouselDO getCarousel = null;
         if (getCarouselSql != null && !"{}".equals(getCarouselSql)) {
@@ -87,14 +85,12 @@ public class InfoDAO {
      * @return {@link Boolean}
      */
     public boolean setCarousel(CarouselDO carouselDO) {
-        log.info("\t> 执行 DAO 层 InfoDAO.setCarousel 方法");
         sortCarousel(carouselDO);
         // 添加id
         for (int i = 0; i < carouselDO.getData().size(); i++) {
             carouselDO.getData().get(i).setId(i + 1);
         }
         String setCarouselSql = gson.toJson(carouselDO);
-        log.info("\t\t> 从 MySQL 获取数据");
         return infoMapper.setCarousel(setCarouselSql);
     }
 }

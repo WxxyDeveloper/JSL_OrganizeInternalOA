@@ -18,15 +18,9 @@ import java.util.List;
 @Accessors(chain = true)
 public class UserReturnBackVO {
     private ReturnUser user;
-    private ReturnUserRole role;
+    private String role;
     private String token;
     private List<String> permission;
-
-    @Data
-    @Accessors(chain = true)
-    public static class ReturnUserRole {
-        private Long rid;
-    }
 
     @Data
     @Accessors(chain = true)

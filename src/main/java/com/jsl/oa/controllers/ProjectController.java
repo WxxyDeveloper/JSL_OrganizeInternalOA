@@ -46,10 +46,8 @@ public class ProjectController {
      */
     @GetMapping("/project/header/get")
     public BaseResponse projectGetHeader(@RequestParam(required = false) final Integer id) {
-        log.info("请求接口[GET]: /project/header/get");
         return projectService.getHeader(id);
     }
-
 
 
     /**
@@ -77,28 +75,33 @@ public class ProjectController {
      */
     @GetMapping("/project/get/custom")
     public BaseResponse projectGetCustom(
-                                         @RequestParam(required = false) List<String> tags,
-                                         @RequestParam(required = false) List<String> isFinish,
-                                         @RequestParam(required = false, defaultValue = "1") Integer page,
-                                         @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
-        log.info("请求接口[GET]: /project/get/custom");
+            @RequestParam(required = false) List<String> tags,
+            @RequestParam(required = false) List<String> isFinish,
+            @RequestParam(required = false, defaultValue = "1") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize
+    ) {
         return projectService.tGet(tags, isFinish, page, pageSize);
     }
 
     /**
-     * 我负责的界面的获取项目
+     * 根据项目 id 获取项目详细信息
+     * <hr/>
+     * 根据项目 id 获取项目的详细信息，在地址后面有 projectId 的 path 部分需要补充完整（不可缺少）
      *
+     * @param projectId 项目 id
+     * @param request   请求
      * @return {@link BaseResponse}
      */
-    @GetMapping("/project/get")
-    public BaseResponse projectGet(
-                                   @RequestParam(required = false) List<String> tags,
-                                   @RequestParam(required = false) List<String> isFinish,
-                                   @RequestParam(required = false, defaultValue = "1") Integer page,
-                                   @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                   HttpServletRequest request) {
-        log.info("请求接口[GET]: /project/get");
-        return projectService.get(request, tags, isFinish, page, pageSize);
+    @GetMapping("/project/get/{projectId}")
+    public BaseResponse getProjectById(
+            @PathVariable String projectId,
+            HttpServletRequest request
+    ) {
+        // 对 projectId 进行判断
+        if (!projectId.matches("^[0-9]+$")) {
+            return ResultUtil.error("参数 projectId 不是一个数字", ErrorCode.PARAMETER_ERROR);
+        }
+        return projectService.getProjectById(request, Long.parseLong(projectId));
     }
 
     /**
@@ -108,13 +111,13 @@ public class ProjectController {
      */
     @GetMapping("/project/child/get")
     public BaseResponse projectWorkGet(
-                                       @RequestParam(required = false) List<String> tags,
-                                       @RequestParam(required = false) List<String> isFinish,
-                                       @RequestParam(required = false) Integer is,
-                                       @RequestParam(required = false, defaultValue = "1") Integer page,
-                                       @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                       HttpServletRequest request) {
-        log.info("请求接口[GET]: /project/work/get");
+            @RequestParam(required = false) List<String> tags,
+            @RequestParam(required = false) List<String> isFinish,
+            @RequestParam(required = false) Integer is,
+            @RequestParam(required = false, defaultValue = "1") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+            HttpServletRequest request
+    ) {
         return projectService.workGet(request, tags, isFinish, is, page, pageSize);
     }
 
@@ -127,7 +130,6 @@ public class ProjectController {
      */
     @GetMapping("/project/header")
     public BaseResponse projectGetByName(@RequestParam String name) {
-        log.info("请求接口[GET]: /project/header");
         return projectService.getByName(name);
     }
 
@@ -141,10 +143,11 @@ public class ProjectController {
      * @return {@link BaseResponse}
      */
     @PostMapping("/project/header/add")
-    public BaseResponse projectAddHeader(@RequestBody @Validated ProjectShowVO projectShowVO,
-                                         HttpServletRequest request,
-                                         @NotNull BindingResult bindingResult) {
-        log.info("请求接口[POST]: /project/header/add");
+    public BaseResponse projectAddHeader(
+            @RequestBody @Validated ProjectShowVO projectShowVO,
+            HttpServletRequest request,
+            @NotNull BindingResult bindingResult
+    ) {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -163,11 +166,12 @@ public class ProjectController {
      * @return {@link BaseResponse}
      */
     @PutMapping("/project/header/edit/{projectId}")
-    public BaseResponse projectEditById(@RequestParam Long projectId,
-                                        @RequestBody @Validated ProjectEditVO projectEdit,
-                                        @NotNull BindingResult bindingResult,
-                                        HttpServletRequest request) {
-        log.info("请求接口[PUT]: /project/header/edit/{projectId}");
+    public BaseResponse projectEditById(
+            @PathVariable Long projectId,
+            @RequestBody @Validated ProjectEditVO projectEdit,
+            @NotNull BindingResult bindingResult,
+            HttpServletRequest request
+    ) {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -183,10 +187,11 @@ public class ProjectController {
      * @return {@link BaseResponse}
      */
     @PostMapping("/project/work/add")
-    public BaseResponse projectWorkAdd(HttpServletRequest request,
-                                       @RequestBody @Validated ProjectWorkVO projectWorkVO,
-                                       @NotNull BindingResult bindingResult) {
-        log.info("请求接口[POST]: /project/work/add");
+    public BaseResponse projectWorkAdd(
+            HttpServletRequest request,
+            @RequestBody @Validated ProjectWorkVO projectWorkVO,
+            @NotNull BindingResult bindingResult
+    ) {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -205,10 +210,11 @@ public class ProjectController {
      */
 
     @PostMapping("/project/add")
-    public BaseResponse projectAdd(HttpServletRequest request,
-                                   @RequestBody @Validated ProjectInfoVO projectInfoVO,
-                                   @NotNull BindingResult bindingResult) {
-        log.info("请求接口[POST]: /project/add");
+    public BaseResponse projectAdd(
+            @RequestBody @Validated ProjectInfoVO projectInfoVO,
+            @NotNull BindingResult bindingResult,
+            HttpServletRequest request
+    ) {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -234,7 +240,6 @@ public class ProjectController {
      */
     @DeleteMapping("/project/delete")
     public BaseResponse projectDelete(HttpServletRequest request, @RequestParam List<Long> id) {
-        log.info("请求接口[Delete]: /project/delete");
         if (id == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
@@ -243,7 +248,6 @@ public class ProjectController {
 
     @GetMapping("/project/file")
     public BaseResponse getProjectFile(HttpServletRequest request, @RequestParam Long projectId) {
-        log.info("请求接口[Get]: /project/file");
         //判断是否有参数错误
         if (projectId == null) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR);

@@ -1,7 +1,7 @@
 package com.jsl.oa.services.impl;
 
-import com.jsl.oa.annotations.CheckUserAbleToUse;
-import com.jsl.oa.annotations.CheckUserHasPermission;
+import com.jsl.oa.annotations.NeedRoleGroup;
+import com.jsl.oa.annotations.UserAbleToUse;
 import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
@@ -52,7 +52,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResponse userDelete(HttpServletRequest request, Long id) {
-        log.info("\t> 执行 Service 层 UserService.userDelete 方法");
         //判断用户是否存在
         if (userDAO.isExistUser(id)) {
             if (!Processing.checkUserIsAdmin(request, roleDAO)) {
@@ -72,7 +71,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResponse userLock(HttpServletRequest request, Long id, Long isLock) {
-        log.info("\t> 执行 Service 层 UserService.userLock 方法");
         if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
@@ -87,7 +85,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResponse userEditProfile(@NotNull UserEditProfileVO userEditProfileVO) {
-        log.info("\t> 执行 Service 层 UserService.userEditProfile 方法");
         if (userDAO.isExistUser(userEditProfileVO.getId())) {
             userDAO.userEditProfile(userEditProfileVO);
             return ResultUtil.success("修改成功");
@@ -97,9 +94,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CheckUserHasPermission("user.current.all")
+    @NeedRoleGroup("user.current.all")
     public BaseResponse userCurrentAll(HttpServletRequest request, @NotNull UserAllCurrentVO userAllCurrentVO) {
-        log.info("\t> 执行 Service 层 UserService.userCurrentAll 方法");
         // 检查数据
         if (userAllCurrentVO.getPage() == null || userAllCurrentVO.getPage() < 1) {
             userAllCurrentVO.setPage(1L);
@@ -126,20 +122,19 @@ public class UserServiceImpl implements UserService {
         }
         // 检查是否存在 Role 筛选
         if (userAllCurrentVO.getRole() != null) {
-            userCurrentBackVO.getUsers().removeIf(it -> !userAllCurrentVO.getRole().equals(it.getRole().getRid()));
+            userCurrentBackVO.getUsers().removeIf(it -> !userAllCurrentVO.getRole().equals(it.getRole()));
         }
         return ResultUtil.success(userCurrentBackVO);
     }
 
     @SuppressWarnings("checkstyle:NestedIfDepth")
     @Override
-    @CheckUserAbleToUse
+    @UserAbleToUse
     public BaseResponse userCurrent(HttpServletRequest request,
                                     String id,
                                     String username,
                                     String email,
                                     String phone) {
-        log.info("\t> 执行 Service 层 UserService.userCurrent 方法");
         if (id == null && username == null && email == null && phone == null) {
             // Token获取信息
             UserDO userDO = userDAO.getUserById(Processing.getAuthHeaderToUserId(request));
@@ -193,7 +188,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResponse userAdd(UserAddVO userAddVo, HttpServletRequest request) {
-        log.info("\t> 执行 Service 层 UserService.userAdd 方法");
         // 检测用户是否为管理员
         if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -231,7 +225,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResponse userEdit(UserEditVO userEditVO, HttpServletRequest request) {
-        log.info("\t> 执行 Service 层 userEdit 方法");
         // 检测用户是否为管理员
         if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -265,13 +258,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResponse userProfileGet(HttpServletRequest request) {
-        log.info("\t> 执行 Service 层 UserService.userProfileGet 方法");
-
         // 获取用户Id
         UserDO userDO = userDAO.getUserById(Processing.getAuthHeaderToUserId(request));
         UserProfileVo userProfileVo = new UserProfileVo();
         Processing.copyProperties(userDO, userProfileVo);
-        userProfileVo.setRole(roleDAO.getRoleNameByUid(userDO.getId()).getDisplayName());
+        userProfileVo.setRole(roleDAO.getRoleNameByUid(userDO.getId()).getRoleName());
         userProfileVo.setSex(Processing.getSex(userDO.getSex()));
         return ResultUtil.success(userProfileVo);
     }

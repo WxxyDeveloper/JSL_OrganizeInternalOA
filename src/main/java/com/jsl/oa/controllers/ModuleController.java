@@ -33,8 +33,6 @@ public class ModuleController {
      */
     @GetMapping("/module/get")
     public BaseResponse moduleGetByProjectId(@RequestParam Integer projectId, HttpServletRequest request) {
-
-        log.info("[Controller] 执行 moduleGetByProjectId 接口");
         return moduleService.getByProjectId(projectId, request);
     }
 
@@ -47,8 +45,6 @@ public class ModuleController {
      */
     @GetMapping("/module/get/min")
     public BaseResponse moduleGetBySysId(@RequestParam Integer sysId, HttpServletRequest request) {
-
-        log.info("[Controller] 执行 moduleGetBySysId 接口");
         return moduleService.getBySysId(sysId, request);
     }
 
@@ -61,7 +57,6 @@ public class ModuleController {
      */
     @DeleteMapping("/module/delete/{id}")
     public BaseResponse moduleDeleteById(@PathVariable("id") Long id, HttpServletRequest request) {
-        log.info("[Controller] 执行 moduleDeleteById 接口");
         return moduleService.deleteById(request, id);
     }
 

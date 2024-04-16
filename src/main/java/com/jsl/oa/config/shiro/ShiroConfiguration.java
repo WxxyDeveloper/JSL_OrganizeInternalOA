@@ -2,6 +2,7 @@ package com.jsl.oa.config.shiro;
 
 import com.jsl.oa.config.filter.CorsFilter;
 import com.jsl.oa.config.filter.JwtFilter;
+import com.jsl.oa.config.filter.TimestampFilter;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -46,8 +47,13 @@ public class ShiroConfiguration {
 
         // 添加JWT过滤器
         Map<String, Filter> filters = new LinkedHashMap<>();
-        filters.put("authc", new JwtFilter()); // 配置自定义的JWT过滤器
-        filters.put("anon", new CorsFilter()); // 配置自定义的CORS过滤器
+        // 配置自定义的JWT过滤器
+        filters.put("authc", new JwtFilter());
+        // 配置自定义的CORS过滤器
+        filters.put("anon", new CorsFilter());
+        // 配置自定义的时间戳检查
+        filters.put("time", new TimestampFilter());
+
         shiroFilterFactoryBean.setFilters(filters);
         return shiroFilterFactoryBean;
     }
@@ -86,7 +92,7 @@ public class ShiroConfiguration {
     @NotNull
     private static Map<String, String> setFilterChain() {
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        filterChainDefinitionMap.put("/auth/**/**", "anon");
+        filterChainDefinitionMap.put("/auth/**/**", "anon, time");
         filterChainDefinitionMap.put("/unauthorized", "anon");
         filterChainDefinitionMap.put("/", "anon");
         filterChainDefinitionMap.put("/info/header-image/get", "anon");
@@ -98,7 +104,7 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/project/work/add", "anon");
         filterChainDefinitionMap.put("/tags/project/list", "anon");
         filterChainDefinitionMap.put("/module/add", "anon");
-        filterChainDefinitionMap.put("/**/**", "authc");
+        filterChainDefinitionMap.put("/**/**", "authc, time");
 
         return filterChainDefinitionMap;
     }
