@@ -46,7 +46,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         } else {
             // 解析Bearer后面的令牌
             token = token.replace("Bearer ", "");
-            log.info("请求令牌：" + token);
+            log.info("[FILTER] 请求令牌：" + token);
             return JwtUtil.verify(token);
         }
     }

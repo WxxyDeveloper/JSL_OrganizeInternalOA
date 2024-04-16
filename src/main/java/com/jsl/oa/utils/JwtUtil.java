@@ -34,7 +34,7 @@ public class JwtUtil {
      * @return 返回生成的Token
      */
     public static String generateToken(@NotNull Long userId) {
-        Key key = Keys.hmacShaKeyFor(SafeConstants.SECRET_KEY.getBytes());
+        Key key = Keys.hmacShaKeyFor(SafeConstants.getSecretKey().getBytes());
         return Jwts.builder()
                 .setSubject(userId.toString())
                 .setExpiration(new java.util.Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -54,10 +54,10 @@ public class JwtUtil {
         try {
             Long getTokenInUserId = getUserId(token);
             // 验证用户名是否匹配
-            log.info("令牌用户主键：" + getTokenInUserId.toString());
+            log.info("[FILTER] 令牌用户主键：{}", getTokenInUserId.toString());
             return Pattern.matches("^[0-9]+$", getTokenInUserId.toString());
         } catch (Exception e) {
-            log.info("令牌错误或失效");
+            log.info("[FILTER] 令牌错误或失效");
             return false;
         }
     }
@@ -71,7 +71,7 @@ public class JwtUtil {
      * @return 返回获取到的用户名
      */
     public static Long getUserId(String token) {
-        Key key = Keys.hmacShaKeyFor(SafeConstants.SECRET_KEY.getBytes());
+        Key key = Keys.hmacShaKeyFor(SafeConstants.getSecretKey().getBytes());
         Jws<Claims> claimsJws = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()

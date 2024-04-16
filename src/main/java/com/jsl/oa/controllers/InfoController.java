@@ -1,5 +1,6 @@
 package com.jsl.oa.controllers;
 
+import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.model.vodata.business.info.CarouselVO;
 import com.jsl.oa.services.InfoService;
 import com.jsl.oa.utils.BaseResponse;
@@ -41,8 +42,8 @@ public class InfoController {
      * @return 图片信息
      */
     @GetMapping("/info/header-image/get")
+    @NeedPermission("info:get_header_image")
     public BaseResponse infoGetHeaderImage(@RequestParam(required = false) Integer id) {
-        log.info("请求接口[GET]: /info/header-image/get");
         return infoService.getHeaderImage(id);
     }
 
@@ -55,12 +56,12 @@ public class InfoController {
      * @return 编辑结果
      */
     @PutMapping("/info/header-image/edit")
+    @NeedPermission("info:edit_header_image")
     public BaseResponse infoEditHeaderImage(
             @RequestBody @Validated CarouselVO carouselVO,
             HttpServletRequest request,
             @NotNull BindingResult bindingResult
     ) {
-        log.info("请求接口[PUT]: /info/header-image/edit");
         // 参数校验
         if (bindingResult.hasErrors()) {
             log.warn("参数校验失败: {}", Processing.getValidatedErrorList(bindingResult));
@@ -81,8 +82,8 @@ public class InfoController {
      * @return 删除结果
      */
     @DeleteMapping("/info/header-image/del")
+    @NeedPermission("info:delete_header_image")
     public BaseResponse infoDelHeaderImage(@RequestParam Integer id, HttpServletRequest request) {
-        log.info("请求接口[DELETE]: /info/header-image/del");
         return infoService.delHeaderImage(request, id);
     }
 
@@ -100,7 +101,6 @@ public class InfoController {
             HttpServletRequest request,
             @NotNull BindingResult bindingResult
     ) {
-        log.info("请求接口[POST]: /info/header-image/add");
         // 参数校验
         if (bindingResult.hasErrors()) {
             log.warn("参数校验失败: {}", Processing.getValidatedErrorList(bindingResult));
@@ -118,7 +118,6 @@ public class InfoController {
      */
     @PutMapping("/info/header-image/edit-setting")
     public BaseResponse infoEditSettingHeaderImage(@RequestParam Boolean showType, HttpServletRequest request) {
-        log.info("请求接口[PUT]: /info/header-image/edit-setting");
         return infoService.editSettingHeaderImage(request, showType);
     }
 
@@ -136,7 +135,6 @@ public class InfoController {
             @RequestParam String orderBy,
             HttpServletRequest request
     ) {
-        log.info("请求接口[GET]: /info/header-user/get");
         return infoService.getHeaderUser(request, order, orderBy);
     }
 }

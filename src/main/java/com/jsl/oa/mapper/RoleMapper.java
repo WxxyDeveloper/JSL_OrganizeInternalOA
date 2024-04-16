@@ -30,7 +30,8 @@ public interface RoleMapper {
     @Select("SELECT * FROM organize_oa.oa_role ORDER BY id DESC")
     List<RoleDO> getRole();
 
-    @Update("UPDATE organize_oa.oa_role SET role_name=#{roleName},display_name=#{displayName},updated_at=CURRENT_TIMESTAMP WHERE id=#{id}")
+    @Update("UPDATE organize_oa.oa_role "
+            + "SET role_name=#{roleName},display_name=#{displayName},updated_at=CURRENT_TIMESTAMP WHERE id=#{id}")
     boolean roleEdit(RoleDO getRole);
 
     @Update("UPDATE organize_oa.oa_role_user SET rid = #{rid},updated_at = current_timestamp WHERE uid = #{uid}")
@@ -39,8 +40,6 @@ public interface RoleMapper {
     @Delete("DELETE FROM organize_oa.oa_role WHERE id=#{id}")
     boolean roleDelete(Long id);
 
-
-
-
-
+    @Select("SELECT * FROM organize_oa.oa_role WHERE id = (SELECT rid FROM organize_oa.oa_role_user WHERE uid=#{uid})")
+    RoleDO getRoleByUserId(Long uid);
 }

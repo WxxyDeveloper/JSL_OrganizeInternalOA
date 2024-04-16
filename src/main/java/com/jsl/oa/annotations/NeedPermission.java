@@ -14,7 +14,7 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CheckUserHasPermission {
+public @interface NeedPermission {
     /**
      * <h2>权限名称</h2>
      * <hr/>
@@ -23,14 +23,4 @@ public @interface CheckUserHasPermission {
      * @return {@link String}
      */
     String value() default "";
-
-    /**
-     * <h2>是否检查</h2>
-     * <hr/>
-     * 用于指定是否检查<br/>
-     * 请注意，该方法只会禁止检查权限，但是不会禁止检查用户是否允许继续执行
-     * @since v1.1.0
-     * @return {@link Boolean}
-     */
-    boolean isCheck() default true;
 }

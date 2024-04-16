@@ -10,7 +10,6 @@ import lombok.experimental.Accessors;
 public class ProjectSimpleVO {
     private String name;
     private String principalUser;
-    private Integer isFinish;
     private String description;
     private Long cycle;
     private Long workLoad;

@@ -19,10 +19,12 @@ import java.sql.Timestamp;
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PermissionDO {
+    // 主键
     private Long id;
-    private Long pid;
+    // 权限名称
     private String name;
-    private String code;
-    private Short type;
-    private Timestamp deletedAt;
+    // 权限描述
+    private String description;
+    // 创建时间
+    private Timestamp createdAt;
 }

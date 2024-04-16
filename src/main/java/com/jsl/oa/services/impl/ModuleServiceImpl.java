@@ -1,11 +1,10 @@
 package com.jsl.oa.services.impl;
 
-import com.jsl.oa.dao.ModuleDAO;
 import com.jsl.oa.dao.ProjectDAO;
+import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ModuleMapper;
-import com.jsl.oa.mapper.RoleMapper;
-import com.jsl.oa.model.dodata.ProjectWorkDO;
+import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.vodata.ProjectWorkAndNameVO;
 import com.jsl.oa.services.ModuleService;
 import com.jsl.oa.utils.BaseResponse;
@@ -24,11 +23,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ModuleServiceImpl implements ModuleService {
-    private final RoleMapper roleMapper;
-    private final ModuleDAO moduleDAO;
     private final ProjectDAO projectDAO;
     private final ModuleMapper moduleMapper;
     private final UserDAO userDAO;
+    private final RoleDAO roleDAO;
 
     @Override
     public BaseResponse getByProjectId(Integer projectId, HttpServletRequest request) {
@@ -44,7 +42,7 @@ public class ModuleServiceImpl implements ModuleService {
             is = 0;
         }
 
-        List<ProjectWorkDO> projectWorkDOList = moduleMapper.getByProjectId(projectId, userId, is);
+        List<ProjectModuleDO> projectWorkDOList = moduleMapper.getByProjectId(projectId, userId, is);
         return ResultUtil.success(projectWorkDOList);
     }
 
@@ -63,15 +61,15 @@ public class ModuleServiceImpl implements ModuleService {
             is = 0;
         }
 
-        List<ProjectWorkDO> projectWorkDOList = moduleMapper.getBySysId(sysId, userId, is);
+        List<ProjectModuleDO> projectWorkDOList = moduleMapper.getBySysId(sysId, userId, is);
 //      封装VO类
         List<ProjectWorkAndNameVO> projectWorkAndNameVOS = new ArrayList<>();
-        for (ProjectWorkDO projectWorkDO : projectWorkDOList) {
+        for (ProjectModuleDO projectWorkDO : projectWorkDOList) {
             ProjectWorkAndNameVO projectWorkAndNameVO = new ProjectWorkAndNameVO();
             Processing.copyProperties(projectWorkDO, projectWorkAndNameVO);
 //        添加负责人和子系统名称
             projectWorkAndNameVO.
-                    setChildSystemName(projectDAO.getProjectWorkerById(projectWorkDO.getPid()).getName())
+                    setChildSystemName(projectDAO.getProjectWorkerById(projectWorkDO.getProjectChildId()).getName())
                     .setPrincipalUser(userDAO.getUserById(projectWorkDO.getPrincipalId()).getUsername());
 
             projectWorkAndNameVOS.add(projectWorkAndNameVO);
@@ -83,9 +81,8 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     public BaseResponse deleteById(HttpServletRequest request, Long id) {
-
 //        检测是否为管理员
-        if (!Processing.checkUserIsAdmin(request, roleMapper)) {
+        if (!Processing.checkUserIsConsole(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
 
@@ -97,9 +94,9 @@ public class ModuleServiceImpl implements ModuleService {
     //    删除子模块方法
     public void deleteMoudule(Long id) {
         //获取所有父Id=id的子模块
-        List<ProjectWorkDO> projectWorkDOS = moduleMapper.getAllMoudleByPid(id);
+        List<ProjectModuleDO> projectWorkDOS = moduleMapper.getAllMoudleByPid(id);
 
-        for (ProjectWorkDO workDO : projectWorkDOS) {
+        for (ProjectModuleDO workDO : projectWorkDOS) {
             deleteMoudule(workDO.getId());
         }
 

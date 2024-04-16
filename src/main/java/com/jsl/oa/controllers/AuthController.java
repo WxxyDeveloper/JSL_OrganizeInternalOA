@@ -1,5 +1,6 @@
 package com.jsl.oa.controllers;
 
+import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.model.vodata.UserChangePasswordVO;
 import com.jsl.oa.model.vodata.UserForgetPasswordVO;
 import com.jsl.oa.model.vodata.UserLoginVO;
@@ -55,7 +56,6 @@ public class AuthController {
             @RequestBody @Validated UserRegisterVO userRegisterVO,
             @NotNull BindingResult bindingResult
     ) {
-        log.info("请求接口[POST]: /auth/register");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -79,8 +79,6 @@ public class AuthController {
             @RequestBody @Validated UserLoginVO userLoginVO,
             @NotNull BindingResult bindingResult
     ) {
-        log.info("请求接口[POST]: /auth/login");
-
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -100,7 +98,6 @@ public class AuthController {
      */
     @GetMapping("/auth/email/code")
     public BaseResponse authSendEmailCode(@RequestParam String email) {
-        log.info("请求接口[GET]: /auth/email/code");
         if (email != null) {
             if (Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", email)) {
                 return authService.authLoginSendEmailCode(email);
@@ -125,7 +122,6 @@ public class AuthController {
      */
     @GetMapping("/auth/login/email")
     public BaseResponse authLoginByEmail(@RequestParam String email, @RequestParam String code) {
-        log.info("请求接口[GET]: /auth/login/email");
         if (email != null && code != null && !email.isEmpty() && !code.isEmpty()) {
             if (Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", email)) {
                 try {
@@ -151,8 +147,8 @@ public class AuthController {
      * @since v1.1.0
      */
     @GetMapping("/auth/logout")
+    @NeedPermission("auth:logout")
     public BaseResponse authLogout(HttpServletRequest request) {
-        log.info("请求接口[GET]: /auth/logout");
         return authService.authLogout(request);
     }
 
@@ -168,12 +164,12 @@ public class AuthController {
      * @since v1.1.0
      */
     @PutMapping("/auth/password")
+    @NeedPermission("auth:change_password")
     public BaseResponse authChangePassword(
             @RequestBody @Validated UserChangePasswordVO userChangePasswordVO,
             @NotNull BindingResult bindingResult,
             HttpServletRequest request
     ) {
-        log.info("请求接口[PUT]: /auth/password");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -191,7 +187,6 @@ public class AuthController {
             @RequestBody @Validated UserForgetPasswordVO userForgetPasswordVO,
             @NotNull BindingResult bindingResult
     ) {
-        log.info("请求接口[PUT]: /auth/password/forget");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));

@@ -52,7 +52,6 @@ public class NewsController {
             BindingResult bindingResult,
             HttpServletRequest request
     ) {
-        log.info("请求接口[POST]: /news/add");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));

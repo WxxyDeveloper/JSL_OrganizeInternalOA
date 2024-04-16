@@ -44,7 +44,6 @@ public class UserController {
      */
     @DeleteMapping("/user/delete")
     public BaseResponse userDelete(HttpServletRequest request, @RequestParam String id) {
-        log.info("请求接口[PUT]: /user/delete");
         // 判断是否有参数错误
         if (id == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
@@ -61,7 +60,6 @@ public class UserController {
      */
     @PutMapping("/user/lock")
     public BaseResponse userLock(HttpServletRequest request, @RequestParam Long id, @RequestParam Long isLock) {
-        log.info("请求接口[PUT]: /user/lock");
         // 判断是否有参数错误
         if (id == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
@@ -77,8 +75,10 @@ public class UserController {
      * @return {@link BaseResponse}
      */
     @PutMapping("/user/profile/edit")
-    public BaseResponse userEditProfile(@RequestBody @Validated UserEditProfileVO userEditProfileVO, BindingResult bindingResult) {
-        log.info("请求接口[PUT]: /user/profile/edit");
+    public BaseResponse userEditProfile(
+            @RequestBody @Validated UserEditProfileVO userEditProfileVO,
+            BindingResult bindingResult
+    ) {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -100,8 +100,13 @@ public class UserController {
      * @return {@link BaseResponse}
      */
     @GetMapping("/user/current")
-    public BaseResponse userCurrent(HttpServletRequest request, @RequestParam @Nullable String id, @RequestParam @Nullable String username, @RequestParam @Nullable String email, @RequestParam @Nullable String phone) {
-        log.info("请求接口[GET]: /user/current");
+    public BaseResponse userCurrent(
+            @RequestParam @Nullable String id,
+            @RequestParam @Nullable String username,
+            @RequestParam @Nullable String email,
+            @RequestParam @Nullable String phone,
+            @NotNull HttpServletRequest request
+    ) {
         // 检查数据是否有问题
         if (id != null && !id.isEmpty()) {
             if (!Pattern.matches("^[0-9]+$", id)) {
@@ -119,7 +124,10 @@ public class UserController {
             }
         }
         if (phone != null && !phone.isEmpty()) {
-            if (!Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", phone)) {
+            if (!Pattern.matches(
+                    "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$",
+                    phone
+            )) {
                 return ResultUtil.error(ErrorCode.PARAMETER_ERROR, "手机格式不正确");
             }
         }
@@ -136,9 +144,11 @@ public class UserController {
      * @return {@link BaseResponse}
      */
     @PostMapping("/user/current/all")
-    public BaseResponse userCurrentAll(@RequestBody @Validated UserAllCurrentVO userAllCurrentVO,
-                                       HttpServletRequest request, @NotNull BindingResult bindingResult) {
-        log.info("请求接口[POST]: /user/current/all");
+    public BaseResponse userCurrentAll(
+            @RequestBody @Validated UserAllCurrentVO userAllCurrentVO,
+            @NotNull BindingResult bindingResult,
+            HttpServletRequest request
+    ) {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -154,8 +164,11 @@ public class UserController {
      * @Param bindingResult:
      **/
     @PostMapping("/user/add")
-    public BaseResponse userAdd(@RequestBody @Validated UserAddVO userAddVo, BindingResult bindingResult, HttpServletRequest request) {
-        log.info("请求接口[POST]: /user/add");
+    public BaseResponse userAdd(
+            @RequestBody @Validated UserAddVO userAddVo,
+            BindingResult bindingResult,
+            HttpServletRequest request
+    ) {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -170,8 +183,11 @@ public class UserController {
      * @Param bindingResult:
      **/
     @PutMapping("/user/edit")
-    public BaseResponse userEdit(@RequestBody @Validated UserEditVO userEditVO, BindingResult bindingResult, HttpServletRequest request) {
-        log.info("请求接口[PUT]: /user/edit");
+    public BaseResponse userEdit(
+            @RequestBody @Validated UserEditVO userEditVO,
+            BindingResult bindingResult,
+            HttpServletRequest request
+    ) {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -182,7 +198,6 @@ public class UserController {
 
     @GetMapping("/user/profile/get")
     public BaseResponse userProfileGet(HttpServletRequest request) {
-        log.info("请求接口[GET]: /user/profile/get");
         return userService.userProfileGet(request);
     }
 
