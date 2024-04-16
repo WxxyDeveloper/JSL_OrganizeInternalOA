@@ -440,7 +440,7 @@ public class Processing {
      * @Date: 2024/4/11
      * @Param category:
      **/
-    public static String turnReviewCategory(Integer category) {
+    public static String turnReviewCategory(short category) {
         switch (category) {
             case 0:
               return "子系统";
@@ -451,7 +451,7 @@ public class Processing {
         }
     }
 
-    public static String turnReviewResult(Integer result) {
+    public static String turnReviewResult(short result) {
         switch (result) {
             case 0:
                 return "已拒绝";

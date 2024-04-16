@@ -27,14 +27,55 @@ public class ReviewDAO {
     private final ReviewMapper reviewMapper;
     private final ProjectMapper projectMapper;
 
-    public List<ReviewDO> getPrincipalUserReview(Long pid) {
-        return reviewMapper.selectAllReviewFromProject(pid);
+
+    public List<ReviewDO> selectAllReviewFromProject(Long projectId) {
+        return reviewMapper.selectAllReviewFromProject(projectId);
     }
 
-    public String getNameBySubproject(Long subId) {
+    public List<ReviewDO> selectApprovedResultReviewFromProject(Long projectId,
+                                                                short result) {
+        return reviewMapper.selectApprovedResultReviewFromProject(projectId,
+                result);
+    }
+
+    public List<ReviewDO> selectReviewFromSubsystem(Long subsystemId) {
+        return reviewMapper.selectReviewFromSubsystem(subsystemId);
+    }
+
+    public List<ReviewDO> selectApprovedResultReviewsFromSubsystem(Long subsystemId,
+                                                                   short result) {
+        return reviewMapper.selectApprovedResultReviewsFromSubsystem(subsystemId,
+                result);
+    }
+
+    public List<ReviewDO> selectReviewFromSubmodule(Long submoduleId) {
+        return reviewMapper.selectReviewFromSubmodule(submoduleId);
+    }
+
+    public List<ReviewDO> selectApprovedResultReviewsFromSubModule(Long id,
+                                                                   short result) {
+        return reviewMapper.selectApprovedResultReviewFromModule(id,
+                result);
+    }
+
+
+    public void addReview(ReviewDO reviewDO) {
+        reviewMapper.addReview(reviewDO);
+    }
+
+    public ReviewDO selectReviewById(Long id) {
+        return reviewMapper.selectReviewById(id);
+    }
+
+    public void updateReview(ReviewDO  reviewDO) {
+        reviewMapper.updateReview(reviewDO);
+    }
+
+
+    public String getNameByModule(Integer subId) {
 
         if (subId != null) {
-            return projectMapper.getProjectWorkById(subId).getName();
+            return projectMapper.getModuleById(subId).getName();
         }
 
         if (subId == null) {

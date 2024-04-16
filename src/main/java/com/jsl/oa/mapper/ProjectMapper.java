@@ -111,13 +111,26 @@ public interface ProjectMapper {
             + "where DATE(deadline) = DATE(#{threeDayLater}) and status = 0")
     List<ProjectModuleDO> getProjectWorkByTime(LocalDateTime threeDayLater);
 
-    List<ProjectModuleDO> getAllSubmoduleByUserId(Long uid);
 
-    List<ProjectDO> getProjectByPrincipalUser(Long uid);
+    @Select("select * from organize_oa.oa_project_modules "
+            + "where is_delete = 0 and principal_id = #{uid}")
+    List<ProjectModuleDO> getAllModuleByUserId(Long uid);
 
-    List<ProjectModuleDO> getAllSubsystemByUserId(Long uid);
+    @Select("select * from organize_oa.oa_project_child "
+            + "where project_id = #{pid} and is_delete = 0 ")
+    List<ProjectChildDO> getAllChildProjectByUserId(Long uid);
+
+    @Select("select * from organize_oa.oa_project "
+            + "where is_delete = 0 and principal_id = #{uid}")
+    List<ProjectDO> getAllProjectByUserId(Long uid);
+
 
     @Select("select * from organize_oa.oa_project_child where "
             + "DATE (created_at) = DATE (#{threeDaysLater}) ")
     List<ProjectChildDO> getProjectChildByTime(LocalDateTime threeDaysLater);
+
+
+    @Select("select * from organize_oa.oa_project_child where "
+            + "id = #{id} and is_delete = 0")
+    ProjectChildDO getProjectChildById(Integer id);
 }
