@@ -1,5 +1,6 @@
 package com.jsl.oa.controllers;
 
+import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.model.vodata.business.info.CarouselVO;
 import com.jsl.oa.services.InfoService;
 import com.jsl.oa.utils.BaseResponse;
@@ -41,6 +42,7 @@ public class InfoController {
      * @return 图片信息
      */
     @GetMapping("/info/header-image/get")
+    @NeedPermission("info:get_header_image")
     public BaseResponse infoGetHeaderImage(@RequestParam(required = false) Integer id) {
         return infoService.getHeaderImage(id);
     }
@@ -54,6 +56,7 @@ public class InfoController {
      * @return 编辑结果
      */
     @PutMapping("/info/header-image/edit")
+    @NeedPermission("info:edit_header_image")
     public BaseResponse infoEditHeaderImage(
             @RequestBody @Validated CarouselVO carouselVO,
             HttpServletRequest request,
@@ -79,6 +82,7 @@ public class InfoController {
      * @return 删除结果
      */
     @DeleteMapping("/info/header-image/del")
+    @NeedPermission("info:delete_header_image")
     public BaseResponse infoDelHeaderImage(@RequestParam Integer id, HttpServletRequest request) {
         return infoService.delHeaderImage(request, id);
     }

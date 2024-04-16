@@ -1,5 +1,6 @@
 package com.jsl.oa.controllers;
 
+import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.model.vodata.UserChangePasswordVO;
 import com.jsl.oa.model.vodata.UserForgetPasswordVO;
 import com.jsl.oa.model.vodata.UserLoginVO;
@@ -146,6 +147,7 @@ public class AuthController {
      * @since v1.1.0
      */
     @GetMapping("/auth/logout")
+    @NeedPermission("auth:logout")
     public BaseResponse authLogout(HttpServletRequest request) {
         return authService.authLogout(request);
     }
@@ -162,6 +164,7 @@ public class AuthController {
      * @since v1.1.0
      */
     @PutMapping("/auth/password")
+    @NeedPermission("auth:change_password")
     public BaseResponse authChangePassword(
             @RequestBody @Validated UserChangePasswordVO userChangePasswordVO,
             @NotNull BindingResult bindingResult,

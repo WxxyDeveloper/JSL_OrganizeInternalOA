@@ -1,5 +1,6 @@
 package com.jsl.oa.config.startup;
 
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -11,6 +12,7 @@ import org.springframework.util.FileCopyUtils;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -75,5 +77,18 @@ public class PrepareData {
                 throw new RuntimeException(ex);
             }
         }
+    }
+
+    public void checkPermission(String roleName, ArrayList<PermissionList.PermissionVO> permissions) {
+        ArrayList<String> newPermissions = new ArrayList<>();
+        permissions.forEach(it -> newPermissions.add(it.getName()));
+        Gson gson = new Gson();
+        String getPermissionString = gson.toJson(newPermissions);
+        log.debug("[Preparation] 更新角色 {} 权限", roleName);
+        jdbcTemplate.update(
+                "UPDATE organize_oa.oa_role SET permissions = ? WHERE role_name = ?",
+                getPermissionString,
+                roleName
+        );
     }
 }

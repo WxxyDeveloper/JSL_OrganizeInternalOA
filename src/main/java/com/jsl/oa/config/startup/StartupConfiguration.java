@@ -37,6 +37,7 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class StartupConfiguration {
     private final JdbcTemplate jdbcTemplate;
+    private final PermissionList getPermission = new PermissionList();
     private PrepareData prepareData;
 
     @Bean
@@ -78,20 +79,49 @@ public class StartupConfiguration {
         };
     }
 
+    @Bean
+    @Order(3)
+    public CommandLineRunner permissionDataPreparation() {
+        return args -> {
+            log.info("[Preparation] 系统进行权限表完整性检查");
+            getPermission.getPermissionList().forEach(permissionVO -> {
+                try {
+                    jdbcTemplate.queryForObject(
+                            "SELECT id FROM organize_oa.oa_permissions WHERE name = ?",
+                            Long.class,
+                            permissionVO.getName()
+                    );
+                } catch (DataAccessException e) {
+                    log.debug("[Preparation] 缺失 {} 权限，正在创建", permissionVO.getName());
+                    jdbcTemplate.update(
+                            "INSERT INTO organize_oa.oa_permissions (name, description) VALUES (?,?)",
+                            permissionVO.getName(),
+                            permissionVO.getDesc()
+                    );
+                }
+            });
+        };
+    }
+
     /**
      * 对数据表进行完整性检查
      * <hr/>
      * 对数据表进行完整性检查，检查数据表是否有数据缺失等信息
      */
     @Bean
-    @Order(3)
+    @Order(4)
     public CommandLineRunner roleDataPreparation() {
         return args -> {
-            log.info("[Preparation] 系统进行数据表完整性检查");
+            log.info("[Preparation] 系统进行角色表完整性检查");
             // 检查角色信息是否完整
             prepareData.checkRole("console", "超级管理员");
             prepareData.checkRole("principal", "负责人");
             prepareData.checkRole("developer", "开发者");
+
+            // 对权限的检查
+            prepareData.checkPermission("console", getPermission.getPermissionList());
+            prepareData.checkPermission("principal", getPermission.getPermissionPrincipal());
+            prepareData.checkPermission("developer", getPermission.getPermissionDeveloper());
         };
     }
 
@@ -102,7 +132,7 @@ public class StartupConfiguration {
      * 账户。
      */
     @Bean
-    @Order(4)
+    @Order(5)
     public CommandLineRunner defaultConsoleDataPreparation() {
         return args -> {
             log.info("[Preparation] 系统进行默认超级管理员信息检查");
@@ -162,7 +192,7 @@ public class StartupConfiguration {
     }
 
     @Bean
-    @Order(5)
+    @Order(6)
     public CommandLineRunner prepareDefaultConfigData(Gson gson) {
         return args -> {
             // 检查加密密钥是否存在
@@ -209,7 +239,7 @@ public class StartupConfiguration {
      * 准备安全密钥，用于加密解密等操作
      */
     @Bean
-    @Order(6)
+    @Order(7)
     public CommandLineRunner prepareKey() {
         return args -> {
             log.info("[Preparation] 系统进行安全密钥准备");
