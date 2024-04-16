@@ -62,14 +62,14 @@ public class ModuleServiceImpl implements ModuleService {
         }
 
         List<ProjectModuleDO> projectWorkDOList = moduleMapper.getBySysId(sysId, userId, is);
-//      封装VO类
+        // 封装VO类
         List<ProjectWorkAndNameVO> projectWorkAndNameVOS = new ArrayList<>();
         for (ProjectModuleDO projectWorkDO : projectWorkDOList) {
             ProjectWorkAndNameVO projectWorkAndNameVO = new ProjectWorkAndNameVO();
             Processing.copyProperties(projectWorkDO, projectWorkAndNameVO);
-//        添加负责人和子系统名称
-            projectWorkAndNameVO.
-                    setChildSystemName(projectDAO.getProjectWorkerById(projectWorkDO.getPid()).getName())
+            // 添加负责人和子系统名称
+            projectWorkAndNameVO
+                    .setChildSystemName(projectDAO.getProjectWorkerById(projectWorkDO.getProjectChildId()).getName())
                     .setPrincipalUser(userDAO.getUserById(projectWorkDO.getPrincipalId()).getUsername());
 
             projectWorkAndNameVOS.add(projectWorkAndNameVO);
