@@ -1,9 +1,7 @@
 package com.jsl.oa.services.impl;
 
 import com.google.gson.Gson;
-import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.annotations.UserAbleToUse;
-import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.model.dodata.UserDO;
@@ -40,7 +38,6 @@ import java.util.regex.Pattern;
 public class UserServiceImpl implements UserService {
     private final UserDAO userDAO;
     private final RoleDAO roleDAO;
-    private final PermissionDAO permissionDAO;
     private final Gson gson;
 
     @Override
@@ -126,7 +123,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @UserAbleToUse
-    @NeedPermission("user:current")
     public BaseResponse userCurrent(
             HttpServletRequest request,
             String id,
@@ -236,7 +232,7 @@ public class UserServiceImpl implements UserService {
         UserDO userDO = userDAO.getUserById(Processing.getAuthHeaderToUserId(request));
         UserProfileVo userProfileVo = new UserProfileVo();
         Processing.copyProperties(userDO, userProfileVo);
-        userProfileVo.setRole(roleDAO.getRoleNameByUid(userDO.getId()).getRoleName());
+        userProfileVo.setRole(roleDAO.getRoleByUserId(userDO.getId()).getRoleName());
         userProfileVo.setSex(Processing.getSex(userDO.getSex()));
         return ResultUtil.success(userProfileVo);
     }

@@ -64,7 +64,7 @@ public class CheckUserPermissionAspect {
             String getRoleAtAnnotation = checkAccountPermission.value();
 
             // 获取用户所在权限组
-            RoleDO getUserRole = roleDAO.getRoleNameByUid(getUserId);
+            RoleDO getUserRole = roleDAO.getRoleByUserId(getUserId);
             if (getUserRole != null) {
                 List<String> permissions = gson.fromJson(getUserRole.getPermissions(), new TypeToken<List<String>>() {
                 }.getType());

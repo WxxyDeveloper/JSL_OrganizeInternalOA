@@ -72,11 +72,6 @@ public class RoleDAO {
 
     }
 
-    public RoleDO getRoleNameByUid(Long uid) {
-        return roleMapper.getRoleById(getRoleUserByUid(uid).getRid());
-    }
-
-
     public boolean roleEdit(RoleDO getRole) {
         if (roleMapper.roleEdit(getRole)) {
             List<RoleDO> roleList = roleMapper.getRole();
