@@ -3,24 +3,30 @@ package com.jsl.oa.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jsl.oa.dao.PermissionDAO;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.exception.ClassCopyException;
-import com.jsl.oa.model.dodata.*;
-import com.jsl.oa.model.vodata.PermissionContentVo;
+import com.jsl.oa.model.dodata.ProjectDO;
+import com.jsl.oa.model.dodata.RoleDO;
+import com.jsl.oa.model.dodata.RoleUserDO;
+import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.model.vodata.ProjectSimpleVO;
 import com.jsl.oa.model.vodata.UserCurrentBackVO;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.BeanUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
-import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
 
 /**
  * <h1>自定义快捷工具类</h1>
@@ -164,7 +170,7 @@ public class Processing {
      * <hr/>
      * 该方法用于检查用户是否是管理员，类型封装后字节返回结果
      *
-     * @param request    请求
+     * @param request 请求
      * @return 如果为 true 是管理员，false 不是管理员
      */
     public static @NotNull Boolean checkUserIsConsole(HttpServletRequest request, @NotNull RoleDAO roleDAO) {
@@ -180,7 +186,7 @@ public class Processing {
     /**
      * 检查用户是否是老师
      *
-     * @param request    请求
+     * @param request 请求
      * @return 如果为 true 是老师，false 不是老师
      */
     public static @NotNull Boolean checkUserIsPrincipal(HttpServletRequest request, @NotNull RoleDAO roleDAO) {
@@ -263,9 +269,12 @@ public class Processing {
     @Contract(pure = true)
     public static @NotNull String getSex(short sex) {
         switch (sex) {
-            case 1: return "男";
-            case 2: return "女";
-            default: return "保密";
+            case 1:
+                return "男";
+            case 2:
+                return "女";
+            default:
+                return "保密";
         }
     }
 
@@ -278,56 +287,23 @@ public class Processing {
      * @return {@link BaseResponse}
      */
     public static @NotNull UserCurrentBackVO.UserCurrent returnUserInfo(
-            @NotNull UserDO userDO, RoleDAO roleDAO, PermissionDAO permissionDAO) {
+            @NotNull UserDO userDO, RoleDAO roleDAO, Gson gson) {
         UserCurrentBackVO.UserCurrent userCurrent = new UserCurrentBackVO.UserCurrent();
-        // 获取用户角色
-        RoleUserDO getUserRole = roleDAO.getRoleUserByUid(userDO.getId());
-        if (getUserRole == null) {
-            getUserRole = new RoleUserDO();
-            getUserRole.setRid(0L).setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        } else {
-            getUserRole.setUid(null);
-        }
         // 获取用户权限
-        RoleUserDO roleUserDO = roleDAO.getRoleUserByUid(userDO.getId());
+        RoleDO getRole = roleDAO.getRoleByUserId(userDO.getId());
         List<String> getPermissionForString;
-        if (roleUserDO != null) {
-            // 获取全部根权限
-            getPermissionForString = permissionDAO.getAllPermissionBuildString();
-        } else {
-            // 获取权限列表信息
-            getPermissionForString = permissionDAO.getPermission(userDO.getId());
-        }
-        RoleDO getRole = roleDAO.getRoleById(getUserRole.getRid());
-        String getRoleString;
         if (getRole != null) {
-            getRoleString = getRole.getRoleName();
+            // 获取全部根权限
+            getPermissionForString = gson.fromJson(getRole.getPermissions(), new TypeToken<List<String>>() {
+            }.getType());
         } else {
-            getRoleString = "default";
+            getPermissionForString = null;
         }
+        UserCurrentBackVO.ReturnUser returnUser = new UserCurrentBackVO.ReturnUser();
+        BeanUtils.copyProperties(userDO, returnUser);
         userCurrent
-                .setUser(new UserCurrentBackVO.ReturnUser()
-                        .setId(userDO.getId())
-                        .setJobId(userDO.getJobId())
-                        .setUsername(userDO.getUsername())
-                        .setAddress(userDO.getAddress())
-                        .setPhone(userDO.getPhone())
-                        .setEmail(userDO.getEmail())
-                        .setAge(userDO.getAge())
-                        .setSignature(userDO.getSignature())
-                        .setAvatar(userDO.getAvatar())
-                        .setNickname(userDO.getNickname())
-                        .setSex(userDO.getSex())
-                        .setEnabled(userDO.getEnabled())
-                        .setAccountNoExpired(userDO.getAccountNoExpired())
-                        .setCredentialsNoExpired(userDO.getCredentialsNoExpired())
-                        .setRecommend(userDO.getRecommend())
-                        .setAccountNoLocked(userDO.getAccountNoLocked())
-                        .setDescription(userDO.getDescription())
-                        .setCreatedAt(userDO.getCreatedAt())
-                        .setUpdatedAt(userDO.getUpdatedAt())
-                        .setIsDelete(userDO.getIsDelete()))
-                .setRole(getRoleString)
+                .setUser(returnUser)
+                .setRole(getRole != null ? getRole.getRoleName() : "default")
                 .setPermission(getPermissionForString);
         return userCurrent;
     }
@@ -384,56 +360,6 @@ public class Processing {
         //return ProjectSimpleVO;
     }
 
-    /**
-     * @Description: 将Permission归纳为父子关系的json形式
-     * @Date: 2024/1/20
-     * @Param permissions: 权限实体类
-     **/
-    public static List<PermissionContentVo> convertToVoList(List<PermissionDO> permissions) {
-        List<PermissionContentVo> vos = new ArrayList<>();
-        Map<Long, List<PermissionDO>> childrenMap = new HashMap<>();
-
-        for (PermissionDO permission : permissions) {
-            if (permission.getPid() != null) {
-                List<PermissionDO> children = childrenMap.getOrDefault(permission.getPid(), new ArrayList<>());
-                children.add(permission);
-                childrenMap.put(permission.getPid(), children);
-            }
-        }
-
-        for (PermissionDO permission : permissions) {
-            if (permission.getPid() == null) {
-                PermissionContentVo vo = convertToVo(permission, childrenMap);
-                vos.add(vo);
-            }
-        }
-
-        return vos;
-    }
-
-    /**
-     * @Description: 封装PermissionContentVo的子类，被convertToVoList方法调用
-     * @Date: 2024/1/20
-     * @Param permission: 权限实体类
-     * @Param childrenMap: 要封装的子类
-     **/
-    public static PermissionContentVo convertToVo(PermissionDO permission, Map<Long, List<PermissionDO>> childrenMap) {
-        PermissionContentVo vo = new PermissionContentVo();
-        copyProperties(permission, vo);
-
-        List<PermissionDO> children = childrenMap.get(permission.getId());
-        if (children != null) {
-            List<PermissionContentVo> childVos = new ArrayList<>();
-            for (PermissionDO child : children) {
-                PermissionContentVo childVo = convertToVo(child, childrenMap);
-                childVos.add(childVo);
-            }
-            vo.setChildren(childVos);
-        }
-
-        return vo;
-    }
-
 
     /**
      * @Description: 转换审核的类别属性为字符串
@@ -443,11 +369,11 @@ public class Processing {
     public static String turnReviewCategory(short category) {
         switch (category) {
             case 0:
-              return "子系统";
+                return "子系统";
             case 1:
-              return "模块";
+                return "模块";
             default:
-              return "其他";
+                return "其他";
         }
     }
 
@@ -463,9 +389,6 @@ public class Processing {
                 return "其他";
         }
     }
-
-
-
 
 
 }

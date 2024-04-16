@@ -1,6 +1,6 @@
 package com.jsl.oa.services.impl;
 
-import com.jsl.oa.annotations.NeedRoleGroup;
+import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.exception.ClassCopyException;
@@ -42,7 +42,7 @@ public class RoleServiceImpl implements RoleService {
     private final UserDAO userDAO;
 
     @Override
-    @NeedRoleGroup("role.add")
+    @NeedPermission("role.add")
     public BaseResponse roleAddUser(HttpServletRequest request, Long uid, Long rid) {
         if (Processing.checkUserIsConsole(request, roleDAO)) {
             roleDAO.addRoleUser(uid, rid);

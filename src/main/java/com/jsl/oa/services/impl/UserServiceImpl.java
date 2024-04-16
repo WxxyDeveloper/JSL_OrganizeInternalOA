@@ -1,11 +1,11 @@
 package com.jsl.oa.services.impl;
 
+import com.google.gson.Gson;
+import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.annotations.UserAbleToUse;
 import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
-import com.jsl.oa.model.dodata.RoleDO;
-import com.jsl.oa.model.dodata.RoleUserDO;
 import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.model.vodata.*;
 import com.jsl.oa.services.UserService;
@@ -21,8 +21,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -43,6 +41,7 @@ public class UserServiceImpl implements UserService {
     private final UserDAO userDAO;
     private final RoleDAO roleDAO;
     private final PermissionDAO permissionDAO;
+    private final Gson gson;
 
     @Override
     public UserDO getUserInfoByUsername(String username) {
@@ -125,46 +124,23 @@ public class UserServiceImpl implements UserService {
         return ResultUtil.success(userCurrentBackVO);
     }
 
-    @SuppressWarnings("checkstyle:NestedIfDepth")
     @Override
     @UserAbleToUse
-    public BaseResponse userCurrent(HttpServletRequest request,
-                                    String id,
-                                    String username,
-                                    String email,
-                                    String phone) {
+    @NeedPermission("user:current")
+    public BaseResponse userCurrent(
+            HttpServletRequest request,
+            String id,
+            String username,
+            String email,
+            String phone
+    ) {
+        UserDO userDO;
         if (id == null && username == null && email == null && phone == null) {
             // Token获取信息
-            UserDO userDO = userDAO.getUserById(Processing.getAuthHeaderToUserId(request));
-            if (userDO != null) {
-                return ResultUtil.success(Processing.returnUserInfo(userDO, roleDAO, permissionDAO));
-            } else {
-                return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
-            }
+            userDO = userDAO.getUserById(Processing.getAuthHeaderToUserId(request));
         } else {
-            // 检查是否是管理员用户
-            Long userId = Processing.getAuthHeaderToUserId(request);
-            if (userId != null) {
-                List<String> getPermission = permissionDAO.getPermission(userId);
-                // 匹配权限
-                if (!getPermission.contains("user.current")) {
-                    log.info("\t> 用户权限不足，检查是否是管理员");
-                    // 检查用户是管理员
-                    RoleUserDO roleUserDO = roleDAO
-                            .getRoleUserByUid(Objects.requireNonNull(Processing.getAuthHeaderToUserId(request)));
-                    if (roleUserDO == null) {
-                        return ResultUtil.error(ErrorCode.NOT_PERMISSION);
-                    }
-                    RoleDO roleDO = roleDAO.getRoleByRoleName("console");
-                    if (!roleUserDO.getRid().equals(roleDO.getId())) {
-                        return ResultUtil.error(ErrorCode.NOT_PERMISSION);
-                    }
-                }
-            } else {
-                return ResultUtil.error(ErrorCode.TOKEN_NOT_EXIST);
-            }
             // 根据顺序优先级进行用户信息获取
-            UserDO userDO = null;
+            userDO = null;
             if (id != null && !id.isEmpty()) {
                 userDO = userDAO.getUserById(Long.valueOf(id));
             } else if (username != null && !username.isEmpty()) {
@@ -174,12 +150,12 @@ public class UserServiceImpl implements UserService {
             } else if (phone != null && !phone.isEmpty()) {
                 userDO = userDAO.getUserByPhone(phone);
             }
-            // 返回结果
-            if (userDO != null) {
-                return ResultUtil.success(Processing.returnUserInfo(userDO, roleDAO, permissionDAO));
-            } else {
-                return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
-            }
+        }
+        // 返回结果
+        if (userDO != null) {
+            return ResultUtil.success(Processing.returnUserInfo(userDO, roleDAO, gson));
+        } else {
+            return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
         }
     }
 

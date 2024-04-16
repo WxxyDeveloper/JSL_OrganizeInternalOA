@@ -13,10 +13,10 @@ import lombok.Getter;
  */
 @Getter
 public class PermissionDeniedException extends RuntimeException {
-    private final String needGroup;
+    private final String needPermission;
 
-    public PermissionDeniedException(String message, String needGroup) {
+    public PermissionDeniedException(String message, String needPermission) {
         super(message);
-        this.needGroup = needGroup;
+        this.needPermission = needPermission;
     }
 }

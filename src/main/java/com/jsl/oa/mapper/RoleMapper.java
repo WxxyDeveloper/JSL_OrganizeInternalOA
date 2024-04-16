@@ -40,8 +40,6 @@ public interface RoleMapper {
     @Delete("DELETE FROM organize_oa.oa_role WHERE id=#{id}")
     boolean roleDelete(Long id);
 
-
-
-
-
+    @Select("SELECT * FROM organize_oa.oa_role WHERE id = (SELECT rid FROM organize_oa.oa_role_user WHERE uid=#{uid})")
+    RoleDO getRoleByUserId(Long uid);
 }

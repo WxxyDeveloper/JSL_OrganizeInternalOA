@@ -3,7 +3,7 @@ package com.jsl.oa.services.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jsl.oa.annotations.NeedRoleGroup;
+import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
@@ -232,7 +232,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    @NeedRoleGroup("info.project.add")
+    @NeedPermission("info.project.add")
     public BaseResponse addHeader(HttpServletRequest request, ProjectShowVO projectShowVO) {
         // 获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
@@ -258,7 +258,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    @NeedRoleGroup("info.project.del")
+    @NeedPermission("info.project.del")
     public BaseResponse delHeader(Integer id, HttpServletRequest request) {
         // 获取展示信息
         ProjectShowDO projectShowDO = projectDAO.getHeader();
@@ -276,7 +276,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    @NeedRoleGroup("info.project.edit")
+    @NeedPermission("info.project.edit")
     public BaseResponse editHeader(HttpServletRequest request, ProjectShowVO projectShowVO, Integer id) {
         // 获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);

@@ -134,4 +134,8 @@ public class RoleDAO {
     public RoleDO getRoleByRoleName(String roleName) {
         return roleMapper.getRoleByRoleName(roleName);
     }
+
+    public RoleDO getRoleByUserId(Long uid) {
+        return roleMapper.getRoleByUserId(uid);
+    }
 }

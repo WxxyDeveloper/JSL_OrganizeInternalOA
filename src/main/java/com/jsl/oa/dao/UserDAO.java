@@ -123,7 +123,7 @@ public class UserDAO {
         userCurrentBackVO.setUsers(new ArrayList<>())
                 .setCount(userMapper.getUsersCount());
         userCurrentDO.forEach(it -> userCurrentBackVO.getUsers()
-                .add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
+                .add(Processing.returnUserInfo(it, roleDAO, gson)));
         return userCurrentBackVO;
 
     }
@@ -134,7 +134,7 @@ public class UserDAO {
         userCurrentBackVO.setUsers(new ArrayList<>())
                 .setCount(userMapper.getUsersCount());
         userCurrentDO.forEach(it -> userCurrentBackVO.getUsers()
-                .add(Processing.returnUserInfo(it, roleDAO, permissionDAO)));
+                .add(Processing.returnUserInfo(it, roleDAO, gson)));
         return userCurrentBackVO;
     }
 

@@ -1,6 +1,6 @@
 package com.jsl.oa.services.impl;
 
-import com.jsl.oa.annotations.NeedRoleGroup;
+import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.dao.InfoDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
@@ -41,7 +41,7 @@ public class InfoServiceImpl implements InfoService {
     private final RoleDAO roleDAO;
 
     @Override
-    @NeedRoleGroup("info.image.add")
+    @NeedPermission("info.image.add")
     public BaseResponse addHeaderImage(HttpServletRequest request, @NotNull CarouselVO carouselVO) {
         // 获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
@@ -74,7 +74,7 @@ public class InfoServiceImpl implements InfoService {
     }
 
     @Override
-    @NeedRoleGroup("info.image.edit")
+    @NeedPermission("info.image.edit")
     public BaseResponse editHeaderImage(HttpServletRequest request, @NotNull CarouselVO carouselVO) {
         // 获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
@@ -124,7 +124,7 @@ public class InfoServiceImpl implements InfoService {
     }
 
     @Override
-    @NeedRoleGroup("info.image.del")
+    @NeedPermission("info.image.del")
     public BaseResponse delHeaderImage(HttpServletRequest request, Integer id) {
         // 用户权限校验
         if (!Processing.checkUserIsConsole(request, roleDAO)) {
@@ -146,7 +146,7 @@ public class InfoServiceImpl implements InfoService {
     }
 
     @Override
-    @NeedRoleGroup("info.image.setting.edit")
+    @NeedPermission("info.image.setting.edit")
     public BaseResponse editSettingHeaderImage(HttpServletRequest request, Boolean showType) {
         // 用户权限校验
         if (!Processing.checkUserIsConsole(request, roleDAO)) {

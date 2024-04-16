@@ -73,7 +73,6 @@ public class StartupConfiguration {
             prepareData.checkDatabase("oa_message");
             prepareData.checkDatabase("oa_news_user");
             prepareData.checkDatabase("oa_project_daily");
-            prepareData.checkDatabase("oa_role_permissions");
             prepareData.checkDatabase("oa_role_user");
             prepareData.checkDatabase("oa_user_tags");
         };

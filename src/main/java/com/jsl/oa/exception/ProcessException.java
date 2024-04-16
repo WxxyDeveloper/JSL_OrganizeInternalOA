@@ -1,5 +1,6 @@
 package com.jsl.oa.exception;
 
+import com.jsl.oa.exception.library.PermissionDeniedException;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.ResultUtil;
@@ -102,5 +103,11 @@ public class ProcessException {
             @NotNull MethodArgumentTypeMismatchException e) {
         log.error(e.getMessage(), e);
         return ResultUtil.error("ServerInternalError", 50002, "服务器内部错误");
+    }
+
+    @ExceptionHandler(value = PermissionDeniedException.class)
+    public BaseResponse businessPermissionDeniedException(PermissionDeniedException e) {
+        log.warn("[EXCEPTION] 无权限操作，需要权限: {}", e.getNeedPermission());
+        return ResultUtil.error("需要权限: " + e.getNeedPermission(), ErrorCode.PERMISSION_NOT_EXIST);
     }
 }

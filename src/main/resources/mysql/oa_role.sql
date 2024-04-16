@@ -4,6 +4,7 @@ create table oa_role
         primary key,
     role_name    varchar(20)                         not null comment '角色名称',
     display_name varchar(10)                         null comment '中文描述',
+    permissions  json                                null comment '用户组权限',
     created_at   timestamp default CURRENT_TIMESTAMP not null comment '创建时间',
     updated_at   timestamp                           null comment '修改时间'
 )

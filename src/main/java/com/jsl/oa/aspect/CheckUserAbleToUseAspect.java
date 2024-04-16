@@ -31,7 +31,7 @@ public class CheckUserAbleToUseAspect {
 
     private final UserDAO userDAO;
 
-    @Around("@annotation(com.jsl.oa.annotations.NeedRoleGroup)")
+    @Around("@annotation(com.jsl.oa.annotations.NeedPermission)")
     public Object checkUse(ProceedingJoinPoint pjp) throws Throwable {
         // 从ServletRequest中获取用户信息
         ServletRequestAttributes servletRequestAttributes =

@@ -14,7 +14,7 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface NeedRoleGroup {
+public @interface NeedPermission {
     /**
      * <h2>权限名称</h2>
      * <hr/>
