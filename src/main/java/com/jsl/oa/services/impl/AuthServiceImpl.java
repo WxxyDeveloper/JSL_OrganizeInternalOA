@@ -1,10 +1,9 @@
 package com.jsl.oa.services.impl;
 
-import com.jsl.oa.annotations.CheckUserAbleToUse;
+import com.jsl.oa.annotations.UserAbleToUse;
 import com.jsl.oa.common.constant.BusinessConstants;
 import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
-import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.dodata.RoleDO;
 import com.jsl.oa.model.dodata.RoleUserDO;
@@ -41,7 +40,6 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
-    private final RoleMapper roleMapper;
     private final RoleDAO roleDAO;
     private final PermissionDAO permissionDAO;
 
@@ -178,7 +176,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @CheckUserAbleToUse
+    @UserAbleToUse
     public BaseResponse authChangePassword(
             @NotNull UserChangePasswordVO userChangePasswordVO,
             HttpServletRequest request
@@ -212,7 +210,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @CheckUserAbleToUse
+    @UserAbleToUse
     public BaseResponse authLogout(HttpServletRequest request) {
         log.info("\t> 执行 Service 层 AuthService.authLogout 方法");
         // 获取用户

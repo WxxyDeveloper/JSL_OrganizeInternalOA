@@ -3,7 +3,7 @@ package com.jsl.oa.services.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jsl.oa.annotations.CheckUserHasPermission;
+import com.jsl.oa.annotations.NeedRoleGroup;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
@@ -236,7 +236,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    @CheckUserHasPermission("info.project.add")
+    @NeedRoleGroup("info.project.add")
     public BaseResponse addHeader(HttpServletRequest request, ProjectShowVO projectShowVO) {
         log.info("\t> 执行 Service 层 InfoService.addHeader 方法");
         // 获取用户
@@ -263,7 +263,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    @CheckUserHasPermission("info.project.del")
+    @NeedRoleGroup("info.project.del")
     public BaseResponse delHeader(Integer id, HttpServletRequest request) {
         log.info("\t> 执行 Service 层 InfoService.delHeader 方法");
         // 获取展示信息
@@ -282,7 +282,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    @CheckUserHasPermission("info.project.edit")
+    @NeedRoleGroup("info.project.edit")
     public BaseResponse editHeader(HttpServletRequest request, ProjectShowVO projectShowVO, Integer id) {
         log.info("\t> 执行 Service 层 InfoService.editHeader 方法");
         // 获取用户

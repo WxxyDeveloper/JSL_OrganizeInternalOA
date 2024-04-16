@@ -1,7 +1,7 @@
 package com.jsl.oa.services.impl;
 
 
-import com.jsl.oa.annotations.CheckUserHasPermission;
+import com.jsl.oa.annotations.NeedRoleGroup;
 import com.jsl.oa.dao.NewsDAO;
 import com.jsl.oa.model.dodata.NewsDO;
 import com.jsl.oa.model.vodata.NewsAddVO;
@@ -35,7 +35,7 @@ public class NewsServiceImpl implements NewsService {
     private final NewsDAO newsDAO;
 
     @Override
-    @CheckUserHasPermission("news.add")
+    @NeedRoleGroup("news.add")
     public BaseResponse newsAdd(NewsAddVO newsAddVO, @NotNull HttpServletRequest request) {
         log.info("\t> 执行 Service 层 NewsService.newsAdd 方法");
         // 拷贝新闻数据到实体类

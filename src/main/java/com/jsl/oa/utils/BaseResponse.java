@@ -18,6 +18,6 @@ public class BaseResponse {
         this.code = code;
         this.message = message;
         this.data = data;
-        log.info("==================================================");
+        log.info("============================================================");
     }
 }

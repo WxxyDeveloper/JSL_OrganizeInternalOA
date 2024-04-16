@@ -1,6 +1,6 @@
 package com.jsl.oa.services.impl;
 
-import com.jsl.oa.annotations.CheckUserAbleToUse;
+import com.jsl.oa.annotations.UserAbleToUse;
 import com.jsl.oa.services.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class MailServiceImpl implements MailService {
 
     @Override
     @Async
-    @CheckUserAbleToUse
+    @UserAbleToUse
     public void sendMail(String sendTo, String subject, String text) {
         log.info("\t> 执行 Service 层 MailService.sendMail 方法");
         //发送多媒体邮件
@@ -63,14 +63,14 @@ public class MailServiceImpl implements MailService {
 
     @Override
     @Async
-    @CheckUserAbleToUse
+    @UserAbleToUse
     public void sendMail(String sendTo, String model) {
         log.info("\t> 执行 Service 层 MailService.sendMail 方法");
     }
 
     @Override
     @Async
-    @CheckUserAbleToUse
+    @UserAbleToUse
     public void sendMailAboutUserLogin(String email, Integer code) {
         log.info("\t> 执行 Service 层 MailService.sendMailAboutUserLogin 方法");
         // 发送邮件带HTML模块部分

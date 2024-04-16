@@ -1,6 +1,6 @@
 package com.jsl.oa.services.impl;
 
-import com.jsl.oa.annotations.CheckUserHasPermission;
+import com.jsl.oa.annotations.NeedRoleGroup;
 import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
@@ -41,7 +41,7 @@ public class PermissionServiceImpl implements PermissionService {
     private final UserDAO userDAO;
 
     @Override
-    @CheckUserHasPermission("permission.add")
+    @NeedRoleGroup("permission.add")
     public BaseResponse permissionAdd(HttpServletRequest request, Long rid, Long pid) {
         log.info("\t> 执行 Service 层 PermissionService.permissionAdd 方法");
         permissionMapper.permissionAdd(rid, pid);
@@ -49,7 +49,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    @CheckUserHasPermission("permission.user")
+    @NeedRoleGroup("permission.user")
     public BaseResponse permissionUser(HttpServletRequest request, Long uid) {
         log.info("\t> 执行 Service 层 PermissionService.permissionUserPid 方法");
         if (userDAO.isExistUser(uid)) {
@@ -70,7 +70,7 @@ public class PermissionServiceImpl implements PermissionService {
 
 
     @Override
-    @CheckUserHasPermission("permission.get")
+    @NeedRoleGroup("permission.get")
     public BaseResponse permissionGet(HttpServletRequest request) {
         log.info("\t> 执行 Service 层 PermissionService.permissionGet 方法");
         //获取所有权限数据
@@ -82,7 +82,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    @CheckUserHasPermission("permission.edit")
+    @NeedRoleGroup("permission.edit")
     public BaseResponse permissionEdit(PermissionEditVO permissionEditVo, HttpServletRequest request) {
         log.info("\t> 执行 Service 层 PermissionService.permissionEdit 方法");
         //根据id获取对应permission数据
@@ -100,7 +100,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    @CheckUserHasPermission("permission.delete")
+    @NeedRoleGroup("permission.delete")
     public BaseResponse permissionDelete(HttpServletRequest request, Long pid) {
         log.info("\t> 执行 Service 层 PermissionService.permissionDelete 方法");
         //删除权限

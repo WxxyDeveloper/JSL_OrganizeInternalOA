@@ -1,7 +1,7 @@
 package com.jsl.oa.services.impl;
 
-import com.jsl.oa.annotations.CheckUserAbleToUse;
-import com.jsl.oa.annotations.CheckUserHasPermission;
+import com.jsl.oa.annotations.NeedRoleGroup;
+import com.jsl.oa.annotations.UserAbleToUse;
 import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CheckUserHasPermission("user.current.all")
+    @NeedRoleGroup("user.current.all")
     public BaseResponse userCurrentAll(HttpServletRequest request, @NotNull UserAllCurrentVO userAllCurrentVO) {
         log.info("\t> 执行 Service 层 UserService.userCurrentAll 方法");
         // 检查数据
@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
 
     @SuppressWarnings("checkstyle:NestedIfDepth")
     @Override
-    @CheckUserAbleToUse
+    @UserAbleToUse
     public BaseResponse userCurrent(HttpServletRequest request,
                                     String id,
                                     String username,

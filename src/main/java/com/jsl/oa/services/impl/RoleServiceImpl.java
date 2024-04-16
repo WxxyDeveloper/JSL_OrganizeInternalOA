@@ -1,6 +1,6 @@
 package com.jsl.oa.services.impl;
 
-import com.jsl.oa.annotations.CheckUserHasPermission;
+import com.jsl.oa.annotations.NeedRoleGroup;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.exception.ClassCopyException;
@@ -42,7 +42,7 @@ public class RoleServiceImpl implements RoleService {
     private final UserDAO userDAO;
 
     @Override
-    @CheckUserHasPermission("role.add")
+    @NeedRoleGroup("role.add")
     public BaseResponse roleAddUser(HttpServletRequest request, Long uid, Long rid) {
         log.info("\t> 执行 Service 层 RoleService.addRoleUser 方法");
         if (Processing.checkUserIsAdmin(request, roleDAO)) {
