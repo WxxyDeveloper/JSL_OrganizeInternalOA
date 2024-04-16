@@ -30,6 +30,7 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     public BaseResponse getByProjectId(Integer projectId, HttpServletRequest request) {
+        log.info("projectService");
         //获取用户id
         Long userId = Processing.getAuthHeaderToUserId(request);
         //获取项目负责人id
@@ -47,6 +48,7 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     public BaseResponse getBySysId(Integer sysId, HttpServletRequest request) {
+        log.info("SysService");
         //获取用户id
         Long userId = Processing.getAuthHeaderToUserId(request);
         //获取子系统负责人id
@@ -60,14 +62,14 @@ public class ModuleServiceImpl implements ModuleService {
         }
 
         List<ProjectModuleDO> projectWorkDOList = moduleMapper.getBySysId(sysId, userId, is);
-        // 封装VO类
+//      封装VO类
         List<ProjectWorkAndNameVO> projectWorkAndNameVOS = new ArrayList<>();
         for (ProjectModuleDO projectWorkDO : projectWorkDOList) {
             ProjectWorkAndNameVO projectWorkAndNameVO = new ProjectWorkAndNameVO();
             Processing.copyProperties(projectWorkDO, projectWorkAndNameVO);
-            // 添加负责人和子系统名称
-            projectWorkAndNameVO
-                    .setChildSystemName(projectDAO.getProjectWorkerById(projectWorkDO.getProjectChildId()).getName())
+//        添加负责人和子系统名称
+            projectWorkAndNameVO.
+                    setChildSystemName(projectDAO.getProjectWorkerById(projectWorkDO.getProjectChildId()).getName())
                     .setPrincipalUser(userDAO.getUserById(projectWorkDO.getPrincipalId()).getUsername());
 
             projectWorkAndNameVOS.add(projectWorkAndNameVO);
