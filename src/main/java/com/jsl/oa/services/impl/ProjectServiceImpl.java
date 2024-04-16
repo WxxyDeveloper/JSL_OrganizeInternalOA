@@ -54,7 +54,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd) {
-        log.info("\t> 执行 Service 层 ProjectService.projectAdd 方法");
         if (projectAdd.getDescription().isEmpty()) {
             projectAdd.setDescription("{}");
         } else {
@@ -81,7 +80,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse projectWorkAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO) {
-        log.info("\t> 执行 Service 层 ProjectService.projectWorkAdd 方法");
         //获取用户id
         Long userId = Processing.getAuthHeaderToUserId(request);
         //是否是增加子系统
@@ -106,7 +104,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse tGet(List<String> tags, List<String> isFinish, Integer page, Integer pageSize) {
-        log.info("\t> 执行 Service 层 ProjectService.tGet 方法");
 
         List<ProjectDO> projectDOList = projectDAO.tget(isFinish, tags);
 
@@ -201,7 +198,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse projectEdit(HttpServletRequest request, @NotNull ProjectEditVO projectEdit, Long projectId) {
-        log.info("\t> 执行 Service 层 ProjectService.projectEdit 方法");
 
 
         //判断用户是否为老师 或者 项目负责人
@@ -238,7 +234,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @NeedRoleGroup("info.project.add")
     public BaseResponse addHeader(HttpServletRequest request, ProjectShowVO projectShowVO) {
-        log.info("\t> 执行 Service 层 InfoService.addHeader 方法");
         // 获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
         UserDO userDO = userDAO.getUserById(userId);
@@ -265,7 +260,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @NeedRoleGroup("info.project.del")
     public BaseResponse delHeader(Integer id, HttpServletRequest request) {
-        log.info("\t> 执行 Service 层 InfoService.delHeader 方法");
         // 获取展示信息
         ProjectShowDO projectShowDO = projectDAO.getHeader();
         // 删除指定展示id
@@ -284,7 +278,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @NeedRoleGroup("info.project.edit")
     public BaseResponse editHeader(HttpServletRequest request, ProjectShowVO projectShowVO, Integer id) {
-        log.info("\t> 执行 Service 层 InfoService.editHeader 方法");
         // 获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
         UserDO userDO = userDAO.getUserById(userId);
@@ -319,7 +312,6 @@ public class ProjectServiceImpl implements ProjectService {
             Integer page,
             Integer pageSize
     ) {
-        log.info("\t> 执行 Service 层 ProjectService.workGet 方法");
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
 
@@ -342,7 +334,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse getByName(String name) {
-        log.info("\t> 执行 Service 层 ProjectService.getByName 方法");
         if (projectDAO.getByName(name) == null) {
             return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
         } else {
@@ -352,7 +343,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse projectDelete(HttpServletRequest request, List<Long> id) {
-        log.info("\t> 执行 Service 层 ProjectService.projectDelete 方法");
 
         //判断用户是否为老师 或者 项目负责人
         if (!Processing.checkUserIsTeacher(request, roleDAO)) {

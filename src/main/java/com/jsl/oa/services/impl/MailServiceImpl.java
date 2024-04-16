@@ -41,7 +41,6 @@ public class MailServiceImpl implements MailService {
     @Async
     @UserAbleToUse
     public void sendMail(String sendTo, String subject, String text) {
-        log.info("\t> 执行 Service 层 MailService.sendMail 方法");
         //发送多媒体邮件
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -64,15 +63,12 @@ public class MailServiceImpl implements MailService {
     @Override
     @Async
     @UserAbleToUse
-    public void sendMail(String sendTo, String model) {
-        log.info("\t> 执行 Service 层 MailService.sendMail 方法");
-    }
+    public void sendMail(String sendTo, String model) { }
 
     @Override
     @Async
     @UserAbleToUse
     public void sendMailAboutUserLogin(String email, Integer code) {
-        log.info("\t> 执行 Service 层 MailService.sendMailAboutUserLogin 方法");
         // 发送邮件带HTML模块部分
         try {
             MimeMessage message = javaMailSender.createMimeMessage();

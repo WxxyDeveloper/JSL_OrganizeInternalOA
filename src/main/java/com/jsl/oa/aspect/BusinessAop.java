@@ -3,6 +3,8 @@ package com.jsl.oa.aspect;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -44,9 +46,16 @@ public class BusinessAop {
             HttpServletRequest request = servletRequestAttributes.getRequest();
             // 获取方法签名
             MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+            Class<?> declaringType = methodSignature.getDeclaringType();
             String methodName = methodSignature.getName();
 
-            log.info("[CONTROL] 执行 {} 接口 | 地址: [{}]{}", methodName, request.getMethod(), request.getServletPath());
+            log.info(
+                    "[CONTROL] 执行 {}:{} 接口 | 地址: [{}]{}",
+                    declaringType.getName(),
+                    methodName,
+                    request.getMethod(),
+                    request.getServletPath()
+            );
         } else {
             throw new RuntimeException("无法获取信息");
         }
@@ -61,25 +70,31 @@ public class BusinessAop {
     public void beforeService(@NotNull JoinPoint joinPoint) {
         // 获取方法签名
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        Class<?> declaringType = methodSignature.getDeclaringType();
         String methodName = methodSignature.getName();
 
-        log.info("[SERVICE] 执行 {} 业务", methodName);
+        log.info("[SERVICE] 执行 {}:{} 业务", declaringType.getName(), methodName);
     }
 
     /**
      * 在DAO的所有方法执行前执行
      *
-     * @param joinPoint 切入点提供对方法执行的信息
+     * @param pjp 切入点提供对方法执行的信息
      */
-    @Before("execution(* com.jsl.oa.dao.*.*(..))")
-    public void beforeDao(@NotNull JoinPoint joinPoint) {
+    @Around("execution(* com.jsl.oa.dao.*.*(..))")
+    public Object beforeDao(@NotNull ProceedingJoinPoint pjp) throws Throwable {
         // 获取方法签名
-        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
+        Class<?> declaringType = methodSignature.getDeclaringType();
         String methodName = methodSignature.getName();
-        Object[] args = joinPoint.getArgs();
-        log.info("[DAO] 操作 {} 记录", methodName);
+        Object[] args = pjp.getArgs();
+        log.info("==>[DAO] 操作 {}:{} 记录", declaringType.getName(), methodName);
         if (args.length != 0) {
             log.debug("\t> 传入信息：{}", Arrays.toString(args));
         }
+        Object result = pjp.proceed();
+        log.info("<==[DAO] 返回数据类型 {}", declaringType.descriptorString());
+        log.debug("\t> 传出信息：{}", result.toString());
+        return result;
     }
 }

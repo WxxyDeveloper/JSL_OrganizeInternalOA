@@ -37,8 +37,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public BaseResponse getUserReview(Long projectId, HttpServletRequest request) {
-        log.info("\t> 执行 Service 层 ReviewService.getUserReview 方法");
-
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
 

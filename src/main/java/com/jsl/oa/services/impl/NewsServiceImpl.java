@@ -37,7 +37,6 @@ public class NewsServiceImpl implements NewsService {
     @Override
     @NeedRoleGroup("news.add")
     public BaseResponse newsAdd(NewsAddVO newsAddVO, @NotNull HttpServletRequest request) {
-        log.info("\t> 执行 Service 层 NewsService.newsAdd 方法");
         // 拷贝新闻数据到实体类
         NewsDO newsDO = new NewsDO();
         Processing.copyProperties(newsAddVO, newsDO);

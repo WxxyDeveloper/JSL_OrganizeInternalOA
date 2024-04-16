@@ -43,7 +43,6 @@ public class InfoServiceImpl implements InfoService {
     @Override
     @NeedRoleGroup("info.image.add")
     public BaseResponse addHeaderImage(HttpServletRequest request, @NotNull CarouselVO carouselVO) {
-        log.info("\t> 执行 Service 层 InfoService.addHeaderImage 方法");
         // 获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
         UserDO userDO = userDAO.getUserById(userId);
@@ -77,7 +76,6 @@ public class InfoServiceImpl implements InfoService {
     @Override
     @NeedRoleGroup("info.image.edit")
     public BaseResponse editHeaderImage(HttpServletRequest request, @NotNull CarouselVO carouselVO) {
-        log.info("\t> 执行 Service 层 InfoService.editHeaderImage 方法");
         // 获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
         UserDO userDO = userDAO.getUserById(userId);
@@ -112,7 +110,6 @@ public class InfoServiceImpl implements InfoService {
 
     @Override
     public BaseResponse getHeaderImage(Integer id) {
-        log.info("\t> 执行 Service 层 InfoService.getHeaderImage 方法");
         // 获取轮播图信息
         CarouselDO carouselDO = infoDAO.getCarousel();
         if (id != null) {
@@ -129,7 +126,6 @@ public class InfoServiceImpl implements InfoService {
     @Override
     @NeedRoleGroup("info.image.del")
     public BaseResponse delHeaderImage(HttpServletRequest request, Integer id) {
-        log.info("\t> 执行 Service 层 InfoService.delHeaderImage 方法");
         // 用户权限校验
         if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -152,7 +148,6 @@ public class InfoServiceImpl implements InfoService {
     @Override
     @NeedRoleGroup("info.image.setting.edit")
     public BaseResponse editSettingHeaderImage(HttpServletRequest request, Boolean showType) {
-        log.info("\t> 执行 Service 层 InfoService.editSettingHeaderImage 方法");
         // 用户权限校验
         if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -170,7 +165,6 @@ public class InfoServiceImpl implements InfoService {
 
     @Override
     public BaseResponse getHeaderUser(HttpServletRequest request, String order, String orderBy) {
-        log.info("\t> 执行 Service 层 InfoService.getHeaderUser 方法");
         // 默认无参数情况
         if (order == null) {
             order = "asc";

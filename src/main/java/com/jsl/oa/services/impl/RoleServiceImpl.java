@@ -44,7 +44,6 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @NeedRoleGroup("role.add")
     public BaseResponse roleAddUser(HttpServletRequest request, Long uid, Long rid) {
-        log.info("\t> 执行 Service 层 RoleService.addRoleUser 方法");
         if (Processing.checkUserIsAdmin(request, roleDAO)) {
             roleDAO.addRoleUser(uid, rid);
             return ResultUtil.success();
@@ -56,7 +55,6 @@ public class RoleServiceImpl implements RoleService {
     @Override
 
     public BaseResponse roleRemoveUser(HttpServletRequest request, Long uid) {
-        log.info("\t> 执行 Service 层 RoleService.delRoleUser 方法");
         if (Processing.checkUserIsAdmin(request, roleDAO)) {
             roleDAO.delRoleUser(uid);
             return ResultUtil.success();
@@ -67,7 +65,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public BaseResponse roleChangeUser(HttpServletRequest request, Long uid, Long rid) {
-        log.info("\t> 执行 Service 层 RoleService.roleChangeUser 方法");
         //检测用户是否存在
         if (!userDAO.isExistUser(uid)) {
             return ResultUtil.error(ErrorCode.USER_NOT_EXIST);
@@ -90,7 +87,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public BaseResponse roleGet(HttpServletRequest request, String id) {
-        log.info("\t> 执行 Service 层 RoleService.roleGet 方法");
         // 检查用户权限
         if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -117,7 +113,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public BaseResponse roleEdit(HttpServletRequest request, RoleEditVO roleEditVO) {
-        log.info("\t> 执行 Service 层 RoleService.roleEdit 方法");
         // 检查用户权限
         if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -141,7 +136,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public BaseResponse roleDelete(HttpServletRequest request, Long id) {
-        log.info("\t> 执行 Service 层 RoleService.roleDelete 方法");
         // 检查用户权限
         if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
@@ -163,7 +157,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public BaseResponse addRole(HttpServletRequest request, RoleAddVo roleAddVO) throws ClassCopyException {
-        log.info("\t> 执行 Service 层 RoleService.addRole 方法");
         // 检查用户权限
         if (!Processing.checkUserIsAdmin(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);

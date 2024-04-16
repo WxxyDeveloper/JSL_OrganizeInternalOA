@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class ReviewController {
 
-//    审核服务
     private final ReviewService reviewService;
 
     /**
@@ -32,7 +31,6 @@ public class ReviewController {
      **/
     @GetMapping("/review/getMyReview")
     public BaseResponse getUserReview(@RequestParam Long projectId, HttpServletRequest request) {
-        log.info("请求接口[GET]: /review/getMyReview");
         return reviewService.getUserReview(projectId, request);
     }
 

@@ -40,7 +40,6 @@ public class PermissionController {
      */
     @PostMapping("/permission/add")
     public BaseResponse permissionAdd(HttpServletRequest request, @RequestParam Long rid, @RequestParam Long pid) {
-        log.info("请求接口[POST]: /permission/add");
         // 判断是否有参数错误
         if (rid == null || pid == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
@@ -58,7 +57,6 @@ public class PermissionController {
      */
     @GetMapping("/permission/current")
     public BaseResponse permissionUser(HttpServletRequest request, @RequestParam Long uid) {
-        log.info("请求接口[GET]: /permission/current");
         // 判断是否有参数错误
         if (uid == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
@@ -75,7 +73,6 @@ public class PermissionController {
      */
     @GetMapping("/permission/get")
     public BaseResponse permissionGet(HttpServletRequest request) {
-        log.info("请求接口[GET]: /permission/get");
         return permissionService.permissionGet(request);
     }
 
@@ -93,7 +90,6 @@ public class PermissionController {
             BindingResult bindingResult,
             HttpServletRequest request
     ) {
-        log.info("请求接口[PUT]: /permission/edit");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -110,7 +106,6 @@ public class PermissionController {
      */
     @DeleteMapping("/permission/delete")
     public BaseResponse permissionDelete(@RequestParam Long pid, HttpServletRequest request) {
-        log.info("请求接口[Delete]: /permission/delete");
         // 判断是否有参数错误
         if (pid == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);

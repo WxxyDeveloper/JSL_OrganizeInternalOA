@@ -33,7 +33,6 @@ public class TagDAO {
      * @param order 排序
      */
     public ArrayList<TagProjectDO> getTagsProjectList(Integer page, Integer limit, String order) {
-        log.info("[DAO] 请求 getTagsProjectList 接口");
         // 获取标签列表
         page = (page - 1) * limit;
         return (ArrayList<TagProjectDO>) tagMapper.getTagsProjectList(order, limit, page);

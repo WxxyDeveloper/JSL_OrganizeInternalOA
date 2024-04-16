@@ -33,7 +33,6 @@ public class TagController {
             @RequestParam(required = false) String limit,
             @RequestParam(required = false) String order
     ) {
-        log.info("[Controller] 请求 getProjectList 接口");
         // 处理默认数据
         if (page == null || !Pattern.matches("^[0-9]+$", page) || Integer.parseInt(page) < 1) {
             page = "1";

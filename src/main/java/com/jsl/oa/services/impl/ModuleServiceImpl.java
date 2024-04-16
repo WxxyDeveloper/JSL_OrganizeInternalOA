@@ -30,7 +30,6 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     public BaseResponse getByProjectId(Integer projectId, HttpServletRequest request) {
-        log.info("projectService");
         //获取用户id
         Long userId = Processing.getAuthHeaderToUserId(request);
         //获取项目负责人id
@@ -48,7 +47,6 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     public BaseResponse getBySysId(Integer sysId, HttpServletRequest request) {
-        log.info("SysService");
         //获取用户id
         Long userId = Processing.getAuthHeaderToUserId(request);
         //获取子系统负责人id

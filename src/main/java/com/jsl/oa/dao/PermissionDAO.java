@@ -40,29 +40,24 @@ public class PermissionDAO {
      * @return {@link List<String>}
      */
     public List<String> getPermission(@NotNull Long uid) {
-        log.info("\t> 执行 DAO 层 PermissionDAO.getPermission 方法");
         List<String> getPermissionForString;
         String permissionRedisString = roleRedisUtil.getData(BusinessConstants.NONE, uid.toString());
         if (permissionRedisString == null) {
-            log.info("\t\t> 从 MySQL 获取数据");
             List<PermissionDO> permissionList = permissionMapper.permissionUserPid(uid);
             getPermissionForString = new ArrayList<>();
             forPermissionToBuildString(permissionList, getPermissionForString);
             // 存入 Redis
             roleRedisUtil.setData(BusinessConstants.NONE, uid.toString(), gson.toJson(getPermissionForString), 1440);
         } else {
-            log.info("\t\t> 从 Redis 获取数据");
             getPermissionForString = gson.fromJson(permissionRedisString, new TypeToken<List<String>>() { }.getType());
         }
         return getPermissionForString;
     }
 
     public List<String> getAllPermissionBuildString() {
-        log.info("\t> 执行 DAO 层 PermissionDAO.getPermission 方法");
         List<String> getPermissionForString;
         String getRedisData = roleRedisUtil.getData(BusinessConstants.ALL_PERMISSION, "string");
         if (getRedisData == null) {
-            log.info("\t\t> 从 MySQL 获取数据");
             List<PermissionDO> permissionList = permissionMapper.getAllPermission();
             permissionList.removeIf(it -> it.getPid() != null);
             getPermissionForString = new ArrayList<>();
@@ -74,17 +69,14 @@ public class PermissionDAO {
                     gson.toJson(getPermissionForString),
                     1440);
         } else {
-            log.info("\t\t> 从 Redis 获取数据");
             getPermissionForString = gson.fromJson(getRedisData, new TypeToken<List<String>>() { }.getType());
         }
         return getPermissionForString;
     }
 
     public List<PermissionDO> getRootPermission() {
-        log.info("\t> 执行 DAO 层 PermissionDAO.getRootPermission 方法");
         String getRedisData = roleRedisUtil.getData(BusinessConstants.ALL_PERMISSION, "all");
         if (getRedisData == null) {
-            log.info("\t\t> 从 MySQL 获取数据");
             List<PermissionDO> permissionList = permissionMapper.getAllPermission();
             if (!permissionList.isEmpty()) {
                 List<PermissionDO> getPermissionList = new ArrayList<>();
@@ -99,7 +91,6 @@ public class PermissionDAO {
                 return null;
             }
         } else {
-            log.info("\t\t> 从 Redis 获取数据");
             return gson.fromJson(getRedisData, new TypeToken<List<PermissionDO>>() {
             }.getType());
         }
