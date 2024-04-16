@@ -1,5 +1,3 @@
-USE organize_oa;
-
 create table oa_project_modules
 (
     id               bigint unsigned auto_increment comment '模块id'

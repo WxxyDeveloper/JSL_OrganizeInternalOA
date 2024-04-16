@@ -52,13 +52,43 @@ public class StartupConfiguration {
     /**
      * 对数据库进行完整性检查
      * <hr/>
-     * 对数据库进行完整性检查，检查数据库是否有数据缺失等信息
+     * 对数据库进行完整性检查，检查数据库是否出现缺失数据表的情况，若出现缺失数据表的情况将会对数据表进行创建，若数据保持完整将不进行任何操作
      */
     @Bean
     @Order(2)
-    public CommandLineRunner roleDataPreparation() {
+    public CommandLineRunner checkDatabaseExist() {
         return args -> {
             log.info("[Preparation] 系统进行数据库完整性检查");
+            // 数据表的检查
+            prepareData.checkDatabase("oa_config");
+            prepareData.checkDatabase("oa_user");
+            prepareData.checkDatabase("oa_role");
+            prepareData.checkDatabase("oa_permissions");
+            prepareData.checkDatabase("oa_news");
+            prepareData.checkDatabase("oa_project_tags");
+            prepareData.checkDatabase("oa_project");
+            prepareData.checkDatabase("oa_project_child");
+            prepareData.checkDatabase("oa_project_modules");
+            prepareData.checkDatabase("oa_review");
+            prepareData.checkDatabase("oa_message");
+            prepareData.checkDatabase("oa_news_user");
+            prepareData.checkDatabase("oa_project_daily");
+            prepareData.checkDatabase("oa_role_permissions");
+            prepareData.checkDatabase("oa_role_user");
+            prepareData.checkDatabase("oa_user_tags");
+        };
+    }
+
+    /**
+     * 对数据表进行完整性检查
+     * <hr/>
+     * 对数据表进行完整性检查，检查数据表是否有数据缺失等信息
+     */
+    @Bean
+    @Order(3)
+    public CommandLineRunner roleDataPreparation() {
+        return args -> {
+            log.info("[Preparation] 系统进行数据表完整性检查");
             // 检查角色信息是否完整
             prepareData.checkRole("console", "超级管理员");
             prepareData.checkRole("principal", "负责人");
@@ -73,7 +103,7 @@ public class StartupConfiguration {
      * 账户。
      */
     @Bean
-    @Order(3)
+    @Order(4)
     public CommandLineRunner defaultConsoleDataPreparation() {
         return args -> {
             log.info("[Preparation] 系统进行默认超级管理员信息检查");
@@ -133,7 +163,7 @@ public class StartupConfiguration {
     }
 
     @Bean
-    @Order(4)
+    @Order(5)
     public CommandLineRunner prepareDefaultConfigData(Gson gson) {
         return args -> {
             // 检查加密密钥是否存在
@@ -180,7 +210,7 @@ public class StartupConfiguration {
      * 准备安全密钥，用于加密解密等操作
      */
     @Bean
-    @Order(5)
+    @Order(6)
     public CommandLineRunner prepareKey() {
         return args -> {
             log.info("[Preparation] 系统进行安全密钥准备");

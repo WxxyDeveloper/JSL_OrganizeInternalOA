@@ -1,5 +1,3 @@
-USE organize_oa;
-
 create table oa_project_child
 (
     id            bigint unsigned auto_increment comment '项目id'
