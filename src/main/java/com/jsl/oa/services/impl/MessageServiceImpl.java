@@ -1,5 +1,6 @@
 package com.jsl.oa.services.impl;
-import com.jsl.oa.annotations.CheckUserAbleToUse;
+
+import com.jsl.oa.annotations.UserAbleToUse;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.MessageMapper;
 import com.jsl.oa.mapper.ProjectMapper;
@@ -13,6 +14,7 @@ import com.jsl.oa.utils.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class MessageServiceImpl implements MessageService {
     private final ProjectMapper projectMapper;
 
     @Override
-    @CheckUserAbleToUse
+    @UserAbleToUse
     public BaseResponse messageDelete(Long mid, HttpServletRequest request) {
         //获取消息数据
         MessageDO messageDO = messageMapper.getMessageById(mid);
@@ -55,7 +57,7 @@ public class MessageServiceImpl implements MessageService {
 
     @SuppressWarnings("checkstyle:Regexp")
     @Override
-    @CheckUserAbleToUse
+    @UserAbleToUse
     public BaseResponse messageGet(LocalDateTime beginTime,
                                    LocalDateTime endTime,
                                    Integer page,
@@ -90,11 +92,11 @@ public class MessageServiceImpl implements MessageService {
     /**
      * 添加指派消息
      *
-     * @param pId    项目id
+     * @param pId      项目id
      * @param systemId 系统id
      * @param moddleId 模块id
-     * @param uid   用户id
-     * @param request
+     * @param uid      用户id
+     * @param request  请求
      */
     @Override
     public void messageAdd(
@@ -129,12 +131,12 @@ public class MessageServiceImpl implements MessageService {
     /**
      * 添加审批消息
      *
-     * @param pId     项目id
+     * @param pId      项目id
      * @param systemId 系统id
      * @param moddleId 模块id
-     * @param uid     用户id
-     * @param isPass  是否通过 1:通过 0:未通过
-     * @param request
+     * @param uid      用户id
+     * @param isPass   是否通过 1:通过 0:未通过
+     * @param request  请求
      */
     @Override
     public void messageAdd(
@@ -163,10 +165,11 @@ public class MessageServiceImpl implements MessageService {
 
     /**
      * 添加项目变动消息
-     * @param pId 项目id
-     * @param type 类型 1:上传文档 2:修改状态 3:修改负责人
+     *
+     * @param pId      项目id
+     * @param type     类型 1:上传文档 2:修改状态 3:修改负责人
      * @param systemId 系统id
-     * @param request
+     * @param request  请求
      */
     @Override
     public void messageAdd(
@@ -201,11 +204,11 @@ public class MessageServiceImpl implements MessageService {
     /**
      * 添加子系统变动消息
      *
-     * @param pId     项目id
+     * @param pId      项目id
      * @param systmeId 系统id
      * @param moddleId 模块id
-     * @param type   类型 1:删除模块 2:修改简介 3:修改周期
-     * @param request
+     * @param type     类型 1:删除模块 2:修改简介 3:修改周期
+     * @param request  请求
      */
     @Override
     public void messageAdd(
@@ -238,8 +241,8 @@ public class MessageServiceImpl implements MessageService {
                     messageAddVO.setText("项目经理" + senderName + "修改了" + projectName + "项目的"
                             + systemName + "系统的简介说明");
                 } else if (type == 3) {
-                messageAddVO.setText("项目经理" + senderName + "修改了" + projectName + "项目的"
-                        + systemName + "系统的系统周期/工作量");
+                    messageAddVO.setText("项目经理" + senderName + "修改了" + projectName + "项目的"
+                            + systemName + "系统的系统周期/工作量");
                 }
                 messageAddVO.setType("跳转系统页");
                 messageAddVO.setToId(systmeId);
@@ -323,8 +326,8 @@ public class MessageServiceImpl implements MessageService {
                 String systemName = projectMapper.getWorkById(projectWorkDO.getProjectChildId().intValue()).getName();
                 String moddleName = projectWorkDO.getName();
                 messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统的" + moddleName + "模块"
-                            + "还有三天就要到期了，请及时处理");
-                    messageAddVO.setType("跳转模块页");
+                        + "还有三天就要到期了，请及时处理");
+                messageAddVO.setType("跳转模块页");
                 messageAddVO.setToId(projectWorkDO.getId().intValue());
                 messageMapper.messageAdd(messageAddVO);
             }

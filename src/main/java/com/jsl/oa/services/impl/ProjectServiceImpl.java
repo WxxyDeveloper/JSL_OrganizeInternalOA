@@ -3,7 +3,7 @@ package com.jsl.oa.services.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jsl.oa.annotations.CheckUserHasPermission;
+import com.jsl.oa.annotations.NeedRoleGroup;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
@@ -54,7 +54,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd) {
-        log.info("\t> 执行 Service 层 ProjectService.projectAdd 方法");
         if (projectAdd.getDescription().isEmpty()) {
             projectAdd.setDescription("{}");
         } else {
@@ -81,7 +80,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse projectWorkAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO) {
-        log.info("\t> 执行 Service 层 ProjectService.projectWorkAdd 方法");
         //获取用户id
         Long userId = Processing.getAuthHeaderToUserId(request);
         //是否是增加子系统
@@ -106,7 +104,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse tGet(List<String> tags, List<String> isFinish, Integer page, Integer pageSize) {
-        log.info("\t> 执行 Service 层 ProjectService.tGet 方法");
 
         List<ProjectDO> projectDOList = projectDAO.tget(isFinish, tags);
 
@@ -136,13 +133,13 @@ public class ProjectServiceImpl implements ProjectService {
 
         ProjectDO projectDO = projectDAO.getProjectById(projectId);
 
-        if (projectDO.getFile() == null || projectDO.getFile().equals("{}")) {
+        if (projectDO.getFiles() == null || projectDO.getFiles().equals("{}")) {
             return ResultUtil.success(null);
         }
 
         // 将文件内容转换为 JSON 数组
         try {
-            Object fileJson = new ObjectMapper().readValue(projectDO.getFile(), Object.class);
+            Object fileJson = new ObjectMapper().readValue(projectDO.getFiles(), Object.class);
             return ResultUtil.success(fileJson);
         } catch (JsonProcessingException e) {
             return ResultUtil.error(ErrorCode.PROJECT_FILE_JSON_ERROR);
@@ -184,8 +181,23 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public BaseResponse getProjectById(HttpServletRequest request, Long projectId) {
+        // 对项目 id 进行数据库校验
+        ProjectDO getProject = projectDAO.getProjectById(projectId);
+        if (getProject == null) {
+            return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
+        }
+        // 检查项目是否被删除
+        if (getProject.getIsDelete()) {
+            return ResultUtil.error("项目已删除", ErrorCode.PROJECT_NOT_EXIST);
+        }
+        // 对项目具体信息进行检查
+        // TODO: [10001] 需要检查普通用户是否有权限可以看到这一篇项目内容
+        return ResultUtil.success(getProject);
+    }
+
+    @Override
     public BaseResponse projectEdit(HttpServletRequest request, @NotNull ProjectEditVO projectEdit, Long projectId) {
-        log.info("\t> 执行 Service 层 ProjectService.projectEdit 方法");
 
 
         //判断用户是否为老师 或者 项目负责人
@@ -220,9 +232,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    @CheckUserHasPermission("info.project.add")
+    @NeedRoleGroup("info.project.add")
     public BaseResponse addHeader(HttpServletRequest request, ProjectShowVO projectShowVO) {
-        log.info("\t> 执行 Service 层 InfoService.addHeader 方法");
         // 获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
         UserDO userDO = userDAO.getUserById(userId);
@@ -247,9 +258,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    @CheckUserHasPermission("info.project.del")
+    @NeedRoleGroup("info.project.del")
     public BaseResponse delHeader(Integer id, HttpServletRequest request) {
-        log.info("\t> 执行 Service 层 InfoService.delHeader 方法");
         // 获取展示信息
         ProjectShowDO projectShowDO = projectDAO.getHeader();
         // 删除指定展示id
@@ -266,9 +276,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    @CheckUserHasPermission("info.project.edit")
+    @NeedRoleGroup("info.project.edit")
     public BaseResponse editHeader(HttpServletRequest request, ProjectShowVO projectShowVO, Integer id) {
-        log.info("\t> 执行 Service 层 InfoService.editHeader 方法");
         // 获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
         UserDO userDO = userDAO.getUserById(userId);
@@ -295,56 +304,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse get(
-            HttpServletRequest request,
-            List<String> tags,
-            List<String> isFinish,
-            Integer page,
-            Integer pageSize
-    ) {
-        log.info("\t> 执行 Service 层 ProjectService.get 方法");
-
-        //获取用户
-        Long userId = Processing.getAuthHeaderToUserId(request);
-        //根据标签查询
-        if (tags != null && !tags.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.get(userId, tags, isFinish);
-
-            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO : projectDOList) {
-                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
-                projectSimpleVOList.add(projectSimpleVO1);
-            }
-            //分页返回
-            int start = (page - 1) * pageSize;
-            int end = start + pageSize;
-            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end, projectSimpleVOList.size()));
-            return ResultUtil.success(pageData);
-        }
-
-        //根据状态查询
-        if (isFinish != null && !isFinish.isEmpty()) {
-            List<ProjectDO> projectDOList = projectDAO.get(userId, tags, isFinish);
-            List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
-            for (ProjectDO projectDO : projectDOList) {
-                ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
-                Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
-                projectSimpleVOList.add(projectSimpleVO1);
-            }
-            //分页返回
-            int start = (page - 1) * pageSize;
-            int end = start + pageSize;
-            List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                    Math.min(end, projectSimpleVOList.size()));
-            return ResultUtil.success(pageData);
-        }
-        return ResultUtil.success(projectMapper.get(userId));
-
-    }
-
-    @Override
     public BaseResponse workGet(
             HttpServletRequest request,
             List<String> tags,
@@ -353,7 +312,6 @@ public class ProjectServiceImpl implements ProjectService {
             Integer page,
             Integer pageSize
     ) {
-        log.info("\t> 执行 Service 层 ProjectService.workGet 方法");
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
 
@@ -374,10 +332,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     }
 
-
     @Override
     public BaseResponse getByName(String name) {
-        log.info("\t> 执行 Service 层 ProjectService.getByName 方法");
         if (projectDAO.getByName(name) == null) {
             return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
         } else {
@@ -387,7 +343,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse projectDelete(HttpServletRequest request, List<Long> id) {
-        log.info("\t> 执行 Service 层 ProjectService.projectDelete 方法");
 
         //判断用户是否为老师 或者 项目负责人
         if (!Processing.checkUserIsTeacher(request, roleDAO)) {

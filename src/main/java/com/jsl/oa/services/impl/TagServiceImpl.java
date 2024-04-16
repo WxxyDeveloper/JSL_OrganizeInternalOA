@@ -37,7 +37,6 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     public BaseResponse getTagsProjectList(Integer page, Integer limit, String order) {
-        log.info("[Service] 请求 getTagsProjectList 接口");
         // 获取标签列表
         ArrayList<TagProjectDO> getTagList = tagDAO.getTagsProjectList(page, limit, order);
         return ResultUtil.success(getTagList);

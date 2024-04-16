@@ -42,7 +42,6 @@ public class InfoController {
      */
     @GetMapping("/info/header-image/get")
     public BaseResponse infoGetHeaderImage(@RequestParam(required = false) Integer id) {
-        log.info("请求接口[GET]: /info/header-image/get");
         return infoService.getHeaderImage(id);
     }
 
@@ -60,7 +59,6 @@ public class InfoController {
             HttpServletRequest request,
             @NotNull BindingResult bindingResult
     ) {
-        log.info("请求接口[PUT]: /info/header-image/edit");
         // 参数校验
         if (bindingResult.hasErrors()) {
             log.warn("参数校验失败: {}", Processing.getValidatedErrorList(bindingResult));
@@ -82,7 +80,6 @@ public class InfoController {
      */
     @DeleteMapping("/info/header-image/del")
     public BaseResponse infoDelHeaderImage(@RequestParam Integer id, HttpServletRequest request) {
-        log.info("请求接口[DELETE]: /info/header-image/del");
         return infoService.delHeaderImage(request, id);
     }
 
@@ -100,7 +97,6 @@ public class InfoController {
             HttpServletRequest request,
             @NotNull BindingResult bindingResult
     ) {
-        log.info("请求接口[POST]: /info/header-image/add");
         // 参数校验
         if (bindingResult.hasErrors()) {
             log.warn("参数校验失败: {}", Processing.getValidatedErrorList(bindingResult));
@@ -118,7 +114,6 @@ public class InfoController {
      */
     @PutMapping("/info/header-image/edit-setting")
     public BaseResponse infoEditSettingHeaderImage(@RequestParam Boolean showType, HttpServletRequest request) {
-        log.info("请求接口[PUT]: /info/header-image/edit-setting");
         return infoService.editSettingHeaderImage(request, showType);
     }
 
@@ -136,7 +131,6 @@ public class InfoController {
             @RequestParam String orderBy,
             HttpServletRequest request
     ) {
-        log.info("请求接口[GET]: /info/header-user/get");
         return infoService.getHeaderUser(request, order, orderBy);
     }
 }

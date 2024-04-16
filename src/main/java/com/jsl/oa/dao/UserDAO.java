@@ -50,7 +50,6 @@ public class UserDAO {
      * @author 筱锋xiao_lfeng
      */
     public UserDO getUserInfoByUsername(String username) {
-        log.info("\t> 执行 DAO 层 UserDAO.getUserInfoByUsername 方法");
         UserDO userDO = null;
         // 从 Redis 获取数据
         // TODO: 10000-Redis: 从 Redis 获取数据
@@ -70,15 +69,12 @@ public class UserDAO {
      * @return Boolean
      */
     public Boolean isExistUser(@NotNull Long id) {
-        log.info("\t> 执行 DAO 层 UserDAO.isExistUser 方法");
         // 从 Redis 获取数据
         String redisData = userRedisUtil.getData(BusinessConstants.NONE, id.toString());
         if (redisData != null) {
-            log.info("\t\t> 从 Redis 获取数据");
             return true;
         } else {
             UserDO userDO = userMapper.getUserById(id);
-            log.info("\t\t> 从 MySQL 获取数据");
             if (userDO != null) {
                 userRedisUtil.setData(BusinessConstants.NONE, userDO.getId().toString(), gson.toJson(userDO), 120);
                 return true;
@@ -96,20 +92,15 @@ public class UserDAO {
      * @param id 用户id
      */
     public void userDelete(@NotNull Long id) {
-        log.info("\t> 执行 DAO 层 UserDAO.userDelete 方法");
         // Redis 获取数据
         String redisData = userRedisUtil.getData(BusinessConstants.NONE, id.toString());
         if (redisData != null) {
-            log.info("\t\t> 从 Redis 删除数据");
             userRedisUtil.delData(BusinessConstants.NONE, id.toString());
         }
-        log.info("\t\t> 从 MySQL 删除数据");
         userMapper.userDelete(id);
     }
 
     public boolean userGetDelete(Long id) {
-        log.info("\t> 执行 DAO 层 UserDAO.userGetDelete 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return userMapper.userGetDelete(id);
     }
 
@@ -119,20 +110,14 @@ public class UserDAO {
      * @param id
      */
     public void userLock(Long id, Long isLock) {
-        log.info("\t> 执行 DAO 层 UserDAO.userLock 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         userMapper.userLock(id, isLock);
     }
 
     public void userEditProfile(UserEditProfileVO userEditProfileVO) {
-        log.info("\t> 执行 DAO 层 UserDAO.userEditProfile 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         userMapper.userEditProfile(userEditProfileVO);
     }
 
     public UserCurrentBackVO userCurrentAll(UserAllCurrentVO userAllCurrentVO) {
-        log.info("\t> 执行 DAO 层 UserDAO.userCurrentAll 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         List<UserDO> userCurrentDO = userMapper.getAllUser(userAllCurrentVO);
         UserCurrentBackVO userCurrentBackVO = new UserCurrentBackVO();
         userCurrentBackVO.setUsers(new ArrayList<>())
@@ -144,8 +129,6 @@ public class UserDAO {
     }
 
     public UserCurrentBackVO userCurrentAllLike(UserAllCurrentVO userAllCurrentVO) {
-        log.info("\t> 执行 DAO 层 UserDAO.userCurrentAllLike 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         List<UserDO> userCurrentDO = userMapper.getAllUserBySearch(userAllCurrentVO);
         UserCurrentBackVO userCurrentBackVO = new UserCurrentBackVO();
         userCurrentBackVO.setUsers(new ArrayList<>())
@@ -163,14 +146,10 @@ public class UserDAO {
      * @Param userDO: user 数据库表实体类
      */
     public boolean userAdd(UserDO userDO) {
-        log.info("\t> 执行 DAO 层 userAdd 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return userMapper.insertUser(userDO);
     }
 
     public void userEdit(UserDO userDO) {
-        log.info("\t> 执行 DAO 层 userEdit 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         userMapper.updateUser(userDO);
     }
 
@@ -181,8 +160,6 @@ public class UserDAO {
      * @Param username: 用户名
      **/
     public Boolean isRepeatUser(String username) {
-        log.info("\t> 执行 DAO 层 isRepeatUser 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return userMapper.getUserInfoByUsername(username) != null;
     }
 
@@ -205,8 +182,6 @@ public class UserDAO {
      * @Param userId
      **/
     public UserDO getUserById(Long userId) {
-        log.info("\t> 执行 DAO 层 getUserById 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return userMapper.getUserById(userId);
     }
 
@@ -217,8 +192,6 @@ public class UserDAO {
      * @Param uid:用户id
      **/
     public RoleUserDO getRoleFromUser(Long uid) {
-        log.info("\t> 执行 DAO 层 getRoleFromUser 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return userMapper.getRoleIdByUserId(uid);
     }
 
@@ -229,8 +202,6 @@ public class UserDAO {
      * @Param null:用户id
      **/
     public Boolean isManagerByRoleId(Long roleId) {
-        log.info("\t> 执行 DAO 层 isManagerByRoleId 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         RoleDO role = userMapper.getRoleById(roleId);
         if (role == null) {
             return false;
@@ -240,26 +211,18 @@ public class UserDAO {
 
 
     public List<UserDO> getRecommendUser() {
-        log.info("\t> 执行 DAO 层 getRecommendUser 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return userMapper.getRecommendUser();
     }
 
     public UserDO getUserByEmail(String email) {
-        log.info("\t> 执行 DAO 层 getUserByEmail 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return userMapper.getUserByEmail(email);
     }
 
     public UserDO getUserByPhone(String phone) {
-        log.info("\t> 执行 DAO 层 getUserByPhone 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return userMapper.getUserByPhone(phone);
     }
 
     public Long getUsersCount() {
-        log.info("\t> 执行 DAO 层 getUsersCount 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return userMapper.getUsersCount();
     }
 }

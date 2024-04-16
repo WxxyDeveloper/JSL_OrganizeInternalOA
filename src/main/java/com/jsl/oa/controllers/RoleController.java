@@ -43,7 +43,6 @@ public class RoleController {
      */
     @GetMapping("/role/get")
     public BaseResponse roleGet(HttpServletRequest request, @RequestParam(required = false) String id) {
-        log.info("请求接口[GET]: /role/get");
         return roleService.roleGet(request, id);
     }
 
@@ -63,7 +62,6 @@ public class RoleController {
             @NotNull BindingResult bindingResult,
             HttpServletRequest request
     ) {
-        log.info("请求接口[PUT]: /role/edit");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -82,7 +80,6 @@ public class RoleController {
      */
     @DeleteMapping("/role/delete")
     public BaseResponse roleDelete(HttpServletRequest request, @RequestParam Long id) {
-        log.info("请求接口[DELETE]: /role/delete");
         // 判断是否有参数错误
         if (id == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
@@ -97,7 +94,6 @@ public class RoleController {
      */
     @PostMapping("role/user/add")
     public BaseResponse roleAddUser(HttpServletRequest request, @RequestParam Long uid, @RequestParam Long rid) {
-        log.info("请求接口[POST]: /role/user/add");
         // 判断是否有参数错误
         if (uid == null || rid == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
@@ -112,7 +108,6 @@ public class RoleController {
      */
     @DeleteMapping("role/user/remove")
     public BaseResponse roleRemoveUser(HttpServletRequest request, @RequestParam Long uid) {
-        log.info("请求接口[POST]: /role/user/remove");
         // 判断是否有参数错误
         if (uid == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
@@ -131,7 +126,6 @@ public class RoleController {
             @NotNull BindingResult bindingResult,
             HttpServletRequest request
     ) throws ClassCopyException {
-        log.info("请求接口[POST]: /role/add");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -146,7 +140,6 @@ public class RoleController {
      */
     @PutMapping("role/user/change")
     public BaseResponse roleChangeUser(HttpServletRequest request, @RequestParam Long uid, @RequestParam Long rid) {
-        log.info("请求接口[POST]: /role/user/change");
         // 判断是否有参数错误
         if (uid == null || rid == null) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);

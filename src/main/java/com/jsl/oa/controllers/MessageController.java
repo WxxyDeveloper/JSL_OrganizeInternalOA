@@ -65,7 +65,6 @@ public class MessageController {
             @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime begin,
             @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
             HttpServletRequest request) {
-        log.info("请求接口[GET]:/message/get");
         String token = request.getHeader("Authorization").replace("Bearer ", "");
         Long uid = JwtUtil.getUserId(token);
         if (uid == null) {
@@ -79,7 +78,6 @@ public class MessageController {
     public BaseResponse messageGetById(
             @RequestParam Long id,
             HttpServletRequest request) {
-        log.info("请求接口[GET]:/message/get/id");
         String token = request.getHeader("Authorization").replace("Bearer ", "");
         Long uid = JwtUtil.getUserId(token);
         if (uid == null) {

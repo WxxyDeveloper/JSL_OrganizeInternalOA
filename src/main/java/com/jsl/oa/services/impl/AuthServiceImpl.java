@@ -1,11 +1,11 @@
 package com.jsl.oa.services.impl;
 
-import com.jsl.oa.annotations.CheckUserAbleToUse;
+import com.jsl.oa.annotations.UserAbleToUse;
 import com.jsl.oa.common.constant.BusinessConstants;
 import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
-import com.jsl.oa.mapper.RoleMapper;
 import com.jsl.oa.mapper.UserMapper;
+import com.jsl.oa.model.dodata.RoleDO;
 import com.jsl.oa.model.dodata.RoleUserDO;
 import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.model.vodata.*;
@@ -40,7 +40,6 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
-    private final RoleMapper roleMapper;
     private final RoleDAO roleDAO;
     private final PermissionDAO permissionDAO;
 
@@ -50,7 +49,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse authRegister(@NotNull UserRegisterVO userRegisterVO) {
-        log.info("\t> 执行 Service 层 AuthService.authRegister 方法");
         // 检查用户说是否存在
         UserDO getUserByUsername = userMapper.getUserInfoByUsername(userRegisterVO.getUsername());
         // 用户名已存在
@@ -87,7 +85,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse authLogin(@NotNull UserLoginVO userLoginVO) {
-        log.info("\t> 执行 Service 层 AuthService.userLogin 方法");
         // 检查用户是否存在
         UserDO userDO;
         if (Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$",
@@ -132,7 +129,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse authLoginByEmail(String email, Integer code) {
-        log.info("\t> 执行 Service 层 AuthService.authLoginByEmail 方法");
         // 获取验证码是否有效
         Integer redisCode = emailRedisUtil.getData(BusinessConstants.BUSINESS_LOGIN, email);
         if (redisCode != null) {
@@ -152,7 +148,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse authLoginSendEmailCode(String email) {
-        log.info("\t> 执行 Service 层 AuthService.authLoginSendEmailCode 方法");
         // 获取用户信息
         UserDO userDO = userMapper.getUserInfoByEmail(email);
         if (userDO != null) {
@@ -177,12 +172,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @CheckUserAbleToUse
+    @UserAbleToUse
     public BaseResponse authChangePassword(
             @NotNull UserChangePasswordVO userChangePasswordVO,
             HttpServletRequest request
     ) {
-        log.info("\t> 执行 Service 层 AuthService.authChangePassword 方法");
         // 检查新密码输入无误
         if (!userChangePasswordVO.getNewPassword().equals(userChangePasswordVO.getConfirmPassword())) {
             return ResultUtil.error(ErrorCode.PASSWORD_NOT_SAME);
@@ -211,9 +205,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @CheckUserAbleToUse
+    @UserAbleToUse
     public BaseResponse authLogout(HttpServletRequest request) {
-        log.info("\t> 执行 Service 层 AuthService.authLogout 方法");
         // 获取用户
         UserDO userDO = userMapper.getUserById(Processing.getAuthHeaderToUserId(request));
         // 删除Token
@@ -226,7 +219,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse authForgetPassword(@NotNull UserForgetPasswordVO userForgetPasswordVO) {
-        log.info("\t> 执行 Service 层 AuthService.authForgetPassword 方法");
         // 获取验证码是否有效
         Integer redisCode = emailRedisUtil.getData(BusinessConstants.BUSINESS_LOGIN, userForgetPasswordVO.getEmail());
         if (redisCode != null) {
@@ -283,14 +275,21 @@ public class AuthServiceImpl implements AuthService {
         } else {
             getUserRole.setUid(null);
         }
+        // 获取角色信息
+        RoleDO getRole = roleDAO.getRoleById(getUserRole.getRid());
+        String getRoleString;
+        if (getRole != null) {
+            getRoleString = getRole.getRoleName();
+        } else {
+            getRoleString = "default";
+        }
         userReturnBackVO.setUser(new UserReturnBackVO.ReturnUser()
                         .setId(userDO.getId())
                         .setJobId(userDO.getJobId())
                         .setUsername(userDO.getUsername())
                         .setEmail(userDO.getEmail())
                         .setPhone(userDO.getPhone()))
-                .setRole(new UserReturnBackVO.ReturnUserRole()
-                        .setRid(getUserRole.getRid()))
+                .setRole(getRoleString)
                 .setToken(token)
                 .setPermission(getPermissionForString);
         return ResultUtil.success("登陆成功", userReturnBackVO);
