@@ -1,7 +1,8 @@
 package com.jsl.oa.mapper;
 
 import com.jsl.oa.model.dodata.ReviewDO;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 

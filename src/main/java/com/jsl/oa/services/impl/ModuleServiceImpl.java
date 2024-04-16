@@ -4,7 +4,7 @@ import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ModuleMapper;
-import com.jsl.oa.model.dodata.ProjectWorkDO;
+import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.vodata.ProjectWorkAndNameVO;
 import com.jsl.oa.services.ModuleService;
 import com.jsl.oa.utils.BaseResponse;
@@ -42,7 +42,7 @@ public class ModuleServiceImpl implements ModuleService {
             is = 0;
         }
 
-        List<ProjectWorkDO> projectWorkDOList = moduleMapper.getByProjectId(projectId, userId, is);
+        List<ProjectModuleDO> projectWorkDOList = moduleMapper.getByProjectId(projectId, userId, is);
         return ResultUtil.success(projectWorkDOList);
     }
 
@@ -61,10 +61,10 @@ public class ModuleServiceImpl implements ModuleService {
             is = 0;
         }
 
-        List<ProjectWorkDO> projectWorkDOList = moduleMapper.getBySysId(sysId, userId, is);
+        List<ProjectModuleDO> projectWorkDOList = moduleMapper.getBySysId(sysId, userId, is);
 //      封装VO类
         List<ProjectWorkAndNameVO> projectWorkAndNameVOS = new ArrayList<>();
-        for (ProjectWorkDO projectWorkDO : projectWorkDOList) {
+        for (ProjectModuleDO projectWorkDO : projectWorkDOList) {
             ProjectWorkAndNameVO projectWorkAndNameVO = new ProjectWorkAndNameVO();
             Processing.copyProperties(projectWorkDO, projectWorkAndNameVO);
 //        添加负责人和子系统名称
@@ -94,9 +94,9 @@ public class ModuleServiceImpl implements ModuleService {
     //    删除子模块方法
     public void deleteMoudule(Long id) {
         //获取所有父Id=id的子模块
-        List<ProjectWorkDO> projectWorkDOS = moduleMapper.getAllMoudleByPid(id);
+        List<ProjectModuleDO> projectWorkDOS = moduleMapper.getAllMoudleByPid(id);
 
-        for (ProjectWorkDO workDO : projectWorkDOS) {
+        for (ProjectModuleDO workDO : projectWorkDOS) {
             deleteMoudule(workDO.getId());
         }
 

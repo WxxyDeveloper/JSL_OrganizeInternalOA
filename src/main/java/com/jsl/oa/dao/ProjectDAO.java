@@ -2,7 +2,7 @@ package com.jsl.oa.dao;
 import com.google.gson.Gson;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.model.dodata.ProjectDO;
-import com.jsl.oa.model.dodata.ProjectWorkDO;
+import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.dodata.info.ProjectShowDO;
 import com.jsl.oa.model.vodata.ProjectEditVO;
 import com.jsl.oa.model.vodata.ProjectInfoVO;
@@ -35,7 +35,7 @@ public class ProjectDAO {
     }
 
     public void projectWorkAdd(ProjectWorkVO projectWorkVO) {
-        log.info("\t> 执行 DAO 层 ProjectDAO.projecWorktAdd 方法");
+        log.info("\t> 执行 DAO 层 ProjectDAO.projectWorkAdd 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         projectMapper.projectWorkAdd(projectWorkVO);
     }
@@ -115,7 +115,7 @@ public class ProjectDAO {
         return projectMapper.getProjectById(id);
     }
 
-    public List<ProjectDO> get(Long userId, Integer listAll, List<String> tags, List<Integer> isFinish) {
+    public List<ProjectDO> get(Long userId, List<String> tags, List<String> isFinish) {
         log.info("\t> 执行 DAO 层 ProjectDAO.get 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         if (tags != null && !tags.isEmpty()) {
@@ -128,16 +128,12 @@ public class ProjectDAO {
             return projectMapper.getByIsfinish(userId, isFinish);
         }
 
-        if (listAll == 0) {
-            return projectMapper.get(userId);
-        } else {
-            return projectMapper.get1(userId);
-        }
+        return projectMapper.get(userId);
+
     }
 
-    public List<ProjectDO> workget(Long userId, Integer listAll,
-                                   List<String> tags, List<Integer> isFinish, Integer is) {
-        log.info("\t> 执行 DAO 层 ProjectDAO.workget 方法");
+    public List<ProjectDO> workget(Long userId, List<String> tags, List<String> isFinish, Integer is) {
+        log.info("\t> 执行 DAO 层 ProjectDAO.workGet 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         if (tags != null && !tags.isEmpty()) {
             return projectMapper.workgetByTags(userId, tags, is, isFinish);
@@ -146,12 +142,8 @@ public class ProjectDAO {
         if (isFinish != null && !isFinish.isEmpty()) {
             return projectMapper.workgetByIsfinish(userId, isFinish, is);
         }
+        return projectMapper.workget(userId, is);
 
-        if (listAll == 0) {
-            return projectMapper.workget(userId, is);
-        } else {
-            return projectMapper.workget1(userId, is);
-        }
     }
 
     public ProjectDO getByName(String name) {
@@ -181,7 +173,7 @@ public class ProjectDAO {
     }
 
 
-    public List<ProjectDO> tget(Integer id, List<Integer> isFinish, List<String> tags) {
+    public List<ProjectDO> tget(List<String> isFinish, List<String> tags) {
         log.info("DAO层tget");
 
         if (tags != null && !tags.isEmpty()) {
@@ -191,11 +183,10 @@ public class ProjectDAO {
         if (isFinish != null && !isFinish.isEmpty()) {
             return projectMapper.tgetByIsfinish(isFinish);
         }
-
-        return projectMapper.tget(id);
+        return projectMapper.getAllProject();
     }
 
-    public ProjectWorkDO getProjectWorkerById(Long id) {
+    public ProjectModuleDO getProjectWorkerById(Long id) {
         return projectMapper.getProjectWorkById(id);
     }
 
@@ -205,13 +196,13 @@ public class ProjectDAO {
         return projectMapper.getProjectByPrincipalUser(uid);
     }
 
-    public List<ProjectWorkDO> getAllSubsystemByUserId(Long uid) {
+    public List<ProjectModuleDO> getAllSubsystemByUserId(Long uid) {
         log.info("\t> 执行 DAO 层 ProjectDAO.getAllSubsystemByUserId 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         return projectMapper.getAllSubsystemByUserId(uid);
     }
 
-    public List<ProjectWorkDO> getAllSubmoduleByUserId(Long uid) {
+    public List<ProjectModuleDO> getAllSubmoduleByUserId(Long uid) {
         log.info("\t> 执行 DAO 层 ProjectDAO.getAllSubmoduleByUserId 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         return projectMapper.getAllSubmoduleByUserId(uid);
