@@ -85,7 +85,7 @@ public class ProjectServiceImpl implements ProjectService {
         //是否是增加子系统
         if (projectWorkVO.getType() == 0) {
             //是否是老师
-            if (Processing.checkUserIsTeacher(request, roleDAO)) {
+            if (Processing.checkUserIsPrincipal(request, roleDAO)) {
                 projectDAO.projectWorkAdd(projectWorkVO);
             } else {
                 return ResultUtil.error(ErrorCode.NOT_PERMISSION);
@@ -201,7 +201,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
         //判断用户是否为老师 或者 项目负责人
-        if (!Processing.checkUserIsTeacher(request, roleDAO)
+        if (!Processing.checkUserIsPrincipal(request, roleDAO)
                 || !projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), projectId)) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
@@ -345,7 +345,7 @@ public class ProjectServiceImpl implements ProjectService {
     public BaseResponse projectDelete(HttpServletRequest request, List<Long> id) {
 
         //判断用户是否为老师 或者 项目负责人
-        if (!Processing.checkUserIsTeacher(request, roleDAO)) {
+        if (!Processing.checkUserIsPrincipal(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
 

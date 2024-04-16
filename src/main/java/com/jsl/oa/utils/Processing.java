@@ -167,10 +167,10 @@ public class Processing {
      * @param request    请求
      * @return 如果为 true 是管理员，false 不是管理员
      */
-    public static @NotNull Boolean checkUserIsAdmin(HttpServletRequest request, @NotNull RoleDAO roleDAO) {
+    public static @NotNull Boolean checkUserIsConsole(HttpServletRequest request, @NotNull RoleDAO roleDAO) {
         RoleUserDO roleUserDO = roleDAO.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
         if (roleUserDO != null) {
-            RoleDO roleDO = roleDAO.getRoleByRoleName("admin");
+            RoleDO roleDO = roleDAO.getRoleByRoleName("console");
             return roleUserDO.getRid().equals(roleDO.getId());
         } else {
             return false;
@@ -183,10 +183,10 @@ public class Processing {
      * @param request    请求
      * @return 如果为 true 是老师，false 不是老师
      */
-    public static @NotNull Boolean checkUserIsTeacher(HttpServletRequest request, @NotNull RoleDAO roleDAO) {
+    public static @NotNull Boolean checkUserIsPrincipal(HttpServletRequest request, @NotNull RoleDAO roleDAO) {
         RoleUserDO roleUserDO = roleDAO.getRoleUserByUid(Processing.getAuthHeaderToUserId(request));
         if (roleUserDO != null) {
-            RoleDO roleDO = roleDAO.getRoleByRoleName("teacher");
+            RoleDO roleDO = roleDAO.getRoleByRoleName("principal");
             return roleUserDO.getRid().equals(roleDO.getId());
         } else {
             return false;
