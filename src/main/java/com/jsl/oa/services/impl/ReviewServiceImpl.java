@@ -45,8 +45,6 @@ public class ReviewServiceImpl implements ReviewService {
     public BaseResponse getUserPendingApprovalReview(Integer page,
                                                      Integer pageSize,
                                                      HttpServletRequest request) {
-        log.info("\t> 执行 Service 层 ReviewService.getUserPendingApprovalReview 方法");
-
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
 
@@ -119,7 +117,6 @@ public class ReviewServiceImpl implements ReviewService {
     public BaseResponse getUserReview(Integer page,
                                       Integer pageSize,
                                       HttpServletRequest request) {
-        log.info("\t> 执行 Service 层 ReviewService.getUserReview 方法");
 
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
@@ -185,7 +182,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public BaseResponse addReview(ReviewAddVO reviewAddVO, HttpServletRequest request) {
-        log.info("\t> 执行 Service 层 ReviewService.addReview 方法");
 
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);

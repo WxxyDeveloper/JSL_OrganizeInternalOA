@@ -29,73 +29,52 @@ public class ReviewDAO {
 
 
     public List<ReviewDO> selectAllReviewFromProject(Long projectId) {
-        log.info("\t> 执行 DAO 层 ReviewDAO.selectAllReviewFromProject 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return reviewMapper.selectAllReviewFromProject(projectId);
     }
 
     public List<ReviewDO> selectApprovedResultReviewFromProject(Long projectId,
                                                                 short result) {
-        log.info("\t> 执行 DAO 层 ReviewDAO.selectApprovedResultReviewFromProject 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return reviewMapper.selectApprovedResultReviewFromProject(projectId,
                 result);
     }
 
     public List<ReviewDO> selectReviewFromSubsystem(Long subsystemId) {
-        log.info("\t> 执行 DAO 层 ReviewDAO.selectReviewFromSubsystem 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return reviewMapper.selectReviewFromSubsystem(subsystemId);
     }
 
     public List<ReviewDO> selectApprovedResultReviewsFromSubsystem(Long subsystemId,
                                                                    short result) {
-        log.info("\t> 执行 DAO 层 ReviewDAO.selectApprovedResultReviewsFromSubsystem 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return reviewMapper.selectApprovedResultReviewsFromSubsystem(subsystemId,
                 result);
     }
 
     public List<ReviewDO> selectReviewFromSubmodule(Long submoduleId) {
-        log.info("\t> 执行 DAO 层 ReviewDAO.selectReviewFromSubmodule 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return reviewMapper.selectReviewFromSubmodule(submoduleId);
     }
 
     public List<ReviewDO> selectApprovedResultReviewsFromSubModule(Long id,
                                                                    short result) {
-        log.info("\t> 执行 DAO 层 ReviewDAO.selectApprovedResultReviewsFromSubModule 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return reviewMapper.selectApprovedResultReviewFromModule(id,
                 result);
     }
 
 
     public void addReview(ReviewDO reviewDO) {
-        log.info("\t> 执行 DAO 层 ReviewDAO.addReview 方法");
-        log.info("\t\t> 从 MySQL 插入数据");
         reviewMapper.addReview(reviewDO);
     }
 
     public ReviewDO selectReviewById(Long id) {
-        log.info("\t> 执行 DAO 层 ReviewDAO.selectReviewById 方法");
-        log.info("\t\t> 从 MySQL 获取数据");
         return reviewMapper.selectReviewById(id);
     }
 
     public void updateReview(ReviewDO  reviewDO) {
-        log.info("\t> 执行 DAO 层 ReviewDAO.updateReview 方法");
-        log.info("\t\t> 从 MySQL 更新数据");
         reviewMapper.updateReview(reviewDO);
     }
 
 
     public String getNameByModule(Integer subId) {
 
-        log.info("\t> 执行 DAO 层 ReviewDAO.getNameBySubproject 方法");
-
         if (subId != null) {
-            log.info("\t\t> 从 MySQL 获取数据");
             return projectMapper.getModuleById(subId).getName();
         }
 

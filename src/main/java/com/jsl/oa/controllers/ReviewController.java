@@ -54,7 +54,6 @@ public class ReviewController {
     public BaseResponse getMyReview(@RequestParam Integer page,
                                     @RequestParam Integer pageSize,
                                     HttpServletRequest request) {
-        log.info("请求接口[GET]: /review/getMyReview");
         return reviewService.getUserPendingApprovalReview(page, pageSize, request);
     }
 
