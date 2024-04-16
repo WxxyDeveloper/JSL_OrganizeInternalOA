@@ -25,11 +25,11 @@
             <if test="projectId != null">
                 project_id,
             </if>
-            <if test="projectSubsystemId != null">
-                project_subsystem_id,
+            <if test="projectChildId != null">
+                project_child_id,
             </if>
-            <if test="projectSubmoduleId != null">
-                project_submodule_id,
+            <if test="projectModuleId != null">
+                project_module_id,
             </if>
             <if test="applicationTime != null">
                 application_time,
@@ -63,11 +63,11 @@
             <if test="projectId != null">
                 #{projectId},
             </if>
-            <if test="projectSubsystemId != null">
-                #{projectSubsystemId},
+            <if test="projectChildId != null">
+                #{projectChildId},
             </if>
-            <if test="projectSubmoduleId != null">
-                #{projectSubmoduleId},
+            <if test="projectModuleId != null">
+                #{projectModuleId},
             </if>
             <if test="applicationTime != null">
                 #{applicationTime},
@@ -112,12 +112,12 @@
                     project_id = #{projectId},
                 </if>
 
-                <if test="projectSubsystemId != null">
-                    project_subsystem_id = #{projectSubsystemId},
+                <if test="projectChildId != null">
+                    project_child_id = #{projectChildId},
                 </if>
 
-                <if test="projectSubmoduleId != null">
-                    project_submodule_id = #{projectSubmoduleId},
+                <if test="projectModuleId != null">
+                    project_module_id = #{projectModuleId},
                 </if>
 
                 <if test="applicationTime != null">

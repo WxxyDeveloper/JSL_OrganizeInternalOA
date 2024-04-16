@@ -35,9 +35,9 @@ public class ReviewDO {
     //申请的项目id
     private Long projectId;
     //申请的子系统id
-    private Long projectSubsystemId;
+    private Long projectChildId;
     //申请的子模块id
-    private Long projectSubmoduleId;
+    private Long projectModuleId;
     //申请时间
     private Date applicationTime;
     //审核时间

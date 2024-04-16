@@ -27,7 +27,7 @@ import javax.validation.constraints.NotNull;
 @RequiredArgsConstructor
 public class ReviewController {
 
-//    审核服务
+    //    审核服务
     private final ReviewService reviewService;
 
     /**
@@ -36,9 +36,12 @@ public class ReviewController {
      * @Param request:
      **/
     @GetMapping("/review/getReviewRecords")
-    public BaseResponse getUserReviewRecords(HttpServletRequest request) {
+    public BaseResponse getUserReviewRecords(
+            @RequestParam Integer page,
+            @RequestParam Integer pageSize,
+            HttpServletRequest request) {
         log.info("请求接口[GET]: /review/getMyReview");
-        return reviewService.getUserReview(request);
+        return reviewService.getUserReview(page, pageSize, request);
     }
 
 
@@ -48,9 +51,11 @@ public class ReviewController {
      * @Param request:
      **/
     @GetMapping("/review/getMyReview")
-    public BaseResponse getMyReview(HttpServletRequest request) {
+    public BaseResponse getMyReview(@RequestParam Integer page,
+                                    @RequestParam Integer pageSize,
+                                    HttpServletRequest request) {
         log.info("请求接口[GET]: /review/getMyReview");
-        return reviewService.getUserPendingApprovalReview(request);
+        return reviewService.getUserPendingApprovalReview(page, pageSize, request);
     }
 
 
@@ -73,7 +78,6 @@ public class ReviewController {
     }
 
 
-
     @PutMapping("/review/updateReview")
     public BaseResponse updateReview(@RequestBody @Validated ReviewUpdateResultVO reviewUpdateResultVOVO,
                                      @NotNull BindingResult bindingResult,
@@ -86,8 +90,6 @@ public class ReviewController {
 
         return reviewService.updateReviewResult(reviewUpdateResultVOVO, request);
     }
-
-
 
 
 }

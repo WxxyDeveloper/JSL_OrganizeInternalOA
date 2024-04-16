@@ -1,6 +1,7 @@
 package com.jsl.oa.dao;
 import com.google.gson.Gson;
 import com.jsl.oa.mapper.ProjectMapper;
+import com.jsl.oa.model.dodata.ProjectChildDO;
 import com.jsl.oa.model.dodata.ProjectDO;
 import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.dodata.info.ProjectShowDO;
@@ -193,19 +194,19 @@ public class ProjectDAO {
     public List<ProjectDO> getProjectByPrincipalUser(Long uid) {
         log.info("\t> 执行 DAO 层 ProjectDAO.getProjectFromUser 方法");
         log.info("\t\t> 从 MySQL 获取数据");
-        return projectMapper.getProjectByPrincipalUser(uid);
+        return projectMapper.getAllProjectByUserId(uid);
     }
 
-    public List<ProjectModuleDO> getAllSubsystemByUserId(Long uid) {
-        log.info("\t> 执行 DAO 层 ProjectDAO.getAllSubsystemByUserId 方法");
+    public List<ProjectChildDO> getAllProjectChildByUId(Long uid) {
+        log.info("\t> 执行 DAO 层 ProjectDAO.getAllProjectChildByUId 方法");
         log.info("\t\t> 从 MySQL 获取数据");
-        return projectMapper.getAllSubsystemByUserId(uid);
+        return projectMapper.getAllChildProjectByUserId(uid);
     }
 
-    public List<ProjectModuleDO> getAllSubmoduleByUserId(Long uid) {
-        log.info("\t> 执行 DAO 层 ProjectDAO.getAllSubmoduleByUserId 方法");
+    public List<ProjectModuleDO> getAllModuleByUId(Long uid) {
+        log.info("\t> 执行 DAO 层 ProjectDAO.getAllModuleByUId 方法");
         log.info("\t\t> 从 MySQL 获取数据");
-        return projectMapper.getAllSubmoduleByUserId(uid);
+        return projectMapper.getAllModuleByUserId(uid);
     }
 
 }

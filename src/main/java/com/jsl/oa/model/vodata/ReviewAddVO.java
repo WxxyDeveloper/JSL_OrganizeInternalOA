@@ -20,9 +20,9 @@ public class ReviewAddVO {
     private Long projectId;
     //申请的子系统id
     @NotNull(message = "子系统id不能为空")
-    private Long projectSubsystemId;
+    private Long projectChildId;
     //申请的子模块id
-    private Long projectSubmoduleId;
+    private Long projectModuleId;
 
 }
 

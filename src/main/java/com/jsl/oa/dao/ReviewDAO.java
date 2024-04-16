@@ -62,6 +62,15 @@ public class ReviewDAO {
         return reviewMapper.selectReviewFromSubmodule(submoduleId);
     }
 
+    public List<ReviewDO> selectApprovedResultReviewsFromSubModule(Long id,
+                                                                   short result) {
+        log.info("\t> 执行 DAO 层 ReviewDAO.selectApprovedResultReviewsFromSubModule 方法");
+        log.info("\t\t> 从 MySQL 获取数据");
+        return reviewMapper.selectApprovedResultReviewFromModule(id,
+                result);
+    }
+
+
     public void addReview(ReviewDO reviewDO) {
         log.info("\t> 执行 DAO 层 ReviewDAO.addReview 方法");
         log.info("\t\t> 从 MySQL 插入数据");
@@ -81,13 +90,13 @@ public class ReviewDAO {
     }
 
 
-    public String getNameBySubproject(Long subId) {
+    public String getNameByModule(Integer subId) {
 
         log.info("\t> 执行 DAO 层 ReviewDAO.getNameBySubproject 方法");
 
         if (subId != null) {
             log.info("\t\t> 从 MySQL 获取数据");
-            return projectMapper.getProjectWorkById(subId).getName();
+            return projectMapper.getModuleById(subId).getName();
         }
 
         if (subId == null) {

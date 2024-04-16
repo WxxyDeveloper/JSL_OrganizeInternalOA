@@ -69,7 +69,7 @@ public class ModuleServiceImpl implements ModuleService {
             Processing.copyProperties(projectWorkDO, projectWorkAndNameVO);
 //        添加负责人和子系统名称
             projectWorkAndNameVO.
-                    setChildSystemName(projectDAO.getProjectWorkerById(projectWorkDO.getPid()).getName())
+                    setChildSystemName(projectDAO.getProjectWorkerById(projectWorkDO.getProjectChildId()).getName())
                     .setPrincipalUser(userDAO.getUserById(projectWorkDO.getPrincipalId()).getUsername());
 
             projectWorkAndNameVOS.add(projectWorkAndNameVO);

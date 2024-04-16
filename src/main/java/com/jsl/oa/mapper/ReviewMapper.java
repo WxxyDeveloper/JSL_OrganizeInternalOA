@@ -18,17 +18,21 @@ public interface ReviewMapper {
     List<ReviewDO> selectApprovedResultReviewFromProject(Long projectId, short result);
 
     @Select("SELECT * FROM organize_oa.oa_review WHERE "
-            + "project_subsystem_id = #{subsystemId} AND is_delete = 0")
-    List<ReviewDO> selectReviewFromSubsystem(Long subsystemId);
+            + "project_child_id = #{childId} AND is_delete = 0")
+    List<ReviewDO> selectReviewFromSubsystem(Long childId);
 
     @Select("SELECT * FROM organize_oa.oa_review WHERE "
-            + "project_subsystem_id = #{subsystemId} "
+            + "project_child_id = #{childId} "
             + "AND is_delete = 0 AND review_result = #{result}")
-    List<ReviewDO> selectApprovedResultReviewsFromSubsystem(Long subsystemId, short result);
+    List<ReviewDO> selectApprovedResultReviewsFromSubsystem(Long childId, short result);
 
     @Select("SELECT * FROM organize_oa.oa_review WHERE "
-            + "project_submodule_id = #{subsystemId} AND is_delete = 0")
-    List<ReviewDO> selectReviewFromSubmodule(Long submoduleId);
+            + "project_module_id = #{moduleId} AND is_delete = 0")
+    List<ReviewDO> selectReviewFromSubmodule(Long moduleId);
+
+    @Select("SELECT * FROM organize_oa.oa_review WHERE review_result = #{result} and "
+            + "project_module_id = #{moduleId} AND is_delete = 0")
+    List<ReviewDO> selectApprovedResultReviewFromModule(Long moduleId, short result);
 
     @Select("SELECT * FROM  organize_oa.oa_review WHERE id = #{id} AND is_delete = 0")
     ReviewDO selectReviewById(Long id);

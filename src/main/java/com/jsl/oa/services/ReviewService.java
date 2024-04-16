@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface ReviewService {
 
-    BaseResponse getUserPendingApprovalReview(HttpServletRequest request);
+    BaseResponse getUserPendingApprovalReview(Integer page, Integer pageSize, HttpServletRequest request);
 
-    BaseResponse getUserReview(HttpServletRequest request);
+    BaseResponse getUserReview(Integer page, Integer pageSize, HttpServletRequest request);
 
     BaseResponse addReview(ReviewAddVO reviewAddVO, HttpServletRequest request);
 
