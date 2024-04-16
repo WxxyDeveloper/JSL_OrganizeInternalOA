@@ -26,6 +26,8 @@ public class MessageDO {
     private String title;
     private String text;
     private Integer isDelete;
+    private String type;
+    private Long toId;
     private Timestamp createdAt;
     private Timestamp deletedAt;
 

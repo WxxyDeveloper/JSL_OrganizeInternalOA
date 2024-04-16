@@ -126,7 +126,7 @@ public interface ProjectMapper {
 
 
     @Select("select * from organize_oa.oa_project_child where "
-            + "DATE (created_at) = DATE (#{threeDaysLater}) and status = 0")
+            + "DATE (created_at) = DATE (#{threeDaysLater}) ")
     List<ProjectChildDO> getProjectChildByTime(LocalDateTime threeDaysLater);
 
 

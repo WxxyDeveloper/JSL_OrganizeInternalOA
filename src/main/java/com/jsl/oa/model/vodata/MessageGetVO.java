@@ -9,9 +9,12 @@ import java.sql.Timestamp;
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessageGetVO {
+    private Long id;
     private String text;
     private String title;
     private Timestamp createdAt;
     private String senderName;
+    private String type;
+    private Long toId;
 
 }

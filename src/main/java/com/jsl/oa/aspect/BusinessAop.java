@@ -94,7 +94,9 @@ public class BusinessAop {
         }
         Object result = pjp.proceed();
         log.info("<==[DAO] 返回数据类型 {}", declaringType.descriptorString());
-        log.debug("\t> 传出信息：{}", result.toString());
+        if (result != null) {
+            log.debug("\t> 传出信息：{}", result);
+        }
         return result;
     }
 }

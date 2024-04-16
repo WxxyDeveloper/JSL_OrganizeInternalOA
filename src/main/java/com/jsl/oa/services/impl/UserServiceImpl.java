@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService {
                     if (roleUserDO == null) {
                         return ResultUtil.error(ErrorCode.NOT_PERMISSION);
                     }
-                    RoleDO roleDO = roleDAO.getRoleByRoleName("admin");
+                    RoleDO roleDO = roleDAO.getRoleByRoleName("console");
                     if (!roleUserDO.getRid().equals(roleDO.getId())) {
                         return ResultUtil.error(ErrorCode.NOT_PERMISSION);
                     }
