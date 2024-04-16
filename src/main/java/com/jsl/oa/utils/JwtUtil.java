@@ -54,10 +54,10 @@ public class JwtUtil {
         try {
             Long getTokenInUserId = getUserId(token);
             // 验证用户名是否匹配
-            log.info("令牌用户主键：" + getTokenInUserId.toString());
+            log.info("[FILTER] 令牌用户主键：{}", getTokenInUserId.toString());
             return Pattern.matches("^[0-9]+$", getTokenInUserId.toString());
         } catch (Exception e) {
-            log.info("令牌错误或失效");
+            log.info("[FILTER] 令牌错误或失效");
             return false;
         }
     }

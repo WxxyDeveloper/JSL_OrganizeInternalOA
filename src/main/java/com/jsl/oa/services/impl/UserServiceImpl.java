@@ -1,6 +1,5 @@
 package com.jsl.oa.services.impl;
 
-import com.jsl.oa.annotations.NeedRoleGroup;
 import com.jsl.oa.annotations.UserAbleToUse;
 import com.jsl.oa.dao.PermissionDAO;
 import com.jsl.oa.dao.RoleDAO;
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
     public BaseResponse userDelete(HttpServletRequest request, Long id) {
         //判断用户是否存在
         if (userDAO.isExistUser(id)) {
-            if (!Processing.checkUserIsAdmin(request, roleDAO)) {
+            if (!Processing.checkUserIsConsole(request, roleDAO)) {
                 return ResultUtil.error(ErrorCode.NOT_ADMIN);
             }
             // 用户是否已删除
@@ -71,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResponse userLock(HttpServletRequest request, Long id, Long isLock) {
-        if (!Processing.checkUserIsAdmin(request, roleDAO)) {
+        if (!Processing.checkUserIsConsole(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         //判断用户是否存在
@@ -94,7 +93,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @NeedRoleGroup("user.current.all")
     public BaseResponse userCurrentAll(HttpServletRequest request, @NotNull UserAllCurrentVO userAllCurrentVO) {
         // 检查数据
         if (userAllCurrentVO.getPage() == null || userAllCurrentVO.getPage() < 1) {
@@ -189,7 +187,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseResponse userAdd(UserAddVO userAddVo, HttpServletRequest request) {
         // 检测用户是否为管理员
-        if (!Processing.checkUserIsAdmin(request, roleDAO)) {
+        if (!Processing.checkUserIsConsole(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         //如果用户不重复，添加用户
@@ -226,7 +224,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseResponse userEdit(UserEditVO userEditVO, HttpServletRequest request) {
         // 检测用户是否为管理员
-        if (!Processing.checkUserIsAdmin(request, roleDAO)) {
+        if (!Processing.checkUserIsConsole(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         //根据id获取用户信息

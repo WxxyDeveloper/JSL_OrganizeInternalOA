@@ -127,7 +127,7 @@ public class InfoServiceImpl implements InfoService {
     @NeedRoleGroup("info.image.del")
     public BaseResponse delHeaderImage(HttpServletRequest request, Integer id) {
         // 用户权限校验
-        if (!Processing.checkUserIsAdmin(request, roleDAO)) {
+        if (!Processing.checkUserIsConsole(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         // 获取轮播图信息
@@ -149,7 +149,7 @@ public class InfoServiceImpl implements InfoService {
     @NeedRoleGroup("info.image.setting.edit")
     public BaseResponse editSettingHeaderImage(HttpServletRequest request, Boolean showType) {
         // 用户权限校验
-        if (!Processing.checkUserIsAdmin(request, roleDAO)) {
+        if (!Processing.checkUserIsConsole(request, roleDAO)) {
             return ResultUtil.error(ErrorCode.NOT_ADMIN);
         }
         // 获取轮播图信息
