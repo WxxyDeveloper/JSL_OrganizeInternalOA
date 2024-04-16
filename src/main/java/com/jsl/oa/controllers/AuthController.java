@@ -178,8 +178,7 @@ public class AuthController {
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return authService.
-                authChangePassword((UserChangePasswordVO) request, (HttpServletRequest) userChangePasswordVO);
+        return authService.authChangePassword(userChangePasswordVO, request);
     }
 
     /**
