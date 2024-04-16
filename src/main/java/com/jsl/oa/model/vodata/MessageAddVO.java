@@ -13,6 +13,6 @@ public class MessageAddVO {
     private Long uid;
     private Long sid;
     private String type;
-    private Integer toId;
+    private Long toId;
 
 }

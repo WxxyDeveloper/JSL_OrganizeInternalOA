@@ -1,6 +1,4 @@
 package com.jsl.oa.services.impl;
-
-import com.jsl.oa.annotations.UserAbleToUse;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.MessageMapper;
 import com.jsl.oa.mapper.ProjectMapper;
@@ -39,7 +37,7 @@ public class MessageServiceImpl implements MessageService {
     private final ProjectMapper projectMapper;
 
     @Override
-    @UserAbleToUse
+
     public BaseResponse messageDelete(Long mid, HttpServletRequest request) {
         //获取消息数据
         MessageDO messageDO = messageMapper.getMessageById(mid);
@@ -57,7 +55,7 @@ public class MessageServiceImpl implements MessageService {
 
     @SuppressWarnings("checkstyle:Regexp")
     @Override
-    @UserAbleToUse
+
     public BaseResponse messageGet(LocalDateTime beginTime,
                                    LocalDateTime endTime,
                                    Integer page,
@@ -73,11 +71,18 @@ public class MessageServiceImpl implements MessageService {
         List<MessageGetVO> messageGetVOList = new ArrayList<>();
         for (MessageDO messageDO : messageDOList) {
             MessageGetVO messageGetVO1 = new MessageGetVO();
+            messageGetVO1.setId(messageDO.getId());
             messageGetVO1.setText(messageDO.getText());
             messageGetVO1.setTitle(messageDO.getTitle());
             messageGetVO1.setCreatedAt(messageDO.getCreatedAt());
             if (messageDO.getSid() != null) {
                 messageGetVO1.setSenderName(userDAO.getUserById(messageDO.getSid()).getUsername());
+            }
+            if (messageDO.getToId() != null) {
+                messageGetVO1.setToId(messageDO.getToId());
+            }
+            if (messageDO.getType() != null) {
+                messageGetVO1.setType(messageDO.getType());
             }
             messageGetVOList.add(messageGetVO1);
         }
@@ -123,7 +128,7 @@ public class MessageServiceImpl implements MessageService {
             String moddleName = projectMapper.getModuleById(moddleId).getName();
             messageAddVO.setText(senderName + "指派了" + projectName + "项目的" + systemName + "子系统的" + moddleName + "子模块给您");
         }
-        messageAddVO.setType("跳转审批页");
+        messageAddVO.setType("Review");
         messageMapper.messageAdd(messageAddVO);
     }
 
@@ -159,7 +164,7 @@ public class MessageServiceImpl implements MessageService {
         } else {
             messageAddVO.setText("您申请的" + projectName + "项目的" + systemName + "系统的" + moddleName + "模块负责人未通过");
         }
-        messageAddVO.setType("消息详情");
+        messageAddVO.setType("Message");
         messageMapper.messageAdd(messageAddVO);
     }
 
@@ -195,8 +200,8 @@ public class MessageServiceImpl implements MessageService {
             } else if (type == 1) {
                 messageAddVO.setText("项目负责人" + senderName + "上传了文档到" + projectName + "项目");
             }
-            messageAddVO.setType("跳转项目页");
-            messageAddVO.setToId(pId);
+            messageAddVO.setType("Project");
+            messageAddVO.setToId(pId.longValue());
             messageMapper.messageAdd(messageAddVO);
         }
     }
@@ -244,8 +249,8 @@ public class MessageServiceImpl implements MessageService {
                     messageAddVO.setText("项目经理" + senderName + "修改了" + projectName + "项目的"
                             + systemName + "系统的系统周期/工作量");
                 }
-                messageAddVO.setType("跳转系统页");
-                messageAddVO.setToId(systmeId);
+                messageAddVO.setType("Project_child");
+                messageAddVO.setToId(systmeId.longValue());
                 messageMapper.messageAdd(messageAddVO);
             }
         }
@@ -308,8 +313,8 @@ public class MessageServiceImpl implements MessageService {
                 String moddleName = projectWorkDO.getName();
                 messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统的" + moddleName + "模块"
                         + "还有七天就要到期了，请及时处理");
-                messageAddVO.setType("跳转模块页");
-                messageAddVO.setToId(projectWorkDO.getId().intValue());
+                messageAddVO.setType("Project_module");
+                messageAddVO.setToId(projectWorkDO.getId());
                 messageMapper.messageAdd(messageAddVO);
             }
         }
@@ -327,8 +332,8 @@ public class MessageServiceImpl implements MessageService {
                 String moddleName = projectWorkDO.getName();
                 messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统的" + moddleName + "模块"
                         + "还有三天就要到期了，请及时处理");
-                messageAddVO.setType("跳转模块页");
-                messageAddVO.setToId(projectWorkDO.getId().intValue());
+                messageAddVO.setType("Project_module");
+                messageAddVO.setToId(projectWorkDO.getId());
                 messageMapper.messageAdd(messageAddVO);
             }
         }
@@ -344,8 +349,8 @@ public class MessageServiceImpl implements MessageService {
                 String projectName = projectMapper.tgetProjectById(projectChildDO.getProjectId().intValue()).getName();
                 String systemName = projectChildDO.getName();
                 messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统还有七天就要到期了，请及时处理");
-                messageAddVO.setType("跳转系统页");
-                messageAddVO.setToId(projectChildDO.getId().intValue());
+                messageAddVO.setType("Project_child");
+                messageAddVO.setToId(projectChildDO.getId());
                 messageMapper.messageAdd(messageAddVO);
             }
         }
@@ -360,8 +365,8 @@ public class MessageServiceImpl implements MessageService {
                 String projectName = projectMapper.tgetProjectById(projectChildDO.getProjectId().intValue()).getName();
                 String systemName = projectChildDO.getName();
                 messageAddVO.setText("您负责的" + projectName + "项目的" + systemName + "系统还有三天就要到期了，请及时处理");
-                messageAddVO.setType("跳转系统页");
-                messageAddVO.setToId(projectChildDO.getId().intValue());
+                messageAddVO.setType("Project_child");
+                messageAddVO.setToId(projectChildDO.getId());
                 messageMapper.messageAdd(messageAddVO);
             }
 
