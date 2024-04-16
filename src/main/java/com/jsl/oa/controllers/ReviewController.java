@@ -92,6 +92,15 @@ public class ReviewController {
     }
 
 
+    @GetMapping("/review/search")
+    public BaseResponse searchReview(String content,
+                                     Short statue,
+                                     HttpServletRequest request,
+                                     @RequestParam Integer page,
+                                     @RequestParam Integer pageSize) {
+        log.info("请求接口[GET]: /review/search");
+        return reviewService.searchReview(content, statue, request, page, pageSize);
+    }
 }
 
 

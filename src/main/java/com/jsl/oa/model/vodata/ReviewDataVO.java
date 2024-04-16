@@ -10,7 +10,7 @@ public class ReviewDataVO {
 
     private Integer dataTotal;
 
-    private List<ReviewVO> data;
+    private List<ReviewVO> reviews;
 }
 
 

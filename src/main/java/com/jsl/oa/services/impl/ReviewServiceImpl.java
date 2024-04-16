@@ -1,6 +1,8 @@
 package com.jsl.oa.services.impl;
 
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jsl.oa.common.constant.ReviewConstants;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.ReviewDAO;
@@ -12,6 +14,7 @@ import com.jsl.oa.model.dodata.ProjectDO;
 import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.dodata.ReviewDO;
 import com.jsl.oa.model.vodata.ReviewAddVO;
+import com.jsl.oa.model.vodata.ReviewDataVO;
 import com.jsl.oa.model.vodata.ReviewUpdateResultVO;
 import com.jsl.oa.model.vodata.ReviewVO;
 import com.jsl.oa.services.ReviewService;
@@ -107,7 +110,13 @@ public class ReviewServiceImpl implements ReviewService {
         //封装对应VO类
         List<ReviewVO> result = encapsulateArrayClass(reviewData);
 
-        return ResultUtil.success(result);
+        //封装结果类与数据总数
+        int total = result.size();
+        ReviewDataVO reviewDataVO = new ReviewDataVO();
+        reviewDataVO.setReviews(result);
+        reviewDataVO.setDataTotal(total);
+
+        return ResultUtil.success(reviewDataVO);
     }
 
 
@@ -172,7 +181,13 @@ public class ReviewServiceImpl implements ReviewService {
         //封装对应VO类
         List<ReviewVO> result = encapsulateArrayClass(reviewData);
 
-        return ResultUtil.success(result);
+        //封装结果类与数据总数
+        int total = result.size();
+        ReviewDataVO reviewDataVO = new ReviewDataVO();
+        reviewDataVO.setReviews(result);
+        reviewDataVO.setDataTotal(total);
+
+        return ResultUtil.success(reviewDataVO);
     }
 
 
@@ -229,6 +244,116 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
 
+
+    @Override
+    public BaseResponse searchReview(String content,
+                                     Short statue,
+                                     HttpServletRequest request,
+                                     Integer page, Integer pageSize) {
+
+        List<ReviewVO> reviewVOS = new ArrayList<>();
+
+//        根据判断结果筛选
+        if (statue == null || statue.equals("")) {
+            List<ReviewVO> reviewVOs = getReview(request);
+            reviewVOS.addAll(reviewVOs);
+        } else {
+            List<ReviewVO> reviewVOs = getReviewsByResult(request, statue);
+            reviewVOS.addAll(reviewVOs);
+        }
+
+//         根据内容筛选
+        if (content == null || content.equals("")) {
+            // 使用PageHelper进行分页
+            PageHelper.startPage(page, pageSize);
+            PageInfo<ReviewVO> pageInfo1 = new PageInfo<>(reviewVOS);
+            int total = reviewVOS.size();
+            ReviewDataVO reviewDataVO = new ReviewDataVO();
+            reviewDataVO.setReviews(pageInfo1.getList());
+            reviewDataVO.setDataTotal(total);
+            return ResultUtil.success(reviewDataVO);
+        } else {
+            reviewVOS = reviewVOS.stream()
+                    .filter(reviewVO -> reviewVO.getName().contains(content) || reviewVO.getContent().contains(content))
+                    .collect(Collectors.toList());
+        }
+
+        // 使用PageHelper进行分页
+        PageHelper.startPage(page, pageSize);
+        PageInfo<ReviewVO> pageInfo = new PageInfo<>(reviewVOS);
+
+
+        //封装结果类与数据总数
+        int total = (int) pageInfo.getTotal();
+        ReviewDataVO reviewDataVO = new ReviewDataVO();
+        reviewDataVO.setReviews(pageInfo.getList());
+        reviewDataVO.setDataTotal(total);
+
+        return ResultUtil.success(reviewDataVO);
+    }
+
+
+
+    private List<ReviewVO> getReview(HttpServletRequest request) {
+        //获取用户
+        Long userId = Processing.getAuthHeaderToUserId(request);
+
+        //存储审核数据的数组
+        List<ReviewDO> reviewData = new ArrayList<>();
+
+        //先获取用户为项目负责人的项目列表
+        projectDAO.getProjectByPrincipalUser(userId);
+
+        //先从用户为 项目负责人 的项目中获取对应 审核信息
+        for (ProjectDO projectDO : projectDAO.getProjectByPrincipalUser(userId)) {
+            //查询每个项目下所有的审核信息
+            List<ReviewDO> reviewDOS = reviewDAO.
+                    selectAllReviewFromProject(projectDO.getId());
+            //封装VO类
+            reviewData.addAll(reviewDOS);
+        }
+
+        //在从用户为 子系统负责人 的项目中获取对应 审核信息
+        for (ProjectChildDO projectChildDO : projectDAO.getAllProjectChildByUId(userId)) {
+            //查询每个项目下所有的审核信息
+            List<ReviewDO> reviewDOS = reviewDAO.
+                    selectReviewFromSubsystem(projectChildDO.getId());
+            //封装VO类
+            reviewData.addAll(reviewDOS);
+        }
+
+
+        //在从用户为 子模块负责人 的项目中获取对应 审核信息
+        for (ProjectModuleDO projectModuleDO : projectDAO.getAllModuleByUId(userId)) {
+            //查询每个项目下所有的审核信息
+            List<ReviewDO> reviewDOS = reviewDAO.
+                    selectReviewFromSubmodule(projectModuleDO.getId());
+            //封装VO类
+            reviewData.addAll(reviewDOS);
+        }
+
+        //根据id进行去重
+        reviewData = reviewData.stream()
+                .collect(Collectors.toMap(ReviewDO::getId, review -> review, (existing, replacement) -> existing))
+                .values()
+                .stream()
+                .collect(Collectors.toList());
+
+        //按照申请时间降序排序
+        Collections.sort(reviewData, new Comparator<ReviewDO>() {
+            @Override
+            public int compare(ReviewDO review1, ReviewDO review2) {
+                return review2.getApplicationTime().compareTo(review1.getApplicationTime());
+            }
+        });
+
+        //封装对应VO类
+        List<ReviewVO> result = encapsulateArrayClass(reviewData);
+
+        return result;
+    }
+
+
     /**
      * @Description: 封装审核的VO类
      * @Date: 2024/4/11
@@ -266,6 +391,70 @@ public class ReviewServiceImpl implements ReviewService {
         return resultData;
     }
 
+
+    public List<ReviewVO> getReviewsByResult(
+                                             HttpServletRequest request,
+                                             Short result) {
+
+//     获取用户
+        Long userId = Processing.getAuthHeaderToUserId(request);
+
+        //存储审核数据的数组
+        List<ReviewDO> reviewData = new ArrayList<>();
+
+        //先获取用户为项目负责人的项目列表
+        projectDAO.getProjectByPrincipalUser(userId);
+
+        //先从用户为 项目负责人 的项目中获取对应 审核信息
+        for (ProjectDO projectDO : projectDAO.getProjectByPrincipalUser(userId)) {
+            //查询每个项目下所有的审核信息
+            List<ReviewDO> reviewDOS = reviewDAO.
+                    selectApprovedResultReviewFromProject(projectDO.getId(),
+                           result);
+            //封装VO类
+            reviewData.addAll(reviewDOS);
+        }
+
+        //在从用户为 子系统负责人 的项目中获取对应 审核信息
+        for (ProjectChildDO projectChildDO : projectDAO.getAllProjectChildByUId(userId)) {
+            //查询每个项目下状态为2的审核信息
+            List<ReviewDO> reviewDOS = reviewDAO.
+                    selectApprovedResultReviewsFromSubsystem(projectChildDO.getId(),
+                            result);
+            //封装VO类
+            reviewData.addAll(reviewDOS);
+        }
+
+
+        //在从用户为 子模块负责人 的项目中获取对应 审核信息
+        for (ProjectModuleDO projectModuleDO : projectDAO.getAllModuleByUId(userId)) {
+            //查询每个项目下所有的审核信息
+            List<ReviewDO> reviewDOS = reviewDAO.
+                    selectApprovedResultReviewsFromSubModule(projectModuleDO.getId(),
+                            result);
+            //封装VO类
+            reviewData.addAll(reviewDOS);
+        }
+
+
+        //根据id进行去重
+        reviewData = reviewData.stream()
+                .collect(Collectors.toMap(ReviewDO::getId, review -> review, (existing, replacement) -> existing))
+                .values()
+                .stream()
+                .collect(Collectors.toList());
+
+
+        //按照申请时间降序排序
+        Collections.sort(reviewData, new Comparator<ReviewDO>() {
+            @Override
+            public int compare(ReviewDO review1, ReviewDO review2) {
+                return review2.getApplicationTime().compareTo(review1.getApplicationTime());
+            }
+        });
+
+        return encapsulateArrayClass(reviewData);
+    }
 
 }
 

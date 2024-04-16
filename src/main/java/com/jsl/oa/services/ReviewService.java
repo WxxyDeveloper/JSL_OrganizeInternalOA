@@ -16,4 +16,6 @@ public interface ReviewService {
     BaseResponse addReview(ReviewAddVO reviewAddVO, HttpServletRequest request);
 
     BaseResponse updateReviewResult(ReviewUpdateResultVO reviewUpdateResultVOVO, HttpServletRequest request);
+
+    BaseResponse searchReview(String content, Short statue, HttpServletRequest request, Integer page, Integer pageSize);
 }
