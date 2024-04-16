@@ -79,7 +79,7 @@ public class PermissionDAO {
             roleRedisUtil.setData(
                     BusinessConstants.ALL_PERMISSION,
                     "string",
-                    gson.toJson(permissionList),
+                    gson.toJson(getPermission),
                     1440);
         } else {
             getPermission = gson.fromJson(getRedisData, new TypeToken<List<String>>() { }.getType());
