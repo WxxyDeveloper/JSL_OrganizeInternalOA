@@ -45,17 +45,27 @@ public class PermissionDAO {
     public List<String> getPermission(@NotNull Long uid) {
         // 查询用户所在角色组
         RoleDO getRole = roleMapper.getRoleByUserId(uid);
-        List<String> getPermissionForString;
-        String permissionRedisString = roleRedisUtil.getData(BusinessConstants.NONE, uid.toString());
-        if (permissionRedisString == null) {
-            String permissionList = permissionMapper.getPermissionByRole(getRole.getRoleName());
-            getPermissionForString = gson.fromJson(permissionList, new TypeToken<List<String>>() { }.getType());
-            // 存入 Redis
-            roleRedisUtil.setData(BusinessConstants.NONE, uid.toString(), gson.toJson(getPermissionForString), 1440);
+        if (getRole != null) {
+            List<String> getPermissionForString;
+            String permissionRedisString = roleRedisUtil.getData(BusinessConstants.NONE, uid.toString());
+            if (permissionRedisString == null) {
+                String permissionList = permissionMapper.getPermissionByRole(getRole.getRoleName());
+                getPermissionForString = gson.fromJson(permissionList, new TypeToken<List<String>>() { }.getType());
+                // 存入 Redis
+                roleRedisUtil.setData(
+                        BusinessConstants.NONE,
+                        uid.toString(),
+                        gson.toJson(getPermissionForString),
+                        1440
+                );
+            } else {
+                getPermissionForString = gson
+                        .fromJson(permissionRedisString, new TypeToken<List<String>>() { }.getType());
+            }
+            return getPermissionForString;
         } else {
-            getPermissionForString = gson.fromJson(permissionRedisString, new TypeToken<List<String>>() { }.getType());
+            return null;
         }
-        return getPermissionForString;
     }
 
     public List<String> getAllPermissionBuildString() {
