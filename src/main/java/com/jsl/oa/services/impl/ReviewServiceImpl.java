@@ -1,8 +1,6 @@
 package com.jsl.oa.services.impl;
 
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.jsl.oa.common.constant.ReviewConstants;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.ReviewDAO;
@@ -111,10 +109,7 @@ public class ReviewServiceImpl implements ReviewService {
         List<ReviewVO> result = encapsulateArrayClass(reviewData);
 
         //封装结果类与数据总数
-        int total = result.size();
-        ReviewDataVO reviewDataVO = new ReviewDataVO();
-        reviewDataVO.setReviews(result);
-        reviewDataVO.setDataTotal(total);
+        ReviewDataVO reviewDataVO = getReviewsByPage(result, page, pageSize);
 
         return ResultUtil.success(reviewDataVO);
     }
@@ -182,10 +177,7 @@ public class ReviewServiceImpl implements ReviewService {
         List<ReviewVO> result = encapsulateArrayClass(reviewData);
 
         //封装结果类与数据总数
-        int total = result.size();
-        ReviewDataVO reviewDataVO = new ReviewDataVO();
-        reviewDataVO.setReviews(result);
-        reviewDataVO.setDataTotal(total);
+        ReviewDataVO reviewDataVO = getReviewsByPage(result, page, pageSize);
 
         return ResultUtil.success(reviewDataVO);
     }
@@ -264,13 +256,9 @@ public class ReviewServiceImpl implements ReviewService {
 
 //         根据内容筛选
         if (content == null || content.equals("")) {
-            // 使用PageHelper进行分页
-            PageHelper.startPage(page, pageSize);
-            PageInfo<ReviewVO> pageInfo1 = new PageInfo<>(reviewVOS);
-            int total = reviewVOS.size();
-            ReviewDataVO reviewDataVO = new ReviewDataVO();
-            reviewDataVO.setReviews(pageInfo1.getList());
-            reviewDataVO.setDataTotal(total);
+            //封装结果类与数据总数
+            ReviewDataVO reviewDataVO = getReviewsByPage(reviewVOS, page, pageSize);
+
             return ResultUtil.success(reviewDataVO);
         } else {
             reviewVOS = reviewVOS.stream()
@@ -278,16 +266,9 @@ public class ReviewServiceImpl implements ReviewService {
                     .collect(Collectors.toList());
         }
 
-        // 使用PageHelper进行分页
-        PageHelper.startPage(page, pageSize);
-        PageInfo<ReviewVO> pageInfo = new PageInfo<>(reviewVOS);
-
 
         //封装结果类与数据总数
-        int total = (int) pageInfo.getTotal();
-        ReviewDataVO reviewDataVO = new ReviewDataVO();
-        reviewDataVO.setReviews(pageInfo.getList());
-        reviewDataVO.setDataTotal(total);
+        ReviewDataVO reviewDataVO = getReviewsByPage(reviewVOS, page, pageSize);
 
         return ResultUtil.success(reviewDataVO);
     }
@@ -456,6 +437,19 @@ public class ReviewServiceImpl implements ReviewService {
         return encapsulateArrayClass(reviewData);
     }
 
+
+    public ReviewDataVO getReviewsByPage(List<ReviewVO> allReviews, int page, int pageSize) {
+        ReviewDataVO reviewDataVO = new ReviewDataVO();
+        int total = allReviews.size();
+        int startIndex = (page - 1) * pageSize;
+        int endIndex = Math.min(startIndex + pageSize, total);
+        List<ReviewVO> reviewsOnPage = allReviews.subList(startIndex, endIndex);
+
+        reviewDataVO.setReviews(reviewsOnPage);
+        reviewDataVO.setDataTotal(total);
+
+        return reviewDataVO;
+    }
 }
 
 
