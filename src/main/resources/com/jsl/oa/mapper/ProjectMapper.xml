@@ -47,6 +47,14 @@
         where id = #{id}
     </update>
 
+    <update id="deleteProjectChild">
+        update organize_oa.oa_project_child set is_delete=true where id=#{id1}
+    </update>
+
+    <update id="deleteProjectModule">
+        update organize_oa.oa_project_modules set is_delete=true where id=#{id1}
+    </update>
+
     <select id="getByTags" resultType="com.jsl.oa.model.dodata.ProjectDO">
         <if test="tags != null">
             select * from organize_oa.oa_project where is_delete=false and principal_id=#{userId}  and

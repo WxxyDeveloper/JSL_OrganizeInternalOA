@@ -51,6 +51,8 @@ public class ProjectController {
 
 
     /**
+     * 获取子模块详细
+     *
      * @param id 要查询的 id
      * @return {@link BaseResponse}
      */
@@ -289,6 +291,34 @@ public BaseResponse projectParticipateGet(
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR);
         }
         return projectService.projectFileGet(request, projectId);
+    }
+
+
+    /**
+     *  删除子系统
+     *
+     * @param id
+     * @param request
+     * @return
+     */
+    @DeleteMapping("/project/child/delete")
+    public BaseResponse projectChildDelete(
+            @RequestParam List<Long> id,
+            HttpServletRequest request) {
+        if (id == null) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
+        }
+        return projectService.projectChildDelete(request, id);
+    }
+
+    @DeleteMapping("/project/module/delete")
+    public BaseResponse projectModuleDelete(
+            @RequestParam List<Long> id,
+            HttpServletRequest request) {
+        if (id == null) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
+        }
+        return projectService.projectModuleDelete(request, id);
     }
 
 

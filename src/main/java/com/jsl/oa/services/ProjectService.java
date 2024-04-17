@@ -63,4 +63,8 @@ public interface ProjectService {
     BaseResponse getPrincipalProject(Integer page, Integer pageSize, HttpServletRequest request);
 
     BaseResponse getParticipateProject(Integer page, Integer pageSize, HttpServletRequest request);
+
+    BaseResponse projectChildDelete(HttpServletRequest request, List<Long> id);
+
+    BaseResponse projectModuleDelete(HttpServletRequest request, List<Long> id);
 }

@@ -90,14 +90,19 @@ public interface ProjectMapper {
     @Select("select * from organize_oa.oa_project_modules where id=#{id}")
     ProjectModuleDO getModuleById(Integer id);
 
-    @Select("select principal_id from organize_oa.oa_project_work where id=#{pid}")
-    Long getPirIdbyWorkid(Long pid);
+    @Select("select principal_id from organize_oa.oa_project where id="
+            + "(select project_id from organize_oa.oa_project_child where id=#{id})")
+    Long getPirIdbyId(Long id);
 
-    @Select("select principal_id from organize_oa.oa_project_modules where project_child_id=#{id} "
-            + "AND is_delete = 0")
+    @Select("select principal_id from organize_oa.oa_project_child where id="
+            + "(select project_child_id from organize_oa.oa_project_modules where id=#{id})")
+    Long getPirTdByModuleId(Long id);
+
+
+    @Select("select principal_id from organize_oa.oa_project_modules where id=#{id} ")
     Long getPid(Integer id);
 
-    @Select("select * from organize_oa.oa_project_work where id=#{id} "
+    @Select("select * from organize_oa.oa_project_child where id=#{id} "
             + "AND is_delete = 0")
     ProjectModuleDO getProjectWorkById(Long id);
 
@@ -136,4 +141,8 @@ public interface ProjectMapper {
 
 
     List<ProjectDO> getParticipateProject(Long userId);
+
+    void deleteProjectChild(Long id1);
+
+    void deleteProjectModule(Long id1);
 }
