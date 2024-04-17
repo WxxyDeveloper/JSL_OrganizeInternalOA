@@ -4,6 +4,7 @@ import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ModuleMapper;
+import com.jsl.oa.model.dodata.ProjectChildDO;
 import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.vodata.ProjectWorkAndNameVO;
 import com.jsl.oa.services.ModuleService;
@@ -42,7 +43,7 @@ public class ModuleServiceImpl implements ModuleService {
             is = 0;
         }
 
-        List<ProjectModuleDO> projectWorkDOList = moduleMapper.getByProjectId(projectId, userId, is);
+        List<ProjectChildDO> projectWorkDOList = moduleMapper.getByProjectId(projectId, userId, is);
         return ResultUtil.success(projectWorkDOList);
     }
 

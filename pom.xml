@@ -17,6 +17,7 @@
         <java.version>1.8</java.version>
         <skipTests>true</skipTests>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -166,10 +167,12 @@
                             <goal>timestamp-property</goal>
                         </goals>
                         <configuration>
+                            
                             <name>buildDate</name>
                             <pattern>yyyy-MM-dd HH:mm:ss</pattern>
                             <locale>en_US</locale>
                             <timeZone>GMT+8</timeZone>
+
                         </configuration>
                     </execution>
                 </executions>

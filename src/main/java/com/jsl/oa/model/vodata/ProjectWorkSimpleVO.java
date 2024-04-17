@@ -13,14 +13,14 @@ public class ProjectWorkSimpleVO {
     private String name;
     private Long principalId;
     private String principalUser;
-    private Integer isFinish;
     private String description;
     private Long cycle;
     private Long projectId;
     private Long workLoad;
     private Long id;
     private String tags;
-    private Integer status;
+    private String status;
+    private Timestamp deadLine;
     private Timestamp beginTime;
     private Timestamp completeTime;
 }

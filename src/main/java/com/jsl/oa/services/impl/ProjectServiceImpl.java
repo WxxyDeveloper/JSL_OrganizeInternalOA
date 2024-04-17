@@ -3,6 +3,8 @@ package com.jsl.oa.services.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.RoleDAO;
@@ -10,10 +12,12 @@ import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.dodata.ProjectDO;
+import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.model.dodata.info.ProjectShowDO;
 import com.jsl.oa.model.vodata.*;
 import com.jsl.oa.model.vodata.business.info.ProjectShowVO;
+import com.jsl.oa.services.MessageService;
 import com.jsl.oa.services.ProjectService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -29,6 +33,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static java.lang.System.*;
 
 /**
  * <h1>项目服务层实现类</h1>
@@ -51,13 +57,19 @@ public class ProjectServiceImpl implements ProjectService {
     private final UserDAO userDAO;
     private final ObjectMapper objectMapper;
     private final RoleDAO roleDAO;
+    private final MessageService messageService;
 
     @Override
     public BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd) {
+        // 判断权限
+        if (!Processing.checkUserIsPrincipal(request, roleDAO)) {
+            return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+        }
+
         if (projectAdd.getDescription().isEmpty()) {
             projectAdd.setDescription("{}");
         } else {
-            projectAdd.setDescription("{\"description\":\" " + projectAdd.getDescription() + "\"}");
+            projectAdd.setDescription("{\"描述\":\" " + projectAdd.getDescription() + "\"}");
         }
         String tags = projectAdd.getTags();
         String[] split = tags.split(",");
@@ -92,7 +104,7 @@ public class ProjectServiceImpl implements ProjectService {
             }
         } else {
             //是否是子系统的负责人
-            if (Objects.equals(userId, projectMapper.getPirIdbyWorkid(projectWorkVO.getPid()))) {
+            if (Objects.equals(userId, projectMapper.getPirIdbyId(projectWorkVO.getPid()))) {
                 projectDAO.projectWorkAdd(projectWorkVO);
             } else {
                 return ResultUtil.error(ErrorCode.NOT_PERMISSION);
@@ -148,16 +160,90 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public BaseResponse getProjectModuleById(Integer id) {
+        return null;
+    }
+
+    @Override
     public BaseResponse getById(Integer id) {
         ProjectDO projectDO = projectMapper.tgetProjectById(id);
         return ResultUtil.success(projectDO);
     }
 
     @Override
-    public BaseResponse getWorkById(Integer id) {
-        ProjectWorkSimpleVO projectWorkSimpleVO = projectMapper.getWorkById(id);
+    public BaseResponse getPrincipalProject(Integer page, Integer pageSize, HttpServletRequest request) {
+        //获取用户id
+        Long userId = Processing.getAuthHeaderToUserId(request);
 
-        projectWorkSimpleVO.setPrincipalUser(userDAO.getUserById(projectMapper.getPid(id)).getUsername());
+        PageHelper.startPage(page, pageSize);
+        List<ProjectDO> projectDOList = projectDAO.get(userId, null, null);
+
+        List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+        for (ProjectDO projectDO : projectDOList) {
+            ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+            Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
+            projectSimpleVOList.add(projectSimpleVO1);
+        }
+        //分页返回
+        PageInfo<ProjectSimpleVO> pageInfo = new PageInfo<>(projectSimpleVOList);
+        return ResultUtil.success(pageInfo);
+    }
+
+    @Override
+    public BaseResponse getParticipateProject(Integer page, Integer pageSize, HttpServletRequest request) {
+        //获取用户id
+        Long userId = Processing.getAuthHeaderToUserId(request);
+
+        PageHelper.startPage(page, pageSize);
+        List<ProjectDO> projectDOList = projectMapper.getParticipateProject(userId);
+
+        List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+        for (ProjectDO projectDO : projectDOList) {
+            ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+            Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
+            projectSimpleVOList.add(projectSimpleVO1);
+        }
+        //分页返回
+        PageInfo<ProjectSimpleVO> pageInfo = new PageInfo<>(projectSimpleVOList);
+        return ResultUtil.success(pageInfo);
+    }
+
+    @Override
+    public BaseResponse projectChildDelete(HttpServletRequest request, List<Long> id) {
+        //判断是否是项目负责人
+        for (Long id1 : id) {
+            if (!Objects.equals(Processing.getAuthHeaderToUserId(request), projectMapper.getPirIdbyId(id1))) {
+                return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+            } else {
+                projectMapper.deleteProjectChild(id1);
+            }
+        }
+        return ResultUtil.success();
+    }
+
+
+    @Override
+    public BaseResponse projectModuleDelete(HttpServletRequest request, List<Long> id) {
+        //判断是否是子系统负责人
+        for (Long id1 : id) {
+            if (!Objects.equals(Processing.getAuthHeaderToUserId(request), projectMapper.getPirTdByModuleId(id1))) {
+                return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+            } else {
+                Integer projectChildId = projectMapper.getModuleById(id1.intValue()).getProjectChildId().intValue();
+                out.println(projectChildId);
+                Integer projectId = projectMapper.getWorkById(projectChildId).getProjectId().intValue();
+                out.println(projectId);
+                projectMapper.deleteProjectModule(id1);
+                messageService.messageAdd(projectId, projectChildId, id1.intValue(), 1, request);
+
+            }
+        }
+        return ResultUtil.success();
+    }
+
+    @Override
+    public BaseResponse getModuleById(Integer id) {
+        ProjectModuleDO projectWorkSimpleVO = projectMapper.getModuleById(id);
         // 解析JSON字符串
         JsonNode rootNode;
         try {
@@ -172,7 +258,12 @@ public class ProjectServiceImpl implements ProjectService {
         } catch (JsonProcessingException ignored) {
 
         }
-        return ResultUtil.success(projectWorkSimpleVO);
+        ProjectModuleSimpleVO projectModuleSimpleVO = new ProjectModuleSimpleVO();
+        projectModuleSimpleVO.setPrincipalUser(userDAO.getUserById(projectMapper.getPid(id)).getUsername());
+        out.println("准备拷贝");
+        Processing.copyProperties(projectWorkSimpleVO, projectModuleSimpleVO);
+        out.println("拷贝wan");
+        return ResultUtil.success(projectModuleSimpleVO);
     }
 
     @Override
@@ -247,7 +338,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .setStatus(projectShowVO.getStatus())
                 .setIsActive(projectShowVO.getIsActive())
                 .setAuthor(userDO.getUsername())
-                .setCreatedAt(new Timestamp(System.currentTimeMillis()).toString());
+                .setCreatedAt(new Timestamp(currentTimeMillis()).toString());
         projectShowDO.getData().add(projectShow);
         // 保存展示
         if (projectDAO.setProjectShow(projectShowDO)) {
@@ -294,7 +385,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .setStatus(projectShowVO.getStatus())
                 .setIsActive(projectShowVO.getIsActive())
                 .setAuthor(userDO.getUsername())
-                .setUpdatedAt(new Timestamp(System.currentTimeMillis()).toString());
+                .setUpdatedAt(new Timestamp(currentTimeMillis()).toString());
         // 保存展示信息
         if (projectDAO.setProjectShow(projectShowDO)) {
             return ResultUtil.success();
@@ -312,9 +403,10 @@ public class ProjectServiceImpl implements ProjectService {
             Integer page,
             Integer pageSize
     ) {
-        //获取用户
+        //获取用户id
         Long userId = Processing.getAuthHeaderToUserId(request);
 
+        PageHelper.startPage(page, pageSize);
         List<ProjectDO> projectDOList = projectDAO.workget(userId, tags, isFinish, is);
         List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
         for (ProjectDO projectDO : projectDOList) {
@@ -323,12 +415,8 @@ public class ProjectServiceImpl implements ProjectService {
             projectSimpleVOList.add(projectSimpleVO1);
         }
         //分页返回
-        int start = (page - 1) * pageSize;
-        int end = start + pageSize;
-        List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                Math.min(end, projectSimpleVOList.size()));
-
-        return ResultUtil.success(pageData);
+        PageInfo<ProjectSimpleVO> pageInfo = new PageInfo<>(projectSimpleVOList);
+        return ResultUtil.success(pageInfo);
 
     }
 
