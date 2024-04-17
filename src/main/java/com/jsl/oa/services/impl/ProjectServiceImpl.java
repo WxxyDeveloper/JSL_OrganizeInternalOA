@@ -3,6 +3,8 @@ package com.jsl.oa.services.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.RoleDAO;
@@ -54,10 +56,15 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd) {
+        // 判断权限
+        if (!Processing.checkUserIsPrincipal(request, roleDAO)) {
+            return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+        }
+
         if (projectAdd.getDescription().isEmpty()) {
             projectAdd.setDescription("{}");
         } else {
-            projectAdd.setDescription("{\"description\":\" " + projectAdd.getDescription() + "\"}");
+            projectAdd.setDescription("{\"描述\":\" " + projectAdd.getDescription() + "\"}");
         }
         String tags = projectAdd.getTags();
         String[] split = tags.split(",");
@@ -148,13 +155,56 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public BaseResponse getProjectModuleById(Integer id) {
+        return null;
+    }
+
+    @Override
     public BaseResponse getById(Integer id) {
         ProjectDO projectDO = projectMapper.tgetProjectById(id);
         return ResultUtil.success(projectDO);
     }
 
     @Override
-    public BaseResponse getWorkById(Integer id) {
+    public BaseResponse getPrincipalProject(Integer page, Integer pageSize, HttpServletRequest request) {
+        //获取用户id
+        Long userId = Processing.getAuthHeaderToUserId(request);
+
+        PageHelper.startPage(page, pageSize);
+        List<ProjectDO> projectDOList = projectDAO.get(userId, null, null);
+
+        List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+        for (ProjectDO projectDO : projectDOList) {
+            ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+            Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
+            projectSimpleVOList.add(projectSimpleVO1);
+        }
+        //分页返回
+        PageInfo<ProjectSimpleVO> pageInfo = new PageInfo<>(projectSimpleVOList);
+        return ResultUtil.success(pageInfo);
+    }
+
+    @Override
+    public BaseResponse getParticipateProject(Integer page, Integer pageSize, HttpServletRequest request) {
+        //获取用户id
+        Long userId = Processing.getAuthHeaderToUserId(request);
+
+        PageHelper.startPage(page, pageSize);
+        List<ProjectDO> projectDOList = projectMapper.getParticipateProject(userId);
+
+        List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
+        for (ProjectDO projectDO : projectDOList) {
+            ProjectSimpleVO projectSimpleVO1 = new ProjectSimpleVO();
+            Processing.projectTosimply(projectSimpleVO1, projectDO, userDAO, objectMapper);
+            projectSimpleVOList.add(projectSimpleVO1);
+        }
+        //分页返回
+        PageInfo<ProjectSimpleVO> pageInfo = new PageInfo<>(projectSimpleVOList);
+        return ResultUtil.success(pageInfo);
+    }
+
+    @Override
+    public BaseResponse getModuleById(Integer id) {
         ProjectWorkSimpleVO projectWorkSimpleVO = projectMapper.getWorkById(id);
 
         projectWorkSimpleVO.setPrincipalUser(userDAO.getUserById(projectMapper.getPid(id)).getUsername());
@@ -312,9 +362,10 @@ public class ProjectServiceImpl implements ProjectService {
             Integer page,
             Integer pageSize
     ) {
-        //获取用户
+        //获取用户id
         Long userId = Processing.getAuthHeaderToUserId(request);
 
+        PageHelper.startPage(page, pageSize);
         List<ProjectDO> projectDOList = projectDAO.workget(userId, tags, isFinish, is);
         List<ProjectSimpleVO> projectSimpleVOList = new ArrayList<>();
         for (ProjectDO projectDO : projectDOList) {
@@ -323,12 +374,8 @@ public class ProjectServiceImpl implements ProjectService {
             projectSimpleVOList.add(projectSimpleVO1);
         }
         //分页返回
-        int start = (page - 1) * pageSize;
-        int end = start + pageSize;
-        List<ProjectSimpleVO> pageData = projectSimpleVOList.subList(start,
-                Math.min(end, projectSimpleVOList.size()));
-
-        return ResultUtil.success(pageData);
+        PageInfo<ProjectSimpleVO> pageInfo = new PageInfo<>(projectSimpleVOList);
+        return ResultUtil.success(pageInfo);
 
     }
 

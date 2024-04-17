@@ -54,9 +54,9 @@ public class ProjectController {
      * @param id 要查询的 id
      * @return {@link BaseResponse}
      */
-    @GetMapping("/project/getwork/id")
-    public BaseResponse projectWorkGetById(@RequestParam Integer id) {
-        return projectService.getWorkById(id);
+    @GetMapping("/project/module/id")
+    public BaseResponse projectModuleGetById(@RequestParam Integer id) {
+        return projectService.getModuleById(id);
     }
 
     /**
@@ -110,7 +110,7 @@ public class ProjectController {
      * @return {@link BaseResponse}
      */
     @GetMapping("/project/child/get")
-    public BaseResponse projectWorkGet(
+    public BaseResponse projectModuleGet(
             @RequestParam(required = false) List<String> tags,
             @RequestParam(required = false) List<String> isFinish,
             @RequestParam(required = false) Integer is,
@@ -179,6 +179,42 @@ public class ProjectController {
         return projectService.projectEdit(request, projectEdit, projectId);
     }
 
+
+    /**
+     * 获取我负责的项目
+     *
+     * @param page  页数
+     * @param pageSize  每页大小
+     * @param request
+     * @return
+     */
+    @GetMapping("/project/my/get")
+    public BaseResponse projectMyGet(
+            @RequestParam(required = false, defaultValue = "1") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+            HttpServletRequest request) {
+        return projectService.getPrincipalProject(page, pageSize, request);
+    }
+
+    /**
+     *
+     * 获取我参与的项目
+     *
+     * @param page  页数
+     * @param pageSize  每页大小
+     * @param request
+     * @return
+     */
+    @GetMapping("/project/participate/get")
+public BaseResponse projectParticipateGet(
+            @RequestParam(required = false, defaultValue = "1") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+            HttpServletRequest request) {
+        return projectService.getParticipateProject(page, pageSize, request);
+    }
+
+
+
     /**
      * 子系统子模块的增加
      *
@@ -219,7 +255,7 @@ public class ProjectController {
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return ResultUtil.success(projectService.projectAdd(request, projectInfoVO));
+        return projectService.projectAdd(request, projectInfoVO);
     }
 
     /**

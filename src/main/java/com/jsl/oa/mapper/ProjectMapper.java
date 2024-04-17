@@ -108,7 +108,7 @@ public interface ProjectMapper {
     List <Long> getMemberBySystemId(Integer id);
 
     @Select("select * from organize_oa.oa_project_modules "
-            + "where DATE(deadline) = DATE(#{threeDayLater}) and status = 0")
+            + "where DATE(dead_line) = DATE(#{threeDayLater}) and status != 'complete' ")
     List<ProjectModuleDO> getProjectWorkByTime(LocalDateTime threeDayLater);
 
 
@@ -126,11 +126,14 @@ public interface ProjectMapper {
 
 
     @Select("select * from organize_oa.oa_project_child where "
-            + "DATE (created_at) = DATE (#{threeDaysLater}) ")
+            + "DATE (dead_line) = DATE (#{threeDaysLater}) and status != 'complete' ")
     List<ProjectChildDO> getProjectChildByTime(LocalDateTime threeDaysLater);
 
 
     @Select("select * from organize_oa.oa_project_child where "
             + "id = #{id} and is_delete = 0")
     ProjectChildDO getProjectChildById(Integer id);
+
+
+    List<ProjectDO> getParticipateProject(Long userId);
 }

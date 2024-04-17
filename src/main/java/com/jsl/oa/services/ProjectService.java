@@ -41,9 +41,9 @@ public interface ProjectService {
 
     BaseResponse projectFileGet(HttpServletRequest request, Long projectId);
 
-    BaseResponse getById(Integer id);
+    BaseResponse getProjectModuleById(Integer id);
 
-    BaseResponse getWorkById(Integer id);
+    BaseResponse getModuleById(Integer id);
 
     BaseResponse projectPrincipalGet();
 
@@ -57,4 +57,10 @@ public interface ProjectService {
      * @return 根据用户所属角色组的不同返回不同的内容
      */
     BaseResponse getProjectById(HttpServletRequest request, Long projectId);
+
+    BaseResponse getById(Integer id);
+
+    BaseResponse getPrincipalProject(Integer page, Integer pageSize, HttpServletRequest request);
+
+    BaseResponse getParticipateProject(Integer page, Integer pageSize, HttpServletRequest request);
 }

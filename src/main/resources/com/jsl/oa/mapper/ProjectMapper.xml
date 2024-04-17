@@ -151,7 +151,12 @@
             #{Finish}
         </foreach>
     </select>
-
+    <select id="getParticipateProject" resultType="com.jsl.oa.model.dodata.ProjectDO">
+        select * from organize_oa.oa_project where id in
+        (select project_id from organize_oa.oa_project_child where id in
+        (select project_child_id from organize_oa.oa_project_modules
+                    where oa_project_modules.principal_id=#{userId} and is_delete=false) )
+    </select>
 
 
 </mapper>
