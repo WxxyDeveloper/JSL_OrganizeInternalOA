@@ -209,9 +209,13 @@ public class AuthServiceImpl implements AuthService {
     public BaseResponse authLogout(HttpServletRequest request) {
         // 获取用户
         UserDO userDO = userMapper.getUserById(Processing.getAuthHeaderToUserId(request));
-        // 删除Token
-        if (tokenRedisUtil.delData(BusinessConstants.BUSINESS_LOGIN, userDO.getId().toString())) {
-            return ResultUtil.success("登出成功");
+        if (userDO != null) {
+            // 删除Token
+            if (tokenRedisUtil.delData(BusinessConstants.BUSINESS_LOGIN, userDO.getId().toString())) {
+                return ResultUtil.success("登出成功");
+            } else {
+                return ResultUtil.error(ErrorCode.TOKEN_NOT_EXIST);
+            }
         } else {
             return ResultUtil.error(ErrorCode.TOKEN_NOT_EXIST);
         }
