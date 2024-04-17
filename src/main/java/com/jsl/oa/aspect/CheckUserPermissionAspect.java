@@ -3,11 +3,14 @@ package com.jsl.oa.aspect;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jsl.oa.annotations.NeedPermission;
+import com.jsl.oa.common.constant.BusinessConstants;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.exception.library.NotLoginException;
 import com.jsl.oa.exception.library.PermissionDeniedException;
+import com.jsl.oa.exception.library.TokenNotFoundedException;
 import com.jsl.oa.model.dodata.RoleDO;
 import com.jsl.oa.utils.Processing;
+import com.jsl.oa.utils.redis.TokenRedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -37,6 +40,7 @@ public class CheckUserPermissionAspect {
 
     private final RoleDAO roleDAO;
     private final Gson gson;
+    private final TokenRedisUtil<String> tokenRedisUtil;
 
     /**
      * 检查权限
@@ -57,6 +61,9 @@ public class CheckUserPermissionAspect {
             Long getUserId = Processing.getAuthHeaderToUserId(servletRequestAttributes.getRequest());
             if (getUserId == null) {
                 throw new NotLoginException("用户信息不存在");
+            }
+            if (tokenRedisUtil.getData(BusinessConstants.BUSINESS_LOGIN, getUserId.toString()) == null) {
+                throw new TokenNotFoundedException("用户未登录");
             }
             // 获取方法签名
             MethodSignature signature = (MethodSignature) pjp.getSignature();
