@@ -147,7 +147,6 @@ public class AuthController {
      * @since v1.1.0
      */
     @GetMapping("/auth/logout")
-    @NeedPermission("auth:logout")
     public BaseResponse authLogout(HttpServletRequest request) {
         return authService.authLogout(request);
     }

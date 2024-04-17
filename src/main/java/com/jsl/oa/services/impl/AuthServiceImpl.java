@@ -213,7 +213,7 @@ public class AuthServiceImpl implements AuthService {
         if (tokenRedisUtil.delData(BusinessConstants.BUSINESS_LOGIN, userDO.getId().toString())) {
             return ResultUtil.success("登出成功");
         } else {
-            return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
+            return ResultUtil.error(ErrorCode.TOKEN_NOT_EXIST);
         }
     }
 

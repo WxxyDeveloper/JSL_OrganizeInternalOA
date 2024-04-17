@@ -1,6 +1,7 @@
 package com.jsl.oa.exception;
 
 import com.jsl.oa.exception.library.PermissionDeniedException;
+import com.jsl.oa.exception.library.TokenNotFoundedException;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
 import com.jsl.oa.utils.ResultUtil;
@@ -109,5 +110,11 @@ public class ProcessException {
     public BaseResponse businessPermissionDeniedException(PermissionDeniedException e) {
         log.warn("[EXCEPTION] 无权限操作，需要权限: {}", e.getNeedPermission());
         return ResultUtil.error("需要权限: " + e.getNeedPermission(), ErrorCode.PERMISSION_NOT_EXIST);
+    }
+
+    @ExceptionHandler(value = TokenNotFoundedException.class)
+    public BaseResponse businessTokenNotFoundedException(TokenNotFoundedException e) {
+        log.warn("[EXCEPTION] {}", e.getMessage());
+        return ResultUtil.error(e.getMessage(), ErrorCode.TOKEN_NOT_EXIST);
     }
 }
