@@ -23,6 +23,7 @@ public class ProjectInfoVO {
     private String files;
     private Timestamp beginTime;
     private Timestamp completeTime;
+    @NotNull(message = "截止时间不能为空")
     private Timestamp deadLine;
     private String status;
 

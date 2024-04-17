@@ -341,6 +341,9 @@ public class Processing {
         projectSimpleVO.setTags(projectDO.getTags());
         projectSimpleVO.setCycle(projectDO.getCycle().longValue());
         projectSimpleVO.setWorkLoad(projectDO.getWorkLoad().longValue());
+        projectSimpleVO.setFiles(projectDO.getFiles());
+        projectSimpleVO.setStatus(projectDO.getStatus());
+        projectSimpleVO.setDeadLine(projectDO.getDeadline());
         projectSimpleVO.setPrincipalUser(userDAO.getUserById(projectDO.getPrincipalId()).getUsername());
         // 解析JSON字符串
         JsonNode rootNode = null;

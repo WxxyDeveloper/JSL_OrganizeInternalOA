@@ -5,17 +5,17 @@
 
 <mapper namespace="com.jsl.oa.mapper.ModuleMapper">
 
-    <select id="getByProjectId" resultType="com.jsl.oa.model.dodata.ProjectModuleDO">
-        select * from organize_oa.oa_project_work where project_id=#{projectId} and type=0
+    <select id="getByProjectId" resultType="com.jsl.oa.model.dodata.ProjectChildDO">
+        select * from organize_oa.oa_project_child where project_id=#{projectId}
         <if test="is != 1 ">
-            and (principal_id=#{userId} or principal_id is null)
+            and (principal_id=#{userId})
         </if>
     </select>
 
     <select id="getBySysId" resultType="com.jsl.oa.model.dodata.ProjectModuleDO">
-        select * from organize_oa.oa_project_work where pid=#{sysId} and type=1
+        select * from organize_oa.oa_project_modules where project_child_id=#{sysId}
         <if test="is != 1 ">
-            and (principal_id=#{userId} or principal_id is null)
+            and (principal_id=#{userId})
         </if>
     </select>
 </mapper>

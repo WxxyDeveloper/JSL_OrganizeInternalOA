@@ -1,4 +1,6 @@
 package com.jsl.oa.services.impl;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.MessageMapper;
 import com.jsl.oa.mapper.ProjectMapper;
@@ -7,7 +9,6 @@ import com.jsl.oa.model.dodata.ProjectChildDO;
 import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.vodata.MessageAddVO;
 import com.jsl.oa.model.vodata.MessageGetVO;
-import com.jsl.oa.model.vodata.PageBean;
 import com.jsl.oa.services.MessageService;
 import com.jsl.oa.utils.*;
 import lombok.RequiredArgsConstructor;
@@ -67,6 +68,7 @@ public class MessageServiceImpl implements MessageService {
             endTime = LocalDateTime.now();
             beginTime = endTime.minusDays(30);
         }
+        PageHelper.startPage(page, pageSize);
         List<MessageDO> messageDOList = messageMapper.page(beginTime, endTime, uid);
         //封装返回数据
         List<MessageGetVO> messageGetVOList = new ArrayList<>();
@@ -89,16 +91,8 @@ public class MessageServiceImpl implements MessageService {
         }
 
         //分页返回
-        int start = (page - 1) * pageSize;
-        int end = start + pageSize;
-        List<MessageGetVO> pageData = messageGetVOList.subList(start,
-                Math.min(end, messageGetVOList.size()));
-        PageBean<MessageGetVO> pageBean = new PageBean<>();
-        pageBean.setTotalCount(messageGetVOList.size());
-        pageBean.setCurrentPage(page);
-        pageBean.setPageSize(pageSize);
-        pageBean.setList(pageData);
-        return ResultUtil.success(pageBean);
+        PageInfo<MessageGetVO> pageInfo = new PageInfo<>(messageGetVOList);
+        return ResultUtil.success(pageInfo);
     }
 
     /**
