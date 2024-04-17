@@ -7,6 +7,7 @@ import com.jsl.oa.model.dodata.ProjectChildDO;
 import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.vodata.MessageAddVO;
 import com.jsl.oa.model.vodata.MessageGetVO;
+import com.jsl.oa.model.vodata.PageBean;
 import com.jsl.oa.services.MessageService;
 import com.jsl.oa.utils.*;
 import lombok.RequiredArgsConstructor;
@@ -86,12 +87,18 @@ public class MessageServiceImpl implements MessageService {
             }
             messageGetVOList.add(messageGetVO1);
         }
+
         //分页返回
         int start = (page - 1) * pageSize;
         int end = start + pageSize;
         List<MessageGetVO> pageData = messageGetVOList.subList(start,
                 Math.min(end, messageGetVOList.size()));
-        return ResultUtil.success(pageData);
+        PageBean<MessageGetVO> pageBean = new PageBean<>();
+        pageBean.setTotalCount(messageGetVOList.size());
+        pageBean.setCurrentPage(page);
+        pageBean.setPageSize(pageSize);
+        pageBean.setList(pageData);
+        return ResultUtil.success(pageBean);
     }
 
     /**
