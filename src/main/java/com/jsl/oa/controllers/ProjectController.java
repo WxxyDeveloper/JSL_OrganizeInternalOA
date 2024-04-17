@@ -114,13 +114,13 @@ public class ProjectController {
     @GetMapping("/project/child/get")
     public BaseResponse projectModuleGet(
             @RequestParam(required = false) List<String> tags,
-            @RequestParam(required = false) List<String> isFinish,
+            @RequestParam(required = false) List<String> status,
             @RequestParam(required = false) Integer is,
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer pageSize,
             HttpServletRequest request
     ) {
-        return projectService.workGet(request, tags, isFinish, is, page, pageSize);
+        return projectService.workGet(request, tags, status, is, page, pageSize);
     }
 
     /**
