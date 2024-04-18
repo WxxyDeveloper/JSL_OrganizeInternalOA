@@ -1,4 +1,4 @@
-package com.jsl.oa.model.dodata;
+package com.jsl.oa.model.vodata;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -6,20 +6,19 @@ import lombok.experimental.Accessors;
 
 import java.sql.Timestamp;
 
+
 @Data
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProjectModuleDO {
+public class ProjectChildGetVO {
     private Long id;
-    private Long projectChildId;
-    private Long principalId;
+    private String principalName;
+    private Long projectId;
     private Integer workLoad;
-    private String description;
+    private Integer cycle;
     private String name;
+    private String description;
     private Integer isDelete;
     private String status;
     private Timestamp deadLine;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
-    private Timestamp completeTime;
 }

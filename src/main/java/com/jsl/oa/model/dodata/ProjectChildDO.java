@@ -31,4 +31,6 @@ public class ProjectChildDO {
     private Timestamp createdAt;
     private Timestamp completeTime;
     private Timestamp updatedAt;
+    private String status;
+    private Timestamp deadLine;
 }

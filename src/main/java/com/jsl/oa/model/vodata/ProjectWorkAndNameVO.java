@@ -15,19 +15,17 @@ import java.sql.Timestamp;
 public class ProjectWorkAndNameVO {
 
     private Long id;
-    private Long pid;
     private String childSystemName;
-    private Long projectId;
+    private Long projectChildId;
     private Long principalId;
     private String principalUser;
     private Integer cycle;
     private Integer workLoad;
-    private Integer type;
     private String name;
     private String description;
     private Integer isDelete;
-    private Integer isFinish;
-    private boolean status;
+    private String status;
+    private Timestamp deadLine;
     private Timestamp beginTime;
     private Timestamp completeTime;
 }
