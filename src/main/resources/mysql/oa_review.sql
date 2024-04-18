@@ -27,9 +27,4 @@ create table oa_review
 create index oa_review_project_id_oa_project_id_fk
     on oa_review (project_id);
 
-create index oa_review_project_project_submodule_id_oa_project_work_id_fk
-    on oa_review (project_module_id);
-
-create index oa_review_project_subsystem_id_oa_project_work_id_fk
-    on oa_review (project_child_id);
 

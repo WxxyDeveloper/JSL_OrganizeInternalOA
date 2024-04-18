@@ -8,7 +8,11 @@ import java.util.List;
 @Data
 public class ReviewDataVO {
 
-    private Integer dataTotal;
+    private Integer totalCount;
+
+    private Integer currentPage;
+
+    private Integer pageSize;
 
     private List<ReviewVO> reviews;
 }
