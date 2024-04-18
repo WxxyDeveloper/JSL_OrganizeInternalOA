@@ -28,6 +28,7 @@ public class PermissionList {
         permissionPrincipal.add(new PermissionVO("info:get_header_image", "获取头部图片"));
         permissionPrincipal.add(new PermissionVO("info:edit_header_image", "编辑头部图片"));
         permissionPrincipal.add(new PermissionVO("info:delete_header_image", "删除头部图片"));
+        permissionPrincipal.add(new PermissionVO("project:add", "增加项目"));
 
         permissionDeveloper.add(new PermissionVO("auth:change_password", "修改密码"));
         permissionDeveloper.add(new PermissionVO("info:get_header_image", "获取头部图片"));
