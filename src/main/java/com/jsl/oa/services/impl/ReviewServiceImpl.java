@@ -196,6 +196,7 @@ public class ReviewServiceImpl implements ReviewService {
         if (!projectDAO.isExistProjectById(reviewAddVO.getProjectId())) {
             throw new BusinessException(ErrorCode.PROJECT_NOT_EXIST);
         }
+
         if (projectMapper.getProjectChildById(
                 Math.toIntExact(reviewAddVO.getProjectChildId())) != null) {
             throw new BusinessException(ErrorCode.PROJECT_CHILD_NOT_EXIST);
@@ -253,7 +254,6 @@ public class ReviewServiceImpl implements ReviewService {
 
         return ResultUtil.success();
     }
-
 
 
     @Override
@@ -437,6 +437,9 @@ public class ReviewServiceImpl implements ReviewService {
             reviewData.addAll(reviewDOS);
         }
 
+        //        获取自己的审核记录
+        List<ReviewDO> myReviewDO = reviewDAO.getReviewByUser(userId);
+        reviewData.addAll(myReviewDO);
 
         //根据id进行去重
         reviewData = reviewData.stream()
