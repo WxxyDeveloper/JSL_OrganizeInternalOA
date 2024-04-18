@@ -93,6 +93,13 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
                                       Date beginTime,
                                       Date endTime,
                                       HttpServletRequest request) {
+//        获取用户id
+        Long userId = Processing.getAuthHeaderToUserId(request);
+//        获取 我发布的及自己负责的项目下 的日报
+        List<ProjectDailyDO> projectDailyDOList =
+                projectDailyDAO.getMyProjectDaily(userId);
+
+
         return null;
     }
 
