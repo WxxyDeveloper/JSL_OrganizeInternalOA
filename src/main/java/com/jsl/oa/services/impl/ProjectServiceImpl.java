@@ -12,6 +12,7 @@ import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.mapper.UserMapper;
+import com.jsl.oa.model.dodata.ProjectChildDO;
 import com.jsl.oa.model.dodata.ProjectDO;
 import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.dodata.UserDO;
@@ -241,6 +242,7 @@ public class ProjectServiceImpl implements ProjectService {
         for (ProjectDO projectDO : projectDOList) {
             ReturnGetVO returnGetVO = new ReturnGetVO();
             Processing.copyProperties(projectDO, returnGetVO);
+            returnGetVOList.add(returnGetVO);
         }
         return ResultUtil.success(returnGetVOList);
     }
@@ -261,6 +263,31 @@ public class ProjectServiceImpl implements ProjectService {
             projectMapper.projectModuleAdd(projectModuleAddVO);
         }
         return ResultUtil.success("添加成功");
+    }
+
+    @Override
+    public BaseResponse projectChildGetName(String name, HttpServletRequest request) {
+
+        List<ProjectChildDO> projectChildDOList = projectMapper.getChildByLikeName(name);
+        List<ReturnGetVO> returnGetVOList = new ArrayList<>();
+        for (ProjectChildDO projectChildDO : projectChildDOList) {
+            ReturnGetVO returnGetVO = new ReturnGetVO();
+            Processing.copyProperties(projectChildDO, returnGetVO);
+            returnGetVOList.add(returnGetVO);
+        }
+        return ResultUtil.success(returnGetVOList);
+    }
+
+    @Override
+    public BaseResponse projectModuleGetName(String projectName, String childName, HttpServletRequest request) {
+        List<ProjectModuleDO> projectModuleDOList = projectMapper.getModuleByName(projectName, childName);
+        List<ReturnGetVO> returnGetVOList = new ArrayList<>();
+        for (ProjectModuleDO projectModuleDO : projectModuleDOList) {
+            ReturnGetVO returnGetVO = new ReturnGetVO();
+            Processing.copyProperties(projectModuleDO, returnGetVO);
+            returnGetVOList.add(returnGetVO);
+        }
+        return ResultUtil.success(returnGetVOList);
     }
 
     @Override

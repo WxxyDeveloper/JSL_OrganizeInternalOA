@@ -349,13 +349,43 @@ public class ProjectController {
         return projectService.projectModuleDelete(request, id);
     }
 
-
+    /**
+     * 项目名模糊查询项目
+     *
+     * @param name
+     * @param request
+     * @return
+     */
     @GetMapping("/project/get/name")
     public BaseResponse projectGetName(
             @RequestParam String name,
             HttpServletRequest request
     ) {
         return projectService.projectGetName(name, request);
+    }
+
+    /**
+     * 项目名查询子系统
+     *
+     * @param name
+     * @param request
+     * @return
+     */
+    @GetMapping("/project/child/get/name")
+    public BaseResponse projectChildGetName(
+            @RequestParam String name,
+            HttpServletRequest request
+    ) {
+        return projectService.projectChildGetName(name, request);
+    }
+
+    @GetMapping("/project/module/get/name")
+    public BaseResponse projectModuleGetName(
+            @RequestParam String projectName,
+            @RequestParam String childName,
+            HttpServletRequest request
+    ) {
+        return projectService.projectModuleGetName(projectName, childName, request);
     }
 
 }

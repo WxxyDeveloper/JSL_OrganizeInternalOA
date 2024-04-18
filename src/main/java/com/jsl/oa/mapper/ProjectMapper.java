@@ -159,4 +159,12 @@ public interface ProjectMapper {
     List<ProjectDO> getByLikeName(String name);
 
 
+    @Select("select * from organize_oa.oa_project_child where project_id = "
+            + "(select id from organize_oa.oa_project where name =#{name})")
+    List<ProjectChildDO> getChildByLikeName(String name);
+
+    @Select("select * from organize_oa.oa_project_modules where project_child_id = "
+            + "(select id from organize_oa.oa_project_child where name =#{childName} "
+            + "and project_id = (select id from organize_oa.oa_project where name =#{projectName}))")
+    List<ProjectModuleDO> getModuleByName(String projectName, String childName);
 }
