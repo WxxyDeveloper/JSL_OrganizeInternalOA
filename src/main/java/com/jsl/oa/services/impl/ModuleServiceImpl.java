@@ -6,6 +6,7 @@ import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ModuleMapper;
 import com.jsl.oa.model.dodata.ProjectChildDO;
 import com.jsl.oa.model.dodata.ProjectModuleDO;
+import com.jsl.oa.model.vodata.ProjectChildGetVO;
 import com.jsl.oa.model.vodata.ProjectWorkAndNameVO;
 import com.jsl.oa.services.ModuleService;
 import com.jsl.oa.utils.BaseResponse;
@@ -42,9 +43,15 @@ public class ModuleServiceImpl implements ModuleService {
             log.info("不是负责人");
             is = 0;
         }
-
         List<ProjectChildDO> projectWorkDOList = moduleMapper.getByProjectId(projectId, userId, is);
-        return ResultUtil.success(projectWorkDOList);
+        List<ProjectChildGetVO> projectWorkAndNameVOS = new ArrayList<>();
+        for (ProjectChildDO projectWorkDO : projectWorkDOList) {
+            ProjectChildGetVO projectWorkAndNameVO = new ProjectChildGetVO();
+            Processing.copyProperties(projectWorkDO, projectWorkAndNameVO);
+            projectWorkAndNameVO.setPrincipalName(userDAO.getUserById(projectWorkDO.getPrincipalId()).getUsername());
+            projectWorkAndNameVOS.add(projectWorkAndNameVO);
+        }
+        return ResultUtil.success(projectWorkAndNameVOS);
     }
 
     @Override
