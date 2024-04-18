@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 
 /**
@@ -54,9 +55,22 @@ public class ProjectDailyController {
 
 
     @GetMapping("/daily/getMyDaily")
-    public BaseResponse getMyDaily(HttpServletRequest request) {
-        return projectDailyService.getMyDaily(request);
+    public BaseResponse getMyDaily(@RequestParam Integer page,
+                                   @RequestParam Integer pageSize,
+                                   HttpServletRequest request) {
+        return projectDailyService.getMyDaily(page, pageSize, request);
     }
+
+
+    @GetMapping("/daily/search")
+    public BaseResponse searchMyDaily(@RequestParam Integer page,
+                                      @RequestParam Integer pageSize,
+                                      Date beginTime,
+                                      Date endTime,
+                                      HttpServletRequest request) {
+        return projectDailyService.searchMyDaily(page, pageSize, beginTime, endTime, request);
+    }
+
 
 }
 
