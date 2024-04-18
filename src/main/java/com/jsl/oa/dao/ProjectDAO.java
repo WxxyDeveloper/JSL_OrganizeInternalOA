@@ -7,7 +7,7 @@ import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.dodata.info.ProjectShowDO;
 import com.jsl.oa.model.vodata.ProjectEditVO;
 import com.jsl.oa.model.vodata.ProjectInfoVO;
-import com.jsl.oa.model.vodata.ProjectWorkVO;
+import com.jsl.oa.model.vodata.ProjectChildAddVO;
 import com.jsl.oa.utils.Processing;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,10 +35,10 @@ public class ProjectDAO {
         projectMapper.projectAdd(projectAdd);
     }
 
-    public void projectWorkAdd(ProjectWorkVO projectWorkVO) {
+    public void projectWorkAdd(ProjectChildAddVO projectChildAddVO) {
         log.info("\t> 执行 DAO 层 ProjectDAO.projectWorkAdd 方法");
         log.info("\t\t> 从 MySQL 获取数据");
-        projectMapper.projectWorkAdd(projectWorkVO);
+        projectMapper.projectWorkAdd(projectChildAddVO);
     }
 
     public ProjectDO projectEdit(@NotNull ProjectEditVO projectEdit, Long projectId) {

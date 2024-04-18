@@ -88,26 +88,19 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public BaseResponse projectWorkAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO) {
-        //获取用户id
-        Long userId = Processing.getAuthHeaderToUserId(request);
-        //是否是增加子系统
-        if (projectWorkVO.getType() == 0) {
-            //是否是老师
-            if (Processing.checkUserIsPrincipal(request, roleDAO)) {
-                projectDAO.projectWorkAdd(projectWorkVO);
-            } else {
-                return ResultUtil.error(ErrorCode.NOT_PERMISSION);
-            }
-        } else {
-            //是否是子系统的负责人
-            if (Objects.equals(userId, projectMapper.getPirIdbyId(projectWorkVO.getPid()))) {
-                projectDAO.projectWorkAdd(projectWorkVO);
-            } else {
-                return ResultUtil.error(ErrorCode.NOT_PERMISSION);
-            }
-        }
+    public BaseResponse projectChildAdd(HttpServletRequest request, ProjectChildAddVO projectChildAddVO) {
 
+        //是否是项目负责人
+        if (projectMapper.getProjectById(projectChildAddVO.getProjectId()).getPrincipalId()
+                .equals(Processing.getAuthHeaderToUserId(request))
+        ) {
+            HashMap<String, Object> descriptionMap = new HashMap<>();
+            descriptionMap.put("description", projectChildAddVO.getDescription());
+            projectChildAddVO.setDescription(gson.toJson(descriptionMap));
+            projectDAO.projectWorkAdd(projectChildAddVO);
+        } else {
+            return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+        }
         return ResultUtil.success("添加成功");
     }
 
@@ -183,6 +176,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
         //分页返回
         PageInfo<ProjectSimpleVO> pageInfo = new PageInfo<>(projectSimpleVOList);
+        pageInfo.setTotal(projectDAO.get(userId, null, null).size());
         return ResultUtil.success(pageInfo);
     }
 
@@ -202,6 +196,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
         //分页返回
         PageInfo<ProjectSimpleVO> pageInfo = new PageInfo<>(projectSimpleVOList);
+        pageInfo.setTotal(projectMapper.getParticipateProject(userId).size());
         return ResultUtil.success(pageInfo);
     }
 
@@ -246,9 +241,26 @@ public class ProjectServiceImpl implements ProjectService {
         for (ProjectDO projectDO : projectDOList) {
             ReturnGetVO returnGetVO = new ReturnGetVO();
             Processing.copyProperties(projectDO, returnGetVO);
-            returnGetVOList.add(returnGetVO);
         }
         return ResultUtil.success(returnGetVOList);
+    }
+
+    @Override
+    public BaseResponse projectModuleAdd(HttpServletRequest request, ProjectModuleAddVO projectModuleAddVO) {
+        //判断是否是子系统负责人或项目负责人
+        if (!Objects.equals(Processing.getAuthHeaderToUserId(request),
+                projectMapper.getProjectChildById(projectModuleAddVO.getProjectChildId().intValue()).getPrincipalId())
+                // 项目负责人
+                && !Objects.equals(Processing.getAuthHeaderToUserId(request),
+                projectMapper.getPirIdbyId(projectModuleAddVO.getProjectChildId()))) {
+            return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+        } else {
+            HashMap<String, Object> descriptionMap = new HashMap<>();
+            descriptionMap.put("description", projectModuleAddVO.getDescription());
+            projectModuleAddVO.setDescription(gson.toJson(descriptionMap));
+            projectMapper.projectModuleAdd(projectModuleAddVO);
+        }
+        return ResultUtil.success("添加成功");
     }
 
     @Override
@@ -426,6 +438,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
         //分页返回
         PageInfo<ProjectSimpleVO> pageInfo = new PageInfo<>(projectSimpleVOList);
+        pageInfo.setTotal(projectDAO.workget(userId, tags, isFinish, is).size());
         return ResultUtil.success(pageInfo);
 
     }
