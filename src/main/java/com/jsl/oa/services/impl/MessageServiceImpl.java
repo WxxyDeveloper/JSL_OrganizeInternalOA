@@ -157,6 +157,7 @@ public class MessageServiceImpl implements MessageService {
         String systemName = projectMapper.getWorkById(systemId).getName();
         // 添加消息
         MessageAddVO messageAddVO = new MessageAddVO();
+        messageAddVO.setSid(Processing.getAuthHeaderToUserId(request));
         messageAddVO.setUid(uid);
         messageAddVO.setTitle("审批消息");
         String moddleName = projectMapper.getModuleById(moddleId).getName();
@@ -193,16 +194,21 @@ public class MessageServiceImpl implements MessageService {
         for (Long uid : uidList) {
             MessageAddVO messageAddVO = new MessageAddVO();
             messageAddVO.setUid(uid);
+            messageAddVO.setSid(Processing.getAuthHeaderToUserId(request));
             messageAddVO.setTitle("项目变动消息");
             if (type == 3) {
                 messageAddVO.setText("项目负责人" + senderName + "调整了" + systemName + "子系统的负责人");
+                messageAddVO.setType("Project_child");
+                messageAddVO.setToId(systemId.longValue());
             } else if (type == 2) {
                 messageAddVO.setText("项目负责人" + senderName + "修改了" + projectName + "项目的状态");
+                messageAddVO.setType("Project");
+                messageAddVO.setToId(pId.longValue());
             } else if (type == 1) {
                 messageAddVO.setText("项目负责人" + senderName + "上传了文档到" + projectName + "项目");
+                messageAddVO.setType("Project");
+                messageAddVO.setToId(pId.longValue());
             }
-            messageAddVO.setType("Project");
-            messageAddVO.setToId(pId.longValue());
             messageMapper.messageAdd(messageAddVO);
         }
     }
@@ -233,6 +239,7 @@ public class MessageServiceImpl implements MessageService {
         if (type == 1) {
             MessageAddVO messageAddVO = new MessageAddVO();
             messageAddVO.setUid(projectMapper.getPid(moddleId));
+            messageAddVO.setSid(Processing.getAuthHeaderToUserId(request));
             messageAddVO.setTitle("子系统变动消息");
             messageAddVO.setText("项目经理" + senderName + "删除了" + projectName + "项目的"
                     + systemName + "系统的" + moddleName + "模块");
@@ -242,6 +249,7 @@ public class MessageServiceImpl implements MessageService {
             for (Long uid : uidList) {
                 MessageAddVO messageAddVO = new MessageAddVO();
                 messageAddVO.setUid(uid);
+                messageAddVO.setSid(Processing.getAuthHeaderToUserId(request));
                 messageAddVO.setTitle("子系统变动消息");
                 if (type == 2) {
                     messageAddVO.setText("项目经理" + senderName + "修改了" + projectName + "项目的"
@@ -280,7 +288,7 @@ public class MessageServiceImpl implements MessageService {
         messageAddVO.setTitle("日报消息");
         messageAddVO.setText(projectName + "项目的" + systemName + "系统的" + moddleName + "模块负责人" + principalName
                 + "刚刚填写了日报");
-        messageAddVO.setType("跳转日报页");
+        messageAddVO.setType("Project_daily");
         messageMapper.messageAdd(messageAddVO);
     }
 
