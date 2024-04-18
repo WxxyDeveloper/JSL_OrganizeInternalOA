@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <h1>日志服务层实现类</h1>
@@ -64,8 +65,18 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
         return ResultUtil.success();
     }
 
+    @Override
+    public BaseResponse getMyDaily(HttpServletRequest request) {
 
+//        获取用户id
+        Long userId = Processing.getAuthHeaderToUserId(request);
+//        获取 我发布的及自己负责的项目下 的日报
+        List<ProjectDailyDO> projectDailyDOList =
+                projectDailyDAO.getMyProjectDaily(userId);
 
+        return ResultUtil.success(projectDailyDOList);
+
+    }
 
 
 }

@@ -25,4 +25,17 @@
         </trim>
     </insert>
 
+    <select id="getProjectDailyByUser" parameterType="java.lang.Long"
+            resultType="com.jsl.oa.model.dodata.ProjectDailyDO">
+        select * from oa_project_daily where user_id = #{uid}
+            and is_delete = 0
+    </select>
+
+    <select id="getProjectDailyByProject" parameterType="java.lang.Integer"
+            resultType="com.jsl.oa.model.dodata.ProjectDailyDO">
+        select * from oa_project_daily where user_id = #{pid}
+            and is_delete = 0
+    </select>
+
+
 </mapper>

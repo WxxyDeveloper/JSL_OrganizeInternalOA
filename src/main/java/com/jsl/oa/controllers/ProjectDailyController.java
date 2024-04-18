@@ -53,6 +53,10 @@ public class ProjectDailyController {
     }
 
 
+    @GetMapping("/daily/getMyDaily")
+    public BaseResponse getMyDaily(HttpServletRequest request) {
+        return projectDailyService.getMyDaily(request);
+    }
 
 }
 
