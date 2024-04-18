@@ -469,7 +469,9 @@ public class ReviewServiceImpl implements ReviewService {
         List<ReviewVO> reviewsOnPage = allReviews.subList(startIndex, endIndex);
 
         reviewDataVO.setReviews(reviewsOnPage);
-        reviewDataVO.setDataTotal(total);
+        reviewDataVO.setTotalCount(allReviews.size());
+        reviewDataVO.setPageSize(pageSize);
+        reviewDataVO.setCurrentPage(page);
 
         return reviewDataVO;
     }
