@@ -147,4 +147,7 @@ public interface ProjectMapper {
     void deleteProjectChild(Long id1);
 
     void deleteProjectModule(Long id1);
+
+    @Select("select * from organize_oa.oa_project where name like CONCAT('%',#{name},'%')")
+    List<ProjectDO> getByLikeName(String name);
 }

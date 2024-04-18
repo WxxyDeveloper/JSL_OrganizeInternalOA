@@ -31,8 +31,10 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import com.google.gson.Gson;
 
 import static java.lang.System.*;
 
@@ -58,6 +60,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final ObjectMapper objectMapper;
     private final RoleDAO roleDAO;
     private final MessageService messageService;
+    private final Gson gson;
 
     @Override
     public BaseResponse projectAdd(HttpServletRequest request, ProjectInfoVO projectAdd) {
@@ -71,18 +74,11 @@ public class ProjectServiceImpl implements ProjectService {
         } else {
             projectAdd.setDescription("{\"描述\":\" " + projectAdd.getDescription() + "\"}");
         }
-        String tags = projectAdd.getTags();
-        String[] split = tags.split(",");
-        String open = "{\"tags\":[\"";
-        String close = "]}";
-        StringBuilder tag = new StringBuilder();
-        for (String tag1 : split) {
-            tag.append(tag1).append("\",\"");
-        }
-        if (tag.length() > 0) {
-            tag = new StringBuilder(tag.substring(0, tag.length() - 2));
-        }
-        projectAdd.setTags(open + tag + close);
+
+        HashMap<String, Object> tagMap = new HashMap<>();
+        tagMap.put("tags", projectAdd.getTags().split(","));
+        projectAdd.setTags(gson.toJson(tagMap));
+
         projectAdd.setFiles("{\"URI\":\"" + projectAdd.getFiles() + "\"}");
 
 
@@ -242,6 +238,19 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public BaseResponse projectGetName(String name, HttpServletRequest request) {
+        List<ProjectDO> projectDOList = projectMapper.getByLikeName(name);
+
+        List<ReturnGetVO> returnGetVOList = new ArrayList<>();
+        for (ProjectDO projectDO : projectDOList) {
+            ReturnGetVO returnGetVO = new ReturnGetVO();
+            Processing.copyProperties(projectDO, returnGetVO);
+            returnGetVOList.add(returnGetVO);
+        }
+        return ResultUtil.success(returnGetVOList);
+    }
+
+    @Override
     public BaseResponse getModuleById(Integer id) {
         ProjectModuleDO projectWorkSimpleVO = projectMapper.getModuleById(id);
         // 解析JSON字符串
@@ -260,9 +269,9 @@ public class ProjectServiceImpl implements ProjectService {
         }
         ProjectModuleSimpleVO projectModuleSimpleVO = new ProjectModuleSimpleVO();
         projectModuleSimpleVO.setPrincipalUser(userDAO.getUserById(projectMapper.getPid(id)).getUsername());
-        out.println("准备拷贝");
+
         Processing.copyProperties(projectWorkSimpleVO, projectModuleSimpleVO);
-        out.println("拷贝wan");
+
         return ResultUtil.success(projectModuleSimpleVO);
     }
 

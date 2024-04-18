@@ -1,5 +1,6 @@
 package com.jsl.oa.controllers;
 
+import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.model.vodata.ProjectEditVO;
 import com.jsl.oa.model.vodata.ProjectInfoVO;
 import com.jsl.oa.model.vodata.ProjectWorkVO;
@@ -248,6 +249,7 @@ public BaseResponse projectParticipateGet(
      */
 
     @PostMapping("/project/add")
+    @NeedPermission("project:add")
     public BaseResponse projectAdd(
             @RequestBody @Validated ProjectInfoVO projectInfoVO,
             @NotNull BindingResult bindingResult,
@@ -321,5 +323,13 @@ public BaseResponse projectParticipateGet(
         return projectService.projectModuleDelete(request, id);
     }
 
+
+    @GetMapping("/project/get/name")
+    public BaseResponse projectGetName(
+            @RequestParam String name,
+            HttpServletRequest request
+    ) {
+        return projectService.projectGetName(name, request);
+    }
 
 }
