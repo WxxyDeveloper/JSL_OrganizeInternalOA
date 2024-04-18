@@ -13,7 +13,7 @@ import java.util.Date;
 public class ProjectDailyAddVO {
 
     @NotNull(message = "项目id不能为空")
-    private Long projectId;
+    private Integer projectId;
 
     @NotBlank(message = "日报内容不能为空")
     private String content;

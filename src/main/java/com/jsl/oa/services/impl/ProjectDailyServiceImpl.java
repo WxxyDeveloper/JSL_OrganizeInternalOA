@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,9 +50,9 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
 //        获取用户id
         Long userId = Processing.getAuthHeaderToUserId(request);
 //        从请求体中获取项目id
-        Long projectId = projectDailyAddVO.getProjectId();
+        Integer projectId = projectDailyAddVO.getProjectId();
 //        检查项目是否存在
-        if (!projectDAO.isExistProjectById(projectId)) {
+        if (!projectDAO.isExistProjectById(Long.valueOf(projectId))) {
             return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
         }
 
@@ -86,7 +87,14 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
         return ResultUtil.success(projectDailyDataVO);
     }
 
-
+    @Override
+    public BaseResponse searchMyDaily(Integer page,
+                                      Integer pageSize,
+                                      Date beginTime,
+                                      Date endTime,
+                                      HttpServletRequest request) {
+        return null;
+    }
 
 
     public List<ProjectDailyVO> encapsulateArrayClass(List<ProjectDailyDO>

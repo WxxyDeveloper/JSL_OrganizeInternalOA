@@ -6,7 +6,7 @@ import com.jsl.oa.model.vodata.ProjectDailyAddVO;
 import com.jsl.oa.utils.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;
-
+import java.util.Date;
 
 
 /**
@@ -21,6 +21,12 @@ public interface ProjectDailyService {
     BaseResponse addDaily(ProjectDailyAddVO projectDailyAddVO, HttpServletRequest request);
 
     BaseResponse getMyDaily(Integer page, Integer pageSize, HttpServletRequest request);
+
+    BaseResponse searchMyDaily(Integer page,
+                               Integer pageSize,
+                               Date beginTime,
+                               Date endTime,
+                               HttpServletRequest request);
 }
 
 

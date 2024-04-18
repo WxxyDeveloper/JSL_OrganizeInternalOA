@@ -189,10 +189,10 @@ public class ReviewServiceImpl implements ReviewService {
     public BaseResponse addReview(ReviewAddVO reviewAddVO, HttpServletRequest request) {
 
         //获取用户
-        Long userId = Processing.getAuthHeaderToUserId(request);
+        Integer userId = Math.toIntExact(Processing.getAuthHeaderToUserId(request));
 
         //检查对应项目，子系统，子模块是否存在
-        if (!projectDAO.isExistProjectById(reviewAddVO.getProjectId())) {
+        if (!projectDAO.isExistProjectById(Long.valueOf(reviewAddVO.getProjectId()))) {
             return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
         }
 
@@ -369,7 +369,7 @@ public class ReviewServiceImpl implements ReviewService {
             Processing.copyProperties(reviewDO, reviewVO);
 //            赋值其他非空属性
             reviewVO.setCategory(Processing.turnReviewCategory(reviewDO.getCategory()))
-                    .setSenderName(userMapper.getUserById(reviewDO.getSenderId()).getNickname())
+                    .setSenderName(userMapper.getUserById(Long.valueOf(reviewDO.getSenderId())).getNickname())
                     .setProjectName(projectDAO.getProjectById(reviewDO.getProjectId()).getName())
                     .setProjectChildName(projectMapper.getProjectChildById(
                                     Math.toIntExact(reviewDO.getProjectChildId())).getName())
