@@ -70,6 +70,7 @@ public class MessageServiceImpl implements MessageService {
         }
         PageHelper.startPage(page, pageSize);
         List<MessageDO> messageDOList = messageMapper.page(beginTime, endTime, uid);
+
         //封装返回数据
         List<MessageGetVO> messageGetVOList = new ArrayList<>();
         for (MessageDO messageDO : messageDOList) {
@@ -89,9 +90,9 @@ public class MessageServiceImpl implements MessageService {
             }
             messageGetVOList.add(messageGetVO1);
         }
-
         //分页返回
         PageInfo<MessageGetVO> pageInfo = new PageInfo<>(messageGetVOList);
+        pageInfo.setTotal(messageMapper.page(beginTime, endTime, uid).size());
         return ResultUtil.success(pageInfo);
     }
 
