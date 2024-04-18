@@ -43,4 +43,8 @@ public interface ReviewMapper {
 
     @Select("SELECT * FROM  organize_oa.oa_review WHERE name = #{name} AND is_delete = 0")
     List<ReviewDO> selectReviewByName(String name);
+
+    @Select("SELECT * FROM  organize_oa.oa_review WHERE sender_id = #{uid} AND "
+            + "is_delete = 0")
+    List<ReviewDO> selectReviewByUser(Long uid);
 }
