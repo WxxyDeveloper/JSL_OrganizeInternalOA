@@ -2,7 +2,8 @@ package com.jsl.oa.services;
 
 import com.jsl.oa.model.vodata.ProjectEditVO;
 import com.jsl.oa.model.vodata.ProjectInfoVO;
-import com.jsl.oa.model.vodata.ProjectWorkVO;
+import com.jsl.oa.model.vodata.ProjectChildAddVO;
+import com.jsl.oa.model.vodata.ProjectModuleAddVO;
 import com.jsl.oa.model.vodata.business.info.ProjectShowVO;
 import com.jsl.oa.utils.BaseResponse;
 
@@ -35,7 +36,7 @@ public interface ProjectService {
             Integer page,
             Integer pageSize);
 
-    BaseResponse projectWorkAdd(HttpServletRequest request, ProjectWorkVO projectWorkVO);
+    BaseResponse projectChildAdd(HttpServletRequest request, ProjectChildAddVO projectChildAddVO);
 
     BaseResponse tGet(List<String> tags, List<String> isFinish, Integer page, Integer pageSize);
 
@@ -69,4 +70,10 @@ public interface ProjectService {
     BaseResponse projectModuleDelete(HttpServletRequest request, List<Long> id);
 
     BaseResponse projectGetName(String name, HttpServletRequest request);
+
+    BaseResponse projectModuleAdd(HttpServletRequest request, ProjectModuleAddVO projectModuleAddVO);
+
+    BaseResponse projectChildGetName(String name, HttpServletRequest request);
+
+    BaseResponse projectModuleGetName(String projectName, String childName, HttpServletRequest request);
 }
