@@ -106,7 +106,9 @@ public interface ProjectMapper {
             + "AND is_delete = 0")
     ProjectModuleDO getProjectWorkById(Long id);
 
-    @Select("select principal_id from organize_oa.oa_project_child where project_id=#{id}")
+    @Select("select principal_id from organize_oa.oa_project_child where project_id=#{id} union "
+            + "select principal_id from organize_oa.oa_project_modules where project_child_id in"
+            + "(select id from organize_oa.oa_project_child where project_id = #{id})")
     List <Long> getMemberByProjectId(Integer id);
 
     @Select("select principal_id from organize_oa.oa_project_modules where project_child_id=#{id}")
