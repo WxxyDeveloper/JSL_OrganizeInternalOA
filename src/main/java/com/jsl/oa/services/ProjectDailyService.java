@@ -20,7 +20,7 @@ public interface ProjectDailyService {
 
     BaseResponse addDaily(ProjectDailyAddVO projectDailyAddVO, HttpServletRequest request);
 
-    BaseResponse getMyDaily(HttpServletRequest request);
+    BaseResponse getMyDaily(Integer page, Integer pageSize, HttpServletRequest request);
 }
 
 

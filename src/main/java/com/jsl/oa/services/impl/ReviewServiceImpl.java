@@ -5,7 +5,6 @@ import com.jsl.oa.common.constant.ReviewConstants;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.ReviewDAO;
 import com.jsl.oa.dao.UserDAO;
-import com.jsl.oa.exception.BusinessException;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.dodata.ProjectChildDO;
@@ -194,19 +193,19 @@ public class ReviewServiceImpl implements ReviewService {
 
         //检查对应项目，子系统，子模块是否存在
         if (!projectDAO.isExistProjectById(reviewAddVO.getProjectId())) {
-            throw new BusinessException(ErrorCode.PROJECT_NOT_EXIST);
+            return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
         }
 
         if (projectMapper.getProjectChildById(
-                Math.toIntExact(reviewAddVO.getProjectChildId())) != null) {
-            throw new BusinessException(ErrorCode.PROJECT_CHILD_NOT_EXIST);
+                Math.toIntExact(reviewAddVO.getProjectChildId())) == null) {
+            return ResultUtil.error(ErrorCode.PROJECT_CHILD_NOT_EXIST);
         }
 
 //        子模块id不为空时查询，否则直接跳过
         if (reviewAddVO.getProjectModuleId() != null) {
             if (projectMapper.getModuleById(
-                    Math.toIntExact(reviewAddVO.getProjectModuleId())) != null) {
-                throw new BusinessException(ErrorCode.MODULE_NOT_EXIST);
+                    Math.toIntExact(reviewAddVO.getProjectModuleId())) == null) {
+                 return ResultUtil.error(ErrorCode.MODULE_NOT_EXIST);
             }
         }
 
@@ -466,8 +465,10 @@ public class ReviewServiceImpl implements ReviewService {
         int total = allReviews.size();
         int startIndex = (page - 1) * pageSize;
         int endIndex = Math.min(startIndex + pageSize, total);
-        List<ReviewVO> reviewsOnPage = allReviews.subList(startIndex, endIndex);
-
+        List<ReviewVO> reviewsOnPage = new ArrayList<>();
+        if (startIndex <=  allReviews.size()) {
+            reviewsOnPage = allReviews.subList(startIndex, endIndex);
+        }
         reviewDataVO.setReviews(reviewsOnPage);
         reviewDataVO.setTotalCount(allReviews.size());
         reviewDataVO.setPageSize(pageSize);
@@ -475,6 +476,8 @@ public class ReviewServiceImpl implements ReviewService {
 
         return reviewDataVO;
     }
+
+
 }
 
 

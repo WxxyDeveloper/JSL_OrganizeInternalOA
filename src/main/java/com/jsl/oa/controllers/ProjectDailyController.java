@@ -54,8 +54,10 @@ public class ProjectDailyController {
 
 
     @GetMapping("/daily/getMyDaily")
-    public BaseResponse getMyDaily(HttpServletRequest request) {
-        return projectDailyService.getMyDaily(request);
+    public BaseResponse getMyDaily(@RequestParam Integer page,
+                                   @RequestParam Integer pageSize,
+                                   HttpServletRequest request) {
+        return projectDailyService.getMyDaily(page, pageSize, request);
     }
 
 }

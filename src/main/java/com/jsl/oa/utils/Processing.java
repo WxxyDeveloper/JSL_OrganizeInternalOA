@@ -394,4 +394,19 @@ public class Processing {
     }
 
 
+    /**
+     * @Description: list分页方法
+     * @Date: 2024/4/18
+     * @Param list:
+     * @Param pageNumber: 当前页码
+     * @Param pageSize: 每页几条
+     **/
+    public static <T> List<T> getPage(List<T> list, int pageNumber, int pageSize) {
+        int fromIndex = (pageNumber - 1) * pageSize;
+        if (fromIndex >= list.size()) {
+            return new ArrayList<>(); // 返回空列表，表示超出范围
+        }
+        int toIndex = Math.min(fromIndex + pageSize, list.size());
+        return list.subList(fromIndex, toIndex);
+    }
 }
