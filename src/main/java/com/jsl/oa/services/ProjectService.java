@@ -67,4 +67,6 @@ public interface ProjectService {
     BaseResponse projectChildDelete(HttpServletRequest request, List<Long> id);
 
     BaseResponse projectModuleDelete(HttpServletRequest request, List<Long> id);
+
+    BaseResponse projectGetName(String name, HttpServletRequest request);
 }
