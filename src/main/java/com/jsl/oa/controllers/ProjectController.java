@@ -3,7 +3,8 @@ package com.jsl.oa.controllers;
 import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.model.vodata.ProjectEditVO;
 import com.jsl.oa.model.vodata.ProjectInfoVO;
-import com.jsl.oa.model.vodata.ProjectWorkVO;
+import com.jsl.oa.model.vodata.ProjectChildAddVO;
+import com.jsl.oa.model.vodata.ProjectModuleAddVO;
 import com.jsl.oa.model.vodata.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
 import com.jsl.oa.utils.BaseResponse;
@@ -209,7 +210,7 @@ public class ProjectController {
      * @return
      */
     @GetMapping("/project/participate/get")
-public BaseResponse projectParticipateGet(
+    public BaseResponse projectParticipateGet(
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer pageSize,
             HttpServletRequest request) {
@@ -217,25 +218,47 @@ public BaseResponse projectParticipateGet(
     }
 
 
+    /**
+     * 增加子模块
+     *
+     * @param projectModuleAddVO
+     * @param bindingResult
+     * @param request
+     * @return
+     */
+    @PostMapping("/project/module/add")
+    @NeedPermission("project:module:add")
+    public BaseResponse projectModuleAdd(
+            @RequestBody @Validated ProjectModuleAddVO projectModuleAddVO,
+            @NotNull BindingResult bindingResult,
+            HttpServletRequest request
+    ) {
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+        return projectService.projectModuleAdd(request, projectModuleAddVO);
+    }
 
     /**
-     * 子系统子模块的增加
+     * 子系统的增加
      *
      * @param request       请求
      * @param bindingResult 参数校验
      * @return {@link BaseResponse}
      */
-    @PostMapping("/project/work/add")
-    public BaseResponse projectWorkAdd(
+    @PostMapping("/project/child/add")
+    @NeedPermission("project:child:add")
+    public BaseResponse projectChildAdd(
             HttpServletRequest request,
-            @RequestBody @Validated ProjectWorkVO projectWorkVO,
+            @RequestBody @Validated ProjectChildAddVO projectChildAddVO,
             @NotNull BindingResult bindingResult
     ) {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        return projectService.projectWorkAdd(request, projectWorkVO);
+        return projectService.projectChildAdd(request, projectChildAddVO);
     }
 
 
@@ -261,6 +284,9 @@ public BaseResponse projectParticipateGet(
         }
         return projectService.projectAdd(request, projectInfoVO);
     }
+
+
+
 
     /**
      * 获取负责人id
@@ -323,13 +349,43 @@ public BaseResponse projectParticipateGet(
         return projectService.projectModuleDelete(request, id);
     }
 
-
+    /**
+     * 项目名模糊查询项目
+     *
+     * @param name
+     * @param request
+     * @return
+     */
     @GetMapping("/project/get/name")
     public BaseResponse projectGetName(
             @RequestParam String name,
             HttpServletRequest request
     ) {
         return projectService.projectGetName(name, request);
+    }
+
+    /**
+     * 项目名查询子系统
+     *
+     * @param name
+     * @param request
+     * @return
+     */
+    @GetMapping("/project/child/get/name")
+    public BaseResponse projectChildGetName(
+            @RequestParam String name,
+            HttpServletRequest request
+    ) {
+        return projectService.projectChildGetName(name, request);
+    }
+
+    @GetMapping("/project/module/get/name")
+    public BaseResponse projectModuleGetName(
+            @RequestParam String projectName,
+            @RequestParam String childName,
+            HttpServletRequest request
+    ) {
+        return projectService.projectModuleGetName(projectName, childName, request);
     }
 
 }

@@ -5,6 +5,7 @@ import com.jsl.oa.common.constant.ReviewConstants;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.ReviewDAO;
 import com.jsl.oa.dao.UserDAO;
+import com.jsl.oa.exception.BusinessException;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.dodata.ProjectChildDO;
@@ -155,6 +156,11 @@ public class ReviewServiceImpl implements ReviewService {
             reviewData.addAll(reviewDOS);
         }
 
+//        获取自己的审核记录
+        List<ReviewDO> myReviewDO = reviewDAO.getReviewByUser(userId);
+        reviewData.addAll(myReviewDO);
+
+
         //根据id进行去重
         reviewData = reviewData.stream()
                 .collect(Collectors.toMap(ReviewDO::getId, review -> review, (existing, replacement) -> existing))
@@ -185,6 +191,24 @@ public class ReviewServiceImpl implements ReviewService {
 
         //获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
+
+        //检查对应项目，子系统，子模块是否存在
+        if (!projectDAO.isExistProjectById(reviewAddVO.getProjectId())) {
+            throw new BusinessException(ErrorCode.PROJECT_NOT_EXIST);
+        }
+
+        if (projectMapper.getProjectChildById(
+                Math.toIntExact(reviewAddVO.getProjectChildId())) != null) {
+            throw new BusinessException(ErrorCode.PROJECT_CHILD_NOT_EXIST);
+        }
+
+//        子模块id不为空时查询，否则直接跳过
+        if (reviewAddVO.getProjectModuleId() != null) {
+            if (projectMapper.getModuleById(
+                    Math.toIntExact(reviewAddVO.getProjectModuleId())) != null) {
+                throw new BusinessException(ErrorCode.MODULE_NOT_EXIST);
+            }
+        }
 
         //定义要添加的审核实体类
         ReviewDO reviewDO = new ReviewDO();
@@ -230,7 +254,6 @@ public class ReviewServiceImpl implements ReviewService {
 
         return ResultUtil.success();
     }
-
 
 
     @Override
@@ -414,6 +437,9 @@ public class ReviewServiceImpl implements ReviewService {
             reviewData.addAll(reviewDOS);
         }
 
+        //        获取自己的审核记录
+        List<ReviewDO> myReviewDO = reviewDAO.getReviewByUser(userId);
+        reviewData.addAll(myReviewDO);
 
         //根据id进行去重
         reviewData = reviewData.stream()
@@ -443,7 +469,9 @@ public class ReviewServiceImpl implements ReviewService {
         List<ReviewVO> reviewsOnPage = allReviews.subList(startIndex, endIndex);
 
         reviewDataVO.setReviews(reviewsOnPage);
-        reviewDataVO.setDataTotal(total);
+        reviewDataVO.setTotalCount(allReviews.size());
+        reviewDataVO.setPageSize(pageSize);
+        reviewDataVO.setCurrentPage(page);
 
         return reviewDataVO;
     }

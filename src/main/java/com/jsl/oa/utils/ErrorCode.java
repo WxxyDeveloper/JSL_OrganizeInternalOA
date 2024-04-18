@@ -53,6 +53,8 @@ public enum ErrorCode {
     PROJECT_USER_NOT_EXIST("ProjectUserNotExist", 40018, "用户项目表无对应记录"),
     PROJECT_FILE_JSON_ERROR("ProjectFileJsonError", 40019, "项目文件json格式错误"),
     PROJECT_NOT_USER("ProjectNotUser", 40020, "项目无此用户"),
+    PROJECT_CHILD_NOT_EXIST("ProjectChildNotExist", 40021, "子系统不存在"),
+    MODULE_NOT_EXIST("ModuleNotExist", 40022, "模块不存在"),
     REVIEW_NOT_EXIST("ReviewNotExit", 40101, "未找到对应审核信息");
 
 

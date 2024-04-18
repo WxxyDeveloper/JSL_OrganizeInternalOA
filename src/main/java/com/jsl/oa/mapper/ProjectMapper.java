@@ -3,8 +3,9 @@ import com.jsl.oa.model.dodata.ProjectChildDO;
 import com.jsl.oa.model.dodata.ProjectDO;
 import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.vodata.ProjectInfoVO;
+import com.jsl.oa.model.vodata.ProjectModuleAddVO;
 import com.jsl.oa.model.vodata.ProjectWorkSimpleVO;
-import com.jsl.oa.model.vodata.ProjectWorkVO;
+import com.jsl.oa.model.vodata.ProjectChildAddVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -23,11 +24,17 @@ public interface ProjectMapper {
             + ",#{completeTime},#{deadLine},#{status},#{tags},#{workLoad})")
     void projectAdd(ProjectInfoVO projectAdd);
 
-    @Insert("insert into organize_oa.oa_project_work (project_id, pid, name, principal_id,"
-            + " work_load, description, cycle, complete_time, type, is_finish,status) "
-            + "value (#{projectId},#{pid},#{name},#{principalId},#{workLoad},"
-            + "#{description},#{cycle},#{completeTime},#{type},#{isFinish},#{status})")
-    void projectWorkAdd(ProjectWorkVO projectWorkVO);
+    @Insert("insert into organize_oa.oa_project_child (project_id,name, principal_id,"
+            + " work_load, description, cycle,status,dead_line) "
+            + "value (#{projectId},#{name},#{principalId},#{workLoad},"
+            + "#{description},#{cycle},#{status},#{deadLine})")
+    void projectWorkAdd(ProjectChildAddVO projectChildAddVO);
+
+    @Insert("insert into organize_oa.oa_project_modules (project_child_id, name, principal_id,"
+            + " work_load, description, status, dead_line) "
+            + "value (#{projectChildId},#{name},#{principalId},#{workLoad},"
+            + "#{description},#{status},#{deadLine})")
+    void projectModuleAdd(ProjectModuleAddVO projectModuleAddVO);
 
     void projectEdit(ProjectDO projectEdit);
 
@@ -150,4 +157,14 @@ public interface ProjectMapper {
 
     @Select("select * from organize_oa.oa_project where name like CONCAT('%',#{name},'%')")
     List<ProjectDO> getByLikeName(String name);
+
+
+    @Select("select * from organize_oa.oa_project_child where project_id = "
+            + "(select id from organize_oa.oa_project where name =#{name})")
+    List<ProjectChildDO> getChildByLikeName(String name);
+
+    @Select("select * from organize_oa.oa_project_modules where project_child_id = "
+            + "(select id from organize_oa.oa_project_child where name =#{childName} "
+            + "and project_id = (select id from organize_oa.oa_project where name =#{projectName}))")
+    List<ProjectModuleDO> getModuleByName(String projectName, String childName);
 }

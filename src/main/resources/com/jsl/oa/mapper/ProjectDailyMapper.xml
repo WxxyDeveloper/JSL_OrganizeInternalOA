@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jsl.oa.mapper.ProjectDailyMapper">
+
+    <!-- 插入方法的 SQL 语句 -->
+    <insert id="insert" parameterType="com.jsl.oa.model.dodata.ProjectDailyDO">
+        insert into oa_project_daily
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="content != null">content,</if>
+            <if test="dailyTime != null">daily_time,</if>
+            created_at
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="dailyTime != null">#{dailyTime},</if>
+            NOW()
+        </trim>
+    </insert>
+
+    <select id="getProjectDailyByUser" parameterType="java.lang.Long"
+            resultType="com.jsl.oa.model.dodata.ProjectDailyDO">
+        select * from oa_project_daily where user_id = #{uid}
+            and is_delete = 0
+    </select>
+
+    <select id="getProjectDailyByProject" parameterType="java.lang.Integer"
+            resultType="com.jsl.oa.model.dodata.ProjectDailyDO">
+        select * from oa_project_daily where user_id = #{pid}
+            and is_delete = 0
+    </select>
+
+
+</mapper>
