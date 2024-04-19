@@ -51,12 +51,12 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
     public BaseResponse addDaily(ProjectDailyAddVO projectDailyAddVO, HttpServletRequest request) {
 
 //        获取用户id
-        Long userId = Processing.getAuthHeaderToUserId(request);
+            Long userId = Processing.getAuthHeaderToUserId(request);
 //        从请求体中获取项目id
-        Integer projectId = projectDailyAddVO.getProjectId();
+            Integer projectId = projectDailyAddVO.getProjectId();
 //        检查项目是否存在
-        if (!projectDAO.isExistProjectById(Long.valueOf(projectId))) {
-            return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
+            if (!projectDAO.isExistProjectById(Long.valueOf(projectId))) {
+                return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
         }
 
 //        赋值数据库表实体类相关属性

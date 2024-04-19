@@ -84,7 +84,6 @@ public interface ProjectMapper {
     //@Select("select * from organize_oa.oa_project_work where status=1 and principal_id=#{userId}")
     List<ProjectDO> workget1(Long userId, Integer is);
 
-
     List<ProjectDO> tget(Integer id);
 
     List<ProjectDO> tgetByIsfinish(List<String> isFinish);
@@ -168,4 +167,7 @@ public interface ProjectMapper {
             + "and project_id = (select id from organize_oa.oa_project where name =#{projectName}))")
     List<ProjectModuleDO> getModuleByName(String projectName, String childName);
 
+    void projectModuleUpdate(ProjectModuleDO projectModuleDO);
+
+    void projectChildEdit(ProjectChildDO projectChildDO);
 }

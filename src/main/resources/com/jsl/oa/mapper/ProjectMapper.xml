@@ -47,6 +47,28 @@
         where id = #{id}
     </update>
 
+    <update id="projectChildEdit">
+        update organize_oa.oa_project_child
+        <set>
+            <if test="principalId != null and principalId != ''">
+                principal_id = #{principalId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <update id="projectModuleUpdate">
+        update organize_oa.oa_project_modules
+        <set>
+            <if test="principalId != null">
+                principal_id = #{principalId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
     <update id="deleteProjectChild">
         update organize_oa.oa_project_child set is_delete=true where id=#{id1}
     </update>

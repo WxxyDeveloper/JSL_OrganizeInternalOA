@@ -235,6 +235,32 @@ public class ReviewServiceImpl implements ReviewService {
             return ResultUtil.error(ErrorCode.REVIEW_NOT_EXIST);
         }
 
+        //修改对应项目负责人
+        if (reviewUpdateResultVO.getResult() == ReviewConstants.APPROVED) {
+
+            //如果为子系统，则添加子系统负责人为申请人
+            if (reviewDO.getCategory() == 0) {
+                ProjectChildDO projectChildDO = projectMapper.
+                        getProjectChildById(Math.toIntExact(reviewDO.getProjectChildId()));
+                if (projectChildDO == null) {
+                    return ResultUtil.error(ErrorCode.PROJECT_CHILD_NOT_EXIST);
+                }
+                projectChildDO.setPrincipalId(Long.valueOf(reviewDO.getSenderId()));
+                projectMapper.projectChildEdit(projectChildDO);
+            }
+            //如果为子模块，则添加子模块负责人为申请人
+            if (reviewDO.getCategory() == 1) {
+                ProjectModuleDO projectModuleDO = projectMapper.
+                        getModuleById(Math.toIntExact(reviewDO.getProjectModuleId()));
+                if (projectModuleDO == null) {
+                    return ResultUtil.error(ErrorCode.MODULE_NOT_EXIST);
+                }
+                projectModuleDO.setPrincipalId(Long.valueOf(reviewDO.getSenderId()));
+                projectMapper.projectModuleUpdate(projectModuleDO);
+            }
+
+        }
+
         //设置对应属性
         reviewDO.setReviewTime(new Date());
         reviewDO.setRecipientId(userId);
