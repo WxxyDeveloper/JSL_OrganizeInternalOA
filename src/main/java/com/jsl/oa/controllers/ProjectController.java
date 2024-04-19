@@ -1,9 +1,9 @@
 package com.jsl.oa.controllers;
 
 import com.jsl.oa.annotations.NeedPermission;
+import com.jsl.oa.model.vodata.ProjectChildAddVO;
 import com.jsl.oa.model.vodata.ProjectEditVO;
 import com.jsl.oa.model.vodata.ProjectInfoVO;
-import com.jsl.oa.model.vodata.ProjectChildAddVO;
 import com.jsl.oa.model.vodata.ProjectModuleAddVO;
 import com.jsl.oa.model.vodata.business.info.ProjectShowVO;
 import com.jsl.oa.services.ProjectService;
@@ -227,7 +227,7 @@ public class ProjectController {
      * @return
      */
     @PostMapping("/project/module/add")
-    @NeedPermission("project:module:add")
+    @NeedPermission("project:module_add")
     public BaseResponse projectModuleAdd(
             @RequestBody @Validated ProjectModuleAddVO projectModuleAddVO,
             @NotNull BindingResult bindingResult,
@@ -248,7 +248,7 @@ public class ProjectController {
      * @return {@link BaseResponse}
      */
     @PostMapping("/project/child/add")
-    @NeedPermission("project:child:add")
+    @NeedPermission("project:child_add")
     public BaseResponse projectChildAdd(
             HttpServletRequest request,
             @RequestBody @Validated ProjectChildAddVO projectChildAddVO,
