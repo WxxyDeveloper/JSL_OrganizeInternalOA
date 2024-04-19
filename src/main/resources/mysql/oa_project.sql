@@ -2,7 +2,7 @@ create table oa_project
 (
     id            bigint unsigned auto_increment comment '项目id'
         primary key,
-    name          varchar(255)                           not null comment '项目名称',
+    name          varchar(255)                           not null unique comment '项目名称',
     principal_id  bigint unsigned                        not null comment '项目负责人',
     description   json                                   null comment '项目描述（技术选择，描述）',
     tags          json                                   null comment '项目标签（项目类型：web，大数据等）',

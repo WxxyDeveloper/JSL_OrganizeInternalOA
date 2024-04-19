@@ -44,7 +44,7 @@ public class ModuleController {
      * @return 子模块列表
      */
     @GetMapping("/module/get/min")
-    public BaseResponse moduleGetBySysId(@RequestParam Integer sysId, HttpServletRequest request) {
+    public BaseResponse moduleGetBySysId(@RequestParam Long sysId, HttpServletRequest request) {
         return moduleService.getBySysId(sysId, request);
     }
 

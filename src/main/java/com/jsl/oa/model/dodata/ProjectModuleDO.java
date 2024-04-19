@@ -13,6 +13,7 @@ public class ProjectModuleDO {
     private Long id;
     private Long projectChildId;
     private Long principalId;
+    private Integer cycle;
     private Integer workLoad;
     private String description;
     private String name;
