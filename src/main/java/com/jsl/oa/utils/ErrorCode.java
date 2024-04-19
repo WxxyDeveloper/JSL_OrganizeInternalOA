@@ -55,6 +55,8 @@ public enum ErrorCode {
     PROJECT_NOT_USER("ProjectNotUser", 40020, "项目无此用户"),
     PROJECT_CHILD_NOT_EXIST("ProjectChildNotExist", 40021, "子系统不存在"),
     MODULE_NOT_EXIST("ModuleNotExist", 40022, "模块不存在"),
+    PROJECT_DAILY_NOT_EXIST("ProjectDailyNotExist", 40023, "日志不存在"),
+    NOT_PERMISSION_UPDATE_DAILY("NotPermissionUpdateDaily", 40024, "用户无权限修改日报"),
     User_NOT_PROJECT_PRINCIPAL("UserNotProjectPrincipal", 40023, "用户非项目负责人"),
     REVIEW_NOT_EXIST("ReviewNotExit", 40101, "未找到对应审核信息");
 

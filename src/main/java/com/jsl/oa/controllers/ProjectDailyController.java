@@ -3,6 +3,7 @@ package com.jsl.oa.controllers;
 
 import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.model.vodata.ProjectDailyAddVO;
+import com.jsl.oa.model.vodata.ProjectDailyUpdateVO;
 import com.jsl.oa.services.ProjectDailyService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -55,6 +56,19 @@ public class ProjectDailyController {
         return projectDailyService.addDaily(projectDailyAddVO, request);
     }
 
+    @PutMapping("/daily/update")
+    public BaseResponse updateDaily(@RequestBody @Validated ProjectDailyUpdateVO projectDailyUpdateVO,
+                                    @NotNull BindingResult bindingResult,
+                                    HttpServletRequest request) {
+
+        log.info("请求接口[PUT]: /daily/update");
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+
+        return projectDailyService.updateDaily(projectDailyUpdateVO, request);
+    }
 
     @DeleteMapping("/daily/delete")
     @NeedPermission("project:daily:delete")

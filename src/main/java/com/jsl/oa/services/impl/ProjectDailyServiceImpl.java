@@ -10,6 +10,7 @@ import com.jsl.oa.mapper.ProjectDailyMapper;
 import com.jsl.oa.model.dodata.ProjectDailyDO;
 import com.jsl.oa.model.vodata.ProjectDailyAddVO;
 import com.jsl.oa.model.vodata.ProjectDailyDataVO;
+import com.jsl.oa.model.vodata.ProjectDailyUpdateVO;
 import com.jsl.oa.model.vodata.ProjectDailyVO;
 import com.jsl.oa.services.ProjectDailyService;
 import com.jsl.oa.utils.BaseResponse;
@@ -137,6 +138,46 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
         }
 
         projectDailyDAO.deleteDailyById(dailyId);
+
+        return ResultUtil.success();
+    }
+
+    @Override
+    public BaseResponse updateDaily(ProjectDailyUpdateVO projectDailyUpdateVO, HttpServletRequest request) {
+//      获取用户id
+        Long userId = Processing.getAuthHeaderToUserId(request);
+//      获取对应日报数据
+        ProjectDailyDO projectDailyDO = projectDailyDAO.getPorjectDailyById(projectDailyUpdateVO.getId());
+//      检测日报是否为空
+        if (projectDailyDO == null) {
+            return ResultUtil.error(ErrorCode.PROJECT_DAILY_NOT_EXIST);
+        }
+//       查询用户是否有修改权限（本人或项目负责人）
+        if (userId.equals(projectDailyDO.getUserId())
+                || projectDAO.getProjectById(
+                        projectDailyDO.getProjectId()).
+                        getPrincipalId().equals(userId)) {
+            String content = projectDailyUpdateVO.getContent();
+            Long projectId = Long.valueOf(projectDailyUpdateVO.getProjectId());
+            String dailyTime = projectDailyUpdateVO.getDailyTime();
+
+            if (content != null && !content.equals("")) {
+                projectDailyDO.setContent(content);
+            }
+
+            if (projectDAO.isExistProject(projectId)) {
+                projectDailyDO.setProjectId(projectId);
+            }
+
+            if (dailyTime != null && !dailyTime.equals("")) {
+                projectDailyDO.setDailyTime(Processing.convertStringToDate(dailyTime));
+            }
+
+        } else {
+            return ResultUtil.error(ErrorCode.NOT_PERMISSION_UPDATE_DAILY);
+        }
+
+        projectDailyDAO.updateDaily(projectDailyDO);
 
         return ResultUtil.success();
     }

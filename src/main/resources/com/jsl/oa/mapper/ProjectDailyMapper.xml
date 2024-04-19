@@ -66,4 +66,18 @@
         SET is_delete = 1
         WHERE id = #{id}
     </delete>
+
+    <update id="updateDaily" parameterType="com.jsl.oa.model.dodata.ProjectDailyDO">
+        UPDATE oa_project_daily
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="dailyTime != null">daily_time = #{dailyTime},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt},</if>
+            <if test="isDelete != null">is_delete = #{isDelete}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
 </mapper>

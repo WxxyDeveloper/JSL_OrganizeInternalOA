@@ -31,6 +31,8 @@ public interface ProjectDailyMapper {
     ProjectDailyDO getDailyById(Integer id);
 
     void deleteDailyById(Integer id);
+
+    void updateDaily(ProjectDailyDO projectDailyDO);
 }
 
 

@@ -3,6 +3,7 @@ package com.jsl.oa.services;
 
 
 import com.jsl.oa.model.vodata.ProjectDailyAddVO;
+import com.jsl.oa.model.vodata.ProjectDailyUpdateVO;
 import com.jsl.oa.utils.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +31,8 @@ public interface ProjectDailyService {
                                HttpServletRequest request);
 
     BaseResponse deleteDaily(Integer dailyId, HttpServletRequest request);
+
+    BaseResponse updateDaily(ProjectDailyUpdateVO projectDailyUpdateVO, HttpServletRequest request);
 }
 
 
