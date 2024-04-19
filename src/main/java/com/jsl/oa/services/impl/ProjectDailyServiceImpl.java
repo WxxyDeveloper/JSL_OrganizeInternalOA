@@ -197,6 +197,14 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
             projectDailyVO.setProjectName(
                     projectDAO.getProjectById(projectDailyVO.getProjectId()).getName())
                     .setUserName(userDAO.getUserById(projectDailyDO.getUserId()).getNickname());
+                //用户是否有权限删除
+            if (projectDailyDO.getUserId().equals(projectDAO.
+                    getProjectById(projectDailyVO.getProjectId()).getPrincipalId())) {
+                projectDailyVO.setIsAllowDelete(true);
+            } else {
+                projectDailyVO.setIsAllowDelete(false);
+            }
+
 //            向 结果封装类数组 添加对应 日报封装类
             projectDailyVOS.add(projectDailyVO);
         }

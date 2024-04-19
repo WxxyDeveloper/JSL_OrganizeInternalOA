@@ -281,7 +281,6 @@ public class ReviewServiceImpl implements ReviewService {
                                             Integer page,
                                             Integer pageSize) {
 
-
 //        获取审核记录数据
         List<ReviewVO> reviewVOS = getReviewsByResult(request, statue);
 
@@ -355,7 +354,9 @@ public class ReviewServiceImpl implements ReviewService {
                     .setProjectName(projectDAO.getProjectById(reviewDO.getProjectId()).getName())
                     .setProjectChildName(projectMapper.getProjectChildById(
                                     Math.toIntExact(reviewDO.getProjectChildId())).getName())
-                    .setResult(Processing.turnReviewResult(reviewDO.getReviewResult()));
+                    .setResult(Processing.turnReviewResult(reviewDO.getReviewResult()))
+                    .setSenderId(Long.valueOf(reviewDO.getSenderId()))
+                    .setRecipientId(reviewDO.getRecipientId());
 //            赋值可为空属性并进行判断
             if (reviewDO.getRecipientId() != null) {
                 reviewVO.setRecipientName(userMapper.getUserById(reviewDO.getRecipientId()).getNickname());
