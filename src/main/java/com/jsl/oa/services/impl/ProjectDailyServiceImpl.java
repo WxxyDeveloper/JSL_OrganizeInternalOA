@@ -6,9 +6,11 @@ package com.jsl.oa.services.impl;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.ProjectDailyDAO;
 import com.jsl.oa.dao.UserDAO;
+import com.jsl.oa.mapper.ProjectDailyMapper;
 import com.jsl.oa.model.dodata.ProjectDailyDO;
 import com.jsl.oa.model.vodata.ProjectDailyAddVO;
 import com.jsl.oa.model.vodata.ProjectDailyDataVO;
+import com.jsl.oa.model.vodata.ProjectDailyUpdateVO;
 import com.jsl.oa.model.vodata.ProjectDailyVO;
 import com.jsl.oa.services.ProjectDailyService;
 import com.jsl.oa.utils.BaseResponse;
@@ -42,6 +44,7 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
     private final ProjectDAO projectDAO;
     private final UserDAO userDAO;
     private final ProjectDailyDAO projectDailyDAO;
+    private final ProjectDailyMapper projectDailyMapper;
 
 
     @Override
@@ -60,7 +63,7 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
         ProjectDailyDO projectDailyDO = new ProjectDailyDO();
         Processing.copyProperties(projectDailyAddVO, projectDailyDO);
         projectDailyDO.setUserId(userId);
-
+        projectDailyDO.setProjectId(Long.valueOf(projectDailyAddVO.getProjectId()));
 
 //        向数据库添加数据
         projectDailyDAO.addProjectDaily(projectDailyDO);
@@ -88,19 +91,95 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
     }
 
     @Override
-    public BaseResponse searchMyDaily(Integer page,
+    public BaseResponse searchMyDaily(Integer projectId,
+                                      Integer page,
                                       Integer pageSize,
                                       Date beginTime,
                                       Date endTime,
                                       HttpServletRequest request) {
 //        获取用户id
         Long userId = Processing.getAuthHeaderToUserId(request);
-//        获取 我发布的及自己负责的项目下 的日报
-        List<ProjectDailyDO> projectDailyDOList =
-                projectDailyDAO.getMyProjectDaily(userId);
+
+//        根据时间筛选---获取 我发布的及自己负责的项目下 的日报
+        List<ProjectDailyDO> projectDailyDOList = new ArrayList<>();
+        //如果时间不为空，则先根据时间筛选
+        if (beginTime != null && endTime != null) {
+           projectDailyDOList  = projectDailyDAO.
+                   getMyProjectDailyByTime(userId, beginTime, endTime);
+        } else {
+        //否则获取全部数据
+            projectDailyDOList =
+                    projectDailyDAO.getMyProjectDaily(userId);
+        }
+
+//        再根据项目id进行筛选
+        if (projectId != null) {
+            projectDailyDOList.removeIf(projectDailyDO -> projectDailyDO.getProjectId() != Long.valueOf(projectId));
+        }
+
+//        进行分页
+        List<ProjectDailyDO> dailyPage =  Processing.getPage(projectDailyDOList, page, pageSize);
+//        封装结果类
+        List<ProjectDailyVO> projectDailyVOS = encapsulateArrayClass(dailyPage);
+        ProjectDailyDataVO projectDailyDataVO =
+                new ProjectDailyDataVO(projectDailyDOList.size(), page, pageSize, projectDailyVOS);
+
+        return ResultUtil.success(projectDailyDataVO);
+    }
 
 
-        return null;
+    @Override
+    public BaseResponse deleteDaily(Integer dailyId, HttpServletRequest request) {
+
+        Long userId = Processing.getAuthHeaderToUserId(request);
+//      检查用户是否为项目负责人
+        if (!projectDAO.isPrincipalUser(userId, projectDailyMapper.getDailyById(dailyId).getProjectId())) {
+            return ResultUtil.error(ErrorCode.User_NOT_PROJECT_PRINCIPAL);
+        }
+
+        projectDailyDAO.deleteDailyById(dailyId);
+
+        return ResultUtil.success();
+    }
+
+    @Override
+    public BaseResponse updateDaily(ProjectDailyUpdateVO projectDailyUpdateVO, HttpServletRequest request) {
+//      获取用户id
+        Long userId = Processing.getAuthHeaderToUserId(request);
+//      获取对应日报数据
+        ProjectDailyDO projectDailyDO = projectDailyDAO.getPorjectDailyById(projectDailyUpdateVO.getId());
+//      检测日报是否为空
+        if (projectDailyDO == null) {
+            return ResultUtil.error(ErrorCode.PROJECT_DAILY_NOT_EXIST);
+        }
+//       查询用户是否有修改权限（本人或项目负责人）
+        if (userId.equals(projectDailyDO.getUserId())
+                || projectDAO.getProjectById(
+                        projectDailyDO.getProjectId()).
+                        getPrincipalId().equals(userId)) {
+            String content = projectDailyUpdateVO.getContent();
+            Long projectId = Long.valueOf(projectDailyUpdateVO.getProjectId());
+            String dailyTime = projectDailyUpdateVO.getDailyTime();
+
+            if (content != null && !content.equals("")) {
+                projectDailyDO.setContent(content);
+            }
+
+            if (projectDAO.isExistProject(projectId)) {
+                projectDailyDO.setProjectId(projectId);
+            }
+
+            if (dailyTime != null && !dailyTime.equals("")) {
+                projectDailyDO.setDailyTime(Processing.convertStringToDate(dailyTime));
+            }
+
+        } else {
+            return ResultUtil.error(ErrorCode.NOT_PERMISSION_UPDATE_DAILY);
+        }
+
+        projectDailyDAO.updateDaily(projectDailyDO);
+
+        return ResultUtil.success();
     }
 
 
@@ -118,6 +197,14 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
             projectDailyVO.setProjectName(
                     projectDAO.getProjectById(projectDailyVO.getProjectId()).getName())
                     .setUserName(userDAO.getUserById(projectDailyDO.getUserId()).getNickname());
+                //用户是否有权限删除
+            if (projectDailyDO.getUserId().equals(projectDAO.
+                    getProjectById(projectDailyVO.getProjectId()).getPrincipalId())) {
+                projectDailyVO.setIsAllowDelete(true);
+            } else {
+                projectDailyVO.setIsAllowDelete(false);
+            }
+
 //            向 结果封装类数组 添加对应 日报封装类
             projectDailyVOS.add(projectDailyVO);
         }

@@ -167,4 +167,5 @@ public interface ProjectMapper {
             + "(select id from organize_oa.oa_project_child where name =#{childName} "
             + "and project_id = (select id from organize_oa.oa_project where name =#{projectName}))")
     List<ProjectModuleDO> getModuleByName(String projectName, String childName);
+
 }

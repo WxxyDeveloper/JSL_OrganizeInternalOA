@@ -1,7 +1,9 @@
 package com.jsl.oa.controllers;
 
 
+import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.model.vodata.ProjectDailyAddVO;
+import com.jsl.oa.model.vodata.ProjectDailyUpdateVO;
 import com.jsl.oa.services.ProjectDailyService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -16,7 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+
 
 
 /**
@@ -42,15 +44,36 @@ public class ProjectDailyController {
      * @return 新增结果
      */
     @PostMapping("/daily/add")
-    public BaseResponse add(@RequestBody @Validated ProjectDailyAddVO projectDailyAddVO,
+    @NeedPermission("daily:add")
+    public BaseResponse addDaily(@RequestBody @Validated ProjectDailyAddVO projectDailyAddVO,
                             @NotNull BindingResult bindingResult,
                             HttpServletRequest request) {
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-
         return projectDailyService.addDaily(projectDailyAddVO, request);
+    }
+
+    @PutMapping("/daily/update")
+    public BaseResponse updateDaily(@RequestBody @Validated ProjectDailyUpdateVO projectDailyUpdateVO,
+                                    @NotNull BindingResult bindingResult,
+                                    HttpServletRequest request) {
+
+        log.info("请求接口[PUT]: /daily/update");
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
+        }
+
+        return projectDailyService.updateDaily(projectDailyUpdateVO, request);
+    }
+
+    @DeleteMapping("/daily/delete")
+    @NeedPermission("project:daily_delete")
+    public BaseResponse delete(@RequestParam Integer dailyId,
+                               HttpServletRequest request) {
+        return projectDailyService.deleteDaily(dailyId, request);
     }
 
 
@@ -65,10 +88,17 @@ public class ProjectDailyController {
     @GetMapping("/daily/search")
     public BaseResponse searchMyDaily(@RequestParam Integer page,
                                       @RequestParam Integer pageSize,
-                                      Date beginTime,
-                                      Date endTime,
+                                      Integer projectId,
+                                      String beginTime,
+                                      String endTime,
                                       HttpServletRequest request) {
-        return projectDailyService.searchMyDaily(page, pageSize, beginTime, endTime, request);
+
+        return projectDailyService.searchMyDaily(projectId,
+                page,
+                pageSize,
+                Processing.convertStringToDate(beginTime),
+                Processing.convertStringToDate(endTime),
+                request);
     }
 
 

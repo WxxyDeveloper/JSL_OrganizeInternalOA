@@ -62,6 +62,10 @@ public class ReviewDAO {
         return reviewMapper.selectReviewByUser(uid);
     }
 
+    public List<ReviewDO> getReviewByUserAndResult(Long uid, Short result) {
+        return reviewMapper.selectReviewByUserAndResult(uid, result);
+    }
+
 
 
     public void addReview(ReviewDO reviewDO) {
