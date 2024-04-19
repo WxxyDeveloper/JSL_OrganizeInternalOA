@@ -64,6 +64,7 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
         Processing.copyProperties(projectDailyAddVO, projectDailyDO);
         projectDailyDO.setUserId(userId);
         projectDailyDO.setProjectId(Long.valueOf(projectDailyAddVO.getProjectId()));
+        projectDailyDO.setDailyTime(Processing.convertStringToDate(projectDailyAddVO.getDailyTime()));
 
 //        向数据库添加数据
         projectDailyDAO.addProjectDaily(projectDailyDO);
@@ -132,8 +133,15 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
     public BaseResponse deleteDaily(Integer dailyId, HttpServletRequest request) {
 
         Long userId = Processing.getAuthHeaderToUserId(request);
+
+        ProjectDailyDO projectDailyDO = projectDailyMapper.getDailyById(dailyId);
+
+        if (projectDailyDO == null) {
+            return ResultUtil.error(ErrorCode.PROJECT_DAILY_NOT_EXIST);
+        }
+
 //      检查用户是否为项目负责人
-        if (!projectDAO.isPrincipalUser(userId, projectDailyMapper.getDailyById(dailyId).getProjectId())) {
+        if (!projectDAO.isPrincipalUser(userId, projectDailyDO.getProjectId())) {
             return ResultUtil.error(ErrorCode.User_NOT_PROJECT_PRINCIPAL);
         }
 
