@@ -15,7 +15,7 @@ public interface ModuleMapper {
 
     List<ProjectChildDO> getByProjectId(Integer projectId, Long userId, int is);
 
-    List<ProjectModuleDO> getBySysId(Integer sysId, Long userId, int is);
+    List<ProjectModuleDO> getBySysId(Long sysId, Long userId, int is);
 
     @Select("select principal_id from organize_oa.oa_project where id=#{projectId}")
     Long getPidByProjectid(Integer projectId);

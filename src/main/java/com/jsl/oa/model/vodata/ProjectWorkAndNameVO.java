@@ -18,14 +18,12 @@ public class ProjectWorkAndNameVO {
     private Long projectChildId;
     private Long principalId;
     private String principalUser;
+    private Integer cycle;
     private Integer workLoad;
     private String name;
     private String description;
-    private Integer isDelete;
     private String status;
     private Timestamp deadLine;
-    private Timestamp beginTime;
-    private Timestamp completeTime;
 }
 
 

@@ -1,5 +1,7 @@
 package com.jsl.oa.services.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
@@ -21,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.System.*;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -29,6 +33,7 @@ public class ModuleServiceImpl implements ModuleService {
     private final ModuleMapper moduleMapper;
     private final UserDAO userDAO;
     private final RoleDAO roleDAO;
+    private final Gson gson;
 
     @Override
     public BaseResponse getByProjectId(Integer projectId, HttpServletRequest request) {
@@ -48,21 +53,28 @@ public class ModuleServiceImpl implements ModuleService {
         for (ProjectChildDO projectWorkDO : projectWorkDOList) {
             ProjectChildGetVO projectWorkAndNameVO = new ProjectChildGetVO();
             Processing.copyProperties(projectWorkDO, projectWorkAndNameVO);
-            projectWorkAndNameVO.setPrincipalName(userDAO.getUserById(projectWorkDO.getPrincipalId()).getUsername());
+            //描述转换,负责人名字转换
+            JsonObject jsonObject = gson.fromJson(projectWorkDO.getDescription(), JsonObject.class);
+            projectWorkAndNameVO.setDescription(jsonObject.get("description").getAsString());
+            if (projectWorkDO.getPrincipalId() != null) {
+                projectWorkAndNameVO
+                        .setPrincipalName(userDAO.getUserById(projectWorkDO.getPrincipalId()).getUsername());
+            }
             projectWorkAndNameVOS.add(projectWorkAndNameVO);
         }
         return ResultUtil.success(projectWorkAndNameVOS);
     }
 
+    @SuppressWarnings("checkstyle:Regexp")
     @Override
-    public BaseResponse getBySysId(Integer sysId, HttpServletRequest request) {
+    public BaseResponse getBySysId(Long sysId, HttpServletRequest request) {
         log.info("SysService");
         //获取用户id
         Long userId = Processing.getAuthHeaderToUserId(request);
         //获取子系统负责人id
-        Long pid = moduleMapper.getPidBySysid(sysId);
+        Long pid = moduleMapper.getPidBySysid(sysId.intValue());
         //获取项目负责人id
-        Long prid = moduleMapper.getPridBySysyid(sysId);
+        Long prid = moduleMapper.getPridBySysyid(sysId.intValue());
         //判断是否是子系统/项目负责人
         int is = 1;
         if (!pid.equals(userId) && !prid.equals(userId)) {
@@ -70,13 +82,19 @@ public class ModuleServiceImpl implements ModuleService {
         }
 
         List<ProjectModuleDO> projectWorkDOList = moduleMapper.getBySysId(sysId, userId, is);
+        out.println(projectWorkDOList.size());
 //      封装VO类
         List<ProjectWorkAndNameVO> projectWorkAndNameVOS = new ArrayList<>();
         for (ProjectModuleDO projectWorkDO : projectWorkDOList) {
             ProjectWorkAndNameVO projectWorkAndNameVO = new ProjectWorkAndNameVO();
             Processing.copyProperties(projectWorkDO, projectWorkAndNameVO);
-//        添加负责人和子系统名称
-            projectWorkAndNameVO.setPrincipalUser(userDAO.getUserById(projectWorkDO.getPrincipalId()).getUsername());
+            //描述转换，负责人名字转换
+            JsonObject jsonObject = gson.fromJson(projectWorkDO.getDescription(), JsonObject.class);
+            projectWorkAndNameVO.setDescription(jsonObject.get("description").getAsString());
+            if (projectWorkDO.getPrincipalId() != null) {
+                projectWorkAndNameVO
+                        .setPrincipalUser(userDAO.getUserById(projectWorkDO.getPrincipalId()).getUsername());
+            }
             projectWorkAndNameVOS.add(projectWorkAndNameVO);
         }
         return ResultUtil.success(projectWorkAndNameVOS);

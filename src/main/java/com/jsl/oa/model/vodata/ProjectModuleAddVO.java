@@ -16,6 +16,8 @@ public class ProjectModuleAddVO {
     private Long principalId;
     @NotNull(message = "工作量不能为空")
     private Integer workLoad;
+    @NotNull(message = "周期不能为空")
+    private Integer cycle;
     @NotNull(message = "名字不能为空")
     private String name;
     private String description;
