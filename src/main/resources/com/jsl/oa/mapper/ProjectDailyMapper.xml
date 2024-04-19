@@ -53,4 +53,17 @@
           and is_delete = 0
     </select>
 
+
+    <select id="getDailyById" parameterType="java.lang.Integer"
+            resultType="com.jsl.oa.model.dodata.ProjectDailyDO">
+        select * from oa_project_daily
+        where id = #{id}
+          and is_delete = 0
+    </select>
+
+    <delete id="deleteDailyById" parameterType="java.lang.Integer">
+        UPDATE oa_project_daily
+        SET is_delete = 1
+        WHERE id = #{id}
+    </delete>
 </mapper>

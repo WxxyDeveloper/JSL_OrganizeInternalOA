@@ -6,6 +6,7 @@ package com.jsl.oa.services.impl;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.ProjectDailyDAO;
 import com.jsl.oa.dao.UserDAO;
+import com.jsl.oa.mapper.ProjectDailyMapper;
 import com.jsl.oa.model.dodata.ProjectDailyDO;
 import com.jsl.oa.model.vodata.ProjectDailyAddVO;
 import com.jsl.oa.model.vodata.ProjectDailyDataVO;
@@ -42,6 +43,7 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
     private final ProjectDAO projectDAO;
     private final UserDAO userDAO;
     private final ProjectDailyDAO projectDailyDAO;
+    private final ProjectDailyMapper projectDailyMapper;
 
 
     @Override
@@ -122,6 +124,21 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
                 new ProjectDailyDataVO(projectDailyDOList.size(), page, pageSize, projectDailyVOS);
 
         return ResultUtil.success(projectDailyDataVO);
+    }
+
+
+    @Override
+    public BaseResponse deleteDaily(Integer dailyId, HttpServletRequest request) {
+
+        Long userId = Processing.getAuthHeaderToUserId(request);
+//      检查用户是否为项目负责人
+        if (!projectDAO.isPrincipalUser(userId, projectDailyMapper.getDailyById(dailyId).getProjectId())) {
+            return ResultUtil.error(ErrorCode.User_NOT_PROJECT_PRINCIPAL);
+        }
+
+        projectDailyDAO.deleteDailyById(dailyId);
+
+        return ResultUtil.success();
     }
 
 

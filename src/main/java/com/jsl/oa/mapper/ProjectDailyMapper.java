@@ -27,6 +27,10 @@ public interface ProjectDailyMapper {
     List getProjectDailyByProjectAndTime(Long id, Date beginTime, Date endTime);
 
     List<ProjectDailyDO> getProjectDailyByUserAndTime(Long userId, Date beginTime, Date endTime);
+
+    ProjectDailyDO getDailyById(Integer id);
+
+    void deleteDailyById(Integer id);
 }
 
 

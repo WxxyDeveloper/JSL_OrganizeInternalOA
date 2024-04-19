@@ -1,6 +1,7 @@
 package com.jsl.oa.controllers;
 
 
+import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.model.vodata.ProjectDailyAddVO;
 import com.jsl.oa.services.ProjectDailyService;
 import com.jsl.oa.utils.BaseResponse;
@@ -42,6 +43,7 @@ public class ProjectDailyController {
      * @return 新增结果
      */
     @PostMapping("/daily/add")
+    @NeedPermission("project:daily:add")
     public BaseResponse add(@RequestBody @Validated ProjectDailyAddVO projectDailyAddVO,
                             @NotNull BindingResult bindingResult,
                             HttpServletRequest request) {
@@ -49,15 +51,23 @@ public class ProjectDailyController {
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-
+        log.info("请求接口[GET]: /daily/add");
         return projectDailyService.addDaily(projectDailyAddVO, request);
     }
 
+    @DeleteMapping("/daily/delete")
+    @NeedPermission("project:daily:delete")
+    public BaseResponse delete(@RequestParam Integer dailyId,
+                               HttpServletRequest request) {
+        log.info("请求接口[DELETE]: /daily/delete");
+        return projectDailyService.deleteDaily(dailyId, request);
+    }
 
     @GetMapping("/daily/getMyDaily")
     public BaseResponse getMyDaily(@RequestParam Integer page,
                                    @RequestParam Integer pageSize,
                                    HttpServletRequest request) {
+        log.info("请求接口[GET]: /daily/getMyDaily");
         return projectDailyService.getMyDaily(page, pageSize, request);
     }
 
@@ -70,7 +80,7 @@ public class ProjectDailyController {
                                       String endTime,
                                       HttpServletRequest request) {
 
-
+        log.info("请求接口[GET]: /daily/search");
         return projectDailyService.searchMyDaily(projectId,
                 page,
                 pageSize,

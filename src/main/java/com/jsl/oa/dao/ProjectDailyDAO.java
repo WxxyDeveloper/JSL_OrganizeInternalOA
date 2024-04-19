@@ -111,6 +111,10 @@ public class ProjectDailyDAO {
 
         return projectDailyDOList;
     }
+
+    public void deleteDailyById(Integer dailyId) {
+        projectDailyMapper.deleteDailyById(dailyId);
+    }
 }
 
 

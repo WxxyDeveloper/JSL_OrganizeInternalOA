@@ -212,6 +212,9 @@ public class ReviewServiceImpl implements ReviewService {
 
         //定义申请者id
         reviewDO.setSenderId(userId);
+        reviewDO.setProjectId(Long.valueOf(reviewAddVO.getProjectId()));
+        reviewDO.setProjectChildId(Long.valueOf(reviewAddVO.getProjectChildId()));
+        reviewDO.setProjectModuleId(Long.valueOf(reviewAddVO.getProjectModuleId()));
         //添加数据
         reviewDAO.addReview(reviewDO);
 

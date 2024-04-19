@@ -28,6 +28,8 @@ public interface ProjectDailyService {
                                Date beginTime,
                                Date endTime,
                                HttpServletRequest request);
+
+    BaseResponse deleteDaily(Integer dailyId, HttpServletRequest request);
 }
 
 
