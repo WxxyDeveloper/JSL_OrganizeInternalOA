@@ -54,11 +54,9 @@
     </select>
 
 
-    <select id="getDailyById" parameterType="java.lang.Integer"
-            resultType="com.jsl.oa.model.dodata.ProjectDailyDO">
+    <select id="getDailyById" parameterType="java.lang.Integer" resultType="com.jsl.oa.model.dodata.ProjectDailyDO">
         select * from organize_oa.oa_project_daily
-        where id = #{id}
-          and is_delete = 0
+        where id = #{id} and is_delete = 0
     </select>
 
     <delete id="deleteDailyById" parameterType="java.lang.Integer">
