@@ -91,14 +91,23 @@ public class ReviewController {
     }
 
 
-    @GetMapping("/review/search")
+    @GetMapping("/review/searchMyReview")
     public BaseResponse searchReview(String content,
-                                     Short statue,
                                      HttpServletRequest request,
                                      @RequestParam Integer page,
                                      @RequestParam Integer pageSize) {
-        log.info("请求接口[GET]: /review/search");
-        return reviewService.searchReview(content, statue, request, page, pageSize);
+        log.info("请求接口[GET]: /review/searchMyReview");
+        return reviewService.searchReview(content, request, page, pageSize);
+    }
+
+    @GetMapping("/review/searchReviewRecords")
+    public BaseResponse searchReviewRecords(String content,
+                                            Short statue,
+                                            HttpServletRequest request,
+                                            @RequestParam Integer page,
+                                            @RequestParam Integer pageSize) {
+        log.info("请求接口[GET]: /review/searchReviewRecords");
+        return  reviewService.searchReviewRecords(content, statue, request, page, pageSize);
     }
 }
 

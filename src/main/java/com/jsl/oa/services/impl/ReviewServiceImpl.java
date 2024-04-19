@@ -257,20 +257,11 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public BaseResponse searchReview(String content,
-                                     Short statue,
                                      HttpServletRequest request,
                                      Integer page, Integer pageSize) {
 
-        List<ReviewVO> reviewVOS = new ArrayList<>();
-
-//        根据判断结果筛选
-        if (statue == null || statue.equals("")) {
-            List<ReviewVO> reviewVOs = getReview(request);
-            reviewVOS.addAll(reviewVOs);
-        } else {
-            List<ReviewVO> reviewVOs = getReviewsByResult(request, statue);
-            reviewVOS.addAll(reviewVOs);
-        }
+//        获取我的审核数据
+        List<ReviewVO> reviewVOS = getReview(request);
 
 //         根据内容筛选
         if (content == null || content.equals("")) {
@@ -291,6 +282,33 @@ public class ReviewServiceImpl implements ReviewService {
         return ResultUtil.success(reviewDataVO);
     }
 
+    @Override
+    public BaseResponse searchReviewRecords(String content,
+                                            Short statue,
+                                            HttpServletRequest request,
+                                            Integer page,
+                                            Integer pageSize) {
+
+//        获取审核记录数据
+        List<ReviewVO> reviewVOS = getReviewsByResult(request, statue);
+
+
+//         根据内容筛选
+        if (content == null || content.equals("")) {
+            //封装结果类与数据总数
+            ReviewDataVO reviewDataVO = getReviewsByPage(reviewVOS, page, pageSize);
+            return ResultUtil.success(reviewDataVO);
+        } else {
+            reviewVOS = reviewVOS.stream()
+                    .filter(reviewVO -> reviewVO.getName().contains(content) || reviewVO.getContent().contains(content))
+                    .collect(Collectors.toList());
+        }
+
+        //封装结果类与数据总数
+        ReviewDataVO reviewDataVO = getReviewsByPage(reviewVOS, page, pageSize);
+
+        return ResultUtil.success(reviewDataVO);
+    }
 
 
     private List<ReviewVO> getReview(HttpServletRequest request) {
@@ -436,7 +454,7 @@ public class ReviewServiceImpl implements ReviewService {
             reviewData.addAll(reviewDOS);
         }
 
-        //        获取自己的审核记录
+//        获取自己的审核记录
         List<ReviewDO> myReviewDO = reviewDAO.getReviewByUser(userId);
         reviewData.addAll(myReviewDO);
 
