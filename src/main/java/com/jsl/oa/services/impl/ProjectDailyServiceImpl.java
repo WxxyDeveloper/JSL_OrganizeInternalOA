@@ -88,19 +88,40 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
     }
 
     @Override
-    public BaseResponse searchMyDaily(Integer page,
+    public BaseResponse searchMyDaily(Integer projectId,
+                                      Integer page,
                                       Integer pageSize,
                                       Date beginTime,
                                       Date endTime,
                                       HttpServletRequest request) {
 //        获取用户id
         Long userId = Processing.getAuthHeaderToUserId(request);
-//        获取 我发布的及自己负责的项目下 的日报
-        List<ProjectDailyDO> projectDailyDOList =
-                projectDailyDAO.getMyProjectDaily(userId);
 
+//        根据时间筛选---获取 我发布的及自己负责的项目下 的日报
+        List<ProjectDailyDO> projectDailyDOList = new ArrayList<>();
+        //如果时间不为空，则先根据时间筛选
+        if (beginTime != null && endTime != null) {
+           projectDailyDOList  = projectDailyDAO.
+                   getMyProjectDailyByTime(userId, beginTime, endTime);
+        } else {
+        //否则获取全部数据
+            projectDailyDOList =
+                    projectDailyDAO.getMyProjectDaily(userId);
+        }
 
-        return null;
+//        再根据项目id进行筛选
+        if (projectId != null) {
+            projectDailyDOList.removeIf(projectDailyDO -> projectDailyDO.getProjectId() != Long.valueOf(projectId));
+        }
+
+//        进行分页
+        List<ProjectDailyDO> dailyPage =  Processing.getPage(projectDailyDOList, page, pageSize);
+//        封装结果类
+        List<ProjectDailyVO> projectDailyVOS = encapsulateArrayClass(dailyPage);
+        ProjectDailyDataVO projectDailyDataVO =
+                new ProjectDailyDataVO(projectDailyDOList.size(), page, pageSize, projectDailyVOS);
+
+        return ResultUtil.success(projectDailyDataVO);
     }
 
 

@@ -22,7 +22,8 @@ public interface ProjectDailyService {
 
     BaseResponse getMyDaily(Integer page, Integer pageSize, HttpServletRequest request);
 
-    BaseResponse searchMyDaily(Integer page,
+    BaseResponse searchMyDaily(Integer projectId,
+                               Integer page,
                                Integer pageSize,
                                Date beginTime,
                                Date endTime,

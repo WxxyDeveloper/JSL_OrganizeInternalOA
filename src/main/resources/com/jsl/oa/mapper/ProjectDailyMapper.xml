@@ -37,5 +37,20 @@
             and is_delete = 0
     </select>
 
+    <select id="getProjectDailyByProjectAndTime" parameterType="java.util.Map"
+            resultType="com.jsl.oa.model.dodata.ProjectDailyDO">
+        select * from oa_project_daily
+        where project_id = #{id}
+          and created_at between #{beginTime} and #{endTime}
+          and is_delete = 0
+    </select>
+
+    <select id="getProjectDailyByUserAndTime" parameterType="java.util.Map"
+            resultType="com.jsl.oa.model.dodata.ProjectDailyDO">
+        select * from oa_project_daily
+        where user_id = #{userId}
+          and created_at between #{beginTime} and #{endTime}
+          and is_delete = 0
+    </select>
 
 </mapper>

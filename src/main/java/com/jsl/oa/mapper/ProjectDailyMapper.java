@@ -4,6 +4,7 @@ package com.jsl.oa.mapper;
 import com.jsl.oa.model.dodata.ProjectDailyDO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -23,6 +24,9 @@ public interface ProjectDailyMapper {
 
     List<ProjectDailyDO> getProjectDailyByProject(Long pid);
 
+    List getProjectDailyByProjectAndTime(Long id, Date beginTime, Date endTime);
+
+    List<ProjectDailyDO> getProjectDailyByUserAndTime(Long userId, Date beginTime, Date endTime);
 }
 
 
