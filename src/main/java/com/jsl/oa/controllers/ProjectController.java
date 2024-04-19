@@ -379,6 +379,21 @@ public class ProjectController {
         return projectService.projectChildGetName(name, request);
     }
 
+    /**
+     * id查询子系统
+     *
+     * @param id
+     * @param request
+     * @return
+     */
+    @GetMapping("/project/child/get/id")
+    public BaseResponse projectChildById(
+            @RequestParam Integer id,
+            HttpServletRequest request
+    ) {
+        return projectService.projectChildGetById(id, request);
+    }
+
     @GetMapping("/project/module/get/name")
     public BaseResponse projectModuleGetName(
             @RequestParam String projectName,
@@ -386,6 +401,15 @@ public class ProjectController {
             HttpServletRequest request
     ) {
         return projectService.projectModuleGetName(projectName, childName, request);
+    }
+
+
+    @GetMapping("/project/module/get/id")
+    public BaseResponse projectModuleGetName(
+            @RequestParam Integer childId,
+            HttpServletRequest request
+    ) {
+        return projectService.projectModuleGetById(childId, request);
     }
 
 }

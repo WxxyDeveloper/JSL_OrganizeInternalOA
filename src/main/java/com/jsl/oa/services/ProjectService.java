@@ -71,9 +71,15 @@ public interface ProjectService {
 
     BaseResponse projectGetName(String name, HttpServletRequest request);
 
+
+
     BaseResponse projectModuleAdd(HttpServletRequest request, ProjectModuleAddVO projectModuleAddVO);
 
     BaseResponse projectChildGetName(String name, HttpServletRequest request);
 
+    BaseResponse projectChildGetById(Integer id, HttpServletRequest request);
+
     BaseResponse projectModuleGetName(String projectName, String childName, HttpServletRequest request);
+
+    BaseResponse projectModuleGetById(Integer id, HttpServletRequest request);
 }

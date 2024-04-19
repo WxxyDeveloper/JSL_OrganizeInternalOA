@@ -170,4 +170,12 @@ public interface ProjectMapper {
     void projectModuleUpdate(ProjectModuleDO projectModuleDO);
 
     void projectChildEdit(ProjectChildDO projectChildDO);
+
+    @Select("select * from organize_oa.oa_project_child where project_id = #{id} "
+            + "and is_delete = 0")
+    List<ProjectChildDO> getAllChildByProjectId(Integer id);
+
+    @Select("select * from organize_oa.oa_project_modules where project_child_id = #{id} "
+            + "and is_delete = 0")
+    List<ProjectModuleDO> getModuleByChildId(Integer id);
 }

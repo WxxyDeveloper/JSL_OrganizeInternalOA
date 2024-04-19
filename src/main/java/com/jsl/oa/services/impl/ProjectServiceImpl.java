@@ -279,8 +279,35 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public BaseResponse projectChildGetById(Integer id, HttpServletRequest request) {
+
+        List<ProjectChildDO> projectChildDOList = projectMapper.getAllChildByProjectId(id);
+
+        List<ReturnGetVO> returnGetVOList = new ArrayList<>();
+        for (ProjectChildDO projectChildDO : projectChildDOList) {
+            ReturnGetVO returnGetVO = new ReturnGetVO();
+            Processing.copyProperties(projectChildDO, returnGetVO);
+            returnGetVOList.add(returnGetVO);
+        }
+
+        return ResultUtil.success(returnGetVOList);
+    }
+
+    @Override
     public BaseResponse projectModuleGetName(String projectName, String childName, HttpServletRequest request) {
         List<ProjectModuleDO> projectModuleDOList = projectMapper.getModuleByName(projectName, childName);
+        List<ReturnGetVO> returnGetVOList = new ArrayList<>();
+        for (ProjectModuleDO projectModuleDO : projectModuleDOList) {
+            ReturnGetVO returnGetVO = new ReturnGetVO();
+            Processing.copyProperties(projectModuleDO, returnGetVO);
+            returnGetVOList.add(returnGetVO);
+        }
+        return ResultUtil.success(returnGetVOList);
+    }
+
+    @Override
+    public BaseResponse projectModuleGetById(Integer id, HttpServletRequest request) {
+        List<ProjectModuleDO> projectModuleDOList = projectMapper.getModuleByChildId(id);
         List<ReturnGetVO> returnGetVOList = new ArrayList<>();
         for (ProjectModuleDO projectModuleDO : projectModuleDOList) {
             ReturnGetVO returnGetVO = new ReturnGetVO();
