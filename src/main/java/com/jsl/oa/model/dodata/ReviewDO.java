@@ -27,7 +27,7 @@ public class ReviewDO {
     //申请理由
     private String content;
     //申请者用户id
-    private Long senderId;
+    private Integer senderId;
     //审核者用户id
     private Long recipientId;
     //审核类别（0：子系统；1：子模块）

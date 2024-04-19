@@ -1,16 +1,38 @@
 package com.jsl.oa.model.vodata;
-/*
-        张睿相   Java
-*/
 
-/**
- * 总体描述
- * <p>创建时间：2024/4/18 13:50</p>
- *
- * @author 张睿相
- * @since v1.0
- */
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.util.Date;
+
+
+@Data
+@Accessors(chain = true)
 public class ProjectDailyVO {
+
+    private Long id;
+
+    private Long userId;
+
+    private String userName;
+
+    private Long projectId;
+
+    private String projectName;
+
+    private String content;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date dailyTime;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createdAt;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updatedAt;
+
+
 }
 
 

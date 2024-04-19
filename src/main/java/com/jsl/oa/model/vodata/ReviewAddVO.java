@@ -17,12 +17,12 @@ public class ReviewAddVO {
     private String content;
     //申请的项目id
     @NotNull(message = "项目id不能为空")
-    private Long projectId;
+    private Integer projectId;
     //申请的子系统id
     @NotNull(message = "子系统id不能为空")
-    private Long projectChildId;
+    private Integer projectChildId;
     //申请的子模块id
-    private Long projectModuleId;
+    private Integer projectModuleId;
 
 }
 
