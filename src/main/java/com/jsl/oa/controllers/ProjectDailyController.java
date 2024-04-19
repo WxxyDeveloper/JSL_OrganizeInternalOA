@@ -52,7 +52,6 @@ public class ProjectDailyController {
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
         }
-        log.info("请求接口[GET]: /daily/add");
         return projectDailyService.addDaily(projectDailyAddVO, request);
     }
 
@@ -71,10 +70,9 @@ public class ProjectDailyController {
     }
 
     @DeleteMapping("/daily/delete")
-    @NeedPermission("project:daily:delete")
+    @NeedPermission("project:daily_delete")
     public BaseResponse delete(@RequestParam Integer dailyId,
                                HttpServletRequest request) {
-        log.info("请求接口[DELETE]: /daily/delete");
         return projectDailyService.deleteDaily(dailyId, request);
     }
 
@@ -83,7 +81,6 @@ public class ProjectDailyController {
     public BaseResponse getMyDaily(@RequestParam Integer page,
                                    @RequestParam Integer pageSize,
                                    HttpServletRequest request) {
-        log.info("请求接口[GET]: /daily/getMyDaily");
         return projectDailyService.getMyDaily(page, pageSize, request);
     }
 
@@ -96,7 +93,6 @@ public class ProjectDailyController {
                                       String endTime,
                                       HttpServletRequest request) {
 
-        log.info("请求接口[GET]: /daily/search");
         return projectDailyService.searchMyDaily(projectId,
                 page,
                 pageSize,
