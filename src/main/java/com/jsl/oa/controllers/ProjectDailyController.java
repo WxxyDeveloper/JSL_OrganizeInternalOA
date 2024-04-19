@@ -43,8 +43,8 @@ public class ProjectDailyController {
      * @return 新增结果
      */
     @PostMapping("/daily/add")
-    @NeedPermission("project:daily:add")
-    public BaseResponse add(@RequestBody @Validated ProjectDailyAddVO projectDailyAddVO,
+    @NeedPermission("daily:add")
+    public BaseResponse addDaily(@RequestBody @Validated ProjectDailyAddVO projectDailyAddVO,
                             @NotNull BindingResult bindingResult,
                             HttpServletRequest request) {
         // 判断是否有参数错误
@@ -55,6 +55,7 @@ public class ProjectDailyController {
         return projectDailyService.addDaily(projectDailyAddVO, request);
     }
 
+
     @DeleteMapping("/daily/delete")
     @NeedPermission("project:daily:delete")
     public BaseResponse delete(@RequestParam Integer dailyId,
@@ -62,6 +63,7 @@ public class ProjectDailyController {
         log.info("请求接口[DELETE]: /daily/delete");
         return projectDailyService.deleteDaily(dailyId, request);
     }
+
 
     @GetMapping("/daily/getMyDaily")
     public BaseResponse getMyDaily(@RequestParam Integer page,

@@ -62,7 +62,7 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
         ProjectDailyDO projectDailyDO = new ProjectDailyDO();
         Processing.copyProperties(projectDailyAddVO, projectDailyDO);
         projectDailyDO.setUserId(userId);
-
+        projectDailyDO.setProjectId(Long.valueOf(projectDailyAddVO.getProjectId()));
 
 //        向数据库添加数据
         projectDailyDAO.addProjectDaily(projectDailyDO);
