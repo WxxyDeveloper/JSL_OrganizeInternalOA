@@ -23,10 +23,9 @@ import org.springframework.validation.ObjectError;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * <h1>自定义快捷工具类</h1>
@@ -409,4 +408,26 @@ public class Processing {
         int toIndex = Math.min(fromIndex + pageSize, list.size());
         return list.subList(fromIndex, toIndex);
     }
+
+
+    /**
+     * @Description: 字符与时间类型转换方法
+     * @Date: 2024/4/19
+     * @Param dateString:
+     **/
+    public static Date convertStringToDate(String dateString) {
+        if (dateString.isEmpty()) {
+            return null; // 如果字符串为空，返回空的Date对象
+        } else {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                return dateFormat.parse(dateString);
+            } catch (ParseException e) {
+                return null;
+            }
+        }
+    }
+
+
+
 }

@@ -41,6 +41,13 @@ public class ReviewServiceImpl implements ReviewService {
     private final ProjectMapper projectMapper;
 
 
+    /**
+     * @Description: 获取用户未审核的数据(只包括管理项目下未审核的数据)
+     * @Date: 2024/4/19
+     * @Param page: 当前页码
+     * @Param pageSize: 每页大小
+     * @Param request: request请求
+     **/
     @Override
     public BaseResponse getUserPendingApprovalReview(Integer page,
                                                      Integer pageSize,
@@ -86,14 +93,12 @@ public class ReviewServiceImpl implements ReviewService {
             reviewData.addAll(reviewDOS);
         }
 
-
         //根据id进行去重
         reviewData = reviewData.stream()
                 .collect(Collectors.toMap(ReviewDO::getId, review -> review, (existing, replacement) -> existing))
                 .values()
                 .stream()
                 .collect(Collectors.toList());
-
 
         //按照申请时间降序排序
         Collections.sort(reviewData, new Comparator<ReviewDO>() {
@@ -113,6 +118,13 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
 
+    /**
+     * @Description: 获取我的审核数据(用户管理项目下与自己的记录)
+     * @Date: 2024/4/19
+     * @Param page: 当前页码
+     * @Param pageSize: 每页大小
+     * @Param request: request请求
+     **/
     @Override
     public BaseResponse getUserReview(Integer page,
                                       Integer pageSize,
@@ -124,41 +136,12 @@ public class ReviewServiceImpl implements ReviewService {
         //存储审核数据的数组
         List<ReviewDO> reviewData = new ArrayList<>();
 
-        //先获取用户为项目负责人的项目列表
-        projectDAO.getProjectByPrincipalUser(userId);
+        //先获取用户管理下的所有审核信息
+        reviewData.addAll(getAllReviewFromProject(userId));
 
-        //先从用户为 项目负责人 的项目中获取对应 审核信息
-        for (ProjectDO projectDO : projectDAO.getProjectByPrincipalUser(userId)) {
-            //查询每个项目下所有的审核信息
-            List<ReviewDO> reviewDOS = reviewDAO.
-                    selectAllReviewFromProject(projectDO.getId());
-            //封装VO类
-            reviewData.addAll(reviewDOS);
-        }
-
-        //在从用户为 子系统负责人 的项目中获取对应 审核信息
-        for (ProjectChildDO projectChildDO : projectDAO.getAllProjectChildByUId(userId)) {
-            //查询每个项目下所有的审核信息
-            List<ReviewDO> reviewDOS = reviewDAO.
-                    selectReviewFromSubsystem(projectChildDO.getId());
-            //封装VO类
-            reviewData.addAll(reviewDOS);
-        }
-
-
-        //在从用户为 子模块负责人 的项目中获取对应 审核信息
-        for (ProjectModuleDO projectModuleDO : projectDAO.getAllModuleByUId(userId)) {
-            //查询每个项目下所有的审核信息
-            List<ReviewDO> reviewDOS = reviewDAO.
-                    selectReviewFromSubmodule(projectModuleDO.getId());
-            //封装VO类
-            reviewData.addAll(reviewDOS);
-        }
-
-//        获取自己的审核记录
+        //获取自己的审核记录
         List<ReviewDO> myReviewDO = reviewDAO.getReviewByUser(userId);
         reviewData.addAll(myReviewDO);
-
 
         //根据id进行去重
         reviewData = reviewData.stream()
@@ -185,6 +168,12 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
 
+    /**
+     * @Description: 添加审核接口
+     * @Date: 2024/4/19
+     * @Param reviewAddVO: 审核添加实体类
+     * @Param request: request请求
+     **/
     @Override
     public BaseResponse addReview(ReviewAddVO reviewAddVO, HttpServletRequest request) {
 
@@ -223,6 +212,9 @@ public class ReviewServiceImpl implements ReviewService {
 
         //定义申请者id
         reviewDO.setSenderId(userId);
+        reviewDO.setProjectId(Long.valueOf(reviewAddVO.getProjectId()));
+        reviewDO.setProjectChildId(Long.valueOf(reviewAddVO.getProjectChildId()));
+        reviewDO.setProjectModuleId(Long.valueOf(reviewAddVO.getProjectModuleId()));
         //添加数据
         reviewDAO.addReview(reviewDO);
 
@@ -257,20 +249,11 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public BaseResponse searchReview(String content,
-                                     Short statue,
                                      HttpServletRequest request,
                                      Integer page, Integer pageSize) {
 
-        List<ReviewVO> reviewVOS = new ArrayList<>();
-
-//        根据判断结果筛选
-        if (statue == null || statue.equals("")) {
-            List<ReviewVO> reviewVOs = getReview(request);
-            reviewVOS.addAll(reviewVOs);
-        } else {
-            List<ReviewVO> reviewVOs = getReviewsByResult(request, statue);
-            reviewVOS.addAll(reviewVOs);
-        }
+//        获取我的审核数据
+        List<ReviewVO> reviewVOS = getReview(request);
 
 //         根据内容筛选
         if (content == null || content.equals("")) {
@@ -291,6 +274,32 @@ public class ReviewServiceImpl implements ReviewService {
         return ResultUtil.success(reviewDataVO);
     }
 
+    @Override
+    public BaseResponse searchReviewRecords(String content,
+                                            Short statue,
+                                            HttpServletRequest request,
+                                            Integer page,
+                                            Integer pageSize) {
+
+//        获取审核记录数据
+        List<ReviewVO> reviewVOS = getReviewsByResult(request, statue);
+
+//         根据内容筛选
+        if (content == null || content.equals("")) {
+            //封装结果类与数据总数
+            ReviewDataVO reviewDataVO = getReviewsByPage(reviewVOS, page, pageSize);
+            return ResultUtil.success(reviewDataVO);
+        } else {
+            reviewVOS = reviewVOS.stream()
+                    .filter(reviewVO -> reviewVO.getName().contains(content) || reviewVO.getContent().contains(content))
+                    .collect(Collectors.toList());
+        }
+
+        //封装结果类与数据总数
+        ReviewDataVO reviewDataVO = getReviewsByPage(reviewVOS, page, pageSize);
+
+        return ResultUtil.success(reviewDataVO);
+    }
 
 
     private List<ReviewVO> getReview(HttpServletRequest request) {
@@ -300,36 +309,8 @@ public class ReviewServiceImpl implements ReviewService {
         //存储审核数据的数组
         List<ReviewDO> reviewData = new ArrayList<>();
 
-        //先获取用户为项目负责人的项目列表
-        projectDAO.getProjectByPrincipalUser(userId);
-
-        //先从用户为 项目负责人 的项目中获取对应 审核信息
-        for (ProjectDO projectDO : projectDAO.getProjectByPrincipalUser(userId)) {
-            //查询每个项目下所有的审核信息
-            List<ReviewDO> reviewDOS = reviewDAO.
-                    selectAllReviewFromProject(projectDO.getId());
-            //封装VO类
-            reviewData.addAll(reviewDOS);
-        }
-
-        //在从用户为 子系统负责人 的项目中获取对应 审核信息
-        for (ProjectChildDO projectChildDO : projectDAO.getAllProjectChildByUId(userId)) {
-            //查询每个项目下所有的审核信息
-            List<ReviewDO> reviewDOS = reviewDAO.
-                    selectReviewFromSubsystem(projectChildDO.getId());
-            //封装VO类
-            reviewData.addAll(reviewDOS);
-        }
-
-
-        //在从用户为 子模块负责人 的项目中获取对应 审核信息
-        for (ProjectModuleDO projectModuleDO : projectDAO.getAllModuleByUId(userId)) {
-            //查询每个项目下所有的审核信息
-            List<ReviewDO> reviewDOS = reviewDAO.
-                    selectReviewFromSubmodule(projectModuleDO.getId());
-            //封装VO类
-            reviewData.addAll(reviewDOS);
-        }
+        //获取用户管理的项目下的审核数据
+         reviewData.addAll(getAllReviewFromProject(userId));
 
         //根据id进行去重
         reviewData = reviewData.stream()
@@ -373,7 +354,9 @@ public class ReviewServiceImpl implements ReviewService {
                     .setProjectName(projectDAO.getProjectById(reviewDO.getProjectId()).getName())
                     .setProjectChildName(projectMapper.getProjectChildById(
                                     Math.toIntExact(reviewDO.getProjectChildId())).getName())
-                    .setResult(Processing.turnReviewResult(reviewDO.getReviewResult()));
+                    .setResult(Processing.turnReviewResult(reviewDO.getReviewResult()))
+                    .setSenderId(Long.valueOf(reviewDO.getSenderId()))
+                    .setRecipientId(reviewDO.getRecipientId());
 //            赋值可为空属性并进行判断
             if (reviewDO.getRecipientId() != null) {
                 reviewVO.setRecipientName(userMapper.getUserById(reviewDO.getRecipientId()).getNickname());
@@ -395,50 +378,58 @@ public class ReviewServiceImpl implements ReviewService {
     public List<ReviewVO> getReviewsByResult(
                                              HttpServletRequest request,
                                              Short result) {
-
 //     获取用户
         Long userId = Processing.getAuthHeaderToUserId(request);
 
         //存储审核数据的数组
         List<ReviewDO> reviewData = new ArrayList<>();
 
-        //先获取用户为项目负责人的项目列表
-        projectDAO.getProjectByPrincipalUser(userId);
+        //如果审核结果不为空，则根据审核结果进行审查
+        if (result != null) {
 
-        //先从用户为 项目负责人 的项目中获取对应 审核信息
-        for (ProjectDO projectDO : projectDAO.getProjectByPrincipalUser(userId)) {
-            //查询每个项目下所有的审核信息
-            List<ReviewDO> reviewDOS = reviewDAO.
-                    selectApprovedResultReviewFromProject(projectDO.getId(),
-                           result);
-            //封装VO类
-            reviewData.addAll(reviewDOS);
+            //先从用户为 项目负责人 的项目中获取对应 审核信息
+            for (ProjectDO projectDO : projectDAO.getProjectByPrincipalUser(userId)) {
+                //查询每个项目下所有的审核信息
+                List<ReviewDO> reviewDOS = reviewDAO.
+                        selectApprovedResultReviewFromProject(projectDO.getId(),
+                                result);
+                //封装VO类
+                reviewData.addAll(reviewDOS);
+            }
+
+            //在从用户为 子系统负责人 的项目中获取对应 审核信息
+            for (ProjectChildDO projectChildDO : projectDAO.getAllProjectChildByUId(userId)) {
+                //查询每个项目下状态为2的审核信息
+                List<ReviewDO> reviewDOS = reviewDAO.
+                        selectApprovedResultReviewsFromSubsystem(projectChildDO.getId(),
+                                result);
+                //封装VO类
+                reviewData.addAll(reviewDOS);
+            }
+
+
+            //在从用户为 子模块负责人 的项目中获取对应 审核信息
+            for (ProjectModuleDO projectModuleDO : projectDAO.getAllModuleByUId(userId)) {
+                //查询每个项目下所有的审核信息
+                List<ReviewDO> reviewDOS = reviewDAO.
+                        selectApprovedResultReviewsFromSubModule(projectModuleDO.getId(),
+                                result);
+                //封装VO类
+                reviewData.addAll(reviewDOS);
+            }
+
+//        获取自己的审核记录
+            List<ReviewDO> myReviewDO = reviewDAO.getReviewByUserAndResult(userId, result);
+            reviewData.addAll(myReviewDO);
         }
 
-        //在从用户为 子系统负责人 的项目中获取对应 审核信息
-        for (ProjectChildDO projectChildDO : projectDAO.getAllProjectChildByUId(userId)) {
-            //查询每个项目下状态为2的审核信息
-            List<ReviewDO> reviewDOS = reviewDAO.
-                    selectApprovedResultReviewsFromSubsystem(projectChildDO.getId(),
-                            result);
-            //封装VO类
-            reviewData.addAll(reviewDOS);
+//        如果审核结果为空，获取全部
+        if (result == null) {
+            //获取用户管理项目下的所有审核数据
+            reviewData.addAll(getAllReviewFromProject(userId));
+            //获取用户自己的所有审核数据
+            reviewData.addAll(reviewDAO.getReviewByUser(userId));
         }
-
-
-        //在从用户为 子模块负责人 的项目中获取对应 审核信息
-        for (ProjectModuleDO projectModuleDO : projectDAO.getAllModuleByUId(userId)) {
-            //查询每个项目下所有的审核信息
-            List<ReviewDO> reviewDOS = reviewDAO.
-                    selectApprovedResultReviewsFromSubModule(projectModuleDO.getId(),
-                            result);
-            //封装VO类
-            reviewData.addAll(reviewDOS);
-        }
-
-        //        获取自己的审核记录
-        List<ReviewDO> myReviewDO = reviewDAO.getReviewByUser(userId);
-        reviewData.addAll(myReviewDO);
 
         //根据id进行去重
         reviewData = reviewData.stream()
@@ -446,7 +437,6 @@ public class ReviewServiceImpl implements ReviewService {
                 .values()
                 .stream()
                 .collect(Collectors.toList());
-
 
         //按照申请时间降序排序
         Collections.sort(reviewData, new Comparator<ReviewDO>() {
@@ -460,6 +450,13 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
 
+    /**
+     * @Description: 审核数据分页处理
+     * @Date: 2024/4/19
+     * @Param allReviews: 审核数据
+     * @Param page: 当前页码
+     * @Param pageSize: 每页大小
+     **/
     public ReviewDataVO getReviewsByPage(List<ReviewVO> allReviews, int page, int pageSize) {
         ReviewDataVO reviewDataVO = new ReviewDataVO();
         int total = allReviews.size();
@@ -475,6 +472,48 @@ public class ReviewServiceImpl implements ReviewService {
         reviewDataVO.setCurrentPage(page);
 
         return reviewDataVO;
+    }
+
+
+
+    /**
+     * @Description: 获取用户管理项目下的所有审核数据
+     * @Date: 2024/4/19
+     * @Param userId:
+     **/
+    public List<ReviewDO> getAllReviewFromProject(Long userId) {
+
+        List<ReviewDO> reviewData = new ArrayList<>();
+
+        //先从用户为 项目负责人 的项目中获取对应 审核信息
+        for (ProjectDO projectDO : projectDAO.getProjectByPrincipalUser(userId)) {
+            //查询每个项目下所有的审核信息
+            List<ReviewDO> reviewDOS = reviewDAO.
+                    selectAllReviewFromProject(projectDO.getId());
+            //封装VO类
+            reviewData.addAll(reviewDOS);
+        }
+
+        //在从用户为 子系统负责人 的项目中获取对应 审核信息
+        for (ProjectChildDO projectChildDO : projectDAO.getAllProjectChildByUId(userId)) {
+            //查询每个项目下所有的审核信息
+            List<ReviewDO> reviewDOS = reviewDAO.
+                    selectReviewFromSubsystem(projectChildDO.getId());
+            //封装VO类
+            reviewData.addAll(reviewDOS);
+        }
+
+
+        //在从用户为 子模块负责人 的项目中获取对应 审核信息
+        for (ProjectModuleDO projectModuleDO : projectDAO.getAllModuleByUId(userId)) {
+            //查询每个项目下所有的审核信息
+            List<ReviewDO> reviewDOS = reviewDAO.
+                    selectReviewFromSubmodule(projectModuleDO.getId());
+            //封装VO类
+            reviewData.addAll(reviewDOS);
+        }
+
+        return reviewData;
     }
 
 

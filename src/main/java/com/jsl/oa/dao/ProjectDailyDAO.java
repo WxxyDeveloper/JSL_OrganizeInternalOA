@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -58,6 +60,42 @@ public class ProjectDailyDAO {
         List<ProjectDailyDO> myProjectDaily = projectDailyMapper.getProjectDailyByUser(userId);
         projectDailyDOList.addAll(myProjectDaily);
 
+//        排序并去重
+        projectDailyDOList = sortaAndNotRepeatDailyDO(projectDailyDOList);
+
+        return projectDailyDOList;
+    }
+
+
+    public List<ProjectDailyDO> getMyProjectDailyByTime(Long userId, Date beginTime, Date endTime) {
+
+//        日报数据数组
+        List<ProjectDailyDO> projectDailyDOList = new ArrayList<>();
+
+//        先获取我负责的项目下的日报数据
+        //获取我负责的项目
+        List<ProjectDO> projectDOS = projectMapper.getAllProjectByUserId(userId);
+        //获取项目下对应日报,并根据时间筛选
+        for (ProjectDO projectDO:projectDOS) {
+            List dailyFromProject = projectDailyMapper.getProjectDailyByProjectAndTime(projectDO.getId(),
+                    beginTime, endTime);
+            projectDailyDOList.addAll(dailyFromProject);
+        }
+
+//        在获取本人的发布日报,并根据时间筛选
+        List<ProjectDailyDO> myProjectDaily = projectDailyMapper.
+                getProjectDailyByUserAndTime(userId, beginTime, endTime);
+        projectDailyDOList.addAll(myProjectDaily);
+
+//        排序并去重
+        projectDailyDOList = sortaAndNotRepeatDailyDO(projectDailyDOList);
+
+        return projectDailyDOList;
+    }
+
+
+    public List<ProjectDailyDO> sortaAndNotRepeatDailyDO(List<ProjectDailyDO> projectDailyDOList) {
+
 //        去除重复的日报信息
         projectDailyDOList = projectDailyDOList.stream()
                 // 根据 id 属性进行去重
@@ -66,11 +104,25 @@ public class ProjectDailyDAO {
                 .values().stream()
                 .collect(Collectors.toList());
 
+//        根据时间进行排序
+        projectDailyDOList = projectDailyDOList.stream()
+                .sorted(Comparator.comparing(ProjectDailyDO::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+
         return projectDailyDOList;
     }
 
+    public void deleteDailyById(Integer dailyId) {
+        projectDailyMapper.deleteDailyById(dailyId);
+    }
 
+    public ProjectDailyDO getPorjectDailyById(Integer id) {
+        return projectDailyMapper.getDailyById(id);
+    }
 
+    public void updateDaily(ProjectDailyDO projectDailyDO) {
+        projectDailyMapper.updateDaily(projectDailyDO);
+    }
 
 }
 

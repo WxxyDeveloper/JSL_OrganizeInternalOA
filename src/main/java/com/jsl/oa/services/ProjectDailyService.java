@@ -3,6 +3,7 @@ package com.jsl.oa.services;
 
 
 import com.jsl.oa.model.vodata.ProjectDailyAddVO;
+import com.jsl.oa.model.vodata.ProjectDailyUpdateVO;
 import com.jsl.oa.utils.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,11 +23,16 @@ public interface ProjectDailyService {
 
     BaseResponse getMyDaily(Integer page, Integer pageSize, HttpServletRequest request);
 
-    BaseResponse searchMyDaily(Integer page,
+    BaseResponse searchMyDaily(Integer projectId,
+                               Integer page,
                                Integer pageSize,
                                Date beginTime,
                                Date endTime,
                                HttpServletRequest request);
+
+    BaseResponse deleteDaily(Integer dailyId, HttpServletRequest request);
+
+    BaseResponse updateDaily(ProjectDailyUpdateVO projectDailyUpdateVO, HttpServletRequest request);
 }
 
 
