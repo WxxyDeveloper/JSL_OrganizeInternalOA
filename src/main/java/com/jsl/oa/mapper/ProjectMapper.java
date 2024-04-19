@@ -31,9 +31,9 @@ public interface ProjectMapper {
     void projectWorkAdd(ProjectChildAddVO projectChildAddVO);
 
     @Insert("insert into organize_oa.oa_project_modules (project_child_id, name, principal_id,"
-            + " work_load, description, status, dead_line) "
+            + " work_load, description, status, dead_line,cycle) "
             + "value (#{projectChildId},#{name},#{principalId},#{workLoad},"
-            + "#{description},#{status},#{deadLine})")
+            + "#{description},#{status},#{deadLine},#{cycle})")
     void projectModuleAdd(ProjectModuleAddVO projectModuleAddVO);
 
     void projectEdit(ProjectDO projectEdit);
