@@ -15,11 +15,9 @@ import java.sql.Timestamp;
 public class ProjectWorkAndNameVO {
 
     private Long id;
-    private String childSystemName;
     private Long projectChildId;
     private Long principalId;
     private String principalUser;
-    private Integer cycle;
     private Integer workLoad;
     private String name;
     private String description;
