@@ -12,6 +12,7 @@ import com.jsl.oa.model.vodata.ProjectDailyAddVO;
 import com.jsl.oa.model.vodata.ProjectDailyDataVO;
 import com.jsl.oa.model.vodata.ProjectDailyUpdateVO;
 import com.jsl.oa.model.vodata.ProjectDailyVO;
+import com.jsl.oa.services.MessageService;
 import com.jsl.oa.services.ProjectDailyService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -45,6 +46,7 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
     private final UserDAO userDAO;
     private final ProjectDailyDAO projectDailyDAO;
     private final ProjectDailyMapper projectDailyMapper;
+    private final MessageService messageService;
 
 
     @Override

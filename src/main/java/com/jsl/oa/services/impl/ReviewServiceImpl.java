@@ -15,6 +15,7 @@ import com.jsl.oa.model.vodata.ReviewAddVO;
 import com.jsl.oa.model.vodata.ReviewDataVO;
 import com.jsl.oa.model.vodata.ReviewUpdateResultVO;
 import com.jsl.oa.model.vodata.ReviewVO;
+import com.jsl.oa.services.MessageService;
 import com.jsl.oa.services.ReviewService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -39,6 +40,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final UserMapper userMapper;
     private final ProjectMapper projectMapper;
+
+    private final MessageService messageService;
 
 
     /**
@@ -218,6 +221,7 @@ public class ReviewServiceImpl implements ReviewService {
         //添加数据
         reviewDAO.addReview(reviewDO);
 
+
         return ResultUtil.success("申请成功");
     }
 
@@ -266,6 +270,13 @@ public class ReviewServiceImpl implements ReviewService {
         reviewDO.setRecipientId(userId);
         reviewDO.setReviewResult(reviewUpdateResultVO.getResult());
 
+        //发送消息
+        messageService.messageAdd(Math.toIntExact(reviewDO.getProjectId()),
+                Math.toIntExact(reviewDO.getProjectChildId()),
+                Math.toIntExact(reviewDO.getProjectModuleId()),
+                Long.valueOf(reviewDO.getSenderId()),
+                Long.valueOf(reviewUpdateResultVO.getResult()),
+                request);
         //更新数据
         reviewDAO.updateReview(reviewDO);
 
