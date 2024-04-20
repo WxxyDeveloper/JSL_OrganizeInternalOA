@@ -15,6 +15,7 @@ import com.jsl.oa.model.vodata.ReviewAddVO;
 import com.jsl.oa.model.vodata.ReviewDataVO;
 import com.jsl.oa.model.vodata.ReviewUpdateResultVO;
 import com.jsl.oa.model.vodata.ReviewVO;
+import com.jsl.oa.services.MessageService;
 import com.jsl.oa.services.ReviewService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -39,6 +40,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final UserMapper userMapper;
     private final ProjectMapper projectMapper;
+
+    private final MessageService messageService;
 
 
     /**
@@ -218,6 +221,7 @@ public class ReviewServiceImpl implements ReviewService {
         //添加数据
         reviewDAO.addReview(reviewDO);
 
+
         return ResultUtil.success("申请成功");
     }
 
@@ -235,11 +239,44 @@ public class ReviewServiceImpl implements ReviewService {
             return ResultUtil.error(ErrorCode.REVIEW_NOT_EXIST);
         }
 
+        //修改对应项目负责人
+        if (reviewUpdateResultVO.getResult() == ReviewConstants.APPROVED) {
+
+            //如果为子系统，则添加子系统负责人为申请人
+            if (reviewDO.getCategory() == 0) {
+                ProjectChildDO projectChildDO = projectMapper.
+                        getProjectChildById(Math.toIntExact(reviewDO.getProjectChildId()));
+                if (projectChildDO == null) {
+                    return ResultUtil.error(ErrorCode.PROJECT_CHILD_NOT_EXIST);
+                }
+                projectChildDO.setPrincipalId(Long.valueOf(reviewDO.getSenderId()));
+                projectMapper.projectChildEdit(projectChildDO);
+            }
+            //如果为子模块，则添加子模块负责人为申请人
+            if (reviewDO.getCategory() == 1) {
+                ProjectModuleDO projectModuleDO = projectMapper.
+                        getModuleById(Math.toIntExact(reviewDO.getProjectModuleId()));
+                if (projectModuleDO == null) {
+                    return ResultUtil.error(ErrorCode.MODULE_NOT_EXIST);
+                }
+                projectModuleDO.setPrincipalId(Long.valueOf(reviewDO.getSenderId()));
+                projectMapper.projectModuleUpdate(projectModuleDO);
+            }
+
+        }
+
         //设置对应属性
         reviewDO.setReviewTime(new Date());
         reviewDO.setRecipientId(userId);
         reviewDO.setReviewResult(reviewUpdateResultVO.getResult());
 
+        //发送消息
+        messageService.messageAdd(Math.toIntExact(reviewDO.getProjectId()),
+                Math.toIntExact(reviewDO.getProjectChildId()),
+                Math.toIntExact(reviewDO.getProjectModuleId()),
+                Long.valueOf(reviewDO.getSenderId()),
+                Long.valueOf(reviewUpdateResultVO.getResult()),
+                request);
         //更新数据
         reviewDAO.updateReview(reviewDO);
 

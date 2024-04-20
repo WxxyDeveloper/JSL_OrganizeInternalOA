@@ -12,6 +12,7 @@ import com.jsl.oa.model.vodata.ProjectDailyAddVO;
 import com.jsl.oa.model.vodata.ProjectDailyDataVO;
 import com.jsl.oa.model.vodata.ProjectDailyUpdateVO;
 import com.jsl.oa.model.vodata.ProjectDailyVO;
+import com.jsl.oa.services.MessageService;
 import com.jsl.oa.services.ProjectDailyService;
 import com.jsl.oa.utils.BaseResponse;
 import com.jsl.oa.utils.ErrorCode;
@@ -45,18 +46,19 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
     private final UserDAO userDAO;
     private final ProjectDailyDAO projectDailyDAO;
     private final ProjectDailyMapper projectDailyMapper;
+    private final MessageService messageService;
 
 
     @Override
     public BaseResponse addDaily(ProjectDailyAddVO projectDailyAddVO, HttpServletRequest request) {
 
 //        获取用户id
-        Long userId = Processing.getAuthHeaderToUserId(request);
+            Long userId = Processing.getAuthHeaderToUserId(request);
 //        从请求体中获取项目id
-        Integer projectId = projectDailyAddVO.getProjectId();
+            Integer projectId = projectDailyAddVO.getProjectId();
 //        检查项目是否存在
-        if (!projectDAO.isExistProjectById(Long.valueOf(projectId))) {
-            return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
+            if (!projectDAO.isExistProjectById(Long.valueOf(projectId))) {
+                return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
         }
 
 //        赋值数据库表实体类相关属性

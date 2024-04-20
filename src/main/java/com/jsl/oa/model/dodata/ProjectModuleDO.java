@@ -10,13 +10,13 @@ import java.sql.Timestamp;
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProjectModuleDO {
+    private String name;
     private Long id;
     private Long projectChildId;
     private Long principalId;
     private Integer cycle;
     private Integer workLoad;
     private String description;
-    private String name;
     private Integer isDelete;
     private String status;
     private Timestamp deadLine;
