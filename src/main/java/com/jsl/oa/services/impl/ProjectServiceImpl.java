@@ -285,6 +285,11 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectChildDO> projectChildDOList = projectMapper.getAllChildByProjectId(id);
 
         List<ReturnGetVO> returnGetVOList = new ArrayList<>();
+
+        if (projectChildDOList.size() == 0) {
+            return ResultUtil.success(returnGetVOList);
+        }
+
         for (ProjectChildDO projectChildDO : projectChildDOList) {
             ReturnGetVO returnGetVO = new ReturnGetVO();
             Processing.copyProperties(projectChildDO, returnGetVO);
@@ -308,8 +313,15 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse projectModuleGetById(Integer id, HttpServletRequest request) {
+
         List<ProjectModuleDO> projectModuleDOList = projectMapper.getModuleByChildId(id);
+
         List<ReturnGetVO> returnGetVOList = new ArrayList<>();
+
+        if (projectModuleDOList.size() == 0) {
+            return ResultUtil.success(returnGetVOList);
+        }
+
         for (ProjectModuleDO projectModuleDO : projectModuleDOList) {
             ReturnGetVO returnGetVO = new ReturnGetVO();
             Processing.copyProperties(projectModuleDO, returnGetVO);
