@@ -60,7 +60,6 @@ public class ProjectDailyController {
                                     @NotNull BindingResult bindingResult,
                                     HttpServletRequest request) {
 
-        log.info("请求接口[PUT]: /daily/update");
         // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR, Processing.getValidatedErrorList(bindingResult));
@@ -73,6 +72,11 @@ public class ProjectDailyController {
     @NeedPermission("project:daily_delete")
     public BaseResponse delete(@RequestParam Integer dailyId,
                                HttpServletRequest request) {
+
+        if (dailyId == null) {
+            return ResultUtil.error(ErrorCode.ID_NOT_EXIST);
+        }
+
         return projectDailyService.deleteDaily(dailyId, request);
     }
 
@@ -81,6 +85,11 @@ public class ProjectDailyController {
     public BaseResponse getMyDaily(@RequestParam Integer page,
                                    @RequestParam Integer pageSize,
                                    HttpServletRequest request) {
+
+        if (page == null || pageSize == null) {
+            return ResultUtil.error(ErrorCode.PAGE_NUMBER_IS_NULL);
+        }
+
         return projectDailyService.getMyDaily(page, pageSize, request);
     }
 
@@ -92,6 +101,14 @@ public class ProjectDailyController {
                                       String beginTime,
                                       String endTime,
                                       HttpServletRequest request) {
+
+        if (page == null || pageSize == null) {
+            return ResultUtil.error(ErrorCode.PAGE_NUMBER_IS_NULL);
+        }
+
+        if (projectId == null) {
+            return ResultUtil.error(ErrorCode.ID_NOT_EXIST);
+        }
 
         return projectDailyService.searchMyDaily(projectId,
                 page,

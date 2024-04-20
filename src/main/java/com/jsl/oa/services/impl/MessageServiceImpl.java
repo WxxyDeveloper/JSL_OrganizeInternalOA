@@ -188,7 +188,10 @@ public class MessageServiceImpl implements MessageService {
         // 获取项目名,负责人名
         String projectName = projectMapper.tgetProjectById(pId).getName();
         String senderName = userDAO.getUserById(Processing.getAuthHeaderToUserId(request)).getUsername();
-        String systemName = projectMapper.getWorkById(systemId).getName();
+        String systemName = null;
+        if (systemId != null && projectMapper.getWorkById(systemId) != null) {
+            systemName = projectMapper.getWorkById(systemId).getName();
+        }
         // 添加消息
         // 1:上传文档 2:修改状态 3:修改负责人
         List<Long> uidList = projectMapper.getMemberByProjectId(pId);
@@ -238,7 +241,7 @@ public class MessageServiceImpl implements MessageService {
         String senderName = userDAO.getUserById(Processing.getAuthHeaderToUserId(request)).getUsername();
         String systemName = projectMapper.getWorkById(systmeId).getName();
         String moddleName = null;
-        if (moddleId != null) {
+        if (moddleId != null && projectMapper.getModuleById(moddleId) != null) {
          moddleName = projectMapper.getModuleById(moddleId).getName();
         }
         // 添加消息
@@ -302,6 +305,7 @@ public class MessageServiceImpl implements MessageService {
         messageAddVO.setType("Project_daily");
         messageMapper.messageAdd(messageAddVO);
     }
+
 
     /**
      * 添加提醒消息
