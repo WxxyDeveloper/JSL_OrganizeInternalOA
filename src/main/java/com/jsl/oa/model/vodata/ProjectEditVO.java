@@ -7,14 +7,14 @@ import java.sql.Timestamp;
 @Data
 public class ProjectEditVO {
 
+    private Long id;
     private String name;
     private Long principalId;
     private String tags;
     private Long cycle;
-    private String file;
+    private String files;
     private String description;
-    private Integer isFinish;
-    private Integer status;
+    private String status;
     private Long workLoad;
     private Timestamp beginTime;
     private Timestamp completeTime;

@@ -22,23 +22,20 @@
             <if test="cycle != null and cycle != ''">
                 cycle = #{cycle},
             </if>
-            <if test="file != null and file != ''">
-                file = #{file},
+            <if test="files != null and files != ''">
+                files = #{files},
             </if>
-            <if test="beginTime != null and beginTime != ''">
+            <if test="beginTime != null ">
                 begin_time = #{beginTime},
             </if>
-            <if test="completeTime != null and completeTime != ''">
+            <if test="completeTime != null ">
                 complete_time = #{completeTime},
             </if>
-            <if test="deadline != null and deadline != ''">
+            <if test="deadline != null ">
                 deadline = #{deadline},
             </if>
             <if test="status != null">
                 status = #{status},
-            </if>
-            <if test="isFinish != null">
-                is_finish = #{isFinish},
             </if>
             <if test="isDelete != null">
                 is_delete = #{isDelete},
@@ -47,12 +44,97 @@
         where id = #{id}
     </update>
 
+    <update id="projectChildEdit">
+        update organize_oa.oa_project_child
+        <set>
+            <if test="principalId != null and principalId != ''">
+                principal_id = #{principalId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <update id="projectModuleUpdate">
+        update organize_oa.oa_project_modules
+        <set>
+            <if test="principalId != null">
+                principal_id = #{principalId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
     <update id="deleteProjectChild">
         update organize_oa.oa_project_child set is_delete=true where id=#{id1}
     </update>
 
     <update id="deleteProjectModule">
         update organize_oa.oa_project_modules set is_delete=true where id=#{id1}
+    </update>
+
+    <update id="projectModuleEdit">
+        update organize_oa.oa_project_modules
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="principalId != null and principalId != ''">
+                principal_id = #{principalId},
+            </if>
+            <if test="workLoad != null and workLoad != ''">
+                work_load = #{workLoad},
+            </if>
+            <if test="cycle != null and cycle != ''">
+                cycle = #{cycle},
+            </if>
+            <if test="completeTime != null ">
+                complete_time = #{completeTime},
+            </if>
+            <if test="deadLine != null ">
+                dead_line = #{deadLine},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            updated_at = CURRENT_TIMESTAMP
+        </set>
+        where id = #{id}
+    </update>
+    <update id="projectChildEditAll">
+        update organize_oa.oa_project_child
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="principalId != null and principalId != ''">
+                principal_id = #{principalId},
+            </if>
+            <if test="workLoad != null and workLoad != ''">
+                work_load = #{workLoad},
+            </if>
+            <if test="cycle != null and cycle != ''">
+                cycle = #{cycle},
+            </if>
+            <if test="completeTime != null ">
+                complete_time = #{completeTime},
+            </if>
+            <if test="deadLine != null ">
+                dead_line = #{deadLine},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            updated_at = CURRENT_TIMESTAMP
+        </set>
+        where id = #{id}
     </update>
 
     <select id="getByTags" resultType="com.jsl.oa.model.dodata.ProjectDO">

@@ -69,7 +69,7 @@ public class ReviewController {
     public BaseResponse addReview(@RequestBody @Validated ReviewAddVO reviewAddVO,
                                   @NotNull BindingResult bindingResult,
                                   HttpServletRequest request) {
-        log.info("请求接口[POST]: /review/add");
+
 
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR);
@@ -83,7 +83,6 @@ public class ReviewController {
     public BaseResponse updateReview(@RequestBody @Validated ReviewUpdateResultVO reviewUpdateResultVOVO,
                                      @NotNull BindingResult bindingResult,
                                      HttpServletRequest request) {
-        log.info("请求接口[PUT]: /review/updateReview");
 
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR);
@@ -98,7 +97,7 @@ public class ReviewController {
                                      HttpServletRequest request,
                                      @RequestParam Integer page,
                                      @RequestParam Integer pageSize) {
-        log.info("请求接口[GET]: /review/searchMyReview");
+
         return reviewService.searchReview(content, request, page, pageSize);
     }
 
@@ -108,7 +107,7 @@ public class ReviewController {
                                             HttpServletRequest request,
                                             @RequestParam Integer page,
                                             @RequestParam Integer pageSize) {
-        log.info("请求接口[GET]: /review/searchReviewRecords");
+
         return  reviewService.searchReviewRecords(content, statue, request, page, pageSize);
     }
 }

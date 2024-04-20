@@ -36,6 +36,8 @@ public interface ProjectMapper {
             + "#{description},#{status},#{deadLine},#{cycle})")
     void projectModuleAdd(ProjectModuleAddVO projectModuleAddVO);
 
+    @Select("select project_id from organize_oa.oa_project_child where id=#{id}")
+    Long getProjectIdBySysId(Long id);
     void projectEdit(ProjectDO projectEdit);
 
     @Select("select * from organize_oa.oa_project where id=#{id}")
@@ -83,7 +85,6 @@ public interface ProjectMapper {
 
     //@Select("select * from organize_oa.oa_project_work where status=1 and principal_id=#{userId}")
     List<ProjectDO> workget1(Long userId, Integer is);
-
 
     List<ProjectDO> tget(Integer id);
 
@@ -168,4 +169,19 @@ public interface ProjectMapper {
             + "and project_id = (select id from organize_oa.oa_project where name =#{projectName}))")
     List<ProjectModuleDO> getModuleByName(String projectName, String childName);
 
+    void projectModuleUpdate(ProjectModuleDO projectModuleDO);
+
+    void projectChildEdit(ProjectChildDO projectChildDO);
+
+    @Select("select * from organize_oa.oa_project_child where project_id = #{id} "
+            + "and is_delete = 0")
+    List<ProjectChildDO> getAllChildByProjectId(Integer id);
+
+    @Select("select * from organize_oa.oa_project_modules where project_child_id = #{id} "
+            + "and is_delete = 0")
+    List<ProjectModuleDO> getModuleByChildId(Integer id);
+
+    void projectModuleEdit(ProjectModuleDO projectModuleAddVO);
+
+    void projectChildEditAll(ProjectChildDO projectChildAddVO);
 }

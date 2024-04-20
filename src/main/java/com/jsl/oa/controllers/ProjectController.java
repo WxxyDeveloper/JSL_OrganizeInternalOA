@@ -1,6 +1,8 @@
 package com.jsl.oa.controllers;
 
 import com.jsl.oa.annotations.NeedPermission;
+import com.jsl.oa.model.dodata.ProjectChildDO;
+import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.vodata.ProjectChildAddVO;
 import com.jsl.oa.model.vodata.ProjectEditVO;
 import com.jsl.oa.model.vodata.ProjectInfoVO;
@@ -365,7 +367,7 @@ public class ProjectController {
     }
 
     /**
-     * 项目名查询子系统
+     * 项目名查询所属所有子系统
      *
      * @param name
      * @param request
@@ -379,6 +381,29 @@ public class ProjectController {
         return projectService.projectChildGetName(name, request);
     }
 
+    /**
+     * id查询子系统
+     *
+     * @param id
+     * @param request
+     * @return
+     */
+    @GetMapping("/project/child/get/id")
+    public BaseResponse projectChildById(
+            @RequestParam Integer id,
+            HttpServletRequest request
+    ) {
+        return projectService.projectChildGetById(id, request);
+    }
+
+    /**
+     * 根据项目和子系统名查询所属所有子模块
+     *
+     * @param projectName
+     * @param childName
+     * @param request
+     * @return
+     */
     @GetMapping("/project/module/get/name")
     public BaseResponse projectModuleGetName(
             @RequestParam String projectName,
@@ -388,4 +413,40 @@ public class ProjectController {
         return projectService.projectModuleGetName(projectName, childName, request);
     }
 
+
+    @GetMapping("/project/module/get/id")
+    public BaseResponse projectModuleGetName(
+            @RequestParam Integer childId,
+            HttpServletRequest request
+    ) {
+        return projectService.projectModuleGetById(childId, request);
+    }
+
+
+    @PutMapping("/project/module/edit")
+    public BaseResponse projectModuleEdit(
+            @RequestParam Long id,
+            @RequestBody  ProjectModuleDO projectModuleAddVO,
+            HttpServletRequest request
+    ) {
+        return projectService.projectModuleEdit(request, projectModuleAddVO, id);
+    }
+
+    @PutMapping("/project/edit")
+    public BaseResponse projectEdit(
+            @RequestParam Long id,
+            @RequestBody  ProjectEditVO projectEditVO,
+            HttpServletRequest request
+    ) {
+        return projectService.projectEdit(request, projectEditVO, id);
+    }
+
+    @PutMapping("/project/child/edit")
+    public BaseResponse projectChildEdit(
+            @RequestParam Long id,
+            @RequestBody ProjectChildDO projectChildAddVO,
+            HttpServletRequest request
+    ) {
+        return projectService.projectChildEdit(request, projectChildAddVO, id);
+    }
 }
