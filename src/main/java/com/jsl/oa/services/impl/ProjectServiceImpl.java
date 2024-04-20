@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.RoleDAO;
@@ -318,6 +319,58 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public BaseResponse projectModuleEdit(HttpServletRequest request, ProjectModuleDO projectModuleEditVO, Long id) {
+        //判断是否是子系统负责人或项目负责人
+        if (!Objects.equals(Processing.getAuthHeaderToUserId(request), projectMapper.getPirTdByModuleId(id))
+                // 项目负责人
+                && !Objects.equals(Processing.getAuthHeaderToUserId(request),
+                projectMapper.getPirIdbyId(projectMapper.getModuleById(id.intValue()).getProjectChildId()))) {
+            return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+        } else {
+            HashMap<String, Object> descriptionMap = new HashMap<>();
+            descriptionMap.put("description", projectModuleEditVO.getDescription());
+            projectModuleEditVO.setDescription(gson.toJson(descriptionMap));
+            projectModuleEditVO.setId(id);
+            projectMapper.projectModuleEdit(projectModuleEditVO);
+        }
+
+
+        return ResultUtil.success("修改成功");
+    }
+
+    @Override
+    public BaseResponse projectChildEdit(HttpServletRequest request, ProjectChildDO projectChildAddVO, Long id) {
+        //判断是否是项目负责人
+        if (!Objects.equals(Processing.getAuthHeaderToUserId(request), projectMapper.getPirIdbyId(id))) {
+            return ResultUtil.error(ErrorCode.NOT_PERMISSION);
+        } else {
+            JsonObject jsonObject = gson
+                    .fromJson(projectMapper.getProjectChildById(id.intValue()).getDescription(), JsonObject.class);
+            //改动简介发送消息
+            if (!Objects.equals(projectChildAddVO.getDescription(), "")
+                    && !projectChildAddVO.getDescription()
+                    .equals(jsonObject.get("description").getAsString())) {
+                messageService.messageAdd(projectMapper.getProjectIdBySysId(id)
+                        .intValue(), id.intValue(), null, 2, request);
+            } // 改动周期或工作量发送消息
+            if (projectChildAddVO.getCycle() != null || projectChildAddVO.getWorkLoad() != null) {
+                messageService.messageAdd(projectMapper.getProjectIdBySysId(id)
+                        .intValue(), id.intValue(), null, 3, request);
+            }
+
+            HashMap<String, Object> descriptionMap = new HashMap<>();
+            descriptionMap.put("description", projectChildAddVO.getDescription());
+            projectChildAddVO.setDescription(gson.toJson(descriptionMap));
+
+            projectChildAddVO.setId(id);
+            projectMapper.projectChildEditAll(projectChildAddVO);
+        }
+
+
+        return ResultUtil.success("修改成功");
+    }
+
+    @Override
     public BaseResponse getModuleById(Integer id) {
         ProjectModuleDO projectWorkSimpleVO = projectMapper.getModuleById(id);
         // 解析JSON字符串
@@ -367,16 +420,32 @@ public class ProjectServiceImpl implements ProjectService {
     public BaseResponse projectEdit(HttpServletRequest request, @NotNull ProjectEditVO projectEdit, Long projectId) {
 
 
-        //判断用户是否为老师 或者 项目负责人
+        //判断用户是否为负责人 或者 项目负责人
         if (!Processing.checkUserIsPrincipal(request, roleDAO)
-                || !projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), projectId)) {
+                && !projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), projectId)) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         }
-
         //判断项目是否存在
         if (projectDAO.isExistProject(projectId)) {
             //更新数据
-            return ResultUtil.success(projectDAO.projectEdit(projectEdit, projectId));
+            HashMap<String, Object> descriptionMap = new HashMap<>();
+            descriptionMap.put("description", projectEdit.getDescription());
+            projectEdit.setDescription(gson.toJson(descriptionMap));
+
+            HashMap<String, Object> tagMap = new HashMap<>();
+            tagMap.put("tags", projectEdit.getTags().split(","));
+            projectEdit.setTags(gson.toJson(tagMap));
+
+            HashMap<String, Object> filesMap = new HashMap<>();
+            filesMap.put("URI", projectEdit.getFiles());
+            projectEdit.setFiles(gson.toJson(filesMap));
+
+            projectEdit.setId(projectId);
+            ProjectDO projectEdit1 = new ProjectDO();
+
+            Processing.copyProperties(projectEdit, projectEdit1);
+            projectDAO.projectEdit(projectEdit1);
+            return ResultUtil.success(projectDAO.projectEdit(projectEdit1));
         } else {
             return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
         }

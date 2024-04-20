@@ -193,24 +193,26 @@ public class MessageServiceImpl implements MessageService {
         // 1:上传文档 2:修改状态 3:修改负责人
         List<Long> uidList = projectMapper.getMemberByProjectId(pId);
         for (Long uid : uidList) {
-            MessageAddVO messageAddVO = new MessageAddVO();
-            messageAddVO.setUid(uid);
-            messageAddVO.setSid(Processing.getAuthHeaderToUserId(request));
-            messageAddVO.setTitle("项目变动消息");
-            if (type == 3) {
-                messageAddVO.setText("项目负责人" + senderName + "调整了" + systemName + "子系统的负责人");
-                messageAddVO.setType("Project_child");
-                messageAddVO.setToId(systemId.longValue());
-            } else if (type == 2) {
-                messageAddVO.setText("项目负责人" + senderName + "修改了" + projectName + "项目的状态");
-                messageAddVO.setType("Project");
-                messageAddVO.setToId(pId.longValue());
-            } else if (type == 1) {
-                messageAddVO.setText("项目负责人" + senderName + "上传了文档到" + projectName + "项目");
-                messageAddVO.setType("Project");
-                messageAddVO.setToId(pId.longValue());
+            if (uid != null) {
+                MessageAddVO messageAddVO = new MessageAddVO();
+                messageAddVO.setUid(uid);
+                messageAddVO.setSid(Processing.getAuthHeaderToUserId(request));
+                messageAddVO.setTitle("项目变动消息");
+                if (type == 3) {
+                    messageAddVO.setText("项目负责人" + senderName + "调整了" + systemName + "子系统的负责人");
+                    messageAddVO.setType("Project_child");
+                    messageAddVO.setToId(systemId.longValue());
+                } else if (type == 2) {
+                    messageAddVO.setText("项目负责人" + senderName + "修改了" + projectName + "项目的状态");
+                    messageAddVO.setType("Project");
+                    messageAddVO.setToId(pId.longValue());
+                } else if (type == 1) {
+                    messageAddVO.setText("项目负责人" + senderName + "上传了文档到" + projectName + "项目");
+                    messageAddVO.setType("Project");
+                    messageAddVO.setToId(pId.longValue());
+                }
+                messageMapper.messageAdd(messageAddVO);
             }
-            messageMapper.messageAdd(messageAddVO);
         }
     }
 
@@ -234,7 +236,10 @@ public class MessageServiceImpl implements MessageService {
         String projectName = projectMapper.tgetProjectById(pId).getName();
         String senderName = userDAO.getUserById(Processing.getAuthHeaderToUserId(request)).getUsername();
         String systemName = projectMapper.getWorkById(systmeId).getName();
-        String moddleName = projectMapper.getModuleById(moddleId).getName();
+        String moddleName = null;
+        if (moddleId != null) {
+         moddleName = projectMapper.getModuleById(moddleId).getName();
+        }
         // 添加消息
         // 1:删除模块 2:修改简介 3:修改周期
         if (type == 1) {
@@ -248,6 +253,7 @@ public class MessageServiceImpl implements MessageService {
         } else {
             List<Long> uidList = projectMapper.getMemberBySystemId(systmeId);
             for (Long uid : uidList) {
+                if (uid != null) {
                 MessageAddVO messageAddVO = new MessageAddVO();
                 messageAddVO.setUid(uid);
                 messageAddVO.setSid(Processing.getAuthHeaderToUserId(request));
@@ -262,6 +268,7 @@ public class MessageServiceImpl implements MessageService {
                 messageAddVO.setType("Project_child");
                 messageAddVO.setToId(systmeId.longValue());
                 messageMapper.messageAdd(messageAddVO);
+                }
             }
         }
     }
@@ -311,6 +318,9 @@ public class MessageServiceImpl implements MessageService {
         List<ProjectModuleDO> projectWorkDOList1 = projectMapper.getProjectWorkByTime(sevenDaysLater);
         if (!projectWorkDOList1.isEmpty()) {
             for (ProjectModuleDO projectWorkDO : projectWorkDOList) {
+                if (projectWorkDO.getPrincipalId() == null) {
+                    continue;
+                }
                 // 添加消息
                 MessageAddVO messageAddVO = new MessageAddVO();
                 messageAddVO.setUid(projectWorkDO.getPrincipalId());
@@ -330,6 +340,9 @@ public class MessageServiceImpl implements MessageService {
         }
         if (!projectWorkDOList.isEmpty()) {
             for (ProjectModuleDO projectWorkDO : projectWorkDOList) {
+                if (projectWorkDO.getPrincipalId() == null) {
+                    continue;
+                }
                 // 添加消息
                 MessageAddVO messageAddVO = new MessageAddVO();
                 messageAddVO.setUid(projectWorkDO.getPrincipalId());
@@ -352,6 +365,9 @@ public class MessageServiceImpl implements MessageService {
         List<ProjectChildDO> projectChildDOList = projectMapper.getProjectChildByTime(sevenDaysLater);
         if (!projectChildDOList.isEmpty()) {
             for (ProjectChildDO projectChildDO : projectChildDOList) {
+                if (projectChildDO.getPrincipalId() == null) {
+                    continue;
+                }
                 // 添加消息
                 MessageAddVO messageAddVO = new MessageAddVO();
                 messageAddVO.setUid(projectChildDO.getPrincipalId());
@@ -368,6 +384,9 @@ public class MessageServiceImpl implements MessageService {
         List<ProjectChildDO> projectChildDOList1 = projectMapper.getProjectChildByTime(threeDaysLater);
         if (!projectChildDOList1.isEmpty()) {
             for (ProjectChildDO projectChildDO : projectChildDOList1) {
+                if (projectChildDO.getPrincipalId() == null) {
+                    continue;
+                }
                 // 添加消息
                 MessageAddVO messageAddVO = new MessageAddVO();
                 messageAddVO.setUid(projectChildDO.getPrincipalId());

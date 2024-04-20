@@ -36,6 +36,8 @@ public interface ProjectMapper {
             + "#{description},#{status},#{deadLine},#{cycle})")
     void projectModuleAdd(ProjectModuleAddVO projectModuleAddVO);
 
+    @Select("select project_id from organize_oa.oa_project_child where id=#{id}")
+    Long getProjectIdBySysId(Long id);
     void projectEdit(ProjectDO projectEdit);
 
     @Select("select * from organize_oa.oa_project where id=#{id}")
@@ -178,4 +180,8 @@ public interface ProjectMapper {
     @Select("select * from organize_oa.oa_project_modules where project_child_id = #{id} "
             + "and is_delete = 0")
     List<ProjectModuleDO> getModuleByChildId(Integer id);
+
+    void projectModuleEdit(ProjectModuleDO projectModuleAddVO);
+
+    void projectChildEditAll(ProjectChildDO projectChildAddVO);
 }

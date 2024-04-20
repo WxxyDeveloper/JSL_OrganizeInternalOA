@@ -41,15 +41,12 @@ public class ProjectDAO {
         projectMapper.projectWorkAdd(projectChildAddVO);
     }
 
-    public ProjectDO projectEdit(@NotNull ProjectEditVO projectEdit, Long projectId) {
+    public ProjectDO projectEdit(@NotNull ProjectDO projectEdit) {
         log.info("\t> 执行 DAO 层 ProjectDAO.projectEdit 方法");
         log.info("\t\t> 从 MySQL 更新数据");
-        ProjectDO projectDO = new ProjectDO();
-        Processing.copyProperties(projectEdit, projectDO);
-        projectDO.setId(projectId);
-        projectMapper.projectEdit(projectDO);
+        projectMapper.projectEdit(projectEdit);
         log.info("\t\t> 从 MySQL 获取数据");
-        return projectMapper.getProjectById(projectId);
+        return projectMapper.getProjectById(projectEdit.getId());
     }
 
     public boolean isExistProject(Long id) {

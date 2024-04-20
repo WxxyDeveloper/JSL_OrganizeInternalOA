@@ -1,5 +1,7 @@
 package com.jsl.oa.services;
 
+import com.jsl.oa.model.dodata.ProjectChildDO;
+import com.jsl.oa.model.dodata.ProjectModuleDO;
 import com.jsl.oa.model.vodata.ProjectEditVO;
 import com.jsl.oa.model.vodata.ProjectInfoVO;
 import com.jsl.oa.model.vodata.ProjectChildAddVO;
@@ -82,4 +84,8 @@ public interface ProjectService {
     BaseResponse projectModuleGetName(String projectName, String childName, HttpServletRequest request);
 
     BaseResponse projectModuleGetById(Integer id, HttpServletRequest request);
+
+    BaseResponse projectModuleEdit(HttpServletRequest request, ProjectModuleDO projectModuleAddVO, Long id);
+
+    BaseResponse projectChildEdit(HttpServletRequest request, ProjectChildDO projectChildAddVO, Long id);
 }
