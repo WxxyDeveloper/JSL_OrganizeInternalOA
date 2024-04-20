@@ -1,9 +1,11 @@
 package com.jsl.oa.dao;
 import com.google.gson.Gson;
 import com.jsl.oa.mapper.ProjectMapper;
+import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.dodata.ProjectChildDO;
 import com.jsl.oa.model.dodata.ProjectDO;
 import com.jsl.oa.model.dodata.ProjectModuleDO;
+import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.model.dodata.info.ProjectShowDO;
 import com.jsl.oa.model.vodata.ProjectInfoVO;
 import com.jsl.oa.model.vodata.ProjectChildAddVO;
@@ -24,6 +26,7 @@ import java.util.Objects;
 public class ProjectDAO {
 
     private final ProjectMapper projectMapper;
+    private final UserMapper userMapper;
     private final Gson gson;
 
     public void projectAdd(ProjectInfoVO projectAdd) {
@@ -205,4 +208,20 @@ public class ProjectDAO {
     }
 
 
+    public String getPrincipalUserFromProject(Long projectId) {
+
+        if (projectId == null) {
+            return "";
+        }
+
+        ProjectDO projectDO = new ProjectDO();
+
+        UserDO userDO =  userMapper.getUserById(projectDO.getPrincipalId());
+
+        if (userDO.getNickname() == null) {
+            return userDO.getUsername();
+        } else {
+            return userDO.getNickname();
+        }
+    }
 }

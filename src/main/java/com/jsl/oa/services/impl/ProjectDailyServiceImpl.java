@@ -8,6 +8,7 @@ import com.jsl.oa.dao.ProjectDailyDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ProjectDailyMapper;
 import com.jsl.oa.model.dodata.ProjectDailyDO;
+import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.model.vodata.ProjectDailyAddVO;
 import com.jsl.oa.model.vodata.ProjectDailyDataVO;
 import com.jsl.oa.model.vodata.ProjectDailyUpdateVO;
@@ -205,8 +206,16 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
             Processing.copyProperties(projectDailyDO, projectDailyVO);
 //            赋值其他需查询的属性
             projectDailyVO.setProjectName(
-                    projectDAO.getProjectById(projectDailyVO.getProjectId()).getName())
-                    .setUserName(userDAO.getUserById(projectDailyDO.getUserId()).getNickname());
+                    projectDAO.getProjectById(projectDailyVO.getProjectId()).getName());
+            //设置发送者名称，如果为昵称为空则赋值用户账号
+            UserDO senderUser = userDAO.getUserById(projectDailyDO.getUserId());
+            if (senderUser.getNickname() == null) {
+                projectDailyVO.setUserName(senderUser.getUsername());
+            } else {
+                projectDailyVO.setUserName(senderUser.getNickname());
+            }
+            //设置项目负责人名称
+            projectDailyVO.setPrincipalName(projectDAO.getPrincipalUserFromProject(projectDailyDO.getProjectId()));
                 //用户是否有权限删除
             if (projectDailyDO.getUserId().equals(projectDAO.
                     getProjectById(projectDailyVO.getProjectId()).getPrincipalId())) {

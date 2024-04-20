@@ -21,6 +21,8 @@ public class ProjectDailyVO {
 
     private String projectName;
 
+    private String principalName;
+
     private String content;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
