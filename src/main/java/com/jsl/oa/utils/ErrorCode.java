@@ -58,6 +58,7 @@ public enum ErrorCode {
     PROJECT_DAILY_NOT_EXIST("ProjectDailyNotExist", 40023, "日志不存在"),
     NOT_PERMISSION_UPDATE_DAILY("NotPermissionUpdateDaily", 40024, "用户无权限修改日报"),
     User_NOT_PROJECT_PRINCIPAL("UserNotProjectPrincipal", 40023, "用户非项目负责人"),
+    PAGE_NUMBER_IS_NULL("PageNumberIsNull", 40024, "分页参数为空"),
     REVIEW_NOT_EXIST("ReviewNotExit", 40101, "未找到对应审核信息");
 
 

@@ -393,6 +393,11 @@ public class ProjectController {
             @RequestParam Integer id,
             HttpServletRequest request
     ) {
+
+        if (id == null) {
+            return ResultUtil.error(ErrorCode.ID_NOT_EXIST);
+        }
+
         return projectService.projectChildGetById(id, request);
     }
 
@@ -419,6 +424,11 @@ public class ProjectController {
             @RequestParam Integer childId,
             HttpServletRequest request
     ) {
+
+        if (childId == null) {
+            return ResultUtil.error(ErrorCode.ID_NOT_EXIST);
+        }
+
         return projectService.projectModuleGetById(childId, request);
     }
 
