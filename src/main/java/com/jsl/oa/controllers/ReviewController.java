@@ -41,7 +41,11 @@ public class ReviewController {
             @RequestParam Integer page,
             @RequestParam Integer pageSize,
             HttpServletRequest request) {
-        log.info("请求接口[GET]: /review/getMyReview");
+
+        if (page == null || pageSize == null) {
+            return ResultUtil.error(ErrorCode.PAGE_NUMBER_IS_NULL);
+        }
+
         return reviewService.getUserReview(page, pageSize, request);
     }
 
@@ -55,6 +59,11 @@ public class ReviewController {
     public BaseResponse getMyReview(@RequestParam Integer page,
                                     @RequestParam Integer pageSize,
                                     HttpServletRequest request) {
+
+        if (page == null || pageSize == null) {
+            return ResultUtil.error(ErrorCode.PAGE_NUMBER_IS_NULL);
+        }
+
         return reviewService.getUserPendingApprovalReview(page, pageSize, request);
     }
 
@@ -69,7 +78,6 @@ public class ReviewController {
     public BaseResponse addReview(@RequestBody @Validated ReviewAddVO reviewAddVO,
                                   @NotNull BindingResult bindingResult,
                                   HttpServletRequest request) {
-
 
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(ErrorCode.REQUEST_BODY_ERROR);
@@ -96,7 +104,11 @@ public class ReviewController {
     public BaseResponse searchReview(String content,
                                      HttpServletRequest request,
                                      @RequestParam Integer page,
-                                     @RequestParam Integer pageSize) {
+                                     @RequestParam  Integer pageSize) {
+
+        if (page == null || pageSize == null) {
+            return ResultUtil.error(ErrorCode.PAGE_NUMBER_IS_NULL);
+        }
 
         return reviewService.searchReview(content, request, page, pageSize);
     }
@@ -107,6 +119,10 @@ public class ReviewController {
                                             HttpServletRequest request,
                                             @RequestParam Integer page,
                                             @RequestParam Integer pageSize) {
+
+        if (page == null || pageSize == null) {
+            return ResultUtil.error(ErrorCode.PAGE_NUMBER_IS_NULL);
+        }
 
         return  reviewService.searchReviewRecords(content, statue, request, page, pageSize);
     }
