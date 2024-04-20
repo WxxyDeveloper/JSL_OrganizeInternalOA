@@ -188,7 +188,10 @@ public class MessageServiceImpl implements MessageService {
         // 获取项目名,负责人名
         String projectName = projectMapper.tgetProjectById(pId).getName();
         String senderName = userDAO.getUserById(Processing.getAuthHeaderToUserId(request)).getUsername();
-        String systemName = projectMapper.getWorkById(systemId).getName();
+        String systemName = null;
+        if (systemId != null) {
+            systemName = projectMapper.getWorkById(systemId).getName();
+        }
         // 添加消息
         // 1:上传文档 2:修改状态 3:修改负责人
         List<Long> uidList = projectMapper.getMemberByProjectId(pId);
