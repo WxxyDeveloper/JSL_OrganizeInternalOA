@@ -189,7 +189,7 @@ public class MessageServiceImpl implements MessageService {
         String projectName = projectMapper.tgetProjectById(pId).getName();
         String senderName = userDAO.getUserById(Processing.getAuthHeaderToUserId(request)).getUsername();
         String systemName = null;
-        if (systemId != null) {
+        if (systemId != null && projectMapper.getWorkById(systemId) != null) {
             systemName = projectMapper.getWorkById(systemId).getName();
         }
         // 添加消息
@@ -241,7 +241,7 @@ public class MessageServiceImpl implements MessageService {
         String senderName = userDAO.getUserById(Processing.getAuthHeaderToUserId(request)).getUsername();
         String systemName = projectMapper.getWorkById(systmeId).getName();
         String moddleName = null;
-        if (moddleId != null) {
+        if (moddleId != null && projectMapper.getModuleById(moddleId) != null) {
          moddleName = projectMapper.getModuleById(moddleId).getName();
         }
         // 添加消息
