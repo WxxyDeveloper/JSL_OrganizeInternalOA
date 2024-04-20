@@ -214,9 +214,13 @@ public class ProjectDAO {
             return "";
         }
 
-        ProjectDO projectDO = new ProjectDO();
+        ProjectDO projectDO = projectMapper.getProjectById(projectId);
 
         UserDO userDO =  userMapper.getUserById(projectDO.getPrincipalId());
+
+        if (userDO == null) {
+            return "";
+        }
 
         if (userDO.getNickname() == null) {
             return userDO.getUsername();

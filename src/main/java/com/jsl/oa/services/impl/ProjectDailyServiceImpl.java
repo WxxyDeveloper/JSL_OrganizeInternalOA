@@ -209,11 +209,15 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
                     projectDAO.getProjectById(projectDailyVO.getProjectId()).getName());
             //设置发送者名称，如果为昵称为空则赋值用户账号
             UserDO senderUser = userDAO.getUserById(projectDailyDO.getUserId());
-            if (senderUser.getNickname() == null) {
-                projectDailyVO.setUserName(senderUser.getUsername());
+
+            if (senderUser == null) {
+                projectDailyVO.setUserName("");
+                projectDailyVO.setNickName("");
             } else {
-                projectDailyVO.setUserName(senderUser.getNickname());
+                projectDailyVO.setUserName(senderUser.getUsername());
+                projectDailyVO.setNickName(senderUser.getNickname());
             }
+
             //设置项目负责人名称
             projectDailyVO.setPrincipalName(projectDAO.getPrincipalUserFromProject(projectDailyDO.getProjectId()));
                 //用户是否有权限删除

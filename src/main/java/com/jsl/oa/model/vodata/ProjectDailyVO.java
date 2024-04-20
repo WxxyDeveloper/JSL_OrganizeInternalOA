@@ -17,6 +17,8 @@ public class ProjectDailyVO {
 
     private String userName;
 
+    private String nickName;
+
     private Long projectId;
 
     private String projectName;
