@@ -339,13 +339,16 @@ public class ProjectServiceImpl implements ProjectService {
                 projectMapper.getPirIdbyId(projectMapper.getModuleById(id.intValue()).getProjectChildId()))) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         } else {
+            ProjectModuleDO projectModuleDO = projectMapper.getModuleById(id.intValue());
+            if (projectModuleDO == null) {
+                return ResultUtil.error(ErrorCode.MODULE_NOT_EXIST);
+            }
             HashMap<String, Object> descriptionMap = new HashMap<>();
             descriptionMap.put("description", projectModuleEditVO.getDescription());
             projectModuleEditVO.setDescription(gson.toJson(descriptionMap));
             projectModuleEditVO.setId(id);
             projectMapper.projectModuleEdit(projectModuleEditVO);
         }
-
 
         return ResultUtil.success("修改成功");
     }
@@ -356,8 +359,12 @@ public class ProjectServiceImpl implements ProjectService {
         if (!Objects.equals(Processing.getAuthHeaderToUserId(request), projectMapper.getPirIdbyId(id))) {
             return ResultUtil.error(ErrorCode.NOT_PERMISSION);
         } else {
+            ProjectChildDO projectChildDO = projectMapper.getProjectChildById(id.intValue());
+            if (projectChildDO == null) {
+                return ResultUtil.error(ErrorCode.PROJECT_CHILD_NOT_EXIST);
+            }
             JsonObject jsonObject = gson
-                    .fromJson(projectMapper.getProjectChildById(id.intValue()).getDescription(), JsonObject.class);
+                    .fromJson(projectChildDO.getDescription(), JsonObject.class);
             //改动简介发送消息
             if (!Objects.equals(projectChildAddVO.getDescription(), "")
                     && !projectChildAddVO.getDescription()
@@ -365,11 +372,20 @@ public class ProjectServiceImpl implements ProjectService {
                 messageService.messageAdd(projectMapper.getProjectIdBySysId(id)
                         .intValue(), id.intValue(), null, 2, request);
             } // 改动周期或工作量发送消息
-            if (projectChildAddVO.getCycle() != null || projectChildAddVO.getWorkLoad() != null) {
+            if ((projectChildAddVO.getCycle() != null
+                    && projectChildDO.getCycle().equals(projectChildAddVO.getCycle()))
+                    || (projectChildAddVO.getWorkLoad() != null
+                    && projectChildDO.getWorkLoad().equals(projectChildAddVO.getWorkLoad()))
+            ) {
                 messageService.messageAdd(projectMapper.getProjectIdBySysId(id)
                         .intValue(), id.intValue(), null, 3, request);
+            } //改动负责人发送消息
+            if (projectChildAddVO.getPrincipalId() != null
+                    && !Objects.equals(projectChildAddVO.getPrincipalId(),
+                    projectChildDO.getPrincipalId())) {
+                messageService.messageAdd(projectMapper.getProjectIdBySysId(id)
+                        .intValue(),  3, id.intValue(),  request);
             }
-
             HashMap<String, Object> descriptionMap = new HashMap<>();
             descriptionMap.put("description", projectChildAddVO.getDescription());
             projectChildAddVO.setDescription(gson.toJson(descriptionMap));
@@ -377,7 +393,6 @@ public class ProjectServiceImpl implements ProjectService {
             projectChildAddVO.setId(id);
             projectMapper.projectChildEditAll(projectChildAddVO);
         }
-
 
         return ResultUtil.success("修改成功");
     }
@@ -440,6 +455,11 @@ public class ProjectServiceImpl implements ProjectService {
         //判断项目是否存在
         if (projectDAO.isExistProject(projectId)) {
             //更新数据
+            ProjectDO projectDO = projectDAO.getProjectById(projectId);
+            //改变项目状态发送消息
+            if (projectEdit.getStatus() != null && !projectDO.getStatus().equals(projectEdit.getStatus())) {
+                messageService.messageAdd(projectId.intValue(), 2, null, request);
+            }
             HashMap<String, Object> descriptionMap = new HashMap<>();
             descriptionMap.put("description", projectEdit.getDescription());
             projectEdit.setDescription(gson.toJson(descriptionMap));

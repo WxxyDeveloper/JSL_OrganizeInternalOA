@@ -185,9 +185,6 @@ public class ProjectDAO {
         return projectMapper.getAllProject();
     }
 
-    public ProjectModuleDO getProjectWorkerById(Long id) {
-        return projectMapper.getProjectWorkById(id);
-    }
 
     public List<ProjectDO> getProjectByPrincipalUser(Long uid) {
         log.info("\t> 执行 DAO 层 ProjectDAO.getProjectFromUser 方法");
