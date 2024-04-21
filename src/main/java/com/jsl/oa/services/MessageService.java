@@ -35,6 +35,11 @@ public interface MessageService {
                     HttpServletRequest request);
     void messageAdd(Integer pId, Integer systemId, Integer moddleId);
 
+    void messageAdd(
+            Integer pId,
+            Long senderId,
+            Long receiverId);
+
     void messageRemind();
 
     BaseResponse messageGetById(Long id, Long uid);
