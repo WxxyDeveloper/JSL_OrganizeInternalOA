@@ -4,7 +4,6 @@ package com.jsl.oa.services.impl;
 import com.jsl.oa.common.constant.ReviewConstants;
 import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.ReviewDAO;
-import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.mapper.UserMapper;
 import com.jsl.oa.model.dodata.ProjectChildDO;
@@ -34,7 +33,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
 
-    private final UserDAO userDAO;
     private final ReviewDAO reviewDAO;
     private final ProjectDAO projectDAO;
 
@@ -217,10 +215,11 @@ public class ReviewServiceImpl implements ReviewService {
         reviewDO.setSenderId(userId);
         reviewDO.setProjectId(Long.valueOf(reviewAddVO.getProjectId()));
         reviewDO.setProjectChildId(Long.valueOf(reviewAddVO.getProjectChildId()));
-        reviewDO.setProjectModuleId(Long.valueOf(reviewAddVO.getProjectModuleId()));
+        if (reviewAddVO.getProjectModuleId() != null) {
+            reviewDO.setProjectModuleId(Long.valueOf(reviewAddVO.getProjectModuleId()));
+        }
         //添加数据
         reviewDAO.addReview(reviewDO);
-
 
         return ResultUtil.success("申请成功");
     }
