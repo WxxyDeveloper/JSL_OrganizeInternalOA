@@ -19,15 +19,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class ProjectDAO {
 
+
     private final ProjectMapper projectMapper;
     private final UserMapper userMapper;
     private final Gson gson;
+
+
 
     public void projectAdd(ProjectInfoVO projectAdd) {
         log.info("\t> 执行 DAO 层 ProjectDAO.projectAdd 方法");
@@ -36,11 +40,15 @@ public class ProjectDAO {
         projectMapper.projectAdd(projectAdd);
     }
 
+
+
     public void projectWorkAdd(ProjectChildAddVO projectChildAddVO) {
         log.info("\t> 执行 DAO 层 ProjectDAO.projectWorkAdd 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         projectMapper.projectWorkAdd(projectChildAddVO);
     }
+
+
 
     public ProjectDO projectEdit(@NotNull ProjectDO projectEdit) {
         log.info("\t> 执行 DAO 层 ProjectDAO.projectEdit 方法");
@@ -50,11 +58,15 @@ public class ProjectDAO {
         return projectMapper.getProjectById(projectEdit.getId());
     }
 
+
+
     public boolean isExistProject(Long id) {
         log.info("\t> 执行 DAO 层 ProjectDAO.isExistProject 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         return projectMapper.getProjectById(id) != null;
     }
+
+
 
     public ProjectShowDO getHeader() {
         log.info("\t> 执行 DAO 层 ProjectDAO.getHeader 方法");
@@ -80,6 +92,8 @@ public class ProjectDAO {
         return getProjectShow;
     }
 
+
+
     private void sortProject(@NotNull ProjectShowDO projectShowDO) {
         log.info("\t> 执行 DAO 层 ProjectDAO.sortProject 方法");
         for (int i = 0; i < projectShowDO.getData().size(); i++) {
@@ -99,6 +113,8 @@ public class ProjectDAO {
         }
     }
 
+
+
     public boolean setProjectShow(ProjectShowDO projectShowDO) {
         log.info("\t> 执行 DAO 层 ProjectDAO.setProjectShow 方法");
         sortProject(projectShowDO);
@@ -108,11 +124,14 @@ public class ProjectDAO {
     }
 
 
+
     public ProjectDO getProjectById(Long id) {
         log.info("\t> 执行 DAO 层 ProjectDAO.getProjectById 方法");
         log.info("\t\t> 从 MySQL 获取数据");
         return projectMapper.getProjectById(id);
     }
+
+
 
     public List<ProjectDO> get(Long userId, List<String> tags, List<String> isFinish) {
         log.info("\t> 执行 DAO 层 ProjectDAO.get 方法");
@@ -225,4 +244,58 @@ public class ProjectDAO {
             return userDO.getNickname();
         }
     }
+
+
+    /**
+     * @Description: 获取该用户在这个项目的所有上级管理用户（比如管理该用户的项目经理，管理该用户的项目负责人）
+     * @Date: 2024/4/21
+     * @Param pid:      项目id
+     * @Param uid:      用户id
+     **/
+    public List<Long> getAllManagerUserByProject(Integer pid, Long uid) {
+
+//        储存  该用户  的  管理用户  数组
+        List<Long> managerUserIds = new ArrayList<>();
+//        获取项目
+        ProjectDO projectDO = projectMapper.getProjectById(Long.valueOf(pid));
+        if (projectDO == null || projectDO.getPrincipalId() == null) {
+            return new ArrayList<>();
+        }
+//         获取该用户
+        UserDO userDO = userMapper.getUserById(uid);
+        if (userDO == null || userDO.getUsername() == null) {
+            return new ArrayList<>();
+        }
+
+//        获取用户负责的所有子模块
+        List<ProjectModuleDO> projectModuleDOS = projectMapper.getAllModuleByUserId(uid);
+//        去除子模块里 具有相同所属子系统 的数据（查询出来的数据里会出现多个子模块属于同一子系统情况）
+        projectModuleDOS = projectModuleDOS.stream()
+                .collect(Collectors.groupingBy(ProjectModuleDO::getProjectChildId))
+                .values()
+                .stream()
+                .map(projectModuleDOS1 -> projectModuleDOS1.get(0))
+                .collect(Collectors.toList());
+//        获取这些子模块的上一级，子系统，添加对应负责人。
+        for (ProjectModuleDO projectModuleDO: projectModuleDOS) {
+            ProjectChildDO projectChildDO = projectMapper.
+                    getProjectChildById(Math.toIntExact(projectModuleDO.getProjectChildId()));
+            if (projectChildDO == null || projectChildDO.getPrincipalId() == null) {
+                continue;
+            }
+            managerUserIds.add(projectChildDO.getPrincipalId());
+        }
+//        添加项目负责人
+        managerUserIds.add(projectDO.getPrincipalId());
+//        去重：去除管理用户数组里相同的人(子系统负责人可能项目，或者与项目负责人冲突)
+        managerUserIds = managerUserIds.stream()
+                .distinct().collect(Collectors.toList());
+//        如果管理用户数组有自己，去除
+        managerUserIds.removeIf(userId -> userId.equals(uid));
+
+        return managerUserIds;
+    }
+
+
+
 }

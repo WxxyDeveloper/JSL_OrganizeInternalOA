@@ -4,9 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.MessageMapper;
 import com.jsl.oa.mapper.ProjectMapper;
-import com.jsl.oa.model.dodata.MessageDO;
-import com.jsl.oa.model.dodata.ProjectChildDO;
-import com.jsl.oa.model.dodata.ProjectModuleDO;
+import com.jsl.oa.model.dodata.*;
 import com.jsl.oa.model.vodata.MessageAddVO;
 import com.jsl.oa.model.vodata.MessageGetVO;
 import com.jsl.oa.services.MessageService;
@@ -279,6 +277,7 @@ public class MessageServiceImpl implements MessageService {
         }
     }
 
+
     /**
      * 添加成员填写日报消息
      *
@@ -301,6 +300,44 @@ public class MessageServiceImpl implements MessageService {
         messageAddVO.setUid(projectMapper.getPid(systemId));
         messageAddVO.setTitle("日报消息");
         messageAddVO.setText(projectName + "项目的" + systemName + "系统的" + moddleName + "模块负责人" + principalName
+                + "刚刚填写了日报");
+        messageAddVO.setType("Project_daily");
+        messageMapper.messageAdd(messageAddVO);
+    }
+
+
+
+    /**
+     * 添加成员填写日报消息
+     *
+     * @param pId      项目id
+     * @param senderId      填写用户id
+     * @param receiverId    接收消息用户id
+     */
+    @Override
+    public void messageAdd(
+            Integer pId,
+            Long senderId,
+            Long receiverId) {
+        // 获取项目名
+        ProjectDO projectDO = projectMapper.tgetProjectById(pId);
+        // 如果为空，则不发送消息
+        if (projectDO == null) {
+            return;
+        }
+        String projectName = projectDO.getName();
+        //获取填写者用户与接收消息用户信息
+        UserDO sederUser = userDAO.getUserById(senderId);
+        UserDO receiverUser = userDAO.getUserById(receiverId);
+        // 如果为空，则不发送消息
+        if (sederUser == null || receiverUser == null) {
+            return;
+        }
+        // 添加消息
+        MessageAddVO messageAddVO = new MessageAddVO();
+        messageAddVO.setUid(receiverUser.getId());
+        messageAddVO.setTitle("日报消息");
+        messageAddVO.setText(projectName + "项目的" + "成员" + sederUser.getUsername()
                 + "刚刚填写了日报");
         messageAddVO.setType("Project_daily");
         messageMapper.messageAdd(messageAddVO);

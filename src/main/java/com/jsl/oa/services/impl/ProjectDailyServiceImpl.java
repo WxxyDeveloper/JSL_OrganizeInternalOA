@@ -72,6 +72,11 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
 //        向数据库添加数据
         projectDailyDAO.addProjectDaily(projectDailyDO);
 
+//        发送消息
+        List<Long> managerUserId = projectDAO.getAllManagerUserByProject(projectId, userId);
+        for (Long uid: managerUserId) {
+            messageService.messageAdd(projectId, userId, uid);
+        }
         return ResultUtil.success();
     }
 
