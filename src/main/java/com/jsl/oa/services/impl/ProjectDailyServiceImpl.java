@@ -7,6 +7,7 @@ import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.ProjectDailyDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ProjectDailyMapper;
+import com.jsl.oa.model.dodata.ProjectDO;
 import com.jsl.oa.model.dodata.ProjectDailyDO;
 import com.jsl.oa.model.dodata.UserDO;
 import com.jsl.oa.model.vodata.ProjectDailyAddVO;
@@ -210,8 +211,12 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
 //            复制相同的属性值
             Processing.copyProperties(projectDailyDO, projectDailyVO);
 //            赋值其他需查询的属性
-            projectDailyVO.setProjectName(
-                    projectDAO.getProjectById(projectDailyVO.getProjectId()).getName());
+            ProjectDO projectDO =  projectDAO.getProjectById(projectDailyVO.getProjectId());
+            if (projectDO == null) {
+                projectDailyVO.setProjectName(projectDO.getName());
+            } else {
+                projectDailyVO.setPrincipalName("项目不存在");
+            }
             //设置发送者名称，如果为昵称为空则赋值用户账号
             UserDO senderUser = userDAO.getUserById(projectDailyDO.getUserId());
 
