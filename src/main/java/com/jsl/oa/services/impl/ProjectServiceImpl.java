@@ -8,16 +8,10 @@ import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.jsl.oa.annotations.NeedPermission;
-import com.jsl.oa.dao.ProjectDAO;
-import com.jsl.oa.dao.ReviewDAO;
-import com.jsl.oa.dao.RoleDAO;
-import com.jsl.oa.dao.UserDAO;
+import com.jsl.oa.dao.*;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.mapper.UserMapper;
-import com.jsl.oa.model.dodata.ProjectChildDO;
-import com.jsl.oa.model.dodata.ProjectDO;
-import com.jsl.oa.model.dodata.ProjectModuleDO;
-import com.jsl.oa.model.dodata.UserDO;
+import com.jsl.oa.model.dodata.*;
 import com.jsl.oa.model.dodata.info.ProjectShowDO;
 import com.jsl.oa.model.vodata.*;
 import com.jsl.oa.model.vodata.business.info.ProjectShowVO;
@@ -64,6 +58,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final UserDAO userDAO;
     private final ObjectMapper objectMapper;
     private final RoleDAO roleDAO;
+    private final ProjectDailyDAO projectDailyDAO;
     private final MessageService messageService;
     private final Gson gson;
 
@@ -637,6 +632,8 @@ public class ProjectServiceImpl implements ProjectService {
             }
             //同时删除所有对应审核信息
             reviewDAO.deleteReviewByProjectId(id1);
+            //同时删除所有对应日报消息
+            projectDailyDAO.deleteDailyByProject(id1);
         }
 
 
