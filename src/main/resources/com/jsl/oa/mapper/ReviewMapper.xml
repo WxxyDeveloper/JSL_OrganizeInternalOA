@@ -139,10 +139,11 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteReview">
-        delete organize_oa.oa_review
-            where id = ${id}
-    </delete>
+    <update id="deleteReview">
+        update organize_oa.oa_review
+        set is_deleted = 1
+        where id = ${id}
+    </update>
 
     <select id="getAllReviewByProjectId">
         select * from  organize_oa.oa_review
