@@ -183,7 +183,7 @@ public class Processing {
     }
 
     /**
-     * 检查用户是否是老师
+     * 检查用户是否是负责人
      *
      * @param request 请求
      * @return 如果为 true 是老师，false 不是老师

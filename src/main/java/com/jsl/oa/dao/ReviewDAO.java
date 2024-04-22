@@ -95,15 +95,24 @@ public class ReviewDAO {
     }
 
     public void deleteReviewByProjectId(Long pid) {
-        reviewMapper.getAllReviewByProjectId(pid);
+        List<ReviewDO> reviewDOS = reviewMapper.getAllReviewByProjectId(pid);
+        for (ReviewDO reviewDO :reviewDOS) {
+            reviewMapper.deleteReview(reviewDO.getId());
+        }
     }
 
     public void deleteReviewByProjectChildId(Long cid) {
-        reviewMapper.getAllReviewByProjectId(cid);
+        List<ReviewDO> reviewDOS = reviewMapper.getAllReviewByProjectId(cid);
+        for (ReviewDO reviewDO :reviewDOS) {
+            reviewMapper.deleteReview(reviewDO.getId());
+        }
     }
 
     public void deleteReviewByProjectModuleId(Long mid) {
-        reviewMapper.getAllReviewByProjectId(mid);
+        List<ReviewDO> reviewDOS = reviewMapper.getAllReviewByProjectId(mid);
+        for (ReviewDO reviewDO :reviewDOS) {
+            reviewMapper.deleteReview(reviewDO.getId());
+        }
     }
 
 }
