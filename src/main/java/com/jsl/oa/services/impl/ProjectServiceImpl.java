@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.jsl.oa.annotations.NeedPermission;
 import com.jsl.oa.dao.ProjectDAO;
+import com.jsl.oa.dao.ReviewDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ProjectMapper;
@@ -58,6 +59,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final UserMapper userMapper;
     private final ProjectMapper projectMapper;
+    private final ReviewDAO reviewDAO;
     private final ProjectDAO projectDAO;
     private final UserDAO userDAO;
     private final ObjectMapper objectMapper;
@@ -210,6 +212,8 @@ public class ProjectServiceImpl implements ProjectService {
                 return ResultUtil.error(ErrorCode.NOT_PERMISSION);
             } else {
                 projectMapper.deleteProjectChild(id1);
+                //同时删除对应审核信息
+                reviewDAO.deleteReviewByProjectChildId(id1);
             }
         }
         return ResultUtil.success();
@@ -622,7 +626,11 @@ public class ProjectServiceImpl implements ProjectService {
             if (!projectDAO.projectDelete(id1)) {
                 return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
             }
+            //同时删除所有对应审核信息
+            reviewDAO.deleteReviewByProjectId(id1);
         }
+
+
         return ResultUtil.success();
     }
 }

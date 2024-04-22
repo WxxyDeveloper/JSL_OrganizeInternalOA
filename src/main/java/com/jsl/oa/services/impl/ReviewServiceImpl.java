@@ -6,10 +6,7 @@ import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.ReviewDAO;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.mapper.UserMapper;
-import com.jsl.oa.model.dodata.ProjectChildDO;
-import com.jsl.oa.model.dodata.ProjectDO;
-import com.jsl.oa.model.dodata.ProjectModuleDO;
-import com.jsl.oa.model.dodata.ReviewDO;
+import com.jsl.oa.model.dodata.*;
 import com.jsl.oa.model.vodata.ReviewAddVO;
 import com.jsl.oa.model.vodata.ReviewDataVO;
 import com.jsl.oa.model.vodata.ReviewUpdateResultVO;
@@ -386,20 +383,42 @@ public class ReviewServiceImpl implements ReviewService {
             Processing.copyProperties(reviewDO, reviewVO);
 //            赋值其他非空属性
             reviewVO.setCategory(Processing.turnReviewCategory(reviewDO.getCategory()))
-                    .setSenderName(userMapper.getUserById(Long.valueOf(reviewDO.getSenderId())).getNickname())
-                    .setProjectName(projectDAO.getProjectById(reviewDO.getProjectId()).getName())
-                    .setProjectChildName(projectMapper.getProjectChildById(
-                                    Math.toIntExact(reviewDO.getProjectChildId())).getName())
-                    .setResult(Processing.turnReviewResult(reviewDO.getReviewResult()))
+                    .setSenderName(userMapper.getUserById(Long.valueOf(reviewDO.getSenderId())).getNickname());
+
+//              获取审核的项目,设置项目名称
+            ProjectDO project = projectDAO.getProjectById(reviewDO.getProjectId());
+            if (project == null) {
+                reviewVO.setProjectName("无此项目");
+            } else {
+                reviewVO.setProjectName(project.getName());
+            }
+//              获取审核的子系统,设置子系统名称
+            ProjectChildDO projectChildDO =
+                    projectMapper.getProjectChildById(Math.toIntExact(reviewDO.getProjectChildId()));
+            if (projectChildDO != null) {
+                reviewVO.setProjectChildName(projectChildDO.getName());
+            } else {
+                reviewVO.setProjectChildName(projectChildDO.getName());
+            }
+//            设置结果、发送者id，接受者id
+            reviewVO.setResult(Processing.turnReviewResult(reviewDO.getReviewResult()))
                     .setSenderId(Long.valueOf(reviewDO.getSenderId()))
                     .setRecipientId(reviewDO.getRecipientId());
 //            赋值可为空属性并进行判断
-            if (reviewDO.getRecipientId() != null) {
-                reviewVO.setRecipientName(userMapper.getUserById(reviewDO.getRecipientId()).getNickname());
+            UserDO recipientUserDO = userMapper.getUserById(reviewDO.getRecipientId());
+            if (reviewDO.getRecipientId() != null || recipientUserDO != null) {
+                reviewVO.setRecipientName(recipientUserDO.getNickname());
             }
+//            获取该审核消息对应的模块信息
             if (reviewDO.getProjectModuleId() != null) {
-                reviewVO.setProjectModuleName(
-                        reviewDAO.getNameByModule(Math.toIntExact(reviewDO.getProjectModuleId())));
+                ProjectModuleDO projectModuleDO =
+                        projectMapper.getModuleById(Math.toIntExact(reviewDO.getProjectModuleId()));
+//                如果模块存在，设置名称
+                if (projectModuleDO != null) {
+                    reviewVO.setProjectModuleName(projectModuleDO.getName());
+                } else {
+                    reviewVO.setProjectModuleName("模块不存在");
+                }
             } else {
                 reviewVO.setProjectModuleName("无");
             }

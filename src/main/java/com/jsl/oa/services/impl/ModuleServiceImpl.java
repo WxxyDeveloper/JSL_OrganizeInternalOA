@@ -3,6 +3,7 @@ package com.jsl.oa.services.impl;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.jsl.oa.dao.ProjectDAO;
+import com.jsl.oa.dao.ReviewDAO;
 import com.jsl.oa.dao.RoleDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ModuleMapper;
@@ -30,6 +31,7 @@ import static java.lang.System.*;
 @RequiredArgsConstructor
 public class ModuleServiceImpl implements ModuleService {
     private final ProjectDAO projectDAO;
+    private final ReviewDAO reviewDAO;
     private final ModuleMapper moduleMapper;
     private final UserDAO userDAO;
     private final RoleDAO roleDAO;
@@ -120,7 +122,11 @@ public class ModuleServiceImpl implements ModuleService {
 
         for (ProjectModuleDO workDO : projectWorkDOS) {
             deleteMoudule(workDO.getId());
+
+        //同时删除对应审核信息
+            reviewDAO.deleteReviewByProjectModuleId(id);
         }
+
 
         moduleMapper.deleteMoudule(id);
     }

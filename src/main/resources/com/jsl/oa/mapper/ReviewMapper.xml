@@ -139,6 +139,26 @@
         where id = #{id}
     </update>
 
+    <delete id="deleteReview">
+        delete organize_oa.oa_review
+            where id = ${id}
+    </delete>
+
+    <select id="getAllReviewByProjectId">
+        select * from  organize_oa.oa_review
+            where project_id = #{pid} and is_delete = 0
+    </select>
+
+    <select id="getAllReviewByProjectChildId">
+        select * from  organize_oa.oa_review
+        where project_child_id = #{pid} and is_delete = 0
+    </select>
+
+    <select id="getAllReviewByProjectModuleId">
+        select * from  organize_oa.oa_review
+        where project_module_id = #{mid} and is_delete = 0
+    </select>
+
 
 
 

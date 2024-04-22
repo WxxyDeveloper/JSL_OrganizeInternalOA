@@ -94,6 +94,18 @@ public class ReviewDAO {
         return "";
     }
 
+    public void deleteReviewByProjectId(Long pid) {
+        reviewMapper.getAllReviewByProjectId(pid);
+    }
+
+    public void deleteReviewByProjectChildId(Long cid) {
+        reviewMapper.getAllReviewByProjectId(cid);
+    }
+
+    public void deleteReviewByProjectModuleId(Long mid) {
+        reviewMapper.getAllReviewByProjectId(mid);
+    }
+
 }
 
 
