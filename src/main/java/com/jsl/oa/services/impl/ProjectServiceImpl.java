@@ -641,7 +641,6 @@ public class ProjectServiceImpl implements ProjectService {
             projectDailyDAO.deleteDailyByProject(id1);
         }
 
-
         return ResultUtil.success();
     }
 }
