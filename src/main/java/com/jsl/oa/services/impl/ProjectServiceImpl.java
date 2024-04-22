@@ -346,13 +346,14 @@ public class ProjectServiceImpl implements ProjectService {
             if (projectModuleDO == null) {
                 return ResultUtil.error(ErrorCode.MODULE_NOT_EXIST);
             }
-            HashMap<String, Object> descriptionMap = new HashMap<>();
-            descriptionMap.put("description", projectModuleEditVO.getDescription());
-            projectModuleEditVO.setDescription(gson.toJson(descriptionMap));
+            if (projectModuleEditVO.getDescription() != null) {
+                HashMap<String, Object> descriptionMap = new HashMap<>();
+                descriptionMap.put("description", projectModuleEditVO.getDescription());
+                projectModuleEditVO.setDescription(gson.toJson(descriptionMap));
+            }
             projectModuleEditVO.setId(id);
             projectMapper.projectModuleEdit(projectModuleEditVO);
         }
-
         return ResultUtil.success("修改成功");
     }
 
@@ -369,11 +370,13 @@ public class ProjectServiceImpl implements ProjectService {
             JsonObject jsonObject = gson
                     .fromJson(projectChildDO.getDescription(), JsonObject.class);
             //改动简介发送消息
-            if (!Objects.equals(projectChildAddVO.getDescription(), "")
-                    && !projectChildAddVO.getDescription()
-                    .equals(jsonObject.get("description").getAsString())) {
-                messageService.messageAdd(projectMapper.getProjectIdBySysId(id)
-                        .intValue(), id.intValue(), null, 2, request);
+            if (projectChildAddVO.getDescription() != null) {
+                if (!Objects.equals(projectChildAddVO.getDescription(), "")
+                        && !projectChildAddVO.getDescription()
+                        .equals(jsonObject.get("description").getAsString())) {
+                    messageService.messageAdd(projectMapper.getProjectIdBySysId(id)
+                            .intValue(), id.intValue(), null, 2, request);
+                }
             } // 改动周期或工作量发送消息
             if ((projectChildAddVO.getCycle() != null
                     && projectChildDO.getCycle().equals(projectChildAddVO.getCycle()))
@@ -389,9 +392,11 @@ public class ProjectServiceImpl implements ProjectService {
                 messageService.messageAdd(projectMapper.getProjectIdBySysId(id)
                         .intValue(),  3, id.intValue(),  request);
             }
-            HashMap<String, Object> descriptionMap = new HashMap<>();
-            descriptionMap.put("description", projectChildAddVO.getDescription());
-            projectChildAddVO.setDescription(gson.toJson(descriptionMap));
+            if (projectChildAddVO.getDescription() != null) {
+                HashMap<String, Object> descriptionMap = new HashMap<>();
+                descriptionMap.put("description", projectChildAddVO.getDescription());
+                projectChildAddVO.setDescription(gson.toJson(descriptionMap));
+            }
 
             projectChildAddVO.setId(id);
             projectMapper.projectChildEditAll(projectChildAddVO);
@@ -463,17 +468,22 @@ public class ProjectServiceImpl implements ProjectService {
             if (projectEdit.getStatus() != null && !projectDO.getStatus().equals(projectEdit.getStatus())) {
                 messageService.messageAdd(projectId.intValue(), 2, null, request);
             }
-            HashMap<String, Object> descriptionMap = new HashMap<>();
-            descriptionMap.put("description", projectEdit.getDescription());
-            projectEdit.setDescription(gson.toJson(descriptionMap));
+            if (projectEdit.getDescription() != null) {
+                HashMap<String, Object> descriptionMap = new HashMap<>();
+                descriptionMap.put("description", projectEdit.getDescription());
+                projectEdit.setDescription(gson.toJson(descriptionMap));
+            }
 
-            HashMap<String, Object> tagMap = new HashMap<>();
-            tagMap.put("tags", projectEdit.getTags().split(","));
-            projectEdit.setTags(gson.toJson(tagMap));
-
-            HashMap<String, Object> filesMap = new HashMap<>();
-            filesMap.put("URI", projectEdit.getFiles());
-            projectEdit.setFiles(gson.toJson(filesMap));
+            if (projectEdit.getDescription() != null) {
+                HashMap<String, Object> tagMap = new HashMap<>();
+                tagMap.put("tags", projectEdit.getTags().split(","));
+                projectEdit.setTags(gson.toJson(tagMap));
+            }
+            if (projectEdit.getDescription() != null) {
+                HashMap<String, Object> filesMap = new HashMap<>();
+                filesMap.put("URI", projectEdit.getFiles());
+                projectEdit.setFiles(gson.toJson(filesMap));
+            }
 
             projectEdit.setId(projectId);
             ProjectDO projectEdit1 = new ProjectDO();

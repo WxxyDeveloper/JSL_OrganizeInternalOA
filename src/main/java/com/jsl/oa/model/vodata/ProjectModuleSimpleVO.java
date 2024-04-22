@@ -16,6 +16,7 @@ public class ProjectModuleSimpleVO {
     private Integer workLoad;
     private Timestamp deadLine;
     private String status;
+    private Integer cycle;
     private String principalUser;
 
 }
