@@ -7,6 +7,7 @@ import com.jsl.oa.dao.ProjectDAO;
 import com.jsl.oa.dao.ProjectDailyDAO;
 import com.jsl.oa.dao.UserDAO;
 import com.jsl.oa.mapper.ProjectDailyMapper;
+import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.model.dodata.ProjectDO;
 import com.jsl.oa.model.dodata.ProjectDailyDO;
 import com.jsl.oa.model.dodata.UserDO;
@@ -48,6 +49,7 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
     private final UserDAO userDAO;
     private final ProjectDailyDAO projectDailyDAO;
     private final ProjectDailyMapper projectDailyMapper;
+    private final ProjectMapper projectMapper;
     private final MessageService messageService;
 
 
@@ -59,9 +61,9 @@ public class ProjectDailyServiceImpl implements ProjectDailyService {
 //        从请求体中获取项目id
             Integer projectId = projectDailyAddVO.getProjectId();
 //        检查项目是否存在
-            if (!projectDAO.isExistProjectById(Long.valueOf(projectId))) {
+            if (projectMapper.getNotDeleteProjectById(Long.valueOf(projectId)) == null) {
                 return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
-        }
+            }
 
 //        赋值数据库表实体类相关属性
         ProjectDailyDO projectDailyDO = new ProjectDailyDO();

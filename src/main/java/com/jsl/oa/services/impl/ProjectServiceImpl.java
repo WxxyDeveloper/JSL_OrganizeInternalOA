@@ -624,6 +624,11 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         for (Long id1 : id) {
+
+            if (projectMapper.getNotDeleteProjectById(id1) == null) {
+                return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
+            }
+
             if (!projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), id1)) {
                 return ResultUtil.error(ErrorCode.NOT_PERMISSION);
             }
