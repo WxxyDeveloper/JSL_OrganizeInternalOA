@@ -179,7 +179,7 @@ public class ReviewServiceImpl implements ReviewService {
         Integer userId = Math.toIntExact(Processing.getAuthHeaderToUserId(request));
 
         //检查对应项目，子系统，子模块是否存在
-        if (!projectDAO.isExistProjectById(Long.valueOf(reviewAddVO.getProjectId()))) {
+        if (projectMapper.getNotDeleteProjectById(Long.valueOf(reviewAddVO.getProjectId())) == null) {
             return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
         }
 

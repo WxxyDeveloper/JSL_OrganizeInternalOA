@@ -43,6 +43,9 @@ public interface ProjectMapper {
     @Select("select * from organize_oa.oa_project where id=#{id}")
     ProjectDO getProjectById(Long id);
 
+    @Select("select * from organize_oa.oa_project where id=#{id} and is_delete = 0")
+    ProjectDO getNotDeleteProjectById(Long id);
+
     @Select("select * from organize_oa.oa_project where id=#{id}")
     ProjectDO tgetProjectById(Integer id);
 

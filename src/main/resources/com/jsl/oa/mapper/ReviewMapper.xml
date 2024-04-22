@@ -141,7 +141,7 @@
 
     <update id="deleteReview">
         update organize_oa.oa_review
-        set is_deleted = 1
+        set is_delete = 1
         where id = ${id}
     </update>
 
