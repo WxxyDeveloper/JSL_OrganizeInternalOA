@@ -40,6 +40,7 @@
             <if test="isDelete != null">
                 is_delete = #{isDelete},
             </if>
+            updated_at = CURRENT_TIMESTAMP
         </set>
         where id = #{id}
     </update>
@@ -105,6 +106,7 @@
         </set>
         where id = #{id}
     </update>
+
     <update id="projectChildEditAll">
         update organize_oa.oa_project_child
         <set>
