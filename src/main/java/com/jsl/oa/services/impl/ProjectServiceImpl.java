@@ -8,15 +8,10 @@ import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.jsl.oa.annotations.NeedPermission;
-import com.jsl.oa.dao.ProjectDAO;
-import com.jsl.oa.dao.RoleDAO;
-import com.jsl.oa.dao.UserDAO;
+import com.jsl.oa.dao.*;
 import com.jsl.oa.mapper.ProjectMapper;
 import com.jsl.oa.mapper.UserMapper;
-import com.jsl.oa.model.dodata.ProjectChildDO;
-import com.jsl.oa.model.dodata.ProjectDO;
-import com.jsl.oa.model.dodata.ProjectModuleDO;
-import com.jsl.oa.model.dodata.UserDO;
+import com.jsl.oa.model.dodata.*;
 import com.jsl.oa.model.dodata.info.ProjectShowDO;
 import com.jsl.oa.model.vodata.*;
 import com.jsl.oa.model.vodata.business.info.ProjectShowVO;
@@ -58,10 +53,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final UserMapper userMapper;
     private final ProjectMapper projectMapper;
+    private final ReviewDAO reviewDAO;
     private final ProjectDAO projectDAO;
     private final UserDAO userDAO;
     private final ObjectMapper objectMapper;
     private final RoleDAO roleDAO;
+    private final ProjectDailyDAO projectDailyDAO;
     private final MessageService messageService;
     private final Gson gson;
 
@@ -128,7 +125,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public BaseResponse projectFileGet(HttpServletRequest request, Long projectId) {
-
 
 //        判断项目是否存在
         if (!projectDAO.isExistProjectById(projectId)) {
@@ -210,6 +206,8 @@ public class ProjectServiceImpl implements ProjectService {
                 return ResultUtil.error(ErrorCode.NOT_PERMISSION);
             } else {
                 projectMapper.deleteProjectChild(id1);
+                //同时删除对应审核信息
+                reviewDAO.deleteReviewByProjectChildId(id1);
             }
         }
         return ResultUtil.success();
@@ -626,13 +624,23 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         for (Long id1 : id) {
+
+            if (projectMapper.getNotDeleteProjectById(id1) == null) {
+                return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
+            }
+
             if (!projectDAO.isPrincipalUser(Processing.getAuthHeaderToUserId(request), id1)) {
                 return ResultUtil.error(ErrorCode.NOT_PERMISSION);
             }
             if (!projectDAO.projectDelete(id1)) {
                 return ResultUtil.error(ErrorCode.DATABASE_DELETE_ERROR);
             }
+            //同时删除所有对应审核信息
+            reviewDAO.deleteReviewByProjectId(id1);
+            //同时删除所有对应日报消息
+            projectDailyDAO.deleteDailyByProject(id1);
         }
+
         return ResultUtil.success();
     }
 }
