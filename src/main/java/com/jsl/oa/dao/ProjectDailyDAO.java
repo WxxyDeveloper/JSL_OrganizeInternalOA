@@ -124,6 +124,22 @@ public class ProjectDailyDAO {
         projectDailyMapper.updateDaily(projectDailyDO);
     }
 
+    public void deleteDailyByProject(Long pid) {
+
+        if (pid == null) {
+            return;
+        }
+
+        List<ProjectDailyDO> projectDailyDOS =
+                projectDailyMapper.getProjectDailyByProject(pid);
+
+        for (ProjectDailyDO projectDailyDO:projectDailyDOS) {
+            if (projectDailyDO == null || projectDailyDO.getId() == null) {
+                continue;
+            }
+            projectDailyMapper.deleteDailyById(Math.toIntExact(projectDailyDO.getId()));
+        }
+    }
 }
 
 

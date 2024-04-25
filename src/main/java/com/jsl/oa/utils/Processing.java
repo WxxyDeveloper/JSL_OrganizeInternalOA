@@ -183,7 +183,7 @@ public class Processing {
     }
 
     /**
-     * 检查用户是否是老师
+     * 检查用户是否是负责人
      *
      * @param request 请求
      * @return 如果为 true 是老师，false 不是老师
@@ -416,7 +416,7 @@ public class Processing {
      * @Param dateString:
      **/
     public static Date convertStringToDate(String dateString) {
-        if (dateString.isEmpty()) {
+        if (dateString == null || dateString.isEmpty()) {
             return null; // 如果字符串为空，返回空的Date对象
         } else {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

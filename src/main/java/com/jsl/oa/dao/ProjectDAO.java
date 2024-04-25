@@ -232,6 +232,10 @@ public class ProjectDAO {
 
         ProjectDO projectDO = projectMapper.getProjectById(projectId);
 
+        if (projectDO == null) {
+            return "项目负责人不存在";
+        }
+
         UserDO userDO =  userMapper.getUserById(projectDO.getPrincipalId());
 
         if (userDO == null) {

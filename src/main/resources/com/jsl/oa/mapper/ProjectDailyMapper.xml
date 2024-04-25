@@ -33,7 +33,7 @@
 
     <select id="getProjectDailyByProject" parameterType="java.lang.Long"
             resultType="com.jsl.oa.model.dodata.ProjectDailyDO">
-        select * from organize_oa.oa_project_daily where user_id = #{pid}
+        select * from organize_oa.oa_project_daily where project_id = #{pid}
             and is_delete = 0
     </select>
 

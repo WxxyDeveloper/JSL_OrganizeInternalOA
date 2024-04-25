@@ -106,10 +106,6 @@ public class ProjectDailyController {
             return ResultUtil.error(ErrorCode.PAGE_NUMBER_IS_NULL);
         }
 
-        if (projectId == null) {
-            return ResultUtil.error(ErrorCode.ID_NOT_EXIST);
-        }
-
         return projectDailyService.searchMyDaily(projectId,
                 page,
                 pageSize,
