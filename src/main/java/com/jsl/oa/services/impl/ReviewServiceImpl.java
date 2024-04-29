@@ -178,7 +178,7 @@ public class ReviewServiceImpl implements ReviewService {
         //获取用户
         Integer userId = Math.toIntExact(Processing.getAuthHeaderToUserId(request));
 
-        //检查对应项目，子系统，子模块是否存在
+        //检查对应项目，子系统，子模块是否存在 用变量接收
         if (projectMapper.getNotDeleteProjectById(Long.valueOf(reviewAddVO.getProjectId())) == null) {
             return ResultUtil.error(ErrorCode.PROJECT_NOT_EXIST);
         }
@@ -266,10 +266,15 @@ public class ReviewServiceImpl implements ReviewService {
         reviewDO.setRecipientId(userId);
         reviewDO.setReviewResult(reviewUpdateResultVO.getResult());
 
+        Integer moduleId = null;
+        if (reviewDO.getProjectModuleId() != null) {
+            moduleId = Math.toIntExact(reviewDO.getProjectModuleId());
+        }
+
         //发送消息
         messageService.messageAdd(Math.toIntExact(reviewDO.getProjectId()),
                 Math.toIntExact(reviewDO.getProjectChildId()),
-                Math.toIntExact(reviewDO.getProjectModuleId()),
+                moduleId,
                 Long.valueOf(reviewDO.getSenderId()),
                 Long.valueOf(reviewUpdateResultVO.getResult()),
                 request);
@@ -398,7 +403,7 @@ public class ReviewServiceImpl implements ReviewService {
             if (projectChildDO != null) {
                 reviewVO.setProjectChildName(projectChildDO.getName());
             } else {
-                reviewVO.setProjectChildName(projectChildDO.getName());
+                reviewVO.setProjectChildName("未找到子系统");
             }
 //            设置结果、发送者id，接受者id
             reviewVO.setResult(Processing.turnReviewResult(reviewDO.getReviewResult()))
